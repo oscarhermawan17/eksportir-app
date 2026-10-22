@@ -1,0 +1,14 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Packages allowed to run install scripts (pnpm blocks them by default).
+allowBuilds:
+  '@prisma/engines': true
+  prisma: true
+  esbuild: true
+  sharp: false
+  unrs-resolver: false
+
+minimumReleaseAgeExclude:
+  - dotenv@18.0.9

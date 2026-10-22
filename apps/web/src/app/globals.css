@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+/*
+ * BaliTrade design tokens — source of truth: design-ui/google-stitch/01-v4.html
+ * Usage in Tailwind: bg-primary, text-muted, border-border, rounded-card, ...
+ */
+@theme {
+  --color-primary: #0f4c5c;
+  --color-primary-hover: #0b3a46;
+  --color-gold: #c9a24a; /* icons, borders, fills, text on dark teal */
+  --color-gold-text: #9a7426; /* gold text on light backgrounds (accessible contrast) */
+  --color-terracotta: #b5563a;
+  --color-background: #faf7f2;
+  --color-card: #ffffff;
+  --color-border: #e7e2d9;
+  --color-text: #1f2937;
+  --color-muted: #6b7280;
+  --color-success: #2e7d5b;
+  --color-warning: #d99a2b;
+  --color-error: #c0392b;
+  --color-info: #2f6f8f;
+
+  --radius-card: 12px;
+  --radius-button: 10px;
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+}

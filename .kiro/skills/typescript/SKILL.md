@@ -11,4 +11,6 @@ description: Aturan TypeScript bersama untuk monorepo BaliTrade (web, api, share
 - Tangani error secara eksplisit; jangan menelan error tanpa log.
 - Komentar hanya untuk logika yang tidak jelas (mis. aturan bisnis kurs/ongkir), bukan untuk menjelaskan kode yang sudah jelas.
 - Dependency baru: versi di-pin (tanpa `^`/`~` untuk dependency langsung), paket populer & aktif dirawat; sebutkan ke user saat menambah.
-- Format & lint: Prettier + ESLint wajib lulus sebelum task dianggap selesai.
+- Format & lint: Prettier + linter wajib lulus sebelum task dianggap selesai (web: ESLint `eslint-config-next`; api: oxlint, bawaan NestJS 12).
+- API (NestJS 12) adalah **ESM**: import relatif wajib pakai ekstensi `.js` (mis. `import { X } from './x.js'`). Test pakai Vitest.
+- Prisma 7: client di-import dari `src/generated/prisma/client.js`, bukan `@prisma/client`.

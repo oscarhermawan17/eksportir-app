@@ -14,10 +14,10 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 ## Fase 0 — Fondasi (23 Okt)
 
-- [ ] **T01 Monorepo** — pnpm workspaces: `apps/web` (Next.js), `apps/api` (NestJS), `packages/shared`; TypeScript strict; ESLint + Prettier; `.gitignore`, `.env.example`, `.nvmrc`.
-  DoD: `pnpm dev` menjalankan web & api bersamaan; `pnpm lint` dan `pnpm build` lulus.
-- [ ] **T02 Database lokal** — `docker-compose.yml` berisi PostgreSQL; Prisma di `apps/api`; schema v1 (User + role saja dulu); migrasi pertama; seed akun admin.
-  DoD: `pnpm db:migrate` & `pnpm db:seed` jalan; tabel terlihat di DB.
+- [x] **T01 Monorepo** — pnpm workspaces: `apps/web` (Next.js), `apps/api` (NestJS), `packages/shared`; TypeScript strict; ESLint (web) / oxlint (api, default NestJS 12) + Prettier; `.gitignore`, `.env.example`, `.nvmrc`.
+  DoD: `pnpm dev` menjalankan web & api bersamaan; `pnpm lint` dan `pnpm build` lulus. ✅ 2026-10-23
+- [x] **T02 Database lokal** — `docker-compose.yml` berisi PostgreSQL; Prisma di `apps/api`; schema v1 (User + role saja dulu); migrasi pertama; seed akun admin.
+  DoD: `pnpm db:migrate` & `pnpm db:seed` jalan; tabel terlihat di DB. ✅ 2026-10-23 (+ `GET /api/health` & e2e test)
 - [ ] **T03 Auth API** — register, login, logout, me; hash password; JWT di cookie httpOnly; throttling login; DTO validation.
   DoD: test e2e register → login → me → logout lulus.
 - [ ] **T04 RBAC** — enum role (BUYER, SELLER, ADMIN_OWNER, ADMIN_FINANCE, ADMIN_OPS) di `packages/shared`; `@Roles()` decorator + guard.

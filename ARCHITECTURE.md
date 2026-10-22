@@ -14,9 +14,9 @@ Status: disetujui garis besar 2026-10-22 (MVP 1.0 / 1.1, NestJS, tanpa email not
 
 | Bagian | Pilihan |
 |---|---|
-| Frontend | Next.js (App Router) + TypeScript + Tailwind; i18n `next-intl` (en, id, ru) |
-| Backend | NestJS + TypeScript (REST API + WebSocket gateway Socket.IO) |
-| Database | PostgreSQL + Prisma (migrasi) |
+| Frontend | Next.js 16.4 (App Router, Turbopack) + React 19.3 + TypeScript 6.0 + Tailwind 4.3; i18n `next-intl` (en, id, ru) |
+| Backend | NestJS 12.2 (ESM, Vitest, oxlint) + TypeScript 6.0 (REST API + WebSocket gateway Socket.IO) |
+| Database | PostgreSQL 18 + Prisma 7.10 (driver adapter `@prisma/adapter-pg`, client di `src/generated/prisma`) |
 | Storage media | Cloudflare R2 (S3-compatible), upload langsung via presigned URL |
 | Email | Resend — hanya untuk lupa password (sender noreply) |
 | Deploy | Build image di **GitHub Actions** → push ke GHCR → VPS menjalankan **Docker Compose**. Reverse proxy + HTTPS: **Caddy** (usulan, karena HTTPS otomatis) atau Nginx + Certbot jika owner lebih terbiasa |

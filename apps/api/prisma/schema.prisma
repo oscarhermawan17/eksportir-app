@@ -1,0 +1,37 @@
+// BaliTrade database schema — v1 (T02): users & roles only.
+// Next models (SellerProfile, Product, Order, ...) are added task by task — see TASKS.md / ARCHITECTURE.md §5.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Keep in sync with packages/shared/src/roles.ts
+enum Role {
+  BUYER
+  SELLER
+  ADMIN_OWNER
+  ADMIN_FINANCE
+  ADMIN_OPS
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  phone        String?
+  /// UI language: en | id | ru
+  locale       String   @default("en")
+  roles        Role[]   @default([BUYER])
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
