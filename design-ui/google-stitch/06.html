@@ -1,0 +1,1761 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_standard" name="shell-type" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-tertiary": "#ffffff", "on-background": "#121c2a", "surface-bright": "#f8f9ff", "tertiary-fixed-dim": "#ebc165", "inverse-primary": "#9acee1", "tertiary": "#3e2d00", "on-secondary-container": "#76270f", "on-tertiary-container": "#d6ae55", "on-error-container": "#93000a", "surface-container-highest": "#d9e3f6", "outline-variant": "#c0c8cb", "error": "#ba1a1a", "inverse-on-surface": "#eaf1ff", "primary-container": "#0f4c5c", "surface-tint": "#306576", "primary-fixed-dim": "#9acee1", "error-container": "#ffdad6", "surface-variant": "#d9e3f6", "secondary": "#9c4329", "background": "#f8f9ff", "on-primary-container": "#87bbce", "outline": "#70787c", "on-primary": "#ffffff", "on-surface-variant": "#40484b", "tertiary-container": "#5a4200", "surface-container-low": "#eff4ff", "on-primary-fixed": "#001f28", "primary-fixed": "#b6ebfe", "tertiary-fixed": "#ffdf9e", "on-secondary-fixed-variant": "#7d2c14", "surface-container": "#e6eeff", "primary": "#003441", "secondary-fixed-dim": "#ffb5a0", "surface-dim": "#d0dbed", "on-error": "#ffffff", "secondary-fixed": "#ffdbd1", "secondary-container": "#ff8f6f", "on-tertiary-fixed-variant": "#5b4300", "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff", "surface": "#f8f9ff", "on-tertiary-fixed": "#261a00", "surface-container-high": "#dee9fc", "on-surface": "#121c2a", "on-primary-fixed-variant": "#114d5d", "inverse-surface": "#27313f", "on-secondary-fixed": "#3b0900" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "margin-mobile": "1rem", "margin": "2rem", "space-lg": "1.25rem", "space-xl": "2rem", "gutter": "1.5rem", "space-md": "0.75rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "gutter-sm": "1rem" }, fontFamily: { "headline-sm": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "price-numeral": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, fontSize: { "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }], "title-md": ["16px", { lineHeight: "24px", fontWeight: "600" }], "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700" }], "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.01em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }], "headline-xl-mobile": ["26px", { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "price-numeral": ["22px", { lineHeight: "26px", letterSpacing: "-0.01em", fontWeight: "700" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "600" }], "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }] } } } };
+    </script>
+  </head>
+  <body class="bg-surface font-body-md text-on-surface antialiased">
+    <header
+      class="fixed top-0 left-0 w-full z-50 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div
+        class="bg-primary text-on-primary py-space-xs px-margin-mobile md:px-margin"
+      >
+        <div
+          class="max-w-7xl mx-auto flex items-center justify-between font-label-sm text-label-sm tracking-wide"
+        >
+          <div class="flex items-center gap-space-xs">
+            <span
+              class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim"
+              >flight_takeoff</span
+            ><span
+              >Next consolidated air cargo from Bali to Russia &amp; CIS</span
+            >
+          </div>
+          <div
+            class="hidden sm:flex items-center gap-space-xs text-on-primary-container"
+          >
+            <span
+              class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim"
+              >verified_user</span
+            ><span>Payment held by BaliTrade until delivery</span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="h-20 bg-surface/90 backdrop-blur-xl px-margin-mobile md:px-margin"
+      >
+        <div
+          class="max-w-7xl mx-auto h-full flex items-center justify-between gap-space-md"
+        >
+          <div class="flex items-center gap-space-xl">
+            <a
+              class="flex items-center gap-space-xs group"
+              data-path="products"
+              href="#"
+              ><div
+                class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-tertiary-fixed-dim"
+              >
+                <span class="material-symbols-outlined text-[22px]"
+                  >local_florist</span
+                >
+              </div>
+              <div class="flex flex-col">
+                <span
+                  class="font-headline-sm text-headline-sm tracking-tight text-primary-container leading-none"
+                  >Bali<span class="text-tertiary-fixed-dim">Trade</span></span
+                ><span
+                  class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                  >B2B Export</span
+                >
+              </div></a
+            >
+            <nav
+              class="hidden lg:flex items-center gap-space-xs p-1"
+              data-active-classes="bg-primary-container text-on-primary rounded-xl font-title-md"
+            >
+              <a
+                class="px-space-md py-space-xs text-on-surface-variant hover:text-on-surface rounded-xl font-title-md text-title-md transition-colors"
+                data-path="products"
+                href="#"
+                >Products</a
+              ><a
+                aria-current="page"
+                class="px-space-md py-space-xs transition-colors bg-primary-container text-on-primary rounded-xl font-title-md"
+                data-path="request-a-product"
+                href="#"
+                >Request a Product</a
+              ><a
+                class="px-space-md py-space-xs text-on-surface-variant hover:text-on-surface rounded-xl font-title-md text-title-md transition-colors"
+                data-path="how-it-works"
+                href="#"
+                >How It Works</a
+              ><a
+                class="px-space-md py-space-xs text-on-surface-variant hover:text-on-surface rounded-xl font-title-md text-title-md transition-colors"
+                data-path="sell-on-balitrade"
+                href="#"
+                >Sell on BaliTrade</a
+              >
+            </nav>
+          </div>
+          <div class="flex items-center gap-space-md">
+            <button
+              aria-label="Search"
+              class="w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[20px]"
+                >search</span
+              ></button
+            ><button
+              aria-label="Cart"
+              class="relative w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[20px]"
+                >shopping_bag</span
+              ><span
+                class="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-on-secondary font-label-sm text-label-sm rounded-full flex items-center justify-center shadow-sm"
+                >2</span
+              ></button
+            ><button
+              class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[18px]">language</span
+              ><span>EN</span></button
+            ><button
+              aria-label="Notifications"
+              class="relative w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors"
+              type="button"
+            >
+              <span class="material-symbols-outlined text-[20px]"
+                >notifications</span
+              ><span
+                class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary"
+              ></span>
+            </button>
+            <div class="flex items-center gap-space-xs pl-space-xs">
+              <div
+                class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"
+              >
+                <span
+                  class="material-symbols-outlined text-on-primary text-[18px]"
+                  >person</span
+                >
+              </div>
+              <span
+                class="hidden md:inline font-title-md text-title-md text-on-surface"
+                >Dmitry I.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="w-full pt-20 bg-surface min-h-[calc(100vh-80px)]">
+      <div class="flex flex-col w-full">
+        <!-- Top Navigation Sub-strip: Breadcrumb & Title Context -->
+        <section class="w-full bg-surface-container-low py-space-md">
+          <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin">
+            <nav
+              aria-label="Breadcrumb"
+              class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant mb-space-xs"
+            >
+              <a
+                class="hover:text-primary transition-colors flex items-center gap-1"
+                data-path="products"
+                href="#"
+              >
+                <span class="material-symbols-outlined text-[16px]">home</span>
+                <span>Home</span>
+              </a>
+              <span
+                class="material-symbols-outlined text-[14px] text-outline-variant"
+                >chevron_right</span
+              >
+              <span class="text-primary font-semibold">Request a Product</span>
+            </nav>
+            <div
+              class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm pt-space-xs"
+            >
+              <div>
+                <h1
+                  class="font-headline-xl text-headline-xl text-on-surface tracking-tight"
+                >
+                  Request a product
+                </h1>
+                <p
+                  class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-1"
+                >
+                  Tell us what you need. Our team searches across Bali and sends
+                  you a quotation you can accept, change, or decline.
+                </p>
+              </div>
+              <div
+                class="flex items-center gap-space-xs bg-surface-container-highest/60 px-space-md py-space-xs rounded-xl self-start md:self-auto"
+              >
+                <span
+                  class="material-symbols-outlined text-[18px] text-primary-container"
+                  >shield_with_heart</span
+                >
+                <span
+                  class="font-label-md text-label-md text-on-surface-variant"
+                  >Payment held by BaliTrade until delivery</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Main Work Area: 2-Column Responsive Layout (65% / 35%) -->
+        <section class="w-full py-space-xl">
+          <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin">
+            <div
+              class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start"
+            >
+              <!-- LEFT COLUMN: RFQ FORM (approx 65% / 8 cols of 12) -->
+              <div class="lg:col-span-8 flex flex-col gap-space-lg">
+                <div
+                  class="bg-surface-container-lowest rounded-xl p-space-lg md:p-space-xl shadow-sm"
+                >
+                  <form
+                    class="space-y-space-xl"
+                    id="rfq-form"
+                    onsubmit="event.preventDefault(); window.triggerSuccessState();"
+                  >
+                    <!-- SECTION 1: WHAT DO YOU NEED? -->
+                    <div class="space-y-space-md">
+                      <div class="flex items-center gap-space-md">
+                        <div
+                          class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-title-md shrink-0 shadow-sm"
+                        >
+                          1
+                        </div>
+                        <div>
+                          <h2
+                            class="font-headline-sm text-headline-sm text-on-surface"
+                          >
+                            What do you need?
+                          </h2>
+                          <p
+                            class="font-body-md text-body-md text-on-surface-variant"
+                          >
+                            Specify the artisanal or agricultural goods you wish
+                            to source from Bali.
+                          </p>
+                        </div>
+                      </div>
+                      <!-- Prefilled Origin Product Chip -->
+                      <div
+                        class="bg-surface-container-low p-space-md rounded-xl flex items-start justify-between gap-space-md"
+                        id="origin-product-chip"
+                      >
+                        <div class="flex items-start gap-space-sm">
+                          <span
+                            class="material-symbols-outlined text-primary-container text-[20px] mt-0.5"
+                            >link</span
+                          >
+                          <div>
+                            <div
+                              class="inline-flex items-center gap-space-xs font-label-md text-label-md text-primary-container font-semibold"
+                            >
+                              <span
+                                >Related product: Kintamani Arabica Green Beans
+                                — Grade 1</span
+                              >
+                            </div>
+                            <p
+                              class="font-label-sm text-label-sm text-on-surface-variant mt-0.5"
+                            >
+                              Prefilled from the catalog product you were
+                              browsing. You can edit any details.
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          aria-label="Remove prefill reference"
+                          class="text-on-surface-variant hover:text-error transition-colors p-1"
+                          onclick="document.getElementById('origin-product-chip').remove();"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[18px]"
+                            >close</span
+                          >
+                        </button>
+                      </div>
+                      <!-- Product Name -->
+                      <div class="space-y-space-xs">
+                        <label
+                          class="font-title-md text-title-md text-on-surface flex items-center gap-1"
+                          for="product_name"
+                        >
+                          Product name
+                          <span class="text-secondary font-bold">*</span>
+                        </label>
+                        <input
+                          class="w-full h-12 px-space-md rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm"
+                          id="product_name"
+                          name="product_name"
+                          required=""
+                          type="text"
+                          value="Arabica green coffee beans (Grade 1 micro-lot)"
+                        />
+                      </div>
+                      <!-- Category -->
+                      <div class="space-y-space-xs">
+                        <label
+                          class="font-title-md text-title-md text-on-surface flex items-center gap-1"
+                          for="category"
+                        >
+                          Category
+                          <span class="text-secondary font-bold">*</span>
+                        </label>
+                        <div class="relative">
+                          <select
+                            class="w-full h-12 px-space-md pr-10 appearance-none rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm"
+                            id="category"
+                            name="category"
+                            required=""
+                          >
+                            <option selected="" value="coffee-tea">
+                              Coffee &amp; Tea
+                            </option>
+                            <option value="apparel">
+                              Apparel &amp; Accessories
+                            </option>
+                            <option value="rattan">Bags &amp; Rattan</option>
+                            <option value="handicrafts">
+                              Handicrafts &amp; Wood
+                            </option>
+                            <option value="decor">Home Decor</option>
+                            <option value="spices">Spices &amp; Food</option>
+                            <option value="other">
+                              Other Sourcing Request
+                            </option>
+                          </select>
+                          <span
+                            class="material-symbols-outlined text-[20px] text-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+                          >
+                            unfold_more
+                          </span>
+                        </div>
+                      </div>
+                      <!-- Description & Specifications -->
+                      <div class="space-y-space-xs">
+                        <div class="flex items-center justify-between">
+                          <label
+                            class="font-title-md text-title-md text-on-surface flex items-center gap-1"
+                            for="specifications"
+                          >
+                            Description &amp; specifications
+                            <span class="text-secondary font-bold">*</span>
+                          </label>
+                          <span
+                            class="font-label-sm text-label-sm text-on-surface-variant"
+                            >Provide harvest, processing, or dimension
+                            details</span
+                          >
+                        </div>
+                        <textarea
+                          class="w-full p-space-md rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm leading-relaxed"
+                          id="specifications"
+                          name="specifications"
+                          required=""
+                          rows="4"
+                        >
+Washed process Arabica green coffee beans from Kintamani or Bangli regency. Moisture content 11–12%, screen size 16+, crop season 2026. Packed in 20kg or 50kg jute sacks with airtight GrainPro inner liner for air cargo transport. Looking for clean micro-lot profile with citrus and floral notes.</textarea
+                        >
+                      </div>
+                      <!-- Reference Photos Dropzone & Previews -->
+                      <div class="space-y-space-xs">
+                        <label
+                          class="font-title-md text-title-md text-on-surface flex items-center justify-between"
+                        >
+                          <span>Reference photos (optional)</span>
+                          <span
+                            class="font-label-sm text-label-sm text-on-surface-variant"
+                            >Up to 5 photos · JPG, PNG</span
+                          >
+                        </label>
+                        <div
+                          class="bg-surface-container-low p-space-md rounded-xl flex flex-col items-center justify-center text-center group cursor-pointer hover:bg-surface-container-high transition-colors"
+                        >
+                          <div
+                            class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-sm mb-2 group-hover:scale-110 transition-transform"
+                          >
+                            <span class="material-symbols-outlined text-[22px]"
+                              >cloud_upload</span
+                            >
+                          </div>
+                          <p
+                            class="font-title-md text-title-md text-on-surface"
+                          >
+                            Drag photos here or
+                            <span
+                              class="text-primary-container underline font-semibold"
+                              >browse files</span
+                            >
+                          </p>
+                          <p
+                            class="font-label-sm text-label-sm text-on-surface-variant mt-0.5"
+                          >
+                            Include photos of packaging stamps, material
+                            references, or sketches
+                          </p>
+                        </div>
+                        <!-- Uploaded Thumbnails Mosaic -->
+                        <div
+                          class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm pt-space-xs"
+                        >
+                          <!-- Photo 1 -->
+                          <div
+                            class="relative bg-surface-container-low rounded-xl p-space-xs flex items-center gap-space-sm group"
+                          >
+                            <div
+                              class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface-container"
+                            >
+                              <img
+                                class="w-full h-full object-cover"
+                                data-alt="High resolution macro shot of raw green Arabica coffee beans Grade 1 from Bali Indonesia with natural greenish hue and clean parchment on white background"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhX-Mzhdb8QR6sy3nPr3hEit_--pP1sKlekipmh39ACmhtVBX5tttkFWzLJm5nfDZSMEaawF6n2voG53rAW-bwH0hiifwmqF-5QJWCOt7C8VAUOWlDgKRMUzhcQToC3kVC4bYrWrpQ_u1OpxfVJ5Jn43qswZIwgrSow0nN1vAz2Bbk5-4IyEc3AGSdKY_VbsJd2XtEsfDQ8S4Eidj8lbCr2QZyMKaixKR6acK6XNqir_0Bi3cd3Hfw"
+                              />
+                            </div>
+                            <div class="min-w-0 flex-1 pr-6">
+                              <p
+                                class="font-label-md text-label-md text-on-surface truncate font-semibold"
+                              >
+                                sample-bean-grade1.jpg
+                              </p>
+                              <p
+                                class="font-label-sm text-label-sm text-on-surface-variant"
+                              >
+                                2.4 MB · Ready
+                              </p>
+                            </div>
+                            <button
+                              class="absolute top-2 right-2 text-on-surface-variant hover:text-error transition-colors p-1"
+                              title="Remove photo"
+                              type="button"
+                            >
+                              <span
+                                class="material-symbols-outlined text-[16px]"
+                                >close</span
+                              >
+                            </button>
+                          </div>
+                          <!-- Photo 2 -->
+                          <div
+                            class="relative bg-surface-container-low rounded-xl p-space-xs flex items-center gap-space-sm group"
+                          >
+                            <div
+                              class="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface-container"
+                            >
+                              <img
+                                class="w-full h-full object-cover"
+                                data-alt="B2B cargo export burlap jute sack with branded GrainPro plastic hermetic liner for coffee transport in warehouse Bali"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC41vnDZr1SoojN7rAuKwgWTzRaZXUPnGpBX9aZNOuozKnztLA8aCo9CSxDXckiOclHhHLUlXGRjPjV9pYIyy915hOFcC3jj1Z4rK-LWTUKYiVtrRBsugLFBtR-EJ_TqtmTac6SixH8VRlB8GMquJrHrpkcQT-BkoR_1ScHXc78OWTxRrtkMIawk6HNkZFVt-Y--OjwBOAX1oKfOsGr8sE4k1UnOQUABeQHxYvf8O6Dnlz_cbsBISDu"
+                              />
+                            </div>
+                            <div class="min-w-0 flex-1 pr-6">
+                              <p
+                                class="font-label-md text-label-md text-on-surface truncate font-semibold"
+                              >
+                                grainpro-packaging-spec.png
+                              </p>
+                              <p
+                                class="font-label-sm text-label-sm text-on-surface-variant"
+                              >
+                                1.8 MB · Ready
+                              </p>
+                            </div>
+                            <button
+                              class="absolute top-2 right-2 text-on-surface-variant hover:text-error transition-colors p-1"
+                              title="Remove photo"
+                              type="button"
+                            >
+                              <span
+                                class="material-symbols-outlined text-[16px]"
+                                >close</span
+                              >
+                            </button>
+                          </div>
+                          <!-- Add slot -->
+                          <div
+                            class="bg-surface-container-low/70 rounded-xl p-space-xs flex items-center justify-center gap-space-xs text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors cursor-pointer min-h-[64px]"
+                          >
+                            <span class="material-symbols-outlined text-[18px]"
+                              >add_photo_alternate</span
+                            >
+                            <span
+                              class="font-label-md text-label-md font-semibold"
+                              >+ Add another</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Form Inset Divider -->
+                    <div
+                      class="w-full h-[1px] bg-surface-container-highest"
+                    ></div>
+                    <!-- SECTION 2: QUANTITY & BUDGET -->
+                    <div class="space-y-space-md">
+                      <div class="flex items-center gap-space-md">
+                        <div
+                          class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-title-md shrink-0 shadow-sm"
+                        >
+                          2
+                        </div>
+                        <div>
+                          <h2
+                            class="font-headline-sm text-headline-sm text-on-surface"
+                          >
+                            Quantity &amp; budget
+                          </h2>
+                          <p
+                            class="font-body-md text-body-md text-on-surface-variant"
+                          >
+                            Wholesale parameters for cooperative production and
+                            logistics planning.
+                          </p>
+                        </div>
+                      </div>
+                      <!-- Quantity & Unit Grid -->
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                        <div class="space-y-space-xs">
+                          <label
+                            class="font-title-md text-title-md text-on-surface flex items-center gap-1"
+                            for="quantity"
+                          >
+                            Quantity
+                            <span class="text-secondary font-bold">*</span>
+                          </label>
+                          <input
+                            class="w-full h-12 px-space-md rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm"
+                            id="quantity"
+                            min="1"
+                            name="quantity"
+                            required=""
+                            type="number"
+                            value="200"
+                          />
+                        </div>
+                        <div class="space-y-space-xs">
+                          <label
+                            class="font-title-md text-title-md text-on-surface flex items-center gap-1"
+                            for="unit"
+                          >
+                            Unit <span class="text-secondary font-bold">*</span>
+                          </label>
+                          <div class="relative">
+                            <select
+                              class="w-full h-12 px-space-md pr-10 appearance-none rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm"
+                              id="unit"
+                              name="unit"
+                              required=""
+                            >
+                              <option selected="" value="kg">
+                                kg (Kilograms)
+                              </option>
+                              <option value="pcs">pcs (Pieces)</option>
+                              <option value="pairs">pairs</option>
+                              <option value="sets">sets</option>
+                              <option value="boxes">boxes</option>
+                            </select>
+                            <span
+                              class="material-symbols-outlined text-[20px] text-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+                            >
+                              unfold_more
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Target Price & Date Grid -->
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                        <div class="space-y-space-xs">
+                          <label
+                            class="font-title-md text-title-md text-on-surface"
+                            for="target_price"
+                          >
+                            Target price per unit (USD, optional)
+                          </label>
+                          <div class="relative">
+                            <span
+                              class="absolute left-3.5 top-1/2 -translate-y-1/2 font-title-md text-title-md text-on-surface-variant font-bold"
+                              >$</span
+                            >
+                            <input
+                              class="w-full h-12 pl-8 pr-space-md rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm"
+                              id="target_price"
+                              name="target_price"
+                              placeholder="0.00"
+                              type="text"
+                              value="6.50"
+                            />
+                          </div>
+                          <p
+                            class="font-label-sm text-label-sm text-on-surface-variant"
+                          >
+                            Helps us find the right seller. You can leave it
+                            empty.
+                          </p>
+                        </div>
+                        <div class="space-y-space-xs">
+                          <label
+                            class="font-title-md text-title-md text-on-surface"
+                            for="needed_by"
+                          >
+                            Needed by (optional)
+                          </label>
+                          <div class="relative">
+                            <input
+                              class="w-full h-12 px-space-md pr-10 rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm"
+                              id="needed_by"
+                              name="needed_by"
+                              type="date"
+                              value="2026-06-15"
+                            />
+                            <span
+                              class="material-symbols-outlined text-[20px] text-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+                            >
+                              calendar_month
+                            </span>
+                          </div>
+                          <p
+                            class="font-label-sm text-label-sm text-on-surface-variant"
+                          >
+                            Gives Bali cooperatives a reference deadline for
+                            fulfillment.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Form Inset Divider -->
+                    <div
+                      class="w-full h-[1px] bg-surface-container-highest"
+                    ></div>
+                    <!-- SECTION 3: WHERE SHOULD IT GO? -->
+                    <div class="space-y-space-md">
+                      <div class="flex items-center gap-space-md">
+                        <div
+                          class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-title-md shrink-0 shadow-sm"
+                        >
+                          3
+                        </div>
+                        <div>
+                          <h2
+                            class="font-headline-sm text-headline-sm text-on-surface"
+                          >
+                            Where should it go?
+                          </h2>
+                          <p
+                            class="font-body-md text-body-md text-on-surface-variant"
+                          >
+                            Select your trade destination territory.
+                          </p>
+                        </div>
+                      </div>
+                      <!-- Destination Country -->
+                      <div class="space-y-space-xs">
+                        <label
+                          class="font-title-md text-title-md text-on-surface flex items-center gap-1"
+                          for="destination_country"
+                        >
+                          Destination country
+                          <span class="text-secondary font-bold">*</span>
+                        </label>
+                        <div class="relative">
+                          <select
+                            class="w-full h-12 px-space-md pr-10 appearance-none rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm"
+                            id="destination_country"
+                            name="destination_country"
+                            required=""
+                          >
+                            <option selected="" value="Kazakhstan">
+                              Kazakhstan
+                            </option>
+                            <option value="Russia">Russia</option>
+                            <option value="Uzbekistan">Uzbekistan</option>
+                            <option value="Kyrgyzstan">Kyrgyzstan</option>
+                            <option value="Armenia">Armenia</option>
+                            <option value="Belarus">Belarus</option>
+                            <option value="Other">
+                              Other CIS / Eurasian Region
+                            </option>
+                          </select>
+                          <span
+                            class="material-symbols-outlined text-[20px] text-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+                          >
+                            public
+                          </span>
+                        </div>
+                        <div
+                          class="flex items-center gap-space-xs text-primary-container font-label-sm text-label-sm mt-1"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >info</span
+                          >
+                          <span
+                            >You'll add the full delivery address after you
+                            accept a quotation. Our team arranges the air cargo
+                            route.</span
+                          >
+                        </div>
+                      </div>
+                      <!-- Anything else? -->
+                      <div class="space-y-space-xs">
+                        <label
+                          class="font-title-md text-title-md text-on-surface"
+                          for="additional_notes"
+                        >
+                          Anything else? (optional)
+                        </label>
+                        <textarea
+                          class="w-full p-space-md rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md outline-none focus:ring-2 focus:ring-primary-container/20 transition-all shadow-sm leading-relaxed"
+                          id="additional_notes"
+                          name="additional_notes"
+                          placeholder="Any specific packaging labels, customs requests, or sample batch questions…"
+                          rows="3"
+                        >
+Please include photos of the green beans and moisture meter readings in the quotation if possible.</textarea
+                        >
+                      </div>
+                      <!-- Agreement Checkbox -->
+                      <div class="pt-space-xs">
+                        <label
+                          class="flex items-start gap-space-sm cursor-pointer select-none"
+                        >
+                          <input
+                            checked=""
+                            class="mt-1 w-5 h-5 rounded text-primary-container focus:ring-primary-container accent-primary-container shrink-0 cursor-pointer"
+                            id="terms_acknowledgement"
+                            required=""
+                            type="checkbox"
+                          />
+                          <span
+                            class="font-body-md text-body-md text-on-surface leading-snug"
+                          >
+                            I understand this is a request, not an order. I'll
+                            receive a quotation to accept or decline.
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- Form Action Buttons -->
+                    <div
+                      class="pt-space-sm flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md"
+                    >
+                      <button
+                        class="bg-primary-container hover:bg-primary text-on-primary px-8 py-3.5 rounded-xl font-title-md text-title-md transition-all shadow-md flex items-center justify-center gap-space-xs active:scale-[0.98]"
+                        type="submit"
+                      >
+                        <span class="material-symbols-outlined text-[20px]"
+                          >send</span
+                        >
+                        <span>Submit request</span>
+                      </button>
+                      <button
+                        class="bg-surface-container-low hover:bg-surface-container-high text-on-surface px-6 py-3.5 rounded-xl font-title-md text-title-md transition-colors flex items-center justify-center gap-space-xs"
+                        onclick="alert('Request specifications saved to draft.');"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >bookmark</span
+                        >
+                        <span>Save as draft</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!-- RIGHT COLUMN: STICKY "HOW REQUESTS WORK" (approx 35% / 4 cols of 12) -->
+              <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-space-md">
+                <div
+                  class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-space-lg"
+                >
+                  <div class="flex items-center gap-space-xs text-primary">
+                    <span
+                      class="material-symbols-outlined text-[24px] text-tertiary-fixed-dim"
+                      >verified</span
+                    >
+                    <h2
+                      class="font-headline-sm text-headline-sm text-on-surface"
+                    >
+                      How requests work
+                    </h2>
+                  </div>
+                  <!-- Steps List -->
+                  <div class="space-y-space-md relative">
+                    <!-- Vertical decorative timeline thread -->
+                    <div
+                      class="absolute left-4 top-4 bottom-4 w-0.5 bg-surface-container-highest -z-0"
+                    ></div>
+                    <!-- Step 1 -->
+                    <div class="flex items-start gap-space-md relative z-10">
+                      <div
+                        class="w-8 h-8 rounded-full bg-surface-container text-primary-container font-bold font-title-md text-title-md flex items-center justify-center shrink-0 shadow-xs"
+                      >
+                        1
+                      </div>
+                      <div>
+                        <h3 class="font-title-md text-title-md text-on-surface">
+                          Submit your request
+                        </h3>
+                        <p
+                          class="font-body-md text-body-md text-on-surface-variant mt-0.5"
+                        >
+                          Tell us what you need and your destination country.
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="flex items-start gap-space-md relative z-10">
+                      <div
+                        class="w-8 h-8 rounded-full bg-surface-container text-primary-container font-bold font-title-md text-title-md flex items-center justify-center shrink-0 shadow-xs"
+                      >
+                        2
+                      </div>
+                      <div>
+                        <h3 class="font-title-md text-title-md text-on-surface">
+                          We search across Bali
+                        </h3>
+                        <p
+                          class="font-body-md text-body-md text-on-surface-variant mt-0.5"
+                        >
+                          Our local team talks directly with verified Balinese
+                          cooperatives and artisans.
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="flex items-start gap-space-md relative z-10">
+                      <div
+                        class="w-8 h-8 rounded-full bg-surface-container text-primary-container font-bold font-title-md text-title-md flex items-center justify-center shrink-0 shadow-xs"
+                      >
+                        3
+                      </div>
+                      <div>
+                        <h3 class="font-title-md text-title-md text-on-surface">
+                          Receive a quotation
+                        </h3>
+                        <p
+                          class="font-body-md text-body-md text-on-surface-variant mt-0.5"
+                        >
+                          Includes confirmed price, quantity, lead time, QC fee,
+                          and validity date.
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="flex items-start gap-space-md relative z-10">
+                      <div
+                        class="w-8 h-8 rounded-full bg-surface-container text-primary-container font-bold font-title-md text-title-md flex items-center justify-center shrink-0 shadow-xs"
+                      >
+                        4
+                      </div>
+                      <div>
+                        <h3 class="font-title-md text-title-md text-on-surface">
+                          Accept, ask for changes, or decline
+                        </h3>
+                        <p
+                          class="font-body-md text-body-md text-on-surface-variant mt-0.5"
+                        >
+                          You review terms first. No obligation to proceed.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Warm Gold Note Box -->
+                  <div
+                    class="bg-surface-container-high/60 rounded-xl p-space-md space-y-space-xs"
+                  >
+                    <div
+                      class="flex items-center gap-space-xs text-on-tertiary-fixed-variant"
+                    >
+                      <span class="material-symbols-outlined text-[20px]"
+                        >forum</span
+                      >
+                      <span class="font-title-md text-title-md font-semibold"
+                        >3-Party Communication</span
+                      >
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface">
+                      Questions? After you submit, a 3-party chat opens with our
+                      team. Please write in English so everyone can understand.
+                    </p>
+                  </div>
+                  <!-- Muted Trust Shield Note -->
+                  <div
+                    class="flex items-start gap-space-xs text-on-surface-variant pt-space-xs"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim shrink-0 mt-0.5"
+                      >lock_person</span
+                    >
+                    <p class="font-label-sm text-label-sm leading-relaxed">
+                      Payment is only needed after you accept a quotation and
+                      the seller confirms. Payment held by BaliTrade until
+                      delivery.
+                    </p>
+                  </div>
+                </div>
+                <!-- Micro Sourcing Metrics Widget -->
+                <div
+                  class="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-space-sm">
+                    <span
+                      class="material-symbols-outlined text-[28px] text-primary"
+                      >hub</span
+                    >
+                    <div>
+                      <p
+                        class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold"
+                      >
+                        Bali Co-op Network
+                      </p>
+                      <p
+                        class="font-title-md text-title-md text-on-surface font-bold"
+                      >
+                        140+ Verified Artisans
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="font-label-sm text-label-sm px-2 py-1 rounded bg-surface-container-highest text-primary-container font-semibold"
+                    >Direct Sourcing</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- ============================================================== -->
+        <!-- AUXILIARY FRAME A: SUBMISSION SUCCESS STATE (PREVIEW COMPONENT) -->
+        <!-- ============================================================== -->
+        <section class="w-full py-space-xl bg-surface-container-low/40">
+          <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin">
+            <!-- Section Labeling / Marker -->
+            <div class="flex items-center gap-space-sm mb-space-md">
+              <span class="material-symbols-outlined text-primary-container"
+                >widgets</span
+              >
+              <span
+                class="font-label-md text-label-md uppercase tracking-wider font-bold text-on-surface-variant"
+                >Design System Specification Frame A</span
+              >
+            </div>
+            <!-- Preview Container -->
+            <div
+              class="bg-surface-container-lowest rounded-xl p-space-xl shadow-md max-w-2xl mx-auto text-center space-y-space-md"
+              id="success-preview-frame"
+            >
+              <div
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant font-semibold"
+              >
+                <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                <span>Component Variant: Post-Submission State</span>
+              </div>
+              <!-- Large Green Check Icon -->
+              <div
+                class="w-16 h-16 rounded-full bg-surface-container-highest text-primary flex items-center justify-center mx-auto shadow-sm"
+              >
+                <span
+                  class="material-symbols-outlined text-[36px]"
+                  style="font-variation-settings: 'FILL' 1;"
+                  >check_circle</span
+                >
+              </div>
+              <!-- H2 -->
+              <div class="space-y-space-xs">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface">
+                  Request submitted
+                </h2>
+                <p
+                  class="font-body-md text-body-md text-on-surface-variant max-w-lg mx-auto"
+                >
+                  Our team will review your specifications, connect with
+                  verified growers in Bangli and Kintamani, and reply in your
+                  request chat.
+                </p>
+              </div>
+              <!-- Request Code Badge -->
+              <div class="py-space-xs">
+                <div
+                  class="inline-flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-xl font-label-md text-label-md text-primary-container font-mono"
+                >
+                  <span class="material-symbols-outlined text-[16px]"
+                    >receipt_long</span
+                  >
+                  <span class="font-bold">Request #RQ-1042</span>
+                  <span>·</span>
+                  <span>Arabica green coffee beans</span>
+                  <span>·</span>
+                  <span>200 kg</span>
+                </div>
+              </div>
+              <!-- Chat Hint Callout -->
+              <div
+                class="bg-surface-container-high/40 p-space-md rounded-xl max-w-md mx-auto flex items-center gap-space-sm text-left"
+              >
+                <span
+                  class="material-symbols-outlined text-[20px] text-primary-container shrink-0"
+                  >mark_chat_unread</span
+                >
+                <p class="font-label-md text-label-md text-on-surface-variant">
+                  A dedicated 3-party room has been opened with your sourcing
+                  officer Dmitry I. Please write in English.
+                </p>
+              </div>
+              <!-- Action Buttons Row -->
+              <div
+                class="pt-space-sm flex flex-col sm:flex-row items-center justify-center gap-space-sm"
+              >
+                <button
+                  class="w-full sm:w-auto bg-primary-container hover:bg-primary text-on-primary px-space-lg py-3 rounded-xl font-title-md text-title-md transition-colors flex items-center justify-center gap-space-xs shadow-sm"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >forum</span
+                  >
+                  <span>Open request chat</span>
+                </button>
+                <a
+                  class="w-full sm:w-auto bg-surface-container-low hover:bg-surface-container-high text-on-surface px-space-lg py-3 rounded-xl font-title-md text-title-md transition-colors flex items-center justify-center gap-space-xs"
+                  href="#requests-list-view"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >list_alt</span
+                  >
+                  <span>View my requests</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- ============================================================== -->
+        <!-- AUXILIARY FRAME B: MY REQUESTS LIST & LIFECYCLE MANAGEMENT      -->
+        <!-- ============================================================== -->
+        <section class="w-full py-space-xl" id="requests-list-view">
+          <div
+            class="max-w-7xl mx-auto px-margin-mobile md:px-margin space-y-space-lg"
+          >
+            <!-- Frame Label & Header Row -->
+            <div
+              class="flex flex-col md:flex-row md:items-center justify-between gap-space-md"
+            >
+              <div>
+                <div class="flex items-center gap-space-sm mb-space-xs">
+                  <span class="material-symbols-outlined text-primary-container"
+                    >widgets</span
+                  >
+                  <span
+                    class="font-label-md text-label-md uppercase tracking-wider font-bold text-on-surface-variant"
+                    >Design System Specification Frame B</span
+                  >
+                </div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface">
+                  My Requests
+                </h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                  Track quotes, chat with sellers and BaliTrade admin, and
+                  review incoming quotations.
+                </p>
+              </div>
+              <!-- Filter Pill Tabs -->
+              <div
+                class="inline-flex p-1 rounded-xl bg-surface-container-low self-start md:self-auto"
+              >
+                <button
+                  class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest font-label-md text-label-md text-primary font-bold shadow-xs"
+                  type="button"
+                >
+                  All (4)
+                </button>
+                <button
+                  class="px-space-md py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+                  type="button"
+                >
+                  Active (3)
+                </button>
+                <button
+                  class="px-space-md py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+                  type="button"
+                >
+                  Closed (1)
+                </button>
+              </div>
+            </div>
+            <!-- Requests Data Table (Card wrap) -->
+            <div
+              class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden"
+            >
+              <div class="overflow-x-auto">
+                <table
+                  class="w-full text-left font-body-md text-body-md border-collapse"
+                >
+                  <thead>
+                    <tr
+                      class="bg-surface-container-low/70 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider"
+                    >
+                      <th class="py-space-md px-space-lg font-semibold">
+                        Request ID &amp; Item
+                      </th>
+                      <th class="py-space-md px-space-md font-semibold">
+                        Quantity
+                      </th>
+                      <th class="py-space-md px-space-md font-semibold">
+                        Destination
+                      </th>
+                      <th class="py-space-md px-space-md font-semibold">
+                        Status
+                      </th>
+                      <th class="py-space-md px-space-md font-semibold">
+                        Last Updated
+                      </th>
+                      <th
+                        class="py-space-md px-space-lg text-right font-semibold"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-container-highest">
+                    <!-- Row 1: RQ-1042 -->
+                    <tr
+                      class="hover:bg-surface-container-low/40 transition-colors"
+                    >
+                      <td class="py-space-md px-space-lg">
+                        <div class="flex items-center gap-space-sm">
+                          <div
+                            class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary-container shrink-0"
+                          >
+                            <span class="material-symbols-outlined text-[20px]"
+                              >coffee</span
+                            >
+                          </div>
+                          <div>
+                            <div
+                              class="flex items-center gap-space-xs font-title-md text-title-md text-on-surface"
+                            >
+                              <span
+                                class="font-mono text-primary-container font-semibold"
+                                >#RQ-1042</span
+                              >
+                              <span>·</span>
+                              <span>Arabica green coffee beans (Grade 1)</span>
+                            </div>
+                            <span
+                              class="font-label-sm text-label-sm text-on-surface-variant"
+                              >Single-origin washed · Kintamani micro-lot</span
+                            >
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-title-md text-title-md text-on-surface"
+                      >
+                        200 kg
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div
+                          class="flex items-center gap-1 font-body-md text-body-md text-on-surface"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px] text-on-surface-variant"
+                            >flight</span
+                          >
+                          <span>Almaty, Kazakhstan</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container font-label-md text-label-md text-on-surface-variant font-semibold"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 rounded-full bg-outline"
+                          ></span>
+                          <span>Submitted</span>
+                        </span>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-label-md text-label-md text-on-surface-variant"
+                      >
+                        Today, 14:20
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <button
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary-container font-title-md text-title-md transition-colors"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >forum</span
+                          >
+                          <span>Open Chat</span>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 2: RQ-1038 -->
+                    <tr
+                      class="hover:bg-surface-container-low/40 transition-colors"
+                    >
+                      <td class="py-space-md px-space-lg">
+                        <div class="flex items-center gap-space-sm">
+                          <div
+                            class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary-container shrink-0"
+                          >
+                            <span class="material-symbols-outlined text-[20px]"
+                              >carpenter</span
+                            >
+                          </div>
+                          <div>
+                            <div
+                              class="flex items-center gap-space-xs font-title-md text-title-md text-on-surface"
+                            >
+                              <span
+                                class="font-mono text-primary-container font-semibold"
+                                >#RQ-1038</span
+                              >
+                              <span>·</span>
+                              <span
+                                >Hand-carved teak root decorative bowls</span
+                              >
+                            </div>
+                            <span
+                              class="font-label-sm text-label-sm text-on-surface-variant"
+                              >Natural wax finish · Ubud carvers
+                              cooperative</span
+                            >
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-title-md text-title-md text-on-surface"
+                      >
+                        100 pcs
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div
+                          class="flex items-center gap-1 font-body-md text-body-md text-on-surface"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px] text-on-surface-variant"
+                            >flight</span
+                          >
+                          <span>Moscow, Russia</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-fixed text-primary font-label-md text-label-md font-semibold"
+                        >
+                          <span
+                            class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"
+                          ></span>
+                          <span>Searching</span>
+                        </span>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-label-md text-label-md text-on-surface-variant"
+                      >
+                        Yesterday
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <button
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-primary-container font-title-md text-title-md transition-colors"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >forum</span
+                          >
+                          <span>Open Chat</span>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 3: RQ-1029 (Quotation Ready) -->
+                    <tr
+                      class="bg-surface-container-low/30 hover:bg-surface-container-low/60 transition-colors"
+                    >
+                      <td class="py-space-md px-space-lg">
+                        <div class="flex items-center gap-space-sm">
+                          <div
+                            class="w-9 h-9 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0"
+                          >
+                            <span class="material-symbols-outlined text-[20px]"
+                              >shopping_bag</span
+                            >
+                          </div>
+                          <div>
+                            <div
+                              class="flex items-center gap-space-xs font-title-md text-title-md text-on-surface"
+                            >
+                              <span
+                                class="font-mono text-primary-container font-semibold"
+                                >#RQ-1029</span
+                              >
+                              <span>·</span>
+                              <span
+                                >Custom Ata grass round bags with custom
+                                lining</span
+                              >
+                            </div>
+                            <span
+                              class="font-label-sm text-label-sm text-on-surface-variant"
+                              >Tenganan village traditional weave · Leather
+                              straps</span
+                            >
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-title-md text-title-md text-on-surface"
+                      >
+                        150 pcs
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div
+                          class="flex items-center gap-1 font-body-md text-body-md text-on-surface"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px] text-on-surface-variant"
+                            >flight</span
+                          >
+                          <span>Tashkent, Uzbekistan</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-tertiary-container font-label-md text-label-md font-bold"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >local_offer</span
+                          >
+                          <span>Quotation ready</span>
+                        </span>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-label-md text-label-md text-on-surface-variant"
+                      >
+                        2 days ago
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <button
+                          class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-tertiary-fixed-dim hover:bg-tertiary-fixed text-on-surface font-title-md text-title-md font-bold transition-all shadow-sm"
+                          type="button"
+                        >
+                          <span>Review quotation</span>
+                          <span class="material-symbols-outlined text-[16px]"
+                            >arrow_forward</span
+                          >
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 4: RQ-1015 (Accepted) -->
+                    <tr
+                      class="hover:bg-surface-container-low/40 transition-colors"
+                    >
+                      <td class="py-space-md px-space-lg">
+                        <div class="flex items-center gap-space-sm">
+                          <div
+                            class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-primary-container shrink-0"
+                          >
+                            <span class="material-symbols-outlined text-[20px]"
+                              >inventory_2</span
+                            >
+                          </div>
+                          <div>
+                            <div
+                              class="flex items-center gap-space-xs font-title-md text-title-md text-on-surface"
+                            >
+                              <span
+                                class="font-mono text-primary-container font-semibold"
+                                >#RQ-1015</span
+                              >
+                              <span>·</span>
+                              <span>Single origin Robusta beans</span>
+                            </div>
+                            <span
+                              class="font-label-sm text-label-sm text-on-surface-variant"
+                              >Pupuan regency · Screen 18 clean wash</span
+                            >
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-title-md text-title-md text-on-surface"
+                      >
+                        500 kg
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div
+                          class="flex items-center gap-1 font-body-md text-body-md text-on-surface"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px] text-on-surface-variant"
+                            >flight</span
+                          >
+                          <span>Minsk, Belarus</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-md text-label-md font-semibold"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >check</span
+                          >
+                          <span>Accepted</span>
+                        </span>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-label-md text-label-md text-on-surface-variant"
+                      >
+                        May 10, 2026
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <button
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-title-md text-title-md transition-colors"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >visibility</span
+                          >
+                          <span>View Order Group</span>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Row 5: RQ-0994 (Declined) -->
+                    <tr
+                      class="hover:bg-surface-container-low/40 transition-colors opacity-80"
+                    >
+                      <td class="py-space-md px-space-lg">
+                        <div class="flex items-center gap-space-sm">
+                          <div
+                            class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant shrink-0"
+                          >
+                            <span class="material-symbols-outlined text-[20px]"
+                              >spa</span
+                            >
+                          </div>
+                          <div>
+                            <div
+                              class="flex items-center gap-space-xs font-title-md text-title-md text-on-surface"
+                            >
+                              <span class="font-mono text-outline font-semibold"
+                                >#RQ-0994</span
+                              >
+                              <span>·</span>
+                              <span>Organic vanilla pods (Grade A)</span>
+                            </div>
+                            <span
+                              class="font-label-sm text-label-sm text-on-surface-variant"
+                              >Planifolia gourmet cured · 18cm+</span
+                            >
+                          </div>
+                        </div>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-title-md text-title-md text-on-surface"
+                      >
+                        25 kg
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <div
+                          class="flex items-center gap-1 font-body-md text-body-md text-on-surface"
+                        >
+                          <span
+                            class="material-symbols-outlined text-[16px] text-on-surface-variant"
+                            >flight</span
+                          >
+                          <span>Yerevan, Armenia</span>
+                        </div>
+                      </td>
+                      <td class="py-space-md px-space-md">
+                        <span
+                          class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container font-label-md text-label-md text-on-surface-variant font-semibold"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >cancel</span
+                          >
+                          <span>Declined</span>
+                        </span>
+                      </td>
+                      <td
+                        class="py-space-md px-space-md font-label-md text-label-md text-on-surface-variant"
+                      >
+                        April 28, 2026
+                      </td>
+                      <td class="py-space-md px-space-lg text-right">
+                        <button
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface font-title-md text-title-md transition-colors"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[16px]"
+                            >refresh</span
+                          >
+                          <span>Re-request</span>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- Empty State Variant Preview Box -->
+            <div
+              class="bg-surface-container-low/50 rounded-xl p-space-xl text-center space-y-space-sm"
+            >
+              <div
+                class="w-12 h-12 rounded-full bg-surface-container mx-auto flex items-center justify-center text-on-surface-variant"
+              >
+                <span class="material-symbols-outlined text-[24px]"
+                  >folder_open</span
+                >
+              </div>
+              <p
+                class="font-title-md text-title-md text-on-surface font-semibold"
+              >
+                Empty state preview: No requests yet.
+              </p>
+              <p
+                class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto"
+              >
+                Can't find a specific artisanal product or customized
+                specification in the Bali catalog?
+              </p>
+              <div class="pt-space-xs">
+                <button
+                  class="bg-primary-container hover:bg-primary text-on-primary px- space-md py-2 px-4 rounded-xl font-title-md text-title-md transition-colors inline-flex items-center gap-1"
+                  onclick="window.scrollTo({top: 0, behavior: 'smooth'});"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[18px]">add</span>
+                  <span>+ New Request</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <script>
+        window.triggerSuccessState = function() {
+          const successFrame = document.getElementById('success-preview-frame');
+          if (successFrame) {
+            successFrame.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            successFrame.classList.add('ring-4', 'ring-primary-container/20');
+            setTimeout(() => {
+              successFrame.classList.remove('ring-4', 'ring-primary-container/20');
+            }, 2000);
+          }
+        };
+      </script>
+    </main>
+    <footer class="w-full bg-primary text-on-primary pt-space-xl pb-space-lg">
+      <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-space-xl"
+        >
+          <div>
+            <div class="flex items-center gap-space-xs mb-space-sm">
+              <div
+                class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-tertiary-fixed-dim"
+              >
+                <span class="material-symbols-outlined text-[20px]"
+                  >local_florist</span
+                >
+              </div>
+              <span
+                class="font-headline-sm text-headline-sm text-on-primary font-bold"
+                >BaliTrade</span
+              >
+            </div>
+            <p
+              class="font-body-md text-body-md text-on-primary-container leading-relaxed"
+            >
+              The premier B2B cross-border marketplace connecting Indonesian
+              artisanal producers and manufacturing cooperatives directly with
+              CIS wholesale buyers, backed by secure escrow and consolidated air
+              &amp; sea freight.
+            </p>
+          </div>
+          <div>
+            <h4
+              class="font-title-md text-title-md text-tertiary-fixed-dim mb-space-md uppercase tracking-wider font-semibold"
+            >
+              For Buyers
+            </h4>
+            <ul
+              class="space-y-space-sm font-body-md text-body-md text-on-primary-container"
+            >
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="how-it-works"
+                  href="#"
+                  >How it works</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="request-a-product"
+                  href="#"
+                  >Request a product</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="payment-methods"
+                  href="#"
+                  >Payment methods</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="shipping-and-tracking"
+                  href="#"
+                  >Shipping &amp; tracking</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4
+              class="font-title-md text-title-md text-tertiary-fixed-dim mb-space-md uppercase tracking-wider font-semibold"
+            >
+              For Sellers
+            </h4>
+            <ul
+              class="space-y-space-sm font-body-md text-body-md text-on-primary-container"
+            >
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="sell-on-balitrade"
+                  href="#"
+                  >Sell on BaliTrade</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="seller-guidelines"
+                  href="#"
+                  >Seller guidelines</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="export-standards"
+                  href="#"
+                  >Export standards</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4
+              class="font-title-md text-title-md text-tertiary-fixed-dim mb-space-md uppercase tracking-wider font-semibold"
+            >
+              Support
+            </h4>
+            <ul
+              class="space-y-space-sm font-body-md text-body-md text-on-primary-container"
+            >
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="faq"
+                  href="#"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="contact"
+                  href="#"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="terms-of-service"
+                  href="#"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="privacy-policy"
+                  href="#"
+                  >Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="py-space-md flex items-center justify-center">
+          <div class="w-full flex items-center gap-space-md">
+            <div class="flex-1 h-[1px] bg-primary-container"></div>
+            <div
+              class="flex items-center gap-space-xs text-tertiary-fixed-dim opacity-70"
+            >
+              <span class="material-symbols-outlined text-[16px]">diamond</span
+              ><span class="material-symbols-outlined text-[20px]"
+                >local_florist</span
+              ><span class="material-symbols-outlined text-[16px]"
+                >diamond</span
+              >
+            </div>
+            <div class="flex-1 h-[1px] bg-primary-container"></div>
+          </div>
+        </div>
+        <div
+          class="pt-space-md flex flex-col md:flex-row items-center justify-between gap-space-md font-body-md text-body-md text-on-primary-container"
+        >
+          <div
+            class="flex items-center gap-space-md font-label-md text-label-md"
+          >
+            <a
+              class="text-on-primary hover:text-tertiary-fixed-dim transition-colors"
+              href="#"
+              >English</a
+            ><span class="opacity-40">/</span
+            ><a class="hover:text-on-primary transition-colors" href="#"
+              >Bahasa Indonesia</a
+            ><span class="opacity-40">/</span
+            ><a class="hover:text-on-primary transition-colors" href="#"
+              >Русский</a
+            >
+          </div>
+          <div><span>© 2026 BaliTrade. All rights reserved.</span></div>
+          <div
+            class="flex items-center gap-space-xs text-tertiary-fixed-dim font-label-md text-label-md"
+          >
+            <span class="material-symbols-outlined text-[16px]">near_me</span
+            ><span>Bali, Indonesia → Russia &amp; CIS</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

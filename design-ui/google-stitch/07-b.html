@@ -1,0 +1,1473 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_standard" name="shell-type" />
+    <title>BaliTrade B2B Export Marketplace</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed": "#ffdf9e", "primary": "#003441", "primary-fixed": "#b6ebfe", "on-primary": "#ffffff", "on-primary-fixed-variant": "#114d5d", "outline": "#70787c", "primary-container": "#0f4c5c", "surface-container-low": "#eff4ff", "tertiary-container": "#5a4200", "on-tertiary": "#ffffff", "background": "#f8f9ff", "on-primary-fixed": "#001f28", "surface-bright": "#f8f9ff", "surface-tint": "#306576", "on-secondary-fixed": "#3b0900", "on-surface": "#121c2a", "surface-variant": "#d9e3f6", "on-primary-container": "#87bbce", "on-secondary": "#ffffff", "inverse-on-surface": "#eaf1ff", "secondary": "#9c4329", "on-tertiary-fixed": "#261a00", "secondary-container": "#ff8f6f", "on-tertiary-container": "#d6ae55", "tertiary": "#3e2d00", "inverse-surface": "#27313f", "surface-container": "#e6eeff", "surface-container-highest": "#d9e3f6", "error": "#ba1a1a", "on-secondary-container": "#76270f", "surface-container-high": "#dee9fc", "on-secondary-fixed-variant": "#7d2c14", "tertiary-fixed-dim": "#ebc165", "on-background": "#121c2a", "on-surface-variant": "#40484b", "error-container": "#ffdad6", "primary-fixed-dim": "#9acee1", "surface": "#f8f9ff", "inverse-primary": "#9acee1", "on-error-container": "#93000a", "on-error": "#ffffff", "on-tertiary-fixed-variant": "#5b4300", "secondary-fixed-dim": "#ffb5a0", "secondary-fixed": "#ffdbd1", "outline-variant": "#c0c8cb", "surface-dim": "#d0dbed", "surface-container-lowest": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2rem", "gutter-sm": "1rem", "margin-mobile": "1rem", "space-xs": "0.25rem", "space-xl": "2rem", "gutter": "1.5rem", "space-md": "0.75rem", "space-sm": "0.5rem", "space-lg": "1.25rem" }, "fontFamily": { "label-sm": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "display-lg-mobile": [ "Plus Jakarta Sans" ], "headline-sm": [ "Plus Jakarta Sans" ], "title-md": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "headline-xl-mobile": [ "Plus Jakarta Sans" ], "label-md": [ "Plus Jakarta Sans" ], "display-lg": [ "Plus Jakarta Sans" ], "price-numeral": [ "Plus Jakarta Sans" ], "headline-xl": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ] }, "fontSize": { "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "display-lg-mobile": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ], "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "headline-lg": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "headline-xl-mobile": [ "26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "display-lg": [ "48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "price-numeral": [ "22px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-xl": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ] } } } };
+    </script>
+  </head>
+  <body
+    class="bg-surface font-body-md text-body-md text-on-surface antialiased"
+  >
+    <header
+      class="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div class="bg-primary text-on-primary py-space-xs px-margin">
+        <div
+          class="max-w-[1440px] mx-auto flex items-center justify-between text-label-sm font-label-sm"
+        >
+          <div class="flex items-center gap-space-sm">
+            <span
+              class="material-symbols-outlined text-[16px] text-tertiary-fixed"
+              >flight_takeoff</span
+            ><span
+              >Next consolidated air cargo from Bali to Russia &amp; CIS:
+              <strong class="font-semibold text-tertiary-fixed"
+                >Departing Friday</strong
+              ></span
+            >
+          </div>
+          <div class="flex items-center gap-space-sm">
+            <span
+              class="material-symbols-outlined text-[16px] text-tertiary-fixed"
+              >verified_user</span
+            ><span>Payment held by BaliTrade escrow until delivery</span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between"
+      >
+        <div class="flex items-center gap-space-xl">
+          <a
+            class="flex items-center gap-space-sm text-primary no-underline"
+            href="#"
+            ><div
+              class="w-9 h-9 rounded-full bg-tertiary-container flex items-center justify-center"
+            >
+              <span
+                class="material-symbols-outlined text-tertiary-fixed text-[22px]"
+                >local_florist</span
+              >
+            </div>
+            <div class="flex flex-col">
+              <span
+                class="font-headline-sm text-headline-sm tracking-tight text-primary font-bold leading-none"
+                >BaliTrade</span
+              ><span
+                class="font-label-sm text-[9px] tracking-widest uppercase text-tertiary-container font-semibold"
+                >B2B Export Gateway</span
+              >
+            </div></a
+          >
+          <nav
+            class="hidden lg:flex items-center gap-space-sm"
+            data-active-classes="bg-surface-container-high text-primary font-semibold"
+          >
+            <a
+              aria-current="page"
+              class="px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-high text-primary font-semibold"
+              data-path="products"
+              href="#"
+              >Products</a
+            ><a
+              class="px-space-md py-space-sm rounded-lg text-on-surface-variant font-title-md text-title-md hover:bg-surface-container hover:text-on-surface transition-colors"
+              data-path="request-a-product"
+              href="#"
+              >Request a Product</a
+            ><a
+              class="px-space-md py-space-sm rounded-lg text-on-surface-variant font-title-md text-title-md hover:bg-surface-container hover:text-on-surface transition-colors"
+              data-path="how-it-works"
+              href="#"
+              >How It Works</a
+            ><a
+              class="px-space-md py-space-sm rounded-lg text-on-surface-variant font-title-md text-title-md hover:bg-surface-container hover:text-on-surface transition-colors"
+              data-path="sell-on-balitrade"
+              href="#"
+              >Sell on BaliTrade</a
+            >
+          </nav>
+        </div>
+        <div class="flex items-center gap-space-lg">
+          <button
+            aria-label="Search catalog"
+            class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]"
+              >search</span
+            ></button
+          ><button
+            aria-label="Consolidated orders and cart"
+            class="relative w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]"
+              >shopping_bag</span
+            ><span
+              class="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] bg-secondary text-on-secondary rounded-full font-label-sm text-[10px] flex items-center justify-center px-1"
+              >2</span
+            >
+          </button>
+          <div
+            class="flex items-center gap-space-xs text-on-surface-variant px-space-sm py-space-xs rounded-lg hover:bg-surface-container hover:text-on-surface cursor-pointer transition-colors"
+          >
+            <span class="material-symbols-outlined text-[18px]">language</span
+            ><span class="font-label-md text-label-md uppercase font-semibold"
+              >EN</span
+            >
+          </div>
+          <button
+            aria-label="Notifications"
+            class="relative w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+            type="button"
+          >
+            <span class="material-symbols-outlined text-[22px]"
+              >notifications</span
+            ><span
+              class="absolute top-2.5 right-2.5 w-2 h-2 bg-secondary rounded-full"
+            ></span>
+          </button>
+          <div class="flex items-center gap-space-sm pl-space-sm">
+            <div
+              class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"
+            >
+              <span
+                class="material-symbols-outlined text-on-primary text-[18px]"
+                >person</span
+              >
+            </div>
+            <span
+              class="font-title-md text-title-md text-on-surface font-semibold"
+              >Dmitry I.</span
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="w-full pt-28 bg-surface">
+      <div
+        class="flex flex-col w-full text-on-surface font-body-md antialiased pb-20"
+      >
+        <!-- Top Meta & Notification Header -->
+        <section
+          class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin pt-6 mb-8"
+        >
+          <!-- Breadcrumb -->
+          <nav
+            aria-label="Breadcrumb"
+            class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md mb-4"
+          >
+            <a
+              class="hover:text-primary transition-colors no-underline"
+              href="#"
+              >Home</a
+            >
+            <span class="text-outline-variant">/</span>
+            <a
+              class="hover:text-primary transition-colors no-underline"
+              href="#"
+              >Orders</a
+            >
+            <span class="text-outline-variant">/</span>
+            <span class="text-on-surface-variant font-medium">#OR-2051</span>
+            <span class="text-outline-variant">/</span>
+            <span class="text-primary font-semibold">Payment</span>
+          </nav>
+          <!-- Main Title & Confirmation Badge -->
+          <div
+            class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6"
+          >
+            <div class="flex items-center gap-space-md flex-wrap">
+              <h1
+                class="font-headline-xl text-headline-xl tracking-tight text-primary font-bold"
+              >
+                Pay for order #OR-2051
+              </h1>
+              <div
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5E9] text-[#2E7D5B] font-label-md text-label-md font-semibold"
+              >
+                <span
+                  class="material-symbols-outlined text-[16px]"
+                  style="font-variation-settings: 'FILL' 1;"
+                  >check_circle</span
+                >
+                All sellers confirmed
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-2 text-on-surface-variant text-label-sm font-label-sm"
+            >
+              <span
+                class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim"
+                >lock</span
+              >
+              <span>Payment held by BaliTrade until delivery</span>
+            </div>
+          </div>
+          <!-- Info contextual banner -->
+          <div
+            class="w-full rounded-xl p-space-md md:p-space-lg bg-surface-container-high/60 flex items-start gap-3.5 shadow-sm"
+          >
+            <div
+              class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 mt-0.5"
+            >
+              <span class="material-symbols-outlined text-[18px]"
+                >verified</span
+              >
+            </div>
+            <div class="flex flex-col gap-0.5">
+              <span
+                class="font-title-md text-title-md text-primary font-semibold"
+                >Order specifications finalized</span
+              >
+              <p
+                class="font-body-md text-body-md text-on-surface-variant leading-relaxed"
+              >
+                Both sellers accepted your order specifications. The amount due
+                now covers items and regional QC fees. Shipping is weighed and
+                billed before departure.
+              </p>
+            </div>
+          </div>
+        </section>
+        <!-- Two-Column Checkout Layout -->
+        <section class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+            <!-- LEFT COLUMN (Sequential Steps: 60% approx -> 7 cols) -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+              <!-- Main Form Panel Card -->
+              <div
+                class="bg-surface-container-lowest rounded-xl shadow-md p-6 md:p-8 flex flex-col gap-8"
+              >
+                <!-- STEP 1: Method Picker -->
+                <div class="flex flex-col gap-4">
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="w-7 h-7 rounded-full bg-primary text-on-primary font-headline-sm text-[14px] flex items-center justify-center font-bold"
+                      >1</span
+                    >
+                    <h2
+                      class="font-headline-sm text-headline-sm text-primary font-bold"
+                    >
+                      Choose payment method
+                    </h2>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <!-- Radio Option 1: Selected (Bank Transfer) -->
+                    <label
+                      class="relative flex flex-col p-4 rounded-xl bg-surface-container-low cursor-pointer shadow-sm transition-all hover:shadow-md"
+                    >
+                      <input
+                        checked=""
+                        class="peer sr-only"
+                        name="payment_method"
+                        type="radio"
+                        value="idr_bank"
+                      />
+                      <div class="flex items-start justify-between mb-2">
+                        <div
+                          class="w-5 h-5 rounded-full bg-primary flex items-center justify-center"
+                        >
+                          <div class="w-2 h-2 rounded-full bg-on-primary"></div>
+                        </div>
+                        <span
+                          class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-tertiary font-label-sm text-[10px] uppercase font-bold tracking-wider"
+                        >
+                          Recommended in IDR
+                        </span>
+                      </div>
+                      <span
+                        class="font-title-md text-title-md font-bold text-primary mt-1"
+                        >Bank transfer (IDR)</span
+                      >
+                      <p
+                        class="font-body-md text-label-md text-on-surface-variant mt-1 leading-normal"
+                      >
+                        Transfer from an Indonesian bank account and upload the
+                        receipt.
+                      </p>
+                      <div
+                        class="absolute inset-0 rounded-xl pointer-events-none transition-all peer-checked:shadow-[inset_0_0_0_2px_#0F4C5C]"
+                      ></div>
+                    </label>
+                    <!-- Radio Option 2: USDT -->
+                    <label
+                      class="relative flex flex-col p-4 rounded-xl bg-surface-container-lowest cursor-pointer shadow-sm hover:bg-surface-container-low/50 transition-all"
+                    >
+                      <input
+                        class="peer sr-only"
+                        name="payment_method"
+                        type="radio"
+                        value="usdt"
+                      />
+                      <div class="flex items-start justify-between mb-2">
+                        <div
+                          class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center"
+                        >
+                          <div
+                            class="w-2 h-2 rounded-full bg-transparent"
+                          ></div>
+                        </div>
+                        <span
+                          class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[10px] uppercase font-semibold"
+                        >
+                          Global Escrow
+                        </span>
+                      </div>
+                      <span
+                        class="font-title-md text-title-md font-bold text-on-surface mt-1"
+                        >USDT</span
+                      >
+                      <p
+                        class="font-body-md text-label-md text-on-surface-variant mt-1 leading-normal"
+                      >
+                        Send USDT to our wallet and submit the transaction hash
+                        and a screenshot.
+                      </p>
+                      <div
+                        class="absolute inset-0 rounded-xl pointer-events-none transition-all peer-checked:shadow-[inset_0_0_0_2px_#0F4C5C]"
+                      ></div>
+                    </label>
+                  </div>
+                </div>
+                <!-- Divider -->
+                <div class="w-full h-px bg-surface-variant/40"></div>
+                <!-- STEP 2: Transfer Coordinates -->
+                <div class="flex flex-col gap-4">
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="w-7 h-7 rounded-full bg-primary text-on-primary font-headline-sm text-[14px] flex items-center justify-center font-bold"
+                      >2</span
+                    >
+                    <h2
+                      class="font-headline-sm text-headline-sm text-primary font-bold"
+                    >
+                      Transfer details
+                    </h2>
+                  </div>
+                  <!-- Inner Panel for Coordinates -->
+                  <div
+                    class="rounded-xl bg-surface-container-lowest shadow-sm p-5 md:p-6 flex flex-col gap-5"
+                  >
+                    <!-- Big Amount Box -->
+                    <div
+                      class="rounded-xl p-5 bg-surface-container-low shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4"
+                    >
+                      <div class="flex flex-col gap-1">
+                        <span
+                          class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold"
+                        >
+                          Amount to transfer
+                        </span>
+                        <span
+                          class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight font-price-numeral"
+                        >
+                          Rp 14,832,000
+                        </span>
+                        <span
+                          class="font-body-md text-label-md text-on-surface-variant font-medium mt-0.5"
+                        >
+                          = $927.00 at today's rate 1 USD = Rp 16,000 (rate
+                          locked for this payment)
+                        </span>
+                      </div>
+                      <button
+                        class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-surface-container text-primary font-title-md text-label-md font-semibold hover:bg-surface-container-high transition-colors shrink-0 shadow-sm"
+                        onclick="navigator.clipboard.writeText('14832000'); this.innerHTML='&lt;span class=\'material-symbols-outlined text-[16px]\'&gt;check&lt;/span&gt; Copied!';"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[16px]"
+                          >content_copy</span
+                        >
+                        <span>Copy amount</span>
+                      </button>
+                    </div>
+                    <!-- Payment Coordinates Rows -->
+                    <div
+                      class="flex flex-col divide-y divide-surface-container"
+                    >
+                      <!-- Row 1: Bank -->
+                      <div class="flex items-center justify-between py-3.5">
+                        <div class="flex flex-col">
+                          <span
+                            class="font-label-sm text-label-sm text-on-surface-variant"
+                            >Bank</span
+                          >
+                          <span
+                            class="font-title-md text-title-md font-semibold text-on-surface"
+                            >[Bank name]</span
+                          >
+                        </div>
+                        <button
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors"
+                          onclick="navigator.clipboard.writeText('[Bank name]');"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >content_copy</span
+                          >
+                          <span>Copy</span>
+                        </button>
+                      </div>
+                      <!-- Row 2: Account Number -->
+                      <div class="flex items-center justify-between py-3.5">
+                        <div class="flex flex-col">
+                          <span
+                            class="font-label-sm text-label-sm text-on-surface-variant"
+                            >Account number</span
+                          >
+                          <span
+                            class="font-title-md text-title-md font-bold tracking-wide text-primary font-mono"
+                            >[Account number]</span
+                          >
+                        </div>
+                        <button
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors"
+                          onclick="navigator.clipboard.writeText('[Account number]');"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >content_copy</span
+                          >
+                          <span>Copy</span>
+                        </button>
+                      </div>
+                      <!-- Row 3: Account Holder -->
+                      <div class="flex items-center justify-between py-3.5">
+                        <div class="flex flex-col">
+                          <span
+                            class="font-label-sm text-label-sm text-on-surface-variant"
+                            >Account holder</span
+                          >
+                          <span
+                            class="font-title-md text-title-md font-semibold text-on-surface"
+                            >[Account holder]</span
+                          >
+                        </div>
+                        <button
+                          class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors"
+                          onclick="navigator.clipboard.writeText('[Account holder]');"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >content_copy</span
+                          >
+                          <span>Copy</span>
+                        </button>
+                      </div>
+                      <!-- Row 4: Reference -->
+                      <div class="flex flex-col gap-1 py-3.5">
+                        <div class="flex items-center justify-between">
+                          <div class="flex flex-col">
+                            <span
+                              class="font-label-sm text-label-sm text-on-surface-variant"
+                              >Payment reference (Mandatory)</span
+                            >
+                            <span
+                              class="font-title-md text-title-md font-bold text-secondary tracking-wider font-mono"
+                              >OR-2051</span
+                            >
+                          </div>
+                          <button
+                            class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md font-semibold transition-colors"
+                            onclick="navigator.clipboard.writeText('OR-2051');"
+                            type="button"
+                          >
+                            <span class="material-symbols-outlined text-[14px]"
+                              >content_copy</span
+                            >
+                            <span>Copy</span>
+                          </button>
+                        </div>
+                        <p
+                          class="font-body-md text-label-sm text-on-surface-variant mt-1"
+                        >
+                          Write this in the transfer note so our team matches
+                          your payment immediately.
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Warning Box -->
+                    <div
+                      class="rounded-xl p-4 bg-[#FFFBEB] text-[#92400E] flex items-start gap-3 shadow-sm"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[20px] text-[#D99A2B] shrink-0 mt-0.5"
+                        >warning</span
+                      >
+                      <p class="font-body-md text-body-md leading-relaxed">
+                        Transfer the exact amount in one transaction. Do not
+                        split the payment.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Divider -->
+                <div class="w-full h-px bg-surface-variant/40"></div>
+                <!-- STEP 3: Upload Proof -->
+                <div class="flex flex-col gap-5">
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="w-7 h-7 rounded-full bg-primary text-on-primary font-headline-sm text-[14px] flex items-center justify-center font-bold"
+                      >3</span
+                    >
+                    <h2
+                      class="font-headline-sm text-headline-sm text-primary font-bold"
+                    >
+                      Upload proof
+                    </h2>
+                  </div>
+                  <!-- Sender Name Input Field -->
+                  <div class="flex flex-col gap-1.5">
+                    <label
+                      class="font-label-sm text-label-sm font-semibold text-on-surface"
+                      for="sender-name"
+                    >
+                      Sender name (account holder)
+                    </label>
+                    <input
+                      class="h-12 px-4 rounded-xl bg-surface-container-lowest text-on-surface font-body-md focus:bg-surface-container-lowest shadow-sm outline-none transition-all placeholder:text-outline-variant"
+                      id="sender-name"
+                      type="text"
+                      value="Dmitry Ivanov"
+                    />
+                    <span
+                      class="font-body-md text-label-sm text-on-surface-variant"
+                    >
+                      If someone else pays for you, enter their name here.
+                    </span>
+                  </div>
+                  <!-- Upload Dropzone (Soft styled, no harsh borders) -->
+                  <div
+                    class="relative flex flex-col items-center justify-center p-8 rounded-xl bg-surface-container-low text-center cursor-pointer hover:bg-surface-container transition-colors shadow-sm group"
+                  >
+                    <input
+                      class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      type="file"
+                    />
+                    <div
+                      class="w-12 h-12 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary-container mb-3 shadow-sm group-hover:scale-105 transition-transform"
+                    >
+                      <span class="material-symbols-outlined text-[24px]"
+                        >cloud_upload</span
+                      >
+                    </div>
+                    <span
+                      class="font-title-md text-title-md font-bold text-primary"
+                    >
+                      Upload payment receipt — JPG, PNG, PDF
+                    </span>
+                    <span
+                      class="font-body-md text-label-md text-on-surface-variant mt-1"
+                    >
+                      Drag and drop or click to browse (max 10MB)
+                    </span>
+                  </div>
+                  <!-- Attached File Pill Preview -->
+                  <div
+                    class="flex items-center justify-between p-3.5 rounded-xl bg-surface-container-low shadow-sm"
+                  >
+                    <div class="flex items-center gap-3 min-w-0">
+                      <div
+                        class="w-8 h-8 rounded-lg bg-[#E8F5E9] text-[#2E7D5B] flex items-center justify-center shrink-0"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >description</span
+                        >
+                      </div>
+                      <div class="flex flex-col min-w-0">
+                        <span
+                          class="font-title-md text-label-md font-bold text-on-surface truncate"
+                          >receipt_OR-2051.jpg</span
+                        >
+                        <span
+                          class="font-body-md text-label-sm text-on-surface-variant"
+                          >1.8 MB • Uploaded</span
+                        >
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <span
+                        class="material-symbols-outlined text-[#2E7D5B] text-[20px]"
+                        >check_circle</span
+                      >
+                      <button
+                        aria-label="Remove uploaded receipt"
+                        class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container text-on-surface-variant hover:text-error transition-colors"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >close</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Confirmation Checkbox -->
+                  <label class="flex items-start gap-3 mt-1 cursor-pointer">
+                    <input
+                      checked=""
+                      class="w-5 h-5 mt-0.5 rounded text-primary focus:ring-0 accent-primary cursor-pointer shrink-0"
+                      type="checkbox"
+                    />
+                    <span
+                      class="font-body-md text-body-md text-on-surface leading-tight select-none"
+                    >
+                      I confirm this payment is for order
+                      <strong>#OR-2051</strong> and made in full.
+                    </span>
+                  </label>
+                  <!-- Primary Submission CTA Button -->
+                  <button
+                    class="w-full h-14 mt-3 rounded-xl bg-primary text-on-primary font-headline-sm text-title-md font-bold hover:bg-primary-container transition-colors shadow-md flex items-center justify-center gap-2"
+                    type="button"
+                  >
+                    <span>Submit payment proof</span>
+                    <span class="material-symbols-outlined text-[20px]"
+                      >arrow_forward</span
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- RIGHT COLUMN: Sticky Order Summary (40% approx -> 5 cols) -->
+            <aside
+              class="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-28"
+            >
+              <div
+                class="bg-surface-container-lowest rounded-xl shadow-md p-6 flex flex-col gap-6"
+              >
+                <!-- Summary Header -->
+                <div class="flex items-center justify-between">
+                  <h3
+                    class="font-headline-sm text-headline-sm font-bold text-primary"
+                  >
+                    Order Summary
+                  </h3>
+                  <span
+                    class="px-2.5 py-1 rounded-lg bg-surface-container font-mono font-bold text-label-md text-on-surface"
+                  >
+                    #OR-2051
+                  </span>
+                </div>
+                <!-- Group 1: Kopi Bali Asli -->
+                <div class="flex flex-col gap-2.5">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim"
+                      style="font-variation-settings: 'FILL' 1;"
+                      >workspace_premium</span
+                    >
+                    <span
+                      class="font-title-md text-label-md font-bold text-primary uppercase tracking-wide"
+                    >
+                      Kopi Bali Asli • Bangli
+                    </span>
+                  </div>
+                  <div
+                    class="flex justify-between items-start text-body-md text-on-surface"
+                  >
+                    <span class="pr-2 font-medium"
+                      >Kintamani Arabica Green Beans (50 kg)</span
+                    >
+                    <span class="font-price-numeral font-bold shrink-0"
+                      >$340.00</span
+                    >
+                  </div>
+                  <div
+                    class="flex justify-between items-center text-label-md text-on-surface-variant"
+                  >
+                    <span>Bangli Regional QC fee</span>
+                    <span class="font-semibold shrink-0">$15.00</span>
+                  </div>
+                  <div
+                    class="flex justify-between items-center pt-1 font-label-md text-label-sm font-semibold text-primary"
+                  >
+                    <span>Supplier Subtotal</span>
+                    <span>$355.00</span>
+                  </div>
+                </div>
+                <div class="w-full h-px bg-surface-container"></div>
+                <!-- Group 2: Ubud Weavers -->
+                <div class="flex flex-col gap-2.5">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim"
+                      style="font-variation-settings: 'FILL' 1;"
+                      >workspace_premium</span
+                    >
+                    <span
+                      class="font-title-md text-label-md font-bold text-primary uppercase tracking-wide"
+                    >
+                      Ubud Weavers • Gianyar
+                    </span>
+                  </div>
+                  <div
+                    class="flex justify-between items-start text-body-md text-on-surface"
+                  >
+                    <span class="pr-2 font-medium"
+                      >Cotton Batik Socks (200 pairs)</span
+                    >
+                    <span class="font-price-numeral font-bold shrink-0"
+                      >$380.00</span
+                    >
+                  </div>
+                  <div
+                    class="flex justify-between items-start text-body-md text-on-surface"
+                  >
+                    <span class="pr-2 font-medium"
+                      >Bucket Hat Batik Pattern (40 pcs)</span
+                    >
+                    <span class="font-price-numeral font-bold shrink-0"
+                      >$180.00</span
+                    >
+                  </div>
+                  <div
+                    class="flex justify-between items-center text-label-md text-on-surface-variant"
+                  >
+                    <span>Gianyar Regional QC fee</span>
+                    <span class="font-semibold shrink-0">$12.00</span>
+                  </div>
+                  <div
+                    class="flex justify-between items-center pt-1 font-label-md text-label-sm font-semibold text-primary"
+                  >
+                    <span>Supplier Subtotal</span>
+                    <span>$572.00</span>
+                  </div>
+                </div>
+                <div class="w-full h-px bg-surface-container"></div>
+                <!-- Calculation Totals Breakdown -->
+                <div class="flex flex-col gap-2 text-label-md">
+                  <div
+                    class="flex justify-between items-center text-on-surface-variant"
+                  >
+                    <span>Items subtotal (3 lots)</span>
+                    <span class="font-semibold text-on-surface">$900.00</span>
+                  </div>
+                  <div
+                    class="flex justify-between items-center text-on-surface-variant"
+                  >
+                    <span>Total QC fees (2 regional hubs)</span>
+                    <span class="font-semibold text-on-surface">$27.00</span>
+                  </div>
+                  <div
+                    class="flex justify-between items-start text-on-surface-variant"
+                  >
+                    <span class="max-w-[180px]">Consolidated air freight</span>
+                    <span class="text-right font-medium text-secondary"
+                      >Billed after packing &amp; weighing (Ship together)</span
+                    >
+                  </div>
+                </div>
+                <!-- Highlighted Total Due Box -->
+                <div
+                  class="rounded-xl p-4 bg-surface-container-high/70 shadow-sm flex flex-col gap-1"
+                >
+                  <div class="flex justify-between items-baseline">
+                    <span
+                      class="font-title-md text-title-md font-bold text-primary"
+                      >Due now (Items + QC)</span
+                    >
+                    <span
+                      class="font-display-lg text-[28px] font-bold text-primary font-price-numeral"
+                      >$927.00</span
+                    >
+                  </div>
+                  <div
+                    class="flex justify-end text-label-sm font-label-sm text-on-surface-variant font-medium"
+                  >
+                    <span>≈ Rp 14,832,000 / 927.00 USDT</span>
+                  </div>
+                </div>
+                <!-- Delivery Address Box -->
+                <div
+                  class="rounded-xl p-4 bg-surface-container-low shadow-sm flex items-center justify-between"
+                >
+                  <div class="flex flex-col">
+                    <span
+                      class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold"
+                      >Delivery to</span
+                    >
+                    <span
+                      class="font-title-md text-body-md font-bold text-on-surface mt-0.5"
+                      >Anna K. • Moscow, Russia</span
+                    >
+                  </div>
+                  <button
+                    class="text-primary hover:text-primary-container font-label-md text-label-md font-bold transition-colors"
+                    type="button"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <!-- Trust Highlights Box -->
+                <div
+                  class="rounded-xl p-4 bg-[#FDFBF7] shadow-sm flex flex-col gap-3"
+                >
+                  <div class="flex items-start gap-2.5">
+                    <span
+                      class="material-symbols-outlined text-[18px] text-[#9A7426] shrink-0 mt-0.5"
+                      >verified_user</span
+                    >
+                    <span
+                      class="font-body-md text-label-md text-[#9A7426] font-semibold leading-snug"
+                    >
+                      Payment held by BaliTrade until delivery
+                    </span>
+                  </div>
+                  <div class="flex items-start gap-2.5">
+                    <span
+                      class="material-symbols-outlined text-[18px] text-[#9A7426] shrink-0 mt-0.5"
+                      >fact_check</span
+                    >
+                    <span
+                      class="font-body-md text-label-md text-[#1F2937] leading-snug"
+                    >
+                      QC report for each seller before shipping — you approve
+                    </span>
+                  </div>
+                  <div class="flex items-start gap-2.5">
+                    <span
+                      class="material-symbols-outlined text-[18px] text-[#9A7426] shrink-0 mt-0.5"
+                      >published_with_changes</span
+                    >
+                    <span
+                      class="font-body-md text-label-md text-[#1F2937] leading-snug"
+                    >
+                      If QC fails, we help find a replacement or give a full
+                      refund
+                    </span>
+                  </div>
+                </div>
+                <!-- Order Chat Link -->
+                <div class="text-center pt-1">
+                  <a
+                    class="inline-flex items-center gap-2 font-title-md text-label-md text-primary hover:text-primary-container font-bold transition-colors no-underline"
+                    href="#"
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >forum</span
+                    >
+                    <span>Questions about payment? Open order chat →</span>
+                  </a>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+        <!-- SPECIFICATION SECTION HEADER -->
+        <section
+          class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin mt-20 mb-6"
+        >
+          <div class="flex items-center gap-3">
+            <div class="h-6 w-1.5 rounded-full bg-secondary"></div>
+            <h2
+              class="font-headline-lg text-headline-lg font-bold text-primary"
+            >
+              System Flow &amp; State Specifications
+            </h2>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+            Visualizing downstream and interactive alternates for the order
+            settlement lifecycle.
+          </p>
+        </section>
+        <!-- SPECIFICATION FRAME A — ALTERNATIVE: USDT PAYMENT SELECTED -->
+        <section
+          class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin mb-16"
+        >
+          <div class="bg-surface-container-high/30 rounded-2xl p-6 md:p-8">
+            <div
+              class="flex items-center justify-between mb-6 pb-3 border-b border-surface-variant/40"
+            >
+              <div>
+                <span
+                  class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold"
+                  >Variant 01</span
+                >
+                <h3
+                  class="font-headline-sm text-headline-sm font-bold text-primary"
+                >
+                  UI Variant: USDT Payment Flow (Steps 2 &amp; 3)
+                </h3>
+              </div>
+              <span
+                class="px-3 py-1 rounded-full bg-surface-container-lowest font-label-md text-label-md font-semibold text-primary shadow-sm"
+              >
+                Interactive State
+              </span>
+            </div>
+            <div
+              class="max-w-2xl mx-auto bg-surface-container-lowest rounded-xl shadow-md p-6 md:p-8 flex flex-col gap-6"
+            >
+              <!-- USDT Coordinates Header -->
+              <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                  <span
+                    class="font-title-md text-title-md font-bold text-primary"
+                    >Step 2 • USDT Transfer Coordinates</span
+                  >
+                  <div
+                    class="px-2.5 py-1 rounded bg-[#E8F5E9] text-[#2E7D5B] font-label-sm text-label-sm font-bold"
+                  >
+                    Rate Locked
+                  </div>
+                </div>
+                <!-- Amount to Send -->
+                <div
+                  class="rounded-xl p-4 bg-surface-container-low flex items-center justify-between"
+                >
+                  <div class="flex flex-col">
+                    <span
+                      class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold"
+                      >Amount to send</span
+                    >
+                    <span
+                      class="font-price-numeral text-headline-sm text-primary font-bold"
+                      >927.00 USDT</span
+                    >
+                  </div>
+                  <button
+                    class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container text-primary font-label-md text-label-md font-bold shadow-sm hover:bg-surface-container-high transition-colors"
+                    onclick="navigator.clipboard.writeText('927.00');"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >content_copy</span
+                    >
+                    <span>Copy</span>
+                  </button>
+                </div>
+                <!-- QR Code & Address Display Box -->
+                <div
+                  class="rounded-xl p-5 bg-surface-container-low flex flex-col md:flex-row items-center gap-5"
+                >
+                  <!-- Simulated QR Code Graphic -->
+                  <div
+                    class="w-32 h-32 rounded-xl bg-surface-container-lowest p-2 shadow-sm flex items-center justify-center relative shrink-0"
+                  >
+                    <svg
+                      class="w-full h-full text-primary"
+                      fill="currentColor"
+                      viewbox="0 0 100 100"
+                    >
+                      <!-- Outer framing corners -->
+                      <rect
+                        fill="none"
+                        height="25"
+                        rx="3"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        width="25"
+                        x="5"
+                        y="5"
+                      ></rect>
+                      <rect height="13" rx="1" width="13" x="11" y="11"></rect>
+                      <rect
+                        fill="none"
+                        height="25"
+                        rx="3"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        width="25"
+                        x="70"
+                        y="5"
+                      ></rect>
+                      <rect height="13" rx="1" width="13" x="76" y="11"></rect>
+                      <rect
+                        fill="none"
+                        height="25"
+                        rx="3"
+                        stroke="currentColor"
+                        stroke-width="4"
+                        width="25"
+                        x="5"
+                        y="70"
+                      ></rect>
+                      <rect height="13" rx="1" width="13" x="11" y="76"></rect>
+                      <!-- Matrix details -->
+                      <rect height="6" width="6" x="36" y="10"></rect>
+                      <rect height="6" width="8" x="46" y="10"></rect>
+                      <rect height="8" width="8" x="36" y="24"></rect>
+                      <rect height="8" width="8" x="10" y="40"></rect>
+                      <rect height="6" width="6" x="24" y="40"></rect>
+                      <rect
+                        class="text-tertiary-fixed-dim"
+                        fill="currentColor"
+                        height="20"
+                        rx="4"
+                        width="20"
+                        x="40"
+                        y="40"
+                      ></rect>
+                      <rect height="14" width="8" x="70" y="40"></rect>
+                      <rect height="8" width="6" x="84" y="40"></rect>
+                      <rect height="8" width="10" x="40" y="70"></rect>
+                      <rect height="6" width="8" x="58" y="70"></rect>
+                      <rect height="6" width="16" x="40" y="84"></rect>
+                      <rect height="8" width="20" x="70" y="70"></rect>
+                      <rect height="6" width="10" x="80" y="84"></rect>
+                    </svg>
+                    <!-- Small emblem badge -->
+                    <div
+                      class="absolute inset-0 m-auto w-7 h-7 rounded-full bg-primary text-tertiary-fixed flex items-center justify-center font-bold text-[10px]"
+                    >
+                      ₮
+                    </div>
+                  </div>
+                  <!-- Address String & Copy Button -->
+                  <div class="flex flex-col gap-2 w-full">
+                    <span
+                      class="font-label-sm text-label-sm uppercase font-semibold text-on-surface-variant"
+                      >Wallet address</span
+                    >
+                    <div
+                      class="p-3 rounded-lg bg-surface-container-lowest font-mono text-label-sm text-on-surface break-all select-all shadow-sm"
+                    >
+                      [USDT wallet address]
+                    </div>
+                    <button
+                      class="self-start inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container text-primary font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors"
+                      onclick="navigator.clipboard.writeText('[USDT wallet address]');"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >content_copy</span
+                      >
+                      <span>Copy address</span>
+                    </button>
+                  </div>
+                </div>
+                <!-- Warning Box -->
+                <div
+                  class="rounded-xl p-4 bg-[#FFF4F2] text-[#C0392B] flex items-start gap-3 shadow-sm"
+                >
+                  <span
+                    class="material-symbols-outlined text-[20px] text-[#C0392B] shrink-0 mt-0.5"
+                    >error</span
+                  >
+                  <p
+                    class="font-body-md text-label-md font-medium leading-relaxed"
+                  >
+                    Send only USDT to this address. Sending other coins may
+                    result in permanent loss of funds.
+                  </p>
+                </div>
+              </div>
+              <div class="w-full h-px bg-surface-variant/40"></div>
+              <!-- USDT Proof Fields -->
+              <div class="flex flex-col gap-4">
+                <span class="font-title-md text-title-md font-bold text-primary"
+                  >Step 3 • Verify USDT Transaction</span
+                >
+                <!-- Transaction Hash Input -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-label-sm text-label-sm font-semibold text-on-surface"
+                    >Transaction hash</label
+                  >
+                  <input
+                    class="h-12 px-4 rounded-xl bg-surface-container-lowest font-mono text-label-md shadow-sm outline-none placeholder:text-outline-variant"
+                    placeholder="0x... or transaction ID"
+                    type="text"
+                  />
+                </div>
+                <!-- Sender Wallet Address Input -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-label-sm text-label-sm font-semibold text-on-surface"
+                    >Sender wallet address</label
+                  >
+                  <input
+                    class="h-12 px-4 rounded-xl bg-surface-container-lowest text-label-md shadow-sm outline-none placeholder:text-outline-variant"
+                    placeholder="Enter your wallet address"
+                    type="text"
+                  />
+                </div>
+                <!-- Dropzone Screen Shot -->
+                <div class="flex flex-col gap-1.5">
+                  <label
+                    class="font-label-sm text-label-sm font-semibold text-on-surface"
+                    >Screenshot of the transfer</label
+                  >
+                  <div
+                    class="flex items-center justify-between p-3.5 rounded-xl bg-surface-container-low shadow-sm"
+                  >
+                    <div class="flex items-center gap-3">
+                      <span class="material-symbols-outlined text-[#2E7D5B]"
+                        >image</span
+                      >
+                      <span
+                        class="font-label-md text-label-md font-medium text-on-surface"
+                        >usdt_transfer_hash.png</span
+                      >
+                    </div>
+                    <button
+                      class="text-on-surface-variant hover:text-error transition-colors"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >close</span
+                      >
+                    </button>
+                  </div>
+                </div>
+                <!-- Button -->
+                <button
+                  class="w-full h-12 mt-2 rounded-xl bg-primary text-on-primary font-title-md text-title-md font-bold hover:bg-primary-container transition-colors shadow-md flex items-center justify-center gap-2"
+                  type="button"
+                >
+                  <span>Submit payment proof</span>
+                  <span class="material-symbols-outlined text-[18px]"
+                    >arrow_forward</span
+                  >
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- SPECIFICATION FRAME B — POST-SUBMISSION STATUS -->
+        <section
+          class="w-full max-w-7xl mx-auto px-margin-mobile md:px-margin mb-12"
+        >
+          <div class="bg-surface-container-high/30 rounded-2xl p-6 md:p-8">
+            <div
+              class="flex items-center justify-between mb-6 pb-3 border-b border-surface-variant/40"
+            >
+              <div>
+                <span
+                  class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold"
+                  >Variant 02</span
+                >
+                <h3
+                  class="font-headline-sm text-headline-sm font-bold text-primary"
+                >
+                  Interactive Specification Frame: Payment Submitted — Waiting
+                  for Verification
+                </h3>
+              </div>
+              <span
+                class="px-3 py-1 rounded-full bg-surface-container-lowest font-label-md text-label-md font-semibold text-primary shadow-sm"
+              >
+                Post-Action Stage
+              </span>
+            </div>
+            <!-- Center Stage Card -->
+            <div
+              class="max-w-3xl mx-auto bg-surface-container-lowest rounded-2xl shadow-md p-6 md:p-10 flex flex-col items-center text-center"
+            >
+              <!-- Status Indicator Icon -->
+              <div
+                class="w-16 h-16 rounded-full bg-[#FEF3C7] text-[#9A7426] flex items-center justify-center mb-4 shadow-sm"
+              >
+                <span class="material-symbols-outlined text-[32px]"
+                  >hourglass_top</span
+                >
+              </div>
+              <h2
+                class="font-headline-xl text-headline-lg font-bold text-primary mb-2"
+              >
+                Payment proof submitted
+              </h2>
+              <!-- Status Pill -->
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FEF3C7] text-[#92400E] font-label-md text-label-md font-semibold mb-4"
+              >
+                <span
+                  class="w-2 h-2 rounded-full bg-[#D99A2B] animate-pulse"
+                ></span>
+                Waiting for verification
+              </div>
+              <p
+                class="font-body-md text-body-lg text-on-surface-variant max-w-xl mx-auto mb-10 leading-relaxed"
+              >
+                Our team will verify your payment and notify you here. Then
+                quality control starts for each seller.
+              </p>
+              <!-- Order Lifecycle Timeline (8 distinct milestones) -->
+              <div class="w-full mb-10 overflow-x-auto pb-4">
+                <div
+                  class="min-w-[680px] flex items-start justify-between relative px-2"
+                >
+                  <!-- Horizontal Connecting Track Behind -->
+                  <div
+                    class="absolute top-4 left-6 right-6 h-0.5 bg-surface-container -z-0"
+                  ></div>
+                  <!-- Milestone 1: Done -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-20"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#2E7D5B] text-on-primary flex items-center justify-center font-bold text-[12px] shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >check</span
+                      >
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-bold text-[#2E7D5B] text-center"
+                      >Order request</span
+                    >
+                  </div>
+                  <!-- Milestone 2: Done -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-20"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#2E7D5B] text-on-primary flex items-center justify-center font-bold text-[12px] shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >check</span
+                      >
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-bold text-[#2E7D5B] text-center"
+                      >Sellers confirmed</span
+                    >
+                  </div>
+                  <!-- Milestone 3: Current Active (Deep Teal) -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-24"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md relative"
+                    >
+                      <span
+                        class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed animate-ping absolute"
+                      ></span>
+                      <span
+                        class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed relative"
+                      ></span>
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-bold text-primary text-center"
+                      >Payment submitted</span
+                    >
+                  </div>
+                  <!-- Milestone 4: Upcoming -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-20"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-[11px]"
+                    >
+                      4
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-medium text-on-surface-variant text-center"
+                      >Payment verified</span
+                    >
+                  </div>
+                  <!-- Milestone 5: Upcoming -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-20"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-[11px]"
+                    >
+                      5
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-medium text-on-surface-variant text-center"
+                      >QC in Bali</span
+                    >
+                  </div>
+                  <!-- Milestone 6: Upcoming -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-20"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-[11px]"
+                    >
+                      6
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-medium text-on-surface-variant text-center"
+                      >Your approval</span
+                    >
+                  </div>
+                  <!-- Milestone 7: Upcoming -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-20"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-[11px]"
+                    >
+                      7
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-medium text-on-surface-variant text-center"
+                      >Shipped by Air</span
+                    >
+                  </div>
+                  <!-- Milestone 8: Upcoming -->
+                  <div
+                    class="flex flex-col items-center gap-2 relative z-10 w-20"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-bold text-[11px]"
+                    >
+                      8
+                    </div>
+                    <span
+                      class="font-label-sm text-[11px] font-medium text-on-surface-variant text-center"
+                      >Delivered</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- Post Action Controls -->
+              <div
+                class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+              >
+                <button
+                  class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-primary text-on-primary font-title-md text-title-md font-bold hover:bg-primary-container transition-colors shadow-md"
+                  type="button"
+                >
+                  View order details
+                </button>
+                <button
+                  class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-surface-container text-primary font-title-md text-title-md font-bold hover:bg-surface-container-high transition-colors shadow-sm"
+                  type="button"
+                >
+                  Open order chat
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="w-full bg-primary text-on-primary mt-space-xl">
+      <div
+        class="w-full h-1.5 bg-gradient-to-r from-tertiary-container via-tertiary-fixed to-tertiary-container opacity-40"
+      ></div>
+      <div class="max-w-[1440px] mx-auto px-margin py-space-xl">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-space-xl">
+          <div class="flex flex-col gap-space-md">
+            <div class="flex items-center gap-space-sm">
+              <div
+                class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center"
+              >
+                <span
+                  class="material-symbols-outlined text-tertiary-fixed text-[18px]"
+                  >local_florist</span
+                >
+              </div>
+              <span
+                class="font-headline-sm text-headline-sm font-bold text-on-primary"
+                >BaliTrade</span
+              >
+            </div>
+            <p
+              class="font-body-md text-body-md text-surface-variant/80 max-w-xs"
+            >
+              The premier wholesale export conduit linking Balinese artisan
+              cooperatives directly to commercial buyers across Russia &amp; CIS
+              nations with audited escrow.
+            </p>
+          </div>
+          <div class="flex flex-col gap-space-sm">
+            <span
+              class="font-title-md text-title-md font-semibold text-tertiary-fixed"
+              >For Buyers</span
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >How it works</a
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Request a product</a
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Payment methods</a
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Shipping &amp; tracking</a
+            >
+          </div>
+          <div class="flex flex-col gap-space-sm">
+            <span
+              class="font-title-md text-title-md font-semibold text-tertiary-fixed"
+              >For Sellers</span
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Sell on BaliTrade</a
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Seller guidelines</a
+            >
+          </div>
+          <div class="flex flex-col gap-space-sm">
+            <span
+              class="font-title-md text-title-md font-semibold text-tertiary-fixed"
+              >Support</span
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >FAQ</a
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Contact</a
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Terms of Service</a
+            ><a
+              class="font-body-md text-body-md text-surface-variant/80 hover:text-on-primary transition-colors no-underline"
+              href="#"
+              >Privacy Policy</a
+            >
+          </div>
+        </div>
+        <div
+          class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md font-body-md text-body-md text-surface-variant/60"
+        >
+          <div class="flex items-center gap-space-md">
+            <div
+              class="flex items-center gap-space-xs bg-primary-container px-space-md py-space-xs rounded-lg text-on-primary cursor-pointer"
+            >
+              <span class="material-symbols-outlined text-[16px]">language</span
+              ><span class="font-label-md text-label-md font-semibold"
+                >English / USD</span
+              >
+            </div>
+            <span>Bali, Indonesia → Russia &amp; CIS</span>
+          </div>
+          <p class="m-0">
+            © 2026 BaliTrade. All rights reserved. Bali, Indonesia → Russia
+            &amp; CIS
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

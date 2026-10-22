@@ -1,0 +1,2684 @@
+<!doctype html>
+
+<html class="scroll-smooth" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+      BaliTrade — Verified Artisanal B2B Sourcing from Bali to Russia &amp; CIS
+    </title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS v3 CDN with forms & container-queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration matching BaliTrade Design System -->
+    <script data-purpose="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                teal: '#0F4C5C',
+                'teal-hover': '#0B3A46',
+                'teal-dark': '#07262E',
+                gold: '#C9A24A',
+                'gold-text': '#9A7426',
+                'gold-light': '#FDF9F0',
+                terracotta: '#B5563A',
+                'terracotta-hover': '#9E442B',
+                bg: '#FAF7F2',
+                card: '#FFFFFF',
+                border: '#E7E2D9',
+                charcoal: '#1F2937',
+                muted: '#6B7280',
+                success: '#2E7D5B',
+                'success-light': '#EBF5F0',
+                warning: '#D99A2B',
+                'warning-light': '#FEF7EB',
+                error: '#C0392B',
+                'error-light': '#FDF0ED',
+                info: '#2F6F8F',
+                'info-light': '#EEF5F8'
+              }
+            },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            },
+            borderRadius: {
+              'custom': '12px',
+            },
+            boxShadow: {
+              'subtle': '0 2px 10px rgba(15, 76, 92, 0.04)',
+              'card': '0 4px 20px -2px rgba(15, 76, 92, 0.06)',
+              'card-hover': '0 12px 28px -4px rgba(15, 76, 92, 0.12)',
+              'modal': '0 20px 40px -10px rgba(7, 38, 46, 0.18)',
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Custom CSS for specialized ornamental accents and fine tuning -->
+    <style data-purpose="custom-decorations">
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #FAF7F2;
+        color: #1F2937;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Balinese subtle geometric background pattern */
+      .bali-pattern-overlay {
+        background-image: radial-gradient(#C9A24A 0.75px, transparent 0.75px);
+        background-size: 24px 24px;
+        opacity: 0.25;
+      }
+
+      .bali-gold-glow {
+        box-shadow: 0 0 0 1px #C9A24A, 0 8px 24px -4px rgba(201, 162, 74, 0.25);
+      }
+
+      /* Accordion chevron animation */
+      details summary::-webkit-details-marker {
+        display: none;
+      }
+      details[open] summary .faq-icon {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col bg-brand-bg text-brand-charcoal selection:bg-brand-gold/30 selection:text-brand-teal"
+  >
+    <!-- BEGIN: TopNotificationBar -->
+    <aside
+      class="w-full bg-brand-teal-dark text-white/90 text-xs py-2 px-4 border-b border-brand-teal/40"
+      data-purpose="announcement-bar"
+    >
+      <div
+        class="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 font-medium"
+      >
+        <div class="flex items-center gap-2">
+          <span
+            class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+          ></span>
+          <span class="text-brand-gold font-semibold"
+            >Next consolidated air cargo:</span
+          >
+          <span
+            >Friday departure from DPS (Bali) → Direct to CIS logistics
+            hubs</span
+          >
+        </div>
+        <div class="flex items-center gap-4 text-white/80">
+          <span class="flex items-center gap-1.5">
+            <svg
+              class="w-3.5 h-3.5 text-emerald-400"
+              fill="currentColor"
+              viewbox="0 0 20 20"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z"
+                fill-rule="evenodd"
+              ></path>
+            </svg>
+            100% Payment Protected by BaliTrade
+          </span>
+          <span class="hidden md:inline text-white/40">|</span>
+          <span class="hidden md:inline text-xs"
+            >Physical Quality Inspection Included</span
+          >
+        </div>
+      </div>
+    </aside>
+    <!-- END: TopNotificationBar -->
+    <!-- BEGIN: MainNavbar -->
+    <header
+      class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-border"
+    >
+      <div
+        class="max-w-[1280px] mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4"
+      >
+        <!-- Brand Logo -->
+        <a
+          aria-label="BaliTrade Home"
+          class="flex items-center gap-3 focus:outline-none"
+          href="#"
+        >
+          <div
+            class="w-10 h-10 rounded-custom bg-brand-teal flex items-center justify-center text-brand-gold shadow-sm"
+          >
+            <!-- Stylized Balinese Frangipani / Leaf Icon -->
+            <svg
+              class="w-6 h-6 text-brand-gold"
+              fill="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M12 2C10.5 5 7.5 7.5 4 8C7 10 9 13.5 9 17C10.5 14 13.5 11.5 17 11C14 9 12 5.5 12 2Z"
+                opacity="0.9"
+              ></path>
+              <circle cx="12" cy="12" fill="#FAF7F2" r="2.5"></circle>
+              <path
+                d="M12 22C13.5 19 16.5 16.5 20 16C17 14 15 10.5 15 7C13.5 10 10.5 12.5 7 13C10 15 12 18.5 12 22Z"
+                opacity="0.6"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span
+                class="font-extrabold text-xl tracking-tight text-brand-teal"
+                >Bali<span class="text-brand-gold">Trade</span></span
+              >
+              <span
+                class="text-[9px] uppercase tracking-wider font-bold bg-brand-gold/15 text-brand-gold-text px-1.5 py-0.5 rounded"
+                >B2B</span
+              >
+            </div>
+            <span
+              class="text-[10px] tracking-wider text-brand-muted uppercase font-semibold"
+              >Air Cargo &amp; Payment Protected</span
+            >
+          </div>
+        </a>
+        <!-- Desktop Navigation Links -->
+        <nav
+          class="hidden lg:flex items-center gap-8 text-sm font-semibold text-brand-charcoal"
+        >
+          <a
+            class="text-brand-teal hover:text-brand-teal-hover transition-colors"
+            href="#products"
+            >Products</a
+          >
+          <a
+            class="text-brand-charcoal hover:text-brand-teal transition-colors"
+            href="#request-banner"
+            >Request a Product</a
+          >
+          <a
+            class="text-brand-charcoal hover:text-brand-teal transition-colors"
+            href="#how-it-works"
+            >How It Works</a
+          >
+          <a
+            class="text-brand-charcoal hover:text-brand-teal transition-colors"
+            href="#seller-section"
+            >Sell on BaliTrade</a
+          >
+        </nav>
+        <!-- Right Utility Actions -->
+        <div class="flex items-center gap-3">
+          <!-- Quick Search Trigger / Input -->
+          <div class="hidden md:flex relative items-center w-52 xl:w-64">
+            <input
+              class="w-full text-xs rounded-custom border-brand-border bg-brand-bg py-2 pl-8 pr-3 text-brand-charcoal placeholder-brand-muted focus:border-brand-teal focus:ring-1 focus:ring-brand-teal"
+              placeholder="Search catalog..."
+              type="text"
+            />
+            <svg
+              class="w-3.5 h-3.5 text-brand-muted absolute left-2.5"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+            </svg>
+          </div>
+          <!-- Language Selector Dropdown -->
+          <div class="relative group" data-purpose="language-selector">
+            <button
+              aria-label="Select Language"
+              class="flex items-center gap-1.5 px-2.5 py-2 rounded-custom border border-brand-border text-xs font-semibold text-brand-charcoal hover:bg-brand-bg transition-colors"
+              type="button"
+            >
+              <svg
+                class="w-4 h-4 text-brand-muted"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+              <span>EN</span>
+              <svg
+                class="w-3 h-3 text-brand-muted group-hover:rotate-180 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M19 9l-7 7-7-7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+            </button>
+            <!-- Hover Dropdown Menu -->
+            <div
+              class="absolute right-0 mt-1 w-36 bg-white border border-brand-border rounded-custom shadow-modal hidden group-hover:block z-50 py-1 text-xs"
+            >
+              <a
+                class="flex items-center justify-between px-3 py-2 text-brand-teal font-bold bg-brand-bg/60"
+                href="#"
+                >English <span>EN</span></a
+              >
+              <a
+                class="flex items-center justify-between px-3 py-2 text-brand-charcoal hover:bg-brand-bg"
+                href="#"
+                >Bahasa ID <span>ID</span></a
+              >
+              <a
+                class="flex items-center justify-between px-3 py-2 text-brand-charcoal hover:bg-brand-bg"
+                href="#"
+                >Русский <span>RU</span></a
+              >
+            </div>
+          </div>
+          <!-- Auth Actions -->
+          <a
+            class="text-xs font-bold px-3 py-2 text-brand-teal hover:bg-brand-bg rounded-custom transition-colors"
+            href="#login"
+          >
+            Log in
+          </a>
+          <a
+            class="text-xs font-bold px-4 py-2 bg-brand-teal hover:bg-brand-teal-hover text-white rounded-custom transition-all shadow-sm"
+            href="#signup"
+          >
+            Sign up
+          </a>
+        </div>
+      </div>
+    </header>
+    <!-- END: MainNavbar -->
+    <main>
+      <!-- BEGIN: HeroSection -->
+      <section
+        class="relative bg-brand-bg pt-10 pb-16 lg:py-20 border-b border-brand-border overflow-hidden"
+      >
+        <!-- Subtle Decorative Background Watermark -->
+        <div
+          class="absolute inset-0 bali-pattern-overlay pointer-events-none"
+        ></div>
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 relative z-10">
+          <div
+            class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center"
+          >
+            <!-- Hero Left: Messaging & Direct Search -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+              <!-- Geo & Corridor Eyebrow Badge -->
+              <div
+                class="inline-flex items-center gap-2 self-start bg-brand-gold-light border border-brand-gold/30 px-3.5 py-1.5 rounded-full text-xs font-bold text-brand-gold-text"
+              >
+                <span
+                  class="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold"
+                ></span>
+                <span>Bali → Russia &amp; CIS Cross-Border Corridor</span>
+                <svg
+                  class="w-3.5 h-3.5 text-brand-gold ml-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <!-- H1 Heading -->
+              <h1
+                class="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-brand-charcoal tracking-tight leading-[1.15]"
+              >
+                Source authentic products from Bali —
+                <span
+                  class="text-brand-teal underline decoration-brand-gold decoration-4 underline-offset-4"
+                  >inspected, packed</span
+                >
+                and shipped for you.
+              </h1>
+              <!-- Subtext -->
+              <p
+                class="text-base sm:text-lg text-brand-muted leading-relaxed max-w-2xl font-normal"
+              >
+                BaliTrade connects verified Balinese cooperative farmers and
+                craft studios with businesses in Russia and CIS countries. Every
+                consignment undergoes physical laboratory and packaging
+                inspection before air dispatch. Payment is safely held by
+                BaliTrade until delivery.
+              </p>
+              <!-- Action Buttons -->
+              <div class="flex flex-wrap items-center gap-3 pt-1">
+                <a
+                  class="h-12 px-7 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white font-bold text-sm inline-flex items-center gap-2 shadow-card hover:shadow-card-hover transition-all"
+                  href="#products"
+                >
+                  <span>Browse ready products</span>
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </a>
+                <a
+                  class="h-12 px-6 rounded-custom bg-brand-terracotta hover:bg-brand-terracotta-hover text-white font-bold text-sm inline-flex items-center gap-2 shadow-sm transition-all"
+                  href="#request-banner"
+                >
+                  <span>Request custom sourcing</span>
+                </a>
+              </div>
+              <!-- In-Hero Search Container -->
+              <div
+                class="mt-2 p-2 bg-white rounded-custom border border-brand-border shadow-subtle flex flex-col sm:flex-row items-center gap-2"
+              >
+                <div class="relative w-full flex items-center">
+                  <svg
+                    class="w-4 h-4 text-brand-gold absolute left-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                  <input
+                    class="w-full text-sm pl-9 pr-3 py-2.5 border-none focus:ring-0 text-brand-charcoal placeholder-brand-muted"
+                    placeholder="Search Arabica beans, ata rattan bags, batik fabrics, wooden bowls..."
+                    type="text"
+                  />
+                </div>
+                <button
+                  class="w-full sm:w-auto h-10 px-5 bg-brand-teal text-white text-xs font-bold rounded-custom hover:bg-brand-teal-hover transition-colors whitespace-nowrap"
+                >
+                  Search Catalog
+                </button>
+              </div>
+              <!-- Trust Checkmarks -->
+              <div
+                class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-brand-charcoal pt-1"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-5 h-5 rounded-full bg-brand-success-light text-brand-success flex items-center justify-center font-bold"
+                    >✓</span
+                  >
+                  <span>Quality control on every order</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-5 h-5 rounded-full bg-brand-success-light text-brand-success flex items-center justify-center font-bold"
+                    >✓</span
+                  >
+                  <span>Payment held until delivery</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-5 h-5 rounded-full bg-brand-success-light text-brand-success flex items-center justify-center font-bold"
+                    >✓</span
+                  >
+                  <span>Air cargo with export papers</span>
+                </div>
+              </div>
+            </div>
+            <!-- Hero Right: Authentic High-Fidelity Product Collage Visual -->
+            <div class="lg:col-span-5 relative">
+              <div
+                class="relative rounded-2xl overflow-hidden border-2 border-white shadow-card bg-white p-2"
+              >
+                <!-- Provided Flatlay Visual https://lh3.googleusercontent.com/aida-public/AB6AXuBN4YnAcUkn9RPARexJNYeRmKWkFWUXkF16DeFsnBS52ousVezRV7u9Fj1erExKw7T0DoYCNDrxzQlpzAdt9a-K3i2-MOUX1LOXEoIOtDGHfZ0YlGVpwHJr4bSy0RdloReBwYo5wu-JOkdxZrVPTt_Ct7pyLuZ7Gjb3PxPt683tg3FBJFLkVU9hvtrTdplIoUpX_rvARpYhJ0SDqj_uWbZbLaN9oaIApXzYjWItdvwMGfJ3VaSKDPXZ -->
+                <img
+                  alt="Professional warm photography collage flatlay of authentic Balinese goods: green coffee beans in rustic burlap sack, handwoven round ata rattan bag, carved wooden bowl handicrafts, folded colorful batik textile fabrics"
+                  class="w-full h-[460px] object-cover rounded-xl"
+                  loading="eager"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN4YnAcUkn9RPARexJNYeRmKWkFWUXkF16DeFsnBS52ousVezRV7u9Fj1erExKw7T0DoYCNDrxzQlpzAdt9a-K3i2-MOUX1LOXEoIOtDGHfZ0YlGVpwHJr4bSy0RdloReBwYo5wu-JOkdxZrVPTt_Ct7pyLuZ7Gjb3PxPt683tg3FBJFLkVU9hvtrTdplIoUpX_rvARpYhJ0SDqj_uWbZbLaN9oaIApXzYjWItdvwMGfJ3VaSKDPXZ"
+                />
+                <!-- Floating Schedule Trust Pill -->
+                <div
+                  class="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md border border-brand-border rounded-custom p-3.5 shadow-modal flex items-center justify-between"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-9 h-9 rounded-full bg-brand-gold-light border border-brand-gold/40 flex items-center justify-center text-brand-gold-text"
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <div
+                        class="text-[11px] font-bold uppercase tracking-wider text-brand-gold-text"
+                      >
+                        DPS Air Cargo Hub
+                      </div>
+                      <div class="text-xs font-bold text-brand-charcoal">
+                        Next Departure: Friday 14:00 WITA
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    class="text-[11px] font-bold px-2 py-1 rounded bg-brand-success-light text-brand-success border border-brand-success/30"
+                  >
+                    Space Confirmed
+                  </span>
+                </div>
+              </div>
+              <!-- Subtle Decorative Stamp -->
+              <div
+                class="absolute -top-3 -right-3 hidden sm:flex items-center gap-1.5 bg-brand-teal text-white text-[10px] uppercase tracking-wider font-extrabold px-3 py-1.5 rounded-custom shadow-md border border-white"
+              >
+                <span>Authentic Bali Handcrafted</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END: HeroSection -->
+      <!-- BEGIN: TrustStrip -->
+      <section class="py-12 bg-white border-b border-brand-border">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Pillar 1 -->
+            <div
+              class="p-5 rounded-custom border border-brand-border bg-brand-bg/40 flex flex-col gap-3 hover:border-brand-teal/40 transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-brand-teal/10 text-brand-teal flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="text-base font-bold text-brand-charcoal">
+                Quality Control
+              </h3>
+              <p class="text-xs text-brand-muted leading-relaxed">
+                We physically inspect all goods at our Denpasar hub and send
+                high-res photos &amp; videos before packing.
+              </p>
+            </div>
+            <!-- Pillar 2 -->
+            <div
+              class="p-5 rounded-custom border border-brand-border bg-brand-bg/40 flex flex-col gap-3 hover:border-brand-teal/40 transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-brand-gold/15 text-brand-gold-text flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="text-base font-bold text-brand-charcoal">
+                Protected Payment
+              </h3>
+              <p class="text-xs text-brand-muted leading-relaxed">
+                Your money is safely held in custody by BaliTrade and released
+                to the seller only after verified CIS delivery.
+              </p>
+            </div>
+            <!-- Pillar 3 -->
+            <div
+              class="p-5 rounded-custom border border-brand-border bg-brand-bg/40 flex flex-col gap-3 hover:border-brand-teal/40 transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-brand-info/10 text-brand-info flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="text-base font-bold text-brand-charcoal">
+                Talk to Everyone
+              </h3>
+              <p class="text-xs text-brand-muted leading-relaxed">
+                Transparent 3-party negotiation. Every discussion includes you,
+                the Bali producer, and BaliTrade bilingual admin.
+              </p>
+            </div>
+            <!-- Pillar 4 -->
+            <div
+              class="p-5 rounded-custom border border-brand-border bg-brand-bg/40 flex flex-col gap-3 hover:border-brand-teal/40 transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-brand-terracotta/10 text-brand-terracotta flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <h3 class="text-base font-bold text-brand-charcoal">
+                Door to Airport
+              </h3>
+              <p class="text-xs text-brand-muted leading-relaxed">
+                We manage island pickup, phyto/origin certification, customs
+                crating, and regular consolidated air cargo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END: TrustStrip -->
+      <!-- BEGIN: HowItWorks -->
+      <section
+        class="py-16 bg-brand-bg border-b border-brand-border"
+        id="how-it-works"
+      >
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <!-- Section Header -->
+          <div class="text-center max-w-2xl mx-auto mb-14">
+            <div
+              class="text-xs font-bold uppercase tracking-wider text-brand-gold-text mb-2"
+            >
+              Clear &amp; Predictable Process
+            </div>
+            <h2 class="text-3xl font-extrabold text-brand-charcoal">
+              How BaliTrade Works
+            </h2>
+            <p class="mt-2 text-sm text-brand-muted">
+              Transparent, protected cross-border B2B sourcing from Bali
+              cooperatives directly to your business in Russia &amp; CIS.
+            </p>
+          </div>
+          <!-- 6-Step Horizontal Pipeline -->
+          <div class="relative">
+            <!-- Connecting Line (visible on desktop) -->
+            <div
+              class="hidden lg:block absolute top-6 left-12 right-12 h-0.5 bg-brand-border -z-0"
+            ></div>
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10"
+            >
+              <!-- Step 1 -->
+              <div
+                class="bg-white p-5 rounded-custom border border-brand-border flex flex-col items-start gap-3 shadow-subtle"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-brand-teal text-white flex items-center justify-center font-extrabold text-sm shadow"
+                >
+                  1
+                </div>
+                <h4 class="text-sm font-bold text-brand-charcoal">
+                  Find or request
+                </h4>
+                <p class="text-xs text-brand-muted leading-relaxed">
+                  Browse catalog ready-stock products or submit custom
+                  specifications for any Balinese goods.
+                </p>
+              </div>
+              <!-- Step 2 -->
+              <div
+                class="bg-white p-5 rounded-custom border border-brand-border flex flex-col items-start gap-3 shadow-subtle"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-brand-teal text-white flex items-center justify-center font-extrabold text-sm shadow"
+                >
+                  2
+                </div>
+                <h4 class="text-sm font-bold text-brand-charcoal">Discuss</h4>
+                <p class="text-xs text-brand-muted leading-relaxed">
+                  Chat directly with the Bali seller and BaliTrade admin to
+                  agree on quantity, packing, and specs.
+                </p>
+              </div>
+              <!-- Step 3 -->
+              <div
+                class="bg-white p-5 rounded-custom border border-brand-border flex flex-col items-start gap-3 shadow-subtle"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-brand-teal text-white flex items-center justify-center font-extrabold text-sm shadow"
+                >
+                  3
+                </div>
+                <h4 class="text-sm font-bold text-brand-charcoal">
+                  Pay securely
+                </h4>
+                <p class="text-xs text-brand-muted leading-relaxed">
+                  Send IDR bank transfer or USDT. Funds remain locked securely
+                  in custody by BaliTrade.
+                </p>
+              </div>
+              <!-- Step 4 -->
+              <div
+                class="bg-white p-5 rounded-custom border border-brand-border flex flex-col items-start gap-3 shadow-subtle"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-brand-gold text-brand-teal-dark flex items-center justify-center font-extrabold text-sm shadow"
+                >
+                  4
+                </div>
+                <h4 class="text-sm font-bold text-brand-charcoal">
+                  Quality check
+                </h4>
+                <p class="text-xs text-brand-muted leading-relaxed">
+                  Our inspectors test and weigh the goods, sending you high-res
+                  photo/video evidence to review.
+                </p>
+              </div>
+              <!-- Step 5 -->
+              <div
+                class="bg-white p-5 rounded-custom border border-brand-border flex flex-col items-start gap-3 shadow-subtle"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-brand-teal text-white flex items-center justify-center font-extrabold text-sm shadow"
+                >
+                  5
+                </div>
+                <h4 class="text-sm font-bold text-brand-charcoal">Ship</h4>
+                <p class="text-xs text-brand-muted leading-relaxed">
+                  Consolidated air cargo flight departs every Friday from
+                  Denpasar Airport with official AWB tracking.
+                </p>
+              </div>
+              <!-- Step 6 -->
+              <div
+                class="bg-white p-5 rounded-custom border border-brand-border flex flex-col items-start gap-3 shadow-subtle"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-brand-success text-white flex items-center justify-center font-extrabold text-sm shadow"
+                >
+                  6
+                </div>
+                <h4 class="text-sm font-bold text-brand-charcoal">Receive</h4>
+                <p class="text-xs text-brand-muted leading-relaxed">
+                  Inspect your shipment at destination. Once you confirm
+                  receipt, payment is released to the seller.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-10">
+            <a
+              class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-teal hover:text-brand-teal-hover"
+              href="#qc-preview"
+            >
+              <span
+                >Learn more about our quality control protocols and escrow
+                security</span
+              >
+              <svg
+                class="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- END: HowItWorks -->
+      <!-- BEGIN: BrowseByCategory -->
+      <section class="py-16 bg-white border-b border-brand-border">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div
+            class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4"
+          >
+            <div>
+              <div
+                class="text-xs font-bold uppercase tracking-wider text-brand-gold-text mb-1"
+              >
+                Direct Sourced Sectors
+              </div>
+              <h2
+                class="text-2xl sm:text-3xl font-extrabold text-brand-charcoal"
+              >
+                Browse by Category
+              </h2>
+            </div>
+            <p class="text-xs text-brand-muted max-w-md">
+              All categories backed by regional Balinese producer associations
+              with export grade packaging standards.
+            </p>
+          </div>
+          <!-- 7 Category Tiles (6 Standard + 1 Custom Request Tile) -->
+          <div
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+          >
+            <!-- Category 1 -->
+            <a
+              class="group relative rounded-custom border border-brand-border bg-brand-bg p-5 flex flex-col justify-between h-44 hover:border-brand-teal hover:shadow-card transition-all overflow-hidden"
+              href="#products"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-white flex items-center justify-center text-brand-teal shadow-xs group-hover:bg-brand-teal group-hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal group-hover:text-brand-teal transition-colors"
+                >
+                  Coffee &amp; Tea
+                </h3>
+                <p class="text-[11px] text-brand-muted mt-0.5">
+                  Kintamani green beans, specialty roast
+                </p>
+              </div>
+            </a>
+            <!-- Category 2 -->
+            <a
+              class="group relative rounded-custom border border-brand-border bg-brand-bg p-5 flex flex-col justify-between h-44 hover:border-brand-teal hover:shadow-card transition-all overflow-hidden"
+              href="#products"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-white flex items-center justify-center text-brand-teal shadow-xs group-hover:bg-brand-teal group-hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal group-hover:text-brand-teal transition-colors"
+                >
+                  Apparel &amp; Accessories
+                </h3>
+                <p class="text-[11px] text-brand-muted mt-0.5">
+                  Custom batik socks, hats, resort linen
+                </p>
+              </div>
+            </a>
+            <!-- Category 3 -->
+            <a
+              class="group relative rounded-custom border border-brand-border bg-brand-bg p-5 flex flex-col justify-between h-44 hover:border-brand-teal hover:shadow-card transition-all overflow-hidden"
+              href="#products"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-white flex items-center justify-center text-brand-teal shadow-xs group-hover:bg-brand-teal group-hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal group-hover:text-brand-teal transition-colors"
+                >
+                  Bags &amp; Rattan
+                </h3>
+                <p class="text-[11px] text-brand-muted mt-0.5">
+                  Handcrafted ata grass bags, woven totes
+                </p>
+              </div>
+            </a>
+            <!-- Category 4 -->
+            <a
+              class="group relative rounded-custom border border-brand-border bg-brand-bg p-5 flex flex-col justify-between h-44 hover:border-brand-teal hover:shadow-card transition-all overflow-hidden"
+              href="#products"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-white flex items-center justify-center text-brand-teal shadow-xs group-hover:bg-brand-teal group-hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal group-hover:text-brand-teal transition-colors"
+                >
+                  Handicrafts &amp; Wood
+                </h3>
+                <p class="text-[11px] text-brand-muted mt-0.5">
+                  Carved teak tableware, floral statues
+                </p>
+              </div>
+            </a>
+            <!-- Category 5 -->
+            <a
+              class="group relative rounded-custom border border-brand-border bg-brand-bg p-5 flex flex-col justify-between h-44 hover:border-brand-teal hover:shadow-card transition-all overflow-hidden"
+              href="#products"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-white flex items-center justify-center text-brand-teal shadow-xs group-hover:bg-brand-teal group-hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal group-hover:text-brand-teal transition-colors"
+                >
+                  Home Decor
+                </h3>
+                <p class="text-[11px] text-brand-muted mt-0.5">
+                  Bamboo light pendants, carved stone items
+                </p>
+              </div>
+            </a>
+            <!-- Category 6 -->
+            <a
+              class="group relative rounded-custom border border-brand-border bg-brand-bg p-5 flex flex-col justify-between h-44 hover:border-brand-teal hover:shadow-card transition-all overflow-hidden"
+              href="#products"
+            >
+              <div
+                class="w-10 h-10 rounded-custom bg-white flex items-center justify-center text-brand-teal shadow-xs group-hover:bg-brand-teal group-hover:text-white transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal group-hover:text-brand-teal transition-colors"
+                >
+                  Spices &amp; Food
+                </h3>
+                <p class="text-[11px] text-brand-muted mt-0.5">
+                  Organic Planifolia vanilla pods, sea salt
+                </p>
+              </div>
+            </a>
+            <!-- Category 7: Request Anything Custom -->
+            <a
+              class="group relative rounded-custom border-2 border-dashed border-brand-gold bg-brand-gold-light/60 p-5 flex flex-col justify-between h-44 hover:bg-brand-gold-light hover:border-brand-gold-text transition-all col-span-2 md:col-span-3 lg:col-span-2"
+              href="#request-banner"
+            >
+              <div class="flex items-center justify-between">
+                <div
+                  class="w-10 h-10 rounded-custom bg-brand-gold text-white flex items-center justify-center font-bold"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 4v16m8-8H4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </div>
+                <span
+                  class="text-[11px] font-bold text-brand-gold-text uppercase tracking-wider bg-white/80 px-2 py-0.5 rounded"
+                  >Personal Sourcing</span
+                >
+              </div>
+              <div>
+                <div
+                  class="flex items-center gap-1.5 text-brand-teal font-extrabold text-sm group-hover:translate-x-1 transition-transform"
+                >
+                  <span>Can't find it? Request it</span>
+                  <span class="text-brand-gold">→</span>
+                </div>
+                <p class="text-xs text-brand-charcoal/80 mt-1">
+                  Tell our Denpasar field coordinators what you need. We will
+                  source, negotiate, and inspect it across Bali.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- END: BrowseByCategory -->
+      <!-- BEGIN: FeaturedProducts -->
+      <section
+        class="py-16 bg-brand-bg border-b border-brand-border"
+        id="products"
+      >
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <!-- Section Header -->
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4"
+          >
+            <div>
+              <div
+                class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-teal uppercase tracking-wider mb-1"
+              >
+                <span class="w-2 h-2 rounded-full bg-brand-teal"></span>
+                Air Cargo Ready Consignments
+              </div>
+              <h2
+                class="text-2xl sm:text-3xl font-extrabold text-brand-charcoal"
+              >
+                Featured Products from Bali
+              </h2>
+            </div>
+            <a
+              class="text-xs font-bold text-brand-teal hover:underline flex items-center gap-1"
+              href="#request-banner"
+            >
+              <span>View all 140+ verified items</span>
+              <svg
+                class="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewbox="0 0 24 24"
+              >
+                <path
+                  d="M9 5l7 7-7 7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+              </svg>
+            </a>
+          </div>
+          <!-- Product Cards Grid: 8 Cards (Strictly Adhering to Card Spec) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Product 1: Kintamani Arabica Green Beans -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-teal text-white"
+                      >Ready stock</span
+                    >
+                    <span
+                      class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-bg text-brand-teal border border-brand-teal/30"
+                      >QC included</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-teal/10 flex items-center justify-center text-brand-teal mb-2 font-bold text-lg"
+                    >
+                      ☕
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Grade 1 Arabica</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Moisture &lt;11.5% · GrainPro</span
+                    >
+                  </div>
+                </div>
+                <!-- Seller Metadata -->
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Kopi Bali Asli · Bangli</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                  >
+                    ✓ Verified
+                  </span>
+                </div>
+                <!-- Product Title -->
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Kintamani Arabica Green Beans
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  Wet-hulled specialty grade 1, altitude 1,350m, citrus and
+                  floral aroma.
+                </p>
+              </div>
+              <!-- Pricing & MOQ -->
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$6.80
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ kg</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 20 kg</span
+                  >
+                </div>
+              </div>
+              <!-- Action -->
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+            <!-- Product 2: Bali Robusta Roasted Beans -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-teal text-white"
+                      >Ready stock</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-gold/20 flex items-center justify-center text-brand-gold-text mb-2 font-bold text-lg"
+                    >
+                      🫘
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Pupuan Robusta</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Medium-Dark Roast · Degassing Valve</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Tabanan Highland Coffee</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                    >✓ Verified</span
+                  >
+                </div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Bali Robusta Roasted Beans
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  Bold body, dark cacao and spice notes, roasted fresh for
+                  commercial espresso blends.
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$5.20
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ kg</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 50 kg</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+            <!-- Product 3: Hand-woven Ata Grass Bag -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-teal text-white"
+                      >Ready stock</span
+                    >
+                    <span
+                      class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-bg text-brand-teal border border-brand-teal/30"
+                      >QC included</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-terracotta/15 flex items-center justify-center text-brand-terracotta mb-2 font-bold text-lg"
+                    >
+                      👜
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Tenganan Ata Weave</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Smoke-cured · Leather Strap</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Ubud Artisan Guild · Gianyar</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                    >✓ Verified</span
+                  >
+                </div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Hand-woven Ata Grass Bag
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  Traditional round design cured with natural coconut husk smoke
+                  for moisture resistance.
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$14.50
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ pc</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 10 pcs</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+            <!-- Product 4: Rattan Round Bag (Batik Lining) -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-teal text-white"
+                      >Ready stock</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-gold/20 flex items-center justify-center text-brand-gold-text mb-2 font-bold text-lg"
+                    >
+                      🌾
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Natural Rattan Core</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Assorted Batik Interior</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Bali Craft Co-op · Gianyar</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                    >✓ Verified</span
+                  >
+                </div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Rattan Round Bag (Batik Lining)
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  20cm diameter, braided border, secure snap button with genuine
+                  leather shoulder cord.
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$11.00
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ pc</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 25 pcs</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+            <!-- Product 5: Cotton Batik Socks (6 Patterns) -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-terracotta text-white"
+                      >Made to order</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-teal/10 flex items-center justify-center text-brand-teal mb-2 font-bold text-lg"
+                    >
+                      🧦
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Combed Cotton 80/20</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Custom Branding Available</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Denpasar Textile Studio</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                    >✓ Verified</span
+                  >
+                </div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Cotton Batik Socks (6 Patterns)
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  Breathable jacquard knit featuring Balinese floral and
+                  geometric motif borders.
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$1.90
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ pair</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 100 pairs</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+            <!-- Product 6: Bucket Hat Batik Pattern -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-teal text-white"
+                      >Ready stock</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-gold/15 flex items-center justify-center text-brand-gold-text mb-2 font-bold text-lg"
+                    >
+                      🧢
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Reversible Cotton Canvas</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Double Stitching · 58cm</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Seminyak Garments · Badung</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                    >✓ Verified</span
+                  >
+                </div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Bucket Hat Batik Pattern
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  Hand-printed Balinese stamps on sturdy cotton canvas.
+                  Reversible plain charcoal lining.
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$4.80
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ pc</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 50 pcs</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+            <!-- Product 7: Carved Wooden Teak Bowl -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-teal text-white"
+                      >Ready stock</span
+                    >
+                    <span
+                      class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-bg text-brand-teal border border-brand-teal/30"
+                      >QC included</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-terracotta/15 flex items-center justify-center text-brand-terracotta mb-2 font-bold text-lg"
+                    >
+                      🥣
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Solid Teak Root</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Food Safe Coconut Oil Polish</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Mas Village Woodworks</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                    >✓ Verified</span
+                  >
+                </div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Carved Wooden Teak Bowl
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  Hand-turned single teak wood block with mandala flower relief
+                  engraving inside.
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$8.50
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ pc</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 20 pcs</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+            <!-- Product 8: Coconut Shell Bowl Set (Polished) -->
+            <article
+              class="bg-white rounded-custom border border-brand-border p-4 flex flex-col justify-between shadow-subtle hover:shadow-card hover:-translate-y-0.5 transition-all"
+              data-purpose="product-card"
+            >
+              <div>
+                <div
+                  class="relative bg-brand-bg rounded-lg h-44 mb-3 flex items-center justify-center p-3 overflow-hidden border border-brand-border/60"
+                >
+                  <div class="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                    <span
+                      class="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-terracotta text-white"
+                      >Made to order</span
+                    >
+                  </div>
+                  <div class="text-center">
+                    <div
+                      class="w-12 h-12 mx-auto rounded-full bg-brand-teal/15 flex items-center justify-center text-brand-teal mb-2 font-bold text-lg"
+                    >
+                      🥥
+                    </div>
+                    <span class="text-xs font-semibold text-brand-charcoal"
+                      >Upcycled Coconut Shell</span
+                    >
+                    <span class="block text-[10px] text-brand-muted"
+                      >Pair + Wooden Spoons Included</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex items-center justify-between text-[11px] mb-1.5"
+                >
+                  <span class="text-brand-muted font-medium truncate"
+                    >Karangasem Natural Crafts</span
+                  >
+                  <span
+                    class="inline-flex items-center gap-0.5 text-brand-success font-bold text-[10px] bg-brand-success-light px-1.5 py-0.5 rounded"
+                    >✓ Verified</span
+                  >
+                </div>
+                <h3
+                  class="text-sm font-bold text-brand-charcoal line-clamp-1 hover:text-brand-teal transition-colors"
+                >
+                  Coconut Shell Bowl Set (Polished)
+                </h3>
+                <p class="text-xs text-brand-muted mt-1 line-clamp-2">
+                  Sustainably repurposed coconut husk with mother-of-pearl rim
+                  inlay. Organic and biodegradable.
+                </p>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-brand-border flex items-end justify-between"
+              >
+                <div>
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >B2B Price</span
+                  >
+                  <span class="text-lg font-extrabold text-brand-charcoal"
+                    >$3.40
+                    <span class="text-xs font-normal text-brand-muted"
+                      >/ set</span
+                    ></span
+                  >
+                </div>
+                <div class="text-right">
+                  <span
+                    class="text-[10px] uppercase text-brand-muted font-semibold block"
+                    >Minimum Order</span
+                  >
+                  <span class="text-xs font-bold text-brand-teal"
+                    >MOQ 50 sets</span
+                  >
+                </div>
+              </div>
+              <button
+                class="mt-3 w-full h-9 rounded-custom bg-brand-teal hover:bg-brand-teal-hover text-white text-xs font-bold transition-colors"
+              >
+                View product &amp; specs
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+      <!-- END: FeaturedProducts -->
+      <!-- BEGIN: RequestProductBanner -->
+      <section class="py-12 bg-white" id="request-banner">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div
+            class="relative rounded-2xl bg-brand-teal p-8 md:p-12 overflow-hidden shadow-card"
+          >
+            <!-- Decorative subtle circle elements -->
+            <div
+              class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-white/5 pointer-events-none"
+            ></div>
+            <div
+              class="absolute -left-10 -top-10 w-48 h-48 rounded-full bg-brand-gold/10 pointer-events-none"
+            ></div>
+            <div
+              class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+            >
+              <div class="lg:col-span-8 flex flex-col gap-3">
+                <span
+                  class="inline-block self-start text-[11px] font-extrabold uppercase tracking-widest text-brand-gold bg-brand-teal-dark px-3 py-1 rounded"
+                >
+                  Custom Concierge Sourcing
+                </span>
+                <h2
+                  class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight"
+                >
+                  Looking for something specific or a bigger quantity?
+                </h2>
+                <p
+                  class="text-white/85 text-sm sm:text-base leading-relaxed max-w-2xl"
+                >
+                  Tell us what you need — product type, quantity, target budget,
+                  and delivery deadline. Our Denpasar field coordinators will
+                  verify local workshops across Bali and send you a formal offer
+                  with QC terms.
+                </p>
+                <div class="text-xs text-white/60 font-medium pt-1">
+                  Popular requests: 200 kg Arabica coffee beans, 1,000
+                  custom-labeled batik hats, wholesale ata rattan beach bags.
+                </div>
+              </div>
+              <div
+                class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col items-start lg:items-end justify-center gap-4"
+              >
+                <button
+                  class="w-full sm:w-auto lg:w-full h-12 px-8 rounded-custom bg-brand-gold hover:bg-[#b89139] text-brand-charcoal font-extrabold text-sm shadow-md transition-colors text-center"
+                >
+                  Submit a sourcing request
+                </button>
+                <div
+                  class="text-[11px] text-white/70 text-center lg:text-right w-full"
+                >
+                  Response within 24 business hours
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END: RequestProductBanner -->
+      <!-- BEGIN: QCAndDocumentationPreview -->
+      <section
+        class="py-16 bg-brand-bg border-b border-brand-border"
+        id="qc-preview"
+      >
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <!-- QC Left Column: Explanation -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+              <div
+                class="inline-flex items-center gap-1.5 self-start text-xs font-bold text-brand-gold-text uppercase tracking-wider"
+              >
+                <span class="w-2 h-2 rounded-full bg-brand-gold"></span>
+                Rigorous Quality Inspection
+              </div>
+              <h2
+                class="text-3xl font-extrabold text-brand-charcoal leading-tight"
+              >
+                See your goods in high definition before they leave Bali.
+              </h2>
+              <p class="text-sm text-brand-muted leading-relaxed">
+                We eliminate cross-border risks. Our local QC agents personally
+                visit cooperatives and village packing facilities to measure
+                moisture, examine stitching, test packaging crates, and verify
+                product compliance.
+              </p>
+              <ul class="space-y-3.5 text-xs font-semibold text-brand-charcoal">
+                <li class="flex items-start gap-3">
+                  <span
+                    class="w-5 h-5 rounded-full bg-brand-success-light text-brand-success flex items-center justify-center font-bold shrink-0 mt-0.5"
+                    >✓</span
+                  >
+                  <div>
+                    <span class="text-brand-charcoal font-bold"
+                      >Photo &amp; video report of your actual goods:</span
+                    >
+                    <span class="text-brand-muted block mt-0.5"
+                      >Macro shots of seams, moisture meter readings, and
+                      crating condition.</span
+                    >
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span
+                    class="w-5 h-5 rounded-full bg-brand-success-light text-brand-success flex items-center justify-center font-bold shrink-0 mt-0.5"
+                    >✓</span
+                  >
+                  <div>
+                    <span class="text-brand-charcoal font-bold"
+                      >Weight, quantity and packaging certified:</span
+                    >
+                    <span class="text-brand-muted block mt-0.5"
+                      >Verified tare weights, GrainPro air seals, and pallet
+                      bands before cargo handover.</span
+                    >
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span
+                    class="w-5 h-5 rounded-full bg-brand-success-light text-brand-success flex items-center justify-center font-bold shrink-0 mt-0.5"
+                    >✓</span
+                  >
+                  <div>
+                    <span class="text-brand-charcoal font-bold"
+                      >You approve before departure:</span
+                    >
+                    <span class="text-brand-muted block mt-0.5"
+                      >If anything fails criteria, seller must rectify or your
+                      payment is protected and refunded.</span
+                    >
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span
+                    class="w-5 h-5 rounded-full bg-brand-success-light text-brand-success flex items-center justify-center font-bold shrink-0 mt-0.5"
+                    >✓</span
+                  >
+                  <div>
+                    <span class="text-brand-charcoal font-bold"
+                      >Transparent fixed fee:</span
+                    >
+                    <span class="text-brand-muted block mt-0.5"
+                      >Calculated based on producer regency in Bali and stated
+                      clearly before payment.</span
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <!-- QC Right Column: Interactive Mock UI Report Card -->
+            <div class="lg:col-span-7">
+              <div
+                class="bg-white rounded-2xl border border-brand-border p-6 shadow-modal"
+              >
+                <!-- Report Card Header -->
+                <div
+                  class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-brand-border gap-3"
+                >
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold text-brand-teal"
+                        >Inspection Report #QC-8419201</span
+                      >
+                      <span
+                        class="text-[10px] font-bold bg-brand-success-light text-brand-success px-2 py-0.5 rounded border border-brand-success/30"
+                      >
+                        ✓ QC Approved
+                      </span>
+                    </div>
+                    <h4 class="text-sm font-extrabold text-brand-charcoal mt-1">
+                      Batch #89 Kintamani Arabica Green Beans (120 kg)
+                    </h4>
+                    <div class="text-[11px] text-brand-muted">
+                      Conducted by
+                      <span class="font-semibold text-brand-charcoal"
+                        >BaliTrade Lead QC Officer</span
+                      >
+                      · Bangli Logistics Hub
+                    </div>
+                  </div>
+                  <div class="text-right sm:text-right">
+                    <div
+                      class="text-[10px] text-brand-muted uppercase font-semibold"
+                    >
+                      Scheduled Flight
+                    </div>
+                    <div class="text-xs font-bold text-brand-charcoal">
+                      Friday Cargo DPS-SVO
+                    </div>
+                  </div>
+                </div>
+                <!-- Media Thumbnails Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
+                  <!-- Thumbnail 1: Moisture Test -->
+                  <div
+                    class="relative rounded-custom bg-brand-bg border border-brand-border p-2 text-center h-28 flex flex-col items-center justify-center"
+                  >
+                    <span class="text-2xl mb-1">📟</span>
+                    <span class="text-[10px] font-bold text-brand-charcoal"
+                      >Moisture: 11.2%</span
+                    >
+                    <span class="text-[9px] text-brand-success font-semibold"
+                      >Standard &lt;12.0%</span
+                    >
+                  </div>
+                  <!-- Thumbnail 2: GrainPro Seal -->
+                  <div
+                    class="relative rounded-custom bg-brand-bg border border-brand-border p-2 text-center h-28 flex flex-col items-center justify-center"
+                  >
+                    <span class="text-2xl mb-1">📦</span>
+                    <span class="text-[10px] font-bold text-brand-charcoal"
+                      >Airtight GrainPro</span
+                    >
+                    <span class="text-[9px] text-brand-success font-semibold"
+                      >6x 20kg sealed</span
+                    >
+                  </div>
+                  <!-- Thumbnail 3: Outer Strapping -->
+                  <div
+                    class="relative rounded-custom bg-brand-bg border border-brand-border p-2 text-center h-28 flex flex-col items-center justify-center"
+                  >
+                    <span class="text-2xl mb-1">🏷️</span>
+                    <span class="text-[10px] font-bold text-brand-charcoal"
+                      >Burlap Sacks</span
+                    >
+                    <span class="text-[9px] text-brand-success font-semibold"
+                      >AWB tags verified</span
+                    >
+                  </div>
+                  <!-- Thumbnail 4: Video Clip -->
+                  <div
+                    class="relative rounded-custom bg-brand-teal text-white p-2 text-center h-28 flex flex-col items-center justify-center group cursor-pointer hover:bg-brand-teal-hover transition-colors"
+                  >
+                    <div
+                      class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform"
+                    >
+                      <svg
+                        class="w-4 h-4 text-white"
+                        fill="currentColor"
+                        viewbox="0 0 24 24"
+                      >
+                        <path d="M8 5v14l11-7z"></path>
+                      </svg>
+                    </div>
+                    <span class="text-[10px] font-bold">Watch QC Video</span>
+                    <span class="text-[9px] text-brand-gold font-mono"
+                      >0:42 HD Clip</span
+                    >
+                  </div>
+                </div>
+                <!-- Checklist Verification Status -->
+                <div
+                  class="bg-brand-bg rounded-custom p-3.5 border border-brand-border mb-5"
+                >
+                  <div
+                    class="text-[11px] font-bold text-brand-charcoal mb-2 uppercase tracking-wide"
+                  >
+                    Inspection Criteria Checklist:
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                    <div class="flex items-center gap-1.5 text-brand-charcoal">
+                      <span class="text-brand-success font-bold">✓</span>
+                      <span>Quantity: 120 kg (6 bags)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-brand-charcoal">
+                      <span class="text-brand-success font-bold">✓</span>
+                      <span>Moisture &amp; Defect Rate OK</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-brand-charcoal">
+                      <span class="text-brand-success font-bold">✓</span>
+                      <span>Phytosanitary stamped</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Buyer Approval Actions -->
+                <div
+                  class="flex flex-col sm:flex-row items-center justify-between gap-3"
+                >
+                  <div class="text-xs text-brand-muted">
+                    Buyer Dmitry I. must approve before packing into flight
+                    container.
+                  </div>
+                  <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      class="flex-1 sm:flex-none px-4 py-2 border border-brand-border text-brand-charcoal text-xs font-bold rounded-custom hover:bg-brand-bg transition-colors"
+                    >
+                      Ask Question
+                    </button>
+                    <button
+                      class="flex-1 sm:flex-none px-5 py-2 bg-brand-teal text-white text-xs font-bold rounded-custom hover:bg-brand-teal-hover transition-colors shadow-sm"
+                    >
+                      Approve Shipment
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END: QCAndDocumentationPreview -->
+      <!-- BEGIN: PaymentMethods -->
+      <section class="py-16 bg-white border-b border-brand-border">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div class="text-center max-w-xl mx-auto mb-12">
+            <div
+              class="text-xs font-bold uppercase tracking-wider text-brand-gold-text mb-2"
+            >
+              Escrow Protection
+            </div>
+            <h2 class="text-3xl font-extrabold text-brand-charcoal">
+              Safe Payment Methods
+            </h2>
+            <p class="mt-2 text-sm text-brand-muted">
+              All customer funds are deposited directly to BaliTrade custody. No
+              direct payments to unknown accounts.
+            </p>
+          </div>
+          <!-- 2 Payment Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <!-- Method 1: IDR Bank Transfer -->
+            <div
+              class="p-6 rounded-custom border border-brand-border bg-brand-bg/40 flex flex-col justify-between hover:border-brand-teal/40 transition-colors"
+            >
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="w-12 h-12 rounded-custom bg-brand-teal/10 text-brand-teal flex items-center justify-center"
+                  >
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span
+                    class="text-xs font-bold px-2.5 py-1 rounded bg-brand-success-light text-brand-success border border-brand-success/30"
+                  >
+                    Payment held by BaliTrade
+                  </span>
+                </div>
+                <h3 class="text-lg font-bold text-brand-charcoal">
+                  Bank Transfer (IDR)
+                </h3>
+                <p class="text-xs text-brand-muted mt-2 leading-relaxed">
+                  Direct Indonesian rupiah invoice payment. Transfer via your
+                  business banking channel and simply upload your official
+                  payment receipt for instant confirmation.
+                </p>
+              </div>
+              <div
+                class="mt-6 pt-4 border-t border-brand-border text-xs text-brand-charcoal font-semibold flex items-center gap-2"
+              >
+                <svg
+                  class="w-4 h-4 text-brand-teal"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  ></path>
+                </svg>
+                <span>Instant administrative verification within 2 hours</span>
+              </div>
+            </div>
+            <!-- Method 2: USDT -->
+            <div
+              class="p-6 rounded-custom border border-brand-border bg-brand-bg/40 flex flex-col justify-between hover:border-brand-teal/40 transition-colors"
+            >
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="w-12 h-12 rounded-custom bg-brand-gold/15 text-brand-gold-text flex items-center justify-center font-extrabold text-lg"
+                  >
+                    ₮
+                  </div>
+                  <span
+                    class="text-xs font-bold px-2.5 py-1 rounded bg-brand-success-light text-brand-success border border-brand-success/30"
+                  >
+                    Payment held by BaliTrade
+                  </span>
+                </div>
+                <h3 class="text-lg font-bold text-brand-charcoal">USDT</h3>
+                <p class="text-xs text-brand-muted mt-2 leading-relaxed">
+                  Seamless digital currency settlement. Send USDT directly to
+                  the BaliTrade custody wallet, paste your transaction hash
+                  (TXID), and attach confirmation.
+                </p>
+              </div>
+              <div
+                class="mt-6 pt-4 border-t border-brand-border text-xs text-brand-charcoal font-semibold flex items-center gap-2"
+              >
+                <svg
+                  class="w-4 h-4 text-brand-teal"
+                  fill="currentColor"
+                  viewbox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  ></path>
+                </svg>
+                <span
+                  >Protected until destination cargo arrival &amp;
+                  sign-off</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Protection Guarantee Banner -->
+          <div
+            class="mt-8 max-w-4xl mx-auto rounded-custom bg-brand-gold-light border border-brand-gold/30 p-4 text-center"
+          >
+            <p class="text-xs text-brand-gold-text font-bold">
+              🛡️ Escrow Guarantee: All funds remain safely locked with BaliTrade
+              until you physically inspect your shipment at your destination
+              airport or warehouse.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- END: PaymentMethods -->
+      <!-- BEGIN: ForSellersSection -->
+      <section
+        class="py-16 bg-brand-bg border-b border-brand-border"
+        id="seller-section"
+      >
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+          <div
+            class="rounded-2xl bg-white border border-brand-border overflow-hidden shadow-card"
+          >
+            <div class="grid grid-cols-1 lg:grid-cols-12">
+              <!-- Seller Visual Left -->
+              <div
+                class="lg:col-span-5 bg-brand-teal-dark p-8 sm:p-12 text-white flex flex-col justify-between relative overflow-hidden"
+              >
+                <div class="relative z-10">
+                  <span
+                    class="text-xs font-bold text-brand-gold uppercase tracking-wider block mb-2"
+                    >Export from Bali</span
+                  >
+                  <h3
+                    class="text-2xl sm:text-3xl font-extrabold tracking-tight"
+                  >
+                    Empowering Balinese artisans &amp; farming co-ops.
+                  </h3>
+                  <p
+                    class="mt-4 text-xs sm:text-sm text-white/80 leading-relaxed"
+                  >
+                    Join 85+ verified workshops, organic estates, and textile
+                    studios in Gianyar, Bangli, Tabanan, and Karangasem reaching
+                    international wholesale markets.
+                  </p>
+                </div>
+                <div
+                  class="relative z-10 pt-8 mt-8 border-t border-white/10 flex items-center gap-4"
+                >
+                  <div
+                    class="w-12 h-12 rounded-full bg-brand-gold text-brand-charcoal flex items-center justify-center font-bold text-lg"
+                  >
+                    🏝️
+                  </div>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">
+                      Guaranteed Payouts in IDR
+                    </div>
+                    <div class="text-white/60">No foreign exchange hassles</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Seller Details Right -->
+              <div
+                class="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center"
+              >
+                <span
+                  class="text-xs font-bold uppercase tracking-wider text-brand-terracotta mb-2"
+                  >For Bali Artisans &amp; Producers</span
+                >
+                <h2
+                  class="text-2xl sm:text-3xl font-extrabold text-brand-charcoal"
+                >
+                  Sell your Bali products to Russia &amp; CIS
+                </h2>
+                <p class="mt-3 text-sm text-brand-muted leading-relaxed">
+                  Register, get verified by our field team, and list your
+                  catalog. BaliTrade handles international customer
+                  communication, quality checks, customs documents, and weekly
+                  air freight dispatch.
+                </p>
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6 text-xs text-brand-charcoal font-semibold"
+                >
+                  <div class="flex items-center gap-2">
+                    <span class="text-brand-success font-bold">✓</span>
+                    <span>Zero upfront listing fees</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-brand-success font-bold">✓</span>
+                    <span>Denpasar warehouse pickup</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-brand-success font-bold">✓</span>
+                    <span>3-way translated negotiation</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-brand-success font-bold">✓</span>
+                    <span>Reliable IDR bank settlement</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4">
+                  <a
+                    class="h-11 px-6 rounded-custom bg-brand-terracotta hover:bg-brand-terracotta-hover text-white text-xs font-bold inline-flex items-center gap-2 transition-colors shadow-sm"
+                    href="#become-seller"
+                  >
+                    <span>Become a verified seller</span>
+                    <svg
+                      class="w-3.5 h-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewbox="0 0 24 24"
+                    >
+                      <path
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      ></path>
+                    </svg>
+                  </a>
+                  <a
+                    class="text-xs font-bold text-brand-charcoal hover:text-brand-teal transition-colors"
+                    href="#seller-guidelines"
+                  >
+                    Seller Guidelines →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END: ForSellersSection -->
+      <!-- BEGIN: FAQSection -->
+      <section class="py-16 bg-white border-b border-brand-border">
+        <div class="max-w-[840px] mx-auto px-4 sm:px-6">
+          <div class="text-center mb-12">
+            <div
+              class="text-xs font-bold uppercase tracking-wider text-brand-gold-text mb-2"
+            >
+              Transparency &amp; Answers
+            </div>
+            <h2 class="text-3xl font-extrabold text-brand-charcoal">
+              Frequently Asked Questions
+            </h2>
+            <p class="mt-2 text-sm text-brand-muted">
+              Everything you need to know about purchasing, quality assurance,
+              and cross-border transport.
+            </p>
+          </div>
+          <div class="space-y-4">
+            <!-- Question 1 -->
+            <details
+              class="group bg-brand-bg rounded-custom border border-brand-border p-4 transition-colors open:bg-white open:shadow-subtle open:border-brand-teal/40"
+            >
+              <summary
+                class="flex items-center justify-between cursor-pointer font-bold text-sm text-brand-charcoal list-none select-none"
+              >
+                <span>How does BaliTrade protect my payment?</span>
+                <svg
+                  class="faq-icon w-4 h-4 text-brand-teal transition-transform duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </summary>
+              <div
+                class="mt-3 pt-3 border-t border-brand-border text-xs text-brand-muted leading-relaxed"
+              >
+                Your payment is deposited directly to BaliTrade custody via
+                Indonesian bank transfer or USDT. The seller only receives
+                payment after the shipment arrives at your destination and you
+                confirm receipt in satisfactory order.
+              </div>
+            </details>
+            <!-- Question 2 -->
+            <details
+              class="group bg-brand-bg rounded-custom border border-brand-border p-4 transition-colors open:bg-white open:shadow-subtle open:border-brand-teal/40"
+            >
+              <summary
+                class="flex items-center justify-between cursor-pointer font-bold text-sm text-brand-charcoal list-none select-none"
+              >
+                <span>What if the goods don't pass quality control?</span>
+                <svg
+                  class="faq-icon w-4 h-4 text-brand-teal transition-transform duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </summary>
+              <div
+                class="mt-3 pt-3 border-t border-brand-border text-xs text-brand-muted leading-relaxed"
+              >
+                If our QC team finds any defects, moisture discrepancies, or
+                packaging flaws, the report is flagged immediately in your
+                dashboard. The seller must replace or rectify the goods, or your
+                payment is fully returned before air departure.
+              </div>
+            </details>
+            <!-- Question 3 -->
+            <details
+              class="group bg-brand-bg rounded-custom border border-brand-border p-4 transition-colors open:bg-white open:shadow-subtle open:border-brand-teal/40"
+            >
+              <summary
+                class="flex items-center justify-between cursor-pointer font-bold text-sm text-brand-charcoal list-none select-none"
+              >
+                <span>Can I order more than the stock shown?</span>
+                <svg
+                  class="faq-icon w-4 h-4 text-brand-teal transition-transform duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </summary>
+              <div
+                class="mt-3 pt-3 border-t border-brand-border text-xs text-brand-muted leading-relaxed"
+              >
+                Yes. You can use 'Request a Product' or message the seller
+                directly within the 3-participant chat to request custom
+                quantities, private labeling, custom embroidery, or bulk harvest
+                production.
+              </div>
+            </details>
+            <!-- Question 4 -->
+            <details
+              class="group bg-brand-bg rounded-custom border border-brand-border p-4 transition-colors open:bg-white open:shadow-subtle open:border-brand-teal/40"
+            >
+              <summary
+                class="flex items-center justify-between cursor-pointer font-bold text-sm text-brand-charcoal list-none select-none"
+              >
+                <span>Which countries do you ship to?</span>
+                <svg
+                  class="faq-icon w-4 h-4 text-brand-teal transition-transform duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </summary>
+              <div
+                class="mt-3 pt-3 border-t border-brand-border text-xs text-brand-muted leading-relaxed"
+              >
+                We ship via consolidated air cargo from Bali directly to major
+                airport hubs across Russia, Kazakhstan, Uzbekistan, Kyrgyzstan,
+                Armenia, Belarus, and other CIS destinations with complete
+                customs documentation.
+              </div>
+            </details>
+            <!-- Question 5 -->
+            <details
+              class="group bg-brand-bg rounded-custom border border-brand-border p-4 transition-colors open:bg-white open:shadow-subtle open:border-brand-teal/40"
+            >
+              <summary
+                class="flex items-center justify-between cursor-pointer font-bold text-sm text-brand-charcoal list-none select-none"
+              >
+                <span>How long does shipping take?</span>
+                <svg
+                  class="faq-icon w-4 h-4 text-brand-teal transition-transform duration-200"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  ></path>
+                </svg>
+              </summary>
+              <div
+                class="mt-3 pt-3 border-t border-brand-border text-xs text-brand-muted leading-relaxed"
+              >
+                Consolidated air shipments depart weekly on Fridays from Bali
+                (DPS). Typical air transit and customs clearance takes 5 to 9
+                business days until destination hub arrival.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+      <!-- END: FAQSection -->
+    </main>
+    <!-- BEGIN: MainFooter -->
+    <footer
+      class="bg-brand-teal-dark text-white pt-16 pb-8 border-t-2 border-brand-gold/30"
+    >
+      <div class="max-w-[1280px] mx-auto px-4 sm:px-6">
+        <!-- 4 Column Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10"
+        >
+          <!-- Col 1: About & Logo (2 cols on lg) -->
+          <div class="lg:col-span-2 flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-9 h-9 rounded-custom bg-brand-teal flex items-center justify-center text-brand-gold shadow-sm"
+              >
+                <svg
+                  class="w-5 h-5 text-brand-gold"
+                  fill="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C10.5 5 7.5 7.5 4 8C7 10 9 13.5 9 17C10.5 14 13.5 11.5 17 11C14 9 12 5.5 12 2Z"
+                  ></path>
+                </svg>
+              </div>
+              <span class="font-extrabold text-xl text-white tracking-tight"
+                >Bali<span class="text-brand-gold">Trade</span></span
+              >
+            </div>
+            <p class="text-xs text-white/70 leading-relaxed max-w-sm">
+              The verified B2B export marketplace connecting Balinese
+              cooperatives and artisans with buyers across Russia and CIS
+              countries with quality control inspection and escrow payment
+              protection.
+            </p>
+            <div
+              class="flex items-center gap-2 text-[11px] text-brand-gold font-semibold pt-1"
+            >
+              <span class="w-2 h-2 rounded-full bg-brand-gold"></span>
+              <span>Payment Protected B2B Trade</span>
+            </div>
+          </div>
+          <!-- Col 2: For Buyers -->
+          <div class="flex flex-col gap-3">
+            <div
+              class="text-xs font-bold uppercase tracking-wider text-brand-gold"
+            >
+              For Buyers
+            </div>
+            <ul class="space-y-2 text-xs text-white/75">
+              <li>
+                <a
+                  class="hover:text-white transition-colors"
+                  href="#how-it-works"
+                  >How it works</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors"
+                  href="#request-banner"
+                  >Request a product</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-white transition-colors" href="#products"
+                  >Product catalog</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors"
+                  href="#payment-methods"
+                  >Payment methods</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-white transition-colors" href="#qc-preview"
+                  >Shipping &amp; tracking</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Col 3: For Sellers -->
+          <div class="flex flex-col gap-3">
+            <div
+              class="text-xs font-bold uppercase tracking-wider text-brand-gold"
+            >
+              For Sellers
+            </div>
+            <ul class="space-y-2 text-xs text-white/75">
+              <li>
+                <a
+                  class="hover:text-white transition-colors"
+                  href="#seller-section"
+                  >Sell on BaliTrade</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors"
+                  href="#seller-section"
+                  >Seller guidelines</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-white transition-colors" href="#qc-preview"
+                  >QC criteria standards</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors"
+                  href="#how-it-works"
+                  >Consolidated cargo drop-off</a
+                >
+              </li>
+            </ul>
+          </div>
+          <!-- Col 4: Support & Legal -->
+          <div class="flex flex-col gap-3">
+            <div
+              class="text-xs font-bold uppercase tracking-wider text-brand-gold"
+            >
+              Support
+            </div>
+            <ul class="space-y-2 text-xs text-white/75">
+              <li>
+                <a class="hover:text-white transition-colors" href="#faq"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-white transition-colors" href="#contact"
+                  >Contact operations team</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-white transition-colors" href="#terms"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a class="hover:text-white transition-colors" href="#privacy"
+                  >Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- Bottom Bar -->
+        <div
+          class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/60"
+        >
+          <div>
+            © 2026 BaliTrade. All rights reserved. Bali, Indonesia → Russia
+            &amp; CIS.
+          </div>
+          <!-- Multilingual Footer Selector -->
+          <div class="flex items-center gap-4 text-xs">
+            <a class="text-brand-gold font-bold" href="#">English (EN)</a>
+            <span class="text-white/20">|</span>
+            <a class="hover:text-white transition-colors" href="#"
+              >Bahasa Indonesia (ID)</a
+            >
+            <span class="text-white/20">|</span>
+            <a class="hover:text-white transition-colors" href="#"
+              >Русский (RU)</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- END: MainFooter -->
+  </body>
+</html>

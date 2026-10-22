@@ -1,0 +1,2014 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_standard" name="shell-type" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "inverse-primary": "#9acee1", "on-primary-fixed": "#001f28", "tertiary": "#3e2d00", "surface-container-low": "#eff4ff", "secondary-container": "#ff8f6f", "on-background": "#121c2a", "primary-fixed": "#b6ebfe", "error": "#ba1a1a", "secondary-fixed": "#ffdbd1", "on-secondary-fixed": "#3b0900", "surface-bright": "#f8f9ff", "tertiary-fixed-dim": "#ebc165", "outline-variant": "#c0c8cb", "primary-container": "#0f4c5c", "on-tertiary-fixed": "#261a00", "primary-fixed-dim": "#9acee1", "on-primary-container": "#87bbce", "outline": "#70787c", "secondary": "#9c4329", "surface-variant": "#d9e3f6", "tertiary-container": "#5a4200", "surface": "#f8f9ff", "secondary-fixed-dim": "#ffb5a0", "surface-tint": "#306576", "on-surface": "#121c2a", "on-surface-variant": "#40484b", "on-error-container": "#93000a", "surface-container-highest": "#d9e3f6", "on-tertiary-fixed-variant": "#5b4300", "on-tertiary": "#ffffff", "tertiary-fixed": "#ffdf9e", "on-secondary-fixed-variant": "#7d2c14", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "surface-container": "#e6eeff", "on-error": "#ffffff", "error-container": "#ffdad6", "on-secondary-container": "#76270f", "inverse-surface": "#27313f", "primary": "#003441", "surface-dim": "#d0dbed", "background": "#f8f9ff", "surface-container-high": "#dee9fc", "on-secondary": "#ffffff", "inverse-on-surface": "#eaf1ff", "on-tertiary-container": "#d6ae55", "on-primary-fixed-variant": "#114d5d" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.25rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "gutter-sm": "1rem", "space-md": "0.75rem", "space-sm": "0.5rem", "margin-mobile": "1rem", "margin": "2rem" }, "fontFamily": { "display-lg": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "price-numeral": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"] }, "fontSize": { "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }], "price-numeral": ["22px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-xl-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }] } } } };
+    </script>
+  </head>
+  <body class="bg-background font-body-md text-on-surface antialiased">
+    <header
+      class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div
+        class="h-20 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between gap-space-lg"
+      >
+        <div class="flex items-center gap-space-xl">
+          <a
+            class="flex items-center gap-space-sm group"
+            data-path="products-catalog"
+            href="#"
+            ><div
+              class="w-9 h-9 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed shadow-sm"
+            >
+              <span class="material-symbols-outlined text-[22px]"
+                >local_florist</span
+              >
+            </div>
+            <div class="flex flex-col">
+              <span
+                class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary"
+                >BaliTrade</span
+              ><span
+                class="font-label-sm text-label-sm uppercase tracking-wider text-outline -mt-1"
+                >Export Hub</span
+              >
+            </div></a
+          >
+          <nav
+            class="hidden lg:flex items-center gap-space-md"
+            data-active-classes="bg-primary text-on-primary rounded-xl px-space-md py-space-xs font-semibold"
+          >
+            <a
+              class="px-space-md py-space-xs font-title-md text-title-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="products-catalog"
+              href="#"
+              >Products</a
+            ><a
+              class="px-space-md py-space-xs font-title-md text-title-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="request-a-product"
+              href="#"
+              >Request a Product</a
+            ><a
+              class="px-space-md py-space-xs font-title-md text-title-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="how-it-works"
+              href="#"
+              >How It Works</a
+            ><a
+              class="px-space-md py-space-xs font-title-md text-title-md text-on-surface-variant hover:text-on-surface transition-colors"
+              data-path="sell-on-balitrade"
+              href="#"
+              >Sell on BaliTrade</a
+            >
+          </nav>
+        </div>
+        <div class="flex items-center gap-space-md">
+          <button
+            aria-label="Search catalog"
+            class="w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors"
+          >
+            <span class="material-symbols-outlined text-[20px]"
+              >search</span
+            ></button
+          ><button
+            aria-label="Procurement Cart"
+            class="w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center relative transition-colors"
+          >
+            <span class="material-symbols-outlined text-[20px]"
+              >shopping_bag</span
+            ><span
+              class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary"
+            ></span>
+          </button>
+          <div
+            class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-xl bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface cursor-pointer transition-colors"
+          >
+            <span class="material-symbols-outlined text-[18px]">language</span
+            ><span class="font-label-md text-label-md font-bold">EN</span>
+          </div>
+          <button
+            aria-label="Notifications"
+            class="w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center relative transition-colors"
+          >
+            <span class="material-symbols-outlined text-[20px]"
+              >notifications</span
+            ><span
+              class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-secondary-container ring-2 ring-surface"
+            ></span>
+          </button>
+          <div class="flex items-center gap-space-sm pl-space-xs">
+            <div
+              class="flex items-center gap-space-sm bg-surface-container-high py-1.5 pl-1.5 pr-space-md rounded-full"
+            >
+              <div
+                class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"
+              >
+                <span
+                  class="material-symbols-outlined text-on-primary text-[18px]"
+                  >person</span
+                >
+              </div>
+              <span
+                class="font-label-md text-label-md font-semibold text-on-surface hidden sm:inline"
+                >Anna K.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="w-full pt-20 bg-background">
+      <div class="flex flex-col w-full">
+        <!-- Top Navigation & Order Header Context -->
+        <div class="w-full bg-[#FAF7F2] py-6 px-4 sm:px-6 lg:px-12">
+          <div class="max-w-7xl mx-auto flex flex-col gap-5">
+            <!-- 1. BREADCRUMB -->
+            <nav
+              aria-label="Breadcrumb"
+              class="flex items-center gap-2 font-label-md text-label-md text-[#6B7280]"
+            >
+              <a class="hover:text-[#1F2937] transition-colors" href="#"
+                >Home</a
+              >
+              <span class="material-symbols-outlined text-[14px]"
+                >chevron_right</span
+              >
+              <a class="hover:text-[#1F2937] transition-colors" href="#"
+                >My orders</a
+              >
+              <span class="material-symbols-outlined text-[14px]"
+                >chevron_right</span
+              >
+              <span class="font-bold text-[#1F2937]">#OR-2051</span>
+            </nav>
+            <!-- 2. ORDER HEADER CARD -->
+            <div
+              class="w-full bg-white rounded-xl p-5 sm:p-7 shadow-sm border border-[#E7E2D9] flex flex-col lg:flex-row lg:items-center justify-between gap-6"
+            >
+              <div class="flex flex-col gap-2.5">
+                <div class="flex flex-wrap items-center gap-3">
+                  <h1
+                    class="font-headline-lg text-headline-lg font-bold text-[#1F2937] tracking-tight"
+                  >
+                    Order #OR-2051
+                  </h1>
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FEF9C3] text-[#9A7426] border border-[#FDE047]"
+                  >
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-[#D99A2B] animate-pulse"
+                    ></span>
+                    Awaiting your approval
+                  </span>
+                </div>
+                <div
+                  class="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs sm:text-sm text-[#6B7280]"
+                >
+                  <span class="inline-flex items-center gap-1.5">
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#0F4C5C]"
+                      >calendar_today</span
+                    >
+                    Placed Oct 21, 2026
+                  </span>
+                  <span class="text-[#E7E2D9]">•</span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#0F4C5C]"
+                      >storefront</span
+                    >
+                    2 sellers
+                  </span>
+                  <span class="text-[#E7E2D9]">•</span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#0F4C5C]"
+                      >layers</span
+                    >
+                    Ship together
+                  </span>
+                  <span class="text-[#E7E2D9]">•</span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#B5563A]"
+                      >location_on</span
+                    >
+                    Delivery: Moscow, Russia
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 self-start lg:self-center">
+                <button
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E7E2D9] text-[#1F2937] hover:bg-[#FAF7F2] font-title-md text-sm font-semibold transition-colors"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >download</span
+                  >
+                  Download invoice
+                </button>
+                <button
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#E7E2D9] text-[#1F2937] hover:bg-[#FAF7F2] font-title-md text-sm font-semibold transition-colors"
+                >
+                  <span class="material-symbols-outlined text-[18px]"
+                    >help_center</span
+                  >
+                  Help
+                </button>
+              </div>
+            </div>
+            <!-- 3. HORIZONTAL PROGRESS STEPPER -->
+            <div
+              class="w-full bg-white rounded-xl p-5 sm:p-6 shadow-sm border border-[#E7E2D9] overflow-hidden"
+            >
+              <div class="overflow-x-auto pb-3 -mb-3">
+                <div
+                  class="min-w-[920px] flex items-center justify-between relative"
+                >
+                  <!-- Step 1 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#0F4C5C] text-white flex items-center justify-center font-bold text-xs shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >check</span
+                      >
+                    </div>
+                    <span class="mt-2 text-xs font-semibold text-[#1F2937]"
+                      >Order request</span
+                    >
+                    <span class="text-[10px] text-[#2E7D5B] font-medium"
+                      >Done</span
+                    >
+                  </div>
+                  <!-- Connector 1-2 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#0F4C5C]"></div>
+                  <!-- Step 2 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#0F4C5C] text-white flex items-center justify-center font-bold text-xs shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >check</span
+                      >
+                    </div>
+                    <span class="mt-2 text-xs font-semibold text-[#1F2937]"
+                      >Sellers confirmed</span
+                    >
+                    <span class="text-[10px] text-[#2E7D5B] font-medium"
+                      >Done</span
+                    >
+                  </div>
+                  <!-- Connector 2-3 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#0F4C5C]"></div>
+                  <!-- Step 3 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#0F4C5C] text-white flex items-center justify-center font-bold text-xs shadow-sm"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >check</span
+                      >
+                    </div>
+                    <span class="mt-2 text-xs font-semibold text-[#1F2937]"
+                      >Payment verified</span
+                    >
+                    <span class="text-[10px] text-[#2E7D5B] font-medium"
+                      >Done</span
+                    >
+                  </div>
+                  <!-- Connector 3-4 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#0F4C5C]"></div>
+                  <!-- Step 4 (Current) -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#0F4C5C] text-white ring-4 ring-[#0F4C5C]/20 flex items-center justify-center font-bold text-xs shadow-sm animate-pulse"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >verified</span
+                      >
+                    </div>
+                    <span class="mt-2 text-xs font-bold text-[#0F4C5C]"
+                      >Quality control</span
+                    >
+                    <span class="text-[10px] text-[#D99A2B] font-semibold"
+                      >1 of 2 ready</span
+                    >
+                  </div>
+                  <!-- Connector 4-5 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#E5E7EB]"></div>
+                  <!-- Step 5 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1 opacity-70"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#FAF7F2] border border-[#E7E2D9] text-[#6B7280] flex items-center justify-center text-xs font-semibold"
+                    >
+                      5
+                    </div>
+                    <span class="mt-2 text-xs font-medium text-[#6B7280]"
+                      >Your approval</span
+                    >
+                    <span class="text-[10px] text-[#6B7280]">Pending</span>
+                  </div>
+                  <!-- Connector 5-6 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#E5E7EB]"></div>
+                  <!-- Step 6 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1 opacity-70"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#FAF7F2] border border-[#E7E2D9] text-[#6B7280] flex items-center justify-center text-xs font-semibold"
+                    >
+                      6
+                    </div>
+                    <span class="mt-2 text-xs font-medium text-[#6B7280]"
+                      >Shipping invoice</span
+                    >
+                    <span class="text-[10px] text-[#6B7280]">Pending</span>
+                  </div>
+                  <!-- Connector 6-7 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#E5E7EB]"></div>
+                  <!-- Step 7 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1 opacity-70"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#FAF7F2] border border-[#E7E2D9] text-[#6B7280] flex items-center justify-center text-xs font-semibold"
+                    >
+                      7
+                    </div>
+                    <span class="mt-2 text-xs font-medium text-[#6B7280]"
+                      >Shipped</span
+                    >
+                    <span class="text-[10px] text-[#6B7280]">Pending</span>
+                  </div>
+                  <!-- Connector 7-8 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#E5E7EB]"></div>
+                  <!-- Step 8 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1 opacity-70"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#FAF7F2] border border-[#E7E2D9] text-[#6B7280] flex items-center justify-center text-xs font-semibold"
+                    >
+                      8
+                    </div>
+                    <span class="mt-2 text-xs font-medium text-[#6B7280]"
+                      >Arrived</span
+                    >
+                    <span class="text-[10px] text-[#6B7280]">Pending</span>
+                  </div>
+                  <!-- Connector 8-9 -->
+                  <div class="h-0.5 flex-1 -mt-5 bg-[#E5E7EB]"></div>
+                  <!-- Step 9 -->
+                  <div
+                    class="flex flex-col items-center text-center relative z-10 flex-1 opacity-70"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#FAF7F2] border border-[#E7E2D9] text-[#6B7280] flex items-center justify-center text-xs font-semibold"
+                    >
+                      9
+                    </div>
+                    <span class="mt-2 text-xs font-medium text-[#6B7280]"
+                      >Received</span
+                    >
+                    <span class="text-[10px] text-[#6B7280]">Pending</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="mt-4 pt-3 border-t border-[#FAF7F2] flex items-center justify-between"
+              >
+                <p class="text-xs text-[#6B7280] flex items-center gap-1.5">
+                  <span
+                    class="material-symbols-outlined text-[16px] text-[#C9A24A]"
+                    >info</span
+                  >
+                  Shipping starts when all sellers' goods are approved.
+                </p>
+                <span class="text-xs font-semibold text-[#0F4C5C]"
+                  >Consolidated freight mode active</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 4. MAIN TWO-COLUMN CONTENT GRID -->
+        <div class="w-full bg-[#FAF7F2] pb-16 px-4 sm:px-6 lg:px-12">
+          <div
+            class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+          >
+            <!-- LEFT COLUMN: GROUPS & QC (65%) -->
+            <div class="lg:col-span-8 flex flex-col gap-6">
+              <!-- GROUP A CARD -->
+              <div
+                class="w-full bg-white rounded-xl p-5 sm:p-7 shadow-sm border border-[#E7E2D9]"
+              >
+                <!-- Card Header -->
+                <div
+                  class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#FAF7F2]"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-11 h-11 rounded-xl bg-[#0F4C5C] text-[#FAF7F2] flex items-center justify-center font-bold text-sm tracking-wider shadow-sm"
+                    >
+                      KBA
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="font-headline-sm text-base font-bold text-[#1F2937]"
+                          >Kopi Bali Asli</span
+                        >
+                        <span
+                          class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#FFFCF5] text-[#9A7426] border border-[#C9A24A]"
+                        >
+                          <span class="material-symbols-outlined text-[13px]"
+                            >local_florist</span
+                          >
+                          Verified seller
+                        </span>
+                      </div>
+                      <span class="text-xs text-[#6B7280]"
+                        >Bangli, Bali • Specialty Highland Coffee
+                        Cooperative</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#9A7426] border border-[#FDE68A]"
+                    >
+                      <span class="w-2 h-2 rounded-full bg-[#D99A2B]"></span>
+                      QC report ready
+                    </span>
+                  </div>
+                </div>
+                <!-- Item Row -->
+                <div
+                  class="py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                >
+                  <div class="flex items-center gap-4">
+                    <img
+                      class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-[#E7E2D9] shrink-0"
+                      data-alt="Highland Indonesian green unroasted coffee beans overflowing from rustic burlap jute sack with wooden scoop in warm morning sunlight, commercial studio B2B agriculture product shot"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBigEmOgZXpa0FlQC-fKpKXCHO7Q2vh637giK9Qlfkm6FihgkD-EIR86AGurODiOHspynKzYVvC7RbJmx6vR4HRqENwWKUaFuvhfgcx41yCWAadQ-NYI_y6tR9aIW8iTjTUs39z7EtzqOpuqcVXUAy0AqOYCa7oU7ZoD_kOs5kVpef8wKVkEjuhMmg1f-jdMG1CVteLUuR5s8C0qFgLVhwxrTuFO-zQ1ahfTEsfnUqGtr6s1jp9SSmv"
+                    />
+                    <div class="flex flex-col">
+                      <span
+                        class="text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+                        >Arabica Green Coffee</span
+                      >
+                      <h4
+                        class="font-title-md text-base font-semibold text-[#1F2937]"
+                      >
+                        Kintamani Arabica Green Beans — Grade 1
+                      </h4>
+                      <span class="text-xs text-[#6B7280] mt-0.5"
+                        >Quantity: 50 kg • $6.80 / kg</span
+                      >
+                    </div>
+                  </div>
+                  <div class="text-right sm:self-center">
+                    <div
+                      class="font-price-numeral text-lg font-bold text-[#1F2937]"
+                    >
+                      $340.00
+                    </div>
+                    <div class="text-[11px] text-[#6B7280]">
+                      + QC fee $15.00
+                    </div>
+                  </div>
+                </div>
+                <!-- Buyer Note Box -->
+                <div
+                  class="bg-[#F8F9FA] rounded-xl p-3.5 border border-[#E7E2D9] flex items-start gap-2.5"
+                >
+                  <span
+                    class="material-symbols-outlined text-[18px] text-[#0F4C5C] mt-0.5"
+                    >sticky_note_2</span
+                  >
+                  <div class="flex flex-col text-xs text-[#1F2937]">
+                    <span class="font-bold text-[#6B7280]"
+                      >Your packing note:</span
+                    >
+                    <span
+                      >Please pack in 20 kg jute sacks with GrainPro
+                      liner.</span
+                    >
+                  </div>
+                </div>
+                <!-- QC REPORT PANEL -->
+                <div
+                  class="mt-5 rounded-xl border border-[#E0C875] bg-[#FFFCF5] p-5 sm:p-6 relative"
+                >
+                  <div
+                    class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#E0C875]/40"
+                  >
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="w-7 h-7 rounded-lg bg-[#C9A24A] text-white flex items-center justify-center shadow-xs"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >verified_user</span
+                        >
+                      </div>
+                      <div>
+                        <h4
+                          class="font-title-md text-sm font-bold text-[#1F2937]"
+                        >
+                          QC Report • Inspected by BaliTrade
+                        </h4>
+                        <span class="text-[11px] text-[#6B7280]"
+                          >Oct 24, 2026 • Gianyar Consolidated Inspection
+                          Facility</span
+                        >
+                      </div>
+                    </div>
+                    <span
+                      class="px-2.5 py-0.5 rounded text-xs font-semibold bg-[#2E7D5B]/10 text-[#2E7D5B]"
+                    >
+                      Passed all specifications
+                    </span>
+                  </div>
+                  <!-- Media Inspection Grid -->
+                  <div class="mt-4">
+                    <div class="flex items-center justify-between mb-2">
+                      <span
+                        class="text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+                        >Inspection Evidence (5 Files)</span
+                      >
+                      <button
+                        class="text-xs font-bold text-[#0F4C5C] hover:underline flex items-center gap-1"
+                      >
+                        View all (8 photos)
+                        <span class="material-symbols-outlined text-[14px]"
+                          >arrow_forward</span
+                        >
+                      </button>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                      <!-- Photo 1 -->
+                      <div
+                        class="group relative rounded-lg overflow-hidden border border-[#E7E2D9] aspect-square bg-gray-100 cursor-pointer"
+                      >
+                        <img
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          data-alt="Digital moisture meter probe displaying 11.4 percent reading inserted into raw green Kintamani coffee beans, sharp laboratory lighting"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh38sH8oCpKJqZ6XihpGEDu67cjqYdb0aqC8LGWGSYCzg5rEInX1UJDs5CKeRa3KIzzRxm6Sw-7-ZzcVvajjYD0PX74d7V5wJyxZkPSBOzlg-v_AwXYeXfV6lrWYEr5aBjbAvYu88Xpv3bNLDHPoFuSz_ZL7QrihPzGgZu6UniEM1lrhDBJGsFEYQB8AsXaFlpj3RDem7AyD-SCwOwENZSDsTClDa_3icIvELIuIn5o_X1KLip7LsT"
+                        />
+                        <span
+                          class="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded"
+                          >Moisture 11.4%</span
+                        >
+                      </div>
+                      <!-- Photo 2 -->
+                      <div
+                        class="group relative rounded-lg overflow-hidden border border-[#E7E2D9] aspect-square bg-gray-100 cursor-pointer"
+                      >
+                        <img
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          data-alt="Extreme macro close up of double stitched heavy duty natural jute coffee sack industrial seam and thick twine seal"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIcgwO5FLdKYXFqsn2NUr-wWheEBhJPp9Krp7iEG6FDbSuKAtKrPl0PeRRyCyj7W423McnjwRwB_kWEd8O16AxYe189ZlxQkT8Y44NwIYhRjCL6nrs1MkAZwbyVRRZwCuxj1-Ah_gcNRo2f9uUbGBFu2vtkcpaKiZ3kUh4OPBu_YTijnu7Fh6a7CeHvz9vjfRvLx7y9D4LrQhhW_CXv5gtTPFCKllRmYbDsaGrbCejW0Xv1d-Mim5D"
+                        />
+                        <span
+                          class="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded"
+                          >Sack Stitch</span
+                        >
+                      </div>
+                      <!-- Photo 3 -->
+                      <div
+                        class="group relative rounded-lg overflow-hidden border border-[#E7E2D9] aspect-square bg-gray-100 cursor-pointer"
+                      >
+                        <img
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          data-alt="Clear high density green GrainPro hermetic liner bag properly heat sealed inside Indonesian burlap sack"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTTUsopy1iM4alEeOugMav5PC3siLd7_pgR1b7hNimTi3qJwExrWximep5_E7W7otPrFgKq-CpTVhM6gG42eb4e71xuSUBzsqgM7JilnSZ3VVVUE8g4MqBGnrrxeLbuFnLgRsuRKDcrLMji0wBm37odZyivBbkuA8p604EnGjtVmy4M26mnOsKX6dvsHxFyTRJCZqHBCTVpirPZ_IdxnW8Pq378HmcDS2uy7DVc64k7utDcqksjBTM"
+                        />
+                        <span
+                          class="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded"
+                          >GrainPro Seal</span
+                        >
+                      </div>
+                      <!-- Photo 4 -->
+                      <div
+                        class="group relative rounded-lg overflow-hidden border border-[#E7E2D9] aspect-square bg-gray-100 cursor-pointer"
+                      >
+                        <img
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          data-alt="Industrial floor platform scale LCD digital display reading 50.2 kg with three loaded jute sacks standing in warehouse"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3jDITU4yJu7sBYGyI-b-isdtyXdYhWR8rf18JzP2KBJ81nJ2jB-rIDNDCjPphJ0ZDpb4Zdtc00C6UojlyxaKDTHCoZthUn8Gn9CC0uuhK2RYC5xINHWiSfVxlsblLFVflfMH2LKSOLWK_XsYM0IAuzXycJOXfEtJgX_9MWLukWTUenlPL4tt2wB2HfRNyHbjgoHtjrGNLZAxodE-6q30rpS6CIUyQyIh3NYR6TAJgwBuPSdao8gja"
+                        />
+                        <span
+                          class="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1 rounded"
+                          >Scale: 50.2kg</span
+                        >
+                      </div>
+                      <!-- Video Thumbnail -->
+                      <div
+                        class="group relative rounded-lg overflow-hidden border border-[#E7E2D9] aspect-square bg-black/80 flex items-center justify-center cursor-pointer"
+                      >
+                        <img
+                          class="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity"
+                          data-alt="B2B warehouse quality inspector holding calibrated green coffee beans grading tray under bright daylight lamp"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8wq-zXf1sfUyJFtKTaA0VxwcdbopIGmLUiteEAFjTtnsBKJahvBJqa01BDoFqY85XkN_sT8vTMzbSYI8PitgK9SD7OsvL17Xc4mfFfsvg3JRYMH1rH42wcm9OdTgj-v5X3RX9OjUsJULVQIBfUsJrFdBjPLXPgkgUZ0XHEj3hVPhGdBr52-hYn_TtvQdYNbdnH2DVPzYNDsEvVaVJ_qC8R5sQwaNKjsUgdHb0x-KrFjQMwHLVg6su"
+                        />
+                        <div
+                          class="absolute inset-0 flex flex-col items-center justify-center text-white"
+                        >
+                          <span
+                            class="w-8 h-8 rounded-full bg-white/90 text-[#0F4C5C] flex items-center justify-center shadow-md"
+                          >
+                            <span
+                              class="material-symbols-outlined text-[20px] ml-0.5"
+                              >play_arrow</span
+                            >
+                          </span>
+                          <span class="text-[10px] font-semibold mt-1"
+                            >0:58</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Verification Checklist -->
+                  <div
+                    class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"
+                  >
+                    <div
+                      class="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E7E2D9]"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[#2E7D5B] text-[18px]"
+                        >check_circle</span
+                      >
+                      <span class="font-medium text-[#1F2937]"
+                        >Quantity: 50 kg (3 sacks: 20 + 20 + 10 kg)</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E7E2D9]"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[#2E7D5B] text-[18px]"
+                        >check_circle</span
+                      >
+                      <span class="font-medium text-[#1F2937]"
+                        >Packaging: jute sack + GrainPro liner</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E7E2D9]"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[#2E7D5B] text-[18px]"
+                        >check_circle</span
+                      >
+                      <span class="font-medium text-[#1F2937]"
+                        >Matches product description</span
+                      >
+                    </div>
+                    <div
+                      class="flex items-center gap-2 p-2 rounded-lg bg-white/80 border border-[#E7E2D9]"
+                    >
+                      <span
+                        class="material-symbols-outlined text-[#2E7D5B] text-[18px]"
+                        >check_circle</span
+                      >
+                      <span class="font-medium text-[#1F2937]"
+                        >Your note followed accurately</span
+                      >
+                    </div>
+                  </div>
+                  <!-- BaliTrade Admin Comment Bubble -->
+                  <div
+                    class="mt-4 bg-[#FEF3C7] border border-[#FDE68A] rounded-xl p-3.5 flex items-start gap-3"
+                  >
+                    <div
+                      class="w-8 h-8 rounded-full bg-[#9A7426] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs"
+                    >
+                      BT
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-[#1F2937]"
+                          >BaliTrade Inspector • Depot Lead</span
+                        >
+                        <span class="text-[10px] text-[#6B7280]"
+                          >Oct 24, 14:15</span
+                        >
+                      </div>
+                      <p class="text-xs text-[#1F2937] mt-0.5 leading-relaxed">
+                        "Beans look clean, consistent, with zero mold detected.
+                        Sacks are sealed and labelled with your order number
+                        #OR-2051. Ready for consolidated cargo."
+                      </p>
+                    </div>
+                  </div>
+                  <!-- Approval & Action Buttons -->
+                  <div
+                    class="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-[#E0C875]/40"
+                  >
+                    <div class="flex items-center gap-2">
+                      <button
+                        class="bg-[#0F4C5C] hover:bg-[#0B3A46] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >thumb_up</span
+                        >
+                        Approve this group
+                      </button>
+                      <button
+                        class="border border-[#E7E2D9] text-[#1F2937] hover:bg-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        <span class="material-symbols-outlined text-[18px]"
+                          >chat</span
+                        >
+                        Ask a question
+                      </button>
+                    </div>
+                    <button
+                      class="text-[#C0392B] text-xs font-semibold hover:underline self-center sm:self-auto flex items-center gap-1"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >report_problem</span
+                      >
+                      Report a problem
+                    </button>
+                  </div>
+                  <p
+                    class="mt-2.5 text-[11px] text-[#6B7280] text-center sm:text-left"
+                  >
+                    Approving confirms the goods can be packed for shipping.
+                    Payment held by BaliTrade until delivery.
+                  </p>
+                </div>
+              </div>
+              <!-- GROUP B CARD -->
+              <div
+                class="w-full bg-white rounded-xl p-5 sm:p-7 shadow-sm border border-[#E7E2D9]"
+              >
+                <!-- Card Header -->
+                <div
+                  class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#FAF7F2]"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-11 h-11 rounded-xl bg-[#B5563A] text-white flex items-center justify-center font-bold text-sm tracking-wider shadow-sm"
+                    >
+                      UW
+                    </div>
+                    <div class="flex flex-col">
+                      <div class="flex items-center gap-2">
+                        <span
+                          class="font-headline-sm text-base font-bold text-[#1F2937]"
+                          >Ubud Weavers</span
+                        >
+                        <span
+                          class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-[#FFFCF5] text-[#9A7426] border border-[#C9A24A]"
+                        >
+                          <span class="material-symbols-outlined text-[13px]"
+                            >local_florist</span
+                          >
+                          Verified seller
+                        </span>
+                      </div>
+                      <span class="text-xs text-[#6B7280]"
+                        >Gianyar, Bali • Handwoven Textile Cooperative</span
+                      >
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#EFF6FF] text-[#2F6F8F] border border-blue-200"
+                    >
+                      <span
+                        class="w-2 h-2 rounded-full bg-[#2F6F8F] animate-ping"
+                      ></span>
+                      In QC inspection
+                    </span>
+                  </div>
+                </div>
+                <!-- Status Notice Callout -->
+                <div
+                  class="my-4 p-3.5 rounded-xl bg-[#F8F9FA] border border-[#E7E2D9] flex items-center gap-3"
+                >
+                  <span
+                    class="material-symbols-outlined text-[20px] text-[#2F6F8F]"
+                    >pending_actions</span
+                  >
+                  <div class="flex-1 text-xs text-[#1F2937]">
+                    <span class="font-bold text-[#2F6F8F]"
+                      >Inspection in progress:</span
+                    >
+                    Our team is inspecting your items at Gianyar hub. You'll be
+                    notified when the report is ready.
+                  </div>
+                </div>
+                <!-- Items Breakdown -->
+                <div class="space-y-4 divide-y divide-[#FAF7F2]">
+                  <!-- Item 1 -->
+                  <div
+                    class="pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  >
+                    <div class="flex items-center gap-4">
+                      <img
+                        class="w-14 h-14 rounded-xl object-cover border border-[#E7E2D9] shrink-0"
+                        data-alt="Neatly arranged pairs of authentic traditional Indonesian hand dyed batik cotton crew socks in deep indigo navy and earthy terracotta brown"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNT6IZPfYFUC5aX7NOYDQdo6OqGpistGS_NI-3h-8vxcl2hAMgR1YuksLEUsYbQ_dfjjffDcqlX1_UVWOUU8mfmKwwaMmHDF70GI2Omx3qa3trCo0nSvSatBbv4ZcO_PBKy43A8pyWzKOdk73R4V6G03F6HFvEifcrJzwYkgaZwohBYnpCT4XYxfgkstiyBqXiI282KFsykRVIaprUMsgf4Jh6uUGh8zanoF2Lu5Y8T6Ov_tuIOpUC"
+                      />
+                      <div class="flex flex-col">
+                        <h4
+                          class="font-title-md text-sm font-semibold text-[#1F2937]"
+                        >
+                          Cotton Batik Socks
+                        </h4>
+                        <span class="text-xs text-[#6B7280]"
+                          >200 pairs • $1.90 / pair</span
+                        >
+                        <span
+                          class="text-[11px] text-[#6B7280] bg-[#FAF7F2] px-2 py-0.5 rounded mt-1 max-w-fit"
+                          >Note: 100 pairs M, 100 pairs L. Navy and brown.</span
+                        >
+                      </div>
+                    </div>
+                    <div class="text-right sm:self-center">
+                      <div
+                        class="font-price-numeral text-base font-bold text-[#1F2937]"
+                      >
+                        $380.00
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Item 2 -->
+                  <div
+                    class="pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  >
+                    <div class="flex items-center gap-4">
+                      <img
+                        class="w-14 h-14 rounded-xl object-cover border border-[#E7E2D9] shrink-0"
+                        data-alt="Stack of stylish artisanal reversible cotton bucket hats featuring Balinese floral batik motifs laid on warm wood surface"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_iLXqitCADFlen6v8X9tK7qh3yhfzZgNg84wToz29uGM3Ok1_6osdJVu35r61_9fLEuVq5b14EQB28zelKVT5jSpxUYGf4bf7DaryDSESQOPD_hcEAPeSzCkCMwzWsbUrqSddpOPWn4H20EqDhvg92wVnwntanwoyoLe1KOJ9nrWn6k-DxGIM32zf3kUvTuxmuicHS7oTyVdrSvsJfHdx9xadYXRi7Eccf_MEeV1eF-bZTDLtB8z8"
+                      />
+                      <div class="flex flex-col">
+                        <h4
+                          class="font-title-md text-sm font-semibold text-[#1F2937]"
+                        >
+                          Bucket Hat Batik Pattern
+                        </h4>
+                        <span class="text-xs text-[#6B7280]"
+                          >40 pcs • $4.50 / pc</span
+                        >
+                      </div>
+                    </div>
+                    <div class="text-right sm:self-center">
+                      <div
+                        class="font-price-numeral text-base font-bold text-[#1F2937]"
+                      >
+                        $180.00
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Regional QC Fee Row -->
+                  <div
+                    class="pt-3 flex items-center justify-between text-xs text-[#6B7280]"
+                  >
+                    <span class="flex items-center gap-1.5">
+                      <span
+                        class="material-symbols-outlined text-[16px] text-[#0F4C5C]"
+                        >fact_check</span
+                      >
+                      Regional QC fee (Gianyar hub)
+                    </span>
+                    <span class="font-bold text-[#1F2937]">$12.00</span>
+                  </div>
+                </div>
+                <!-- Action Footer -->
+                <div
+                  class="mt-5 pt-4 border-t border-[#FAF7F2] flex items-center justify-between"
+                >
+                  <a
+                    class="inline-flex items-center gap-2 text-xs font-bold text-[#0F4C5C] hover:text-[#0B3A46] transition-colors"
+                    href="#"
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >forum</span
+                    >
+                    Open chat with Ubud Weavers &amp; BaliTrade
+                  </a>
+                  <span class="text-[11px] text-[#6B7280]"
+                    >Estimated report: Today, 18:00 UTC+8</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- RIGHT COLUMN: SIDEBAR (35%) -->
+            <div class="lg:col-span-4 flex flex-col gap-6 sticky top-24">
+              <!-- 1. PAYMENT SUMMARY CARD -->
+              <div
+                class="w-full bg-white rounded-xl p-5 shadow-sm border border-[#E7E2D9]"
+              >
+                <div
+                  class="flex items-center justify-between pb-3 border-b border-[#FAF7F2]"
+                >
+                  <h3 class="font-title-md text-base font-bold text-[#1F2937]">
+                    Payment status
+                  </h3>
+                  <span
+                    class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#2E7D5B]/10 text-[#2E7D5B]"
+                  >
+                    <span class="material-symbols-outlined text-[14px]"
+                      >check</span
+                    >
+                    Paid
+                  </span>
+                </div>
+                <div class="py-4 space-y-2.5 text-xs">
+                  <div class="flex items-center justify-between text-[#6B7280]">
+                    <span>Items subtotal (2 sellers)</span>
+                    <span class="font-bold text-[#1F2937]">$900.00</span>
+                  </div>
+                  <div class="flex items-center justify-between text-[#6B7280]">
+                    <span>Total QC fees (Bangli + Gianyar)</span>
+                    <span class="font-bold text-[#1F2937]">$27.00</span>
+                  </div>
+                  <div
+                    class="flex items-center justify-between pt-2 border-t border-[#FAF7F2] text-sm"
+                  >
+                    <span class="font-bold text-[#1F2937]"
+                      >Total items + QC paid</span
+                    >
+                    <span class="font-price-numeral font-bold text-[#0F4C5C]"
+                      >$927.00</span
+                    >
+                  </div>
+                  <div class="text-[11px] text-[#6B7280]">
+                    Bank transfer IDR • Verified
+                  </div>
+                </div>
+                <div class="p-3 bg-[#FAF7F2] rounded-xl text-xs space-y-1.5">
+                  <div
+                    class="flex items-center justify-between font-semibold text-[#1F2937]"
+                  >
+                    <span>Shipping stage:</span>
+                    <span class="text-[#9A7426]">Pending approval</span>
+                  </div>
+                  <p class="text-[11px] text-[#6B7280]">
+                    Invoice generated after consolidated packing &amp; final
+                    weighing.
+                  </p>
+                </div>
+                <div
+                  class="mt-4 pt-3 border-t border-[#FAF7F2] flex items-start gap-2.5 text-[11px] text-[#2E7D5B]"
+                >
+                  <span
+                    class="material-symbols-outlined text-[18px] shrink-0 mt-0.5"
+                    >verified_user</span
+                  >
+                  <span
+                    >Payment held by BaliTrade until delivery is confirmed by
+                    you.</span
+                  >
+                </div>
+              </div>
+              <!-- 2. DELIVERY ADDRESS CARD -->
+              <div
+                class="w-full bg-white rounded-xl p-5 shadow-sm border border-[#E7E2D9]"
+              >
+                <div
+                  class="flex items-center justify-between pb-3 border-b border-[#FAF7F2]"
+                >
+                  <h3 class="font-title-md text-base font-bold text-[#1F2937]">
+                    Delivery address
+                  </h3>
+                  <span
+                    class="material-symbols-outlined text-[18px] text-[#0F4C5C]"
+                    >local_shipping</span
+                  >
+                </div>
+                <div class="mt-3 text-xs space-y-1 text-[#1F2937]">
+                  <div class="font-bold text-sm">Anna K.</div>
+                  <div class="text-[#6B7280]">[Street address], Moscow</div>
+                  <div class="text-[#6B7280]">[Postal code], Russia</div>
+                  <div class="text-[#6B7280] font-mono text-[11px] pt-1">
+                    [+7 …]
+                  </div>
+                </div>
+                <div
+                  class="mt-3.5 pt-3 border-t border-[#FAF7F2] flex items-center gap-2 text-[11px] text-[#6B7280]"
+                >
+                  <span
+                    class="material-symbols-outlined text-[15px] text-[#0F4C5C]"
+                    >flight_takeoff</span
+                  >
+                  <span>Our team arranges the direct air cargo route.</span>
+                </div>
+              </div>
+              <!-- 3. ACTIVE 3-PARTY CHATS CARD -->
+              <div
+                class="w-full bg-white rounded-xl p-5 shadow-sm border border-[#E7E2D9]"
+              >
+                <div
+                  class="flex items-center justify-between pb-3 border-b border-[#FAF7F2]"
+                >
+                  <h3 class="font-title-md text-base font-bold text-[#1F2937]">
+                    Order chats (3-party)
+                  </h3>
+                  <span class="w-2 h-2 rounded-full bg-[#2E7D5B]"></span>
+                </div>
+                <div class="mt-3 divide-y divide-[#FAF7F2] text-xs">
+                  <!-- Chat 1 -->
+                  <a
+                    class="py-2.5 flex items-start justify-between gap-3 hover:bg-[#FAF7F2] -mx-2 px-2 rounded-lg transition-colors group"
+                    href="#"
+                  >
+                    <div class="flex items-start gap-2.5">
+                      <div
+                        class="w-7 h-7 rounded-lg bg-[#0F4C5C] text-white flex items-center justify-center font-bold text-[10px] shrink-0"
+                      >
+                        KBA
+                      </div>
+                      <div class="flex flex-col">
+                        <span
+                          class="font-bold text-[#1F2937] group-hover:text-[#0F4C5C]"
+                          >Kopi Bali Asli &amp; BaliTrade</span
+                        >
+                        <span class="text-[11px] text-[#6B7280] line-clamp-1"
+                          >Admin: Sacks sealed and labelled...</span
+                        >
+                      </div>
+                    </div>
+                    <span
+                      class="px-1.5 py-0.5 rounded-full bg-[#B5563A] text-white text-[10px] font-bold"
+                      >2</span
+                    >
+                  </a>
+                  <!-- Chat 2 -->
+                  <a
+                    class="py-2.5 flex items-start justify-between gap-3 hover:bg-[#FAF7F2] -mx-2 px-2 rounded-lg transition-colors group"
+                    href="#"
+                  >
+                    <div class="flex items-start gap-2.5">
+                      <div
+                        class="w-7 h-7 rounded-lg bg-[#B5563A] text-white flex items-center justify-center font-bold text-[10px] shrink-0"
+                      >
+                        UW
+                      </div>
+                      <div class="flex flex-col">
+                        <span
+                          class="font-bold text-[#1F2937] group-hover:text-[#0F4C5C]"
+                          >Ubud Weavers &amp; BaliTrade</span
+                        >
+                        <span class="text-[11px] text-[#6B7280] line-clamp-1"
+                          >Ubud Weavers: Hats ready for inspection...</span
+                        >
+                      </div>
+                    </div>
+                    <span
+                      class="w-2 h-2 rounded-full bg-[#2E7D5B] mt-1 shrink-0"
+                    ></span>
+                  </a>
+                </div>
+                <p
+                  class="mt-3 pt-3 border-t border-[#FAF7F2] text-[11px] text-[#6B7280]"
+                >
+                  Every chat includes BaliTrade Admin for verification and
+                  dispute protection.
+                </p>
+              </div>
+              <!-- 4. DOCUMENTS CARD -->
+              <div
+                class="w-full bg-white rounded-xl p-5 shadow-sm border border-[#E7E2D9]"
+              >
+                <h3
+                  class="font-title-md text-base font-bold text-[#1F2937] pb-3 border-b border-[#FAF7F2]"
+                >
+                  Documents
+                </h3>
+                <div class="mt-3 space-y-2 text-xs">
+                  <a
+                    class="flex items-center justify-between p-2 rounded-lg hover:bg-[#FAF7F2] text-[#1F2937] transition-colors group"
+                    href="#"
+                  >
+                    <span class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[18px] text-[#0F4C5C]"
+                        >description</span
+                      >
+                      Order summary (PDF)
+                    </span>
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#6B7280] group-hover:text-[#0F4C5C]"
+                      >download</span
+                    >
+                  </a>
+                  <a
+                    class="flex items-center justify-between p-2 rounded-lg hover:bg-[#FAF7F2] text-[#1F2937] transition-colors group"
+                    href="#"
+                  >
+                    <span class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[18px] text-[#0F4C5C]"
+                        >receipt_long</span
+                      >
+                      Payment receipt
+                    </span>
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#6B7280] group-hover:text-[#0F4C5C]"
+                      >download</span
+                    >
+                  </a>
+                  <a
+                    class="flex items-center justify-between p-2 rounded-lg hover:bg-[#FAF7F2] text-[#1F2937] transition-colors group"
+                    href="#"
+                  >
+                    <span class="flex items-center gap-2">
+                      <span
+                        class="material-symbols-outlined text-[18px] text-[#C9A24A]"
+                        >verified</span
+                      >
+                      QC report — Kopi Bali Asli (PDF)
+                    </span>
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#6B7280] group-hover:text-[#0F4C5C]"
+                      >download</span
+                    >
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 5. DOWNSTREAM SYSTEM FLOW SPECIFICATIONS (All 4 lifecycle variants showcased clearly) -->
+        <div
+          class="w-full bg-white border-t border-[#E7E2D9] py-14 px-4 sm:px-6 lg:px-12"
+        >
+          <div class="max-w-7xl mx-auto flex flex-col gap-8">
+            <div class="flex flex-col gap-2">
+              <div
+                class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#9A7426]"
+              >
+                <span class="material-symbols-outlined text-[16px]"
+                  >account_tree</span
+                >
+                Export Protocol Engine
+              </div>
+              <h2
+                class="font-headline-lg text-headline-lg font-bold text-[#1F2937]"
+              >
+                System Lifecycle States &amp; Specifications
+              </h2>
+              <p class="text-sm text-[#6B7280] max-w-3xl">
+                Visual documentation of subsequent transactional checkpoints for
+                Order #OR-2051: Issue handling, consolidated logistics
+                invoicing, air cargo telemetry, and final milestone
+                disbursement.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- FRAME 1: QC FAILED / ISSUE RESOLUTION STATE -->
+              <div
+                class="bg-[#FAF7F2] rounded-xl p-5 sm:p-6 border border-[#E7E2D9] flex flex-col justify-between shadow-sm"
+              >
+                <div>
+                  <div
+                    class="flex items-center justify-between gap-3 pb-3 border-b border-[#E7E2D9]"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="w-6 h-6 rounded-full bg-[#C0392B] text-white flex items-center justify-center text-xs font-bold"
+                        >1</span
+                      >
+                      <h3
+                        class="font-title-md text-sm font-bold text-[#1F2937]"
+                      >
+                        Group B: Ubud Weavers • Issue State
+                      </h3>
+                    </div>
+                    <span
+                      class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEE2E2] text-[#C0392B] border border-red-200"
+                    >
+                      QC issue
+                    </span>
+                  </div>
+                  <div
+                    class="mt-4 p-3.5 bg-white rounded-xl border border-red-200"
+                  >
+                    <div class="flex items-start gap-3">
+                      <span
+                        class="material-symbols-outlined text-[20px] text-[#C0392B] shrink-0 mt-0.5"
+                        >error</span
+                      >
+                      <div class="flex flex-col text-xs">
+                        <span class="font-bold text-[#1F2937]"
+                          >Bucket Hat: 6 of 40 pcs have uneven stitching</span
+                        >
+                        <span class="text-[#6B7280] mt-0.5"
+                          >Identified during Gianyar depot tensile and brim
+                          stitch review.</span
+                        >
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                      <div
+                        class="rounded-lg overflow-hidden border border-[#E7E2D9] aspect-video bg-gray-100"
+                      >
+                        <img
+                          class="w-full h-full object-cover"
+                          data-alt="Macro close up photograph of defective loose thread and crooked machine stitching on artisanal batik hat brim rim"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEuQ3TDrndb4TL6e_ENO1Imv9LLmBiKIUmuBmi7pM16NCw7Mpl6MkAafc54YTRv2avjfArVng0kE_C8g9i4tGF_MKiw8PsbpsmeOe01tJj1shkfhRAfc7CEjAu-T35qFTesqDx3D2cgoHp7cgoGHnhIQisu46QiqAjmz0GGtz0voySEgyNYzIVWrjGziSMWCiO7_hh_VMoO0KfxG2rmo0hr4cDZVxkLQRvlgAwpchoMKOVUH3xy_4w"
+                        />
+                      </div>
+                      <div
+                        class="rounded-lg overflow-hidden border border-[#E7E2D9] aspect-video bg-gray-100"
+                      >
+                        <img
+                          class="w-full h-full object-cover"
+                          data-alt="Batik bucket hat side seam discrepancy compared against approved export technical specification sample"
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhhdGGKEOUBJBR-3iqjjcSXfhX3FAGYjQvnom4wfflI0XEVa_CZQ4H-IV5aDEC63qRsrHOZkbJws9sT050paXEqfEXnUr18XovutW_96YgCpWVJOCh2v2iBJMHNXeG9tr9fsLMC66-fGq6DTCAmS89lG47Mtav9CI5Ps8jQ2pSQs_AcuUcDJZr2UQySoyb8R78D4VObosn5nnu34oe3M63ZFcBdkgZWZgqsLle0mGhd01K9Txw9lTU"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="mt-4 p-3 rounded-lg bg-[#EFF6FF] border border-blue-200 text-xs text-[#2F6F8F]"
+                  >
+                    <span class="font-bold">Resolution protocol:</span> We can
+                    find a replacement for the 6 hats, or you can get a refund
+                    for them.
+                  </div>
+                  <!-- Selectable Options -->
+                  <div class="mt-3 space-y-2">
+                    <label
+                      class="flex items-start gap-3 p-3 rounded-xl bg-white border-2 border-[#0F4C5C] cursor-pointer shadow-xs"
+                    >
+                      <input
+                        checked=""
+                        class="mt-0.5 text-[#0F4C5C] focus:ring-[#0F4C5C]"
+                        name="qc_resolution"
+                        type="radio"
+                      />
+                      <div class="text-xs">
+                        <div class="font-bold text-[#1F2937]">
+                          Find a replacement (recommended)
+                        </div>
+                        <div class="text-[#6B7280]">
+                          Our team sources matching hats; shipping waits for the
+                          replacement.
+                        </div>
+                      </div>
+                    </label>
+                    <label
+                      class="flex items-start gap-3 p-3 rounded-xl bg-white border border-[#E7E2D9] cursor-pointer hover:border-[#6B7280]"
+                    >
+                      <input
+                        class="mt-0.5 text-[#0F4C5C] focus:ring-[#0F4C5C]"
+                        name="qc_resolution"
+                        type="radio"
+                      />
+                      <div class="text-xs">
+                        <div class="font-bold text-[#1F2937]">
+                          Refund for these items
+                        </div>
+                        <div class="text-[#6B7280]">
+                          $27.00 refunded to you after confirmation.
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+                <div
+                  class="mt-5 pt-3 border-t border-[#E7E2D9] flex items-center justify-between gap-3"
+                >
+                  <button
+                    class="bg-[#0F4C5C] text-white px-4 py-2 rounded-xl text-xs font-semibold hover:bg-[#0B3A46]"
+                  >
+                    Confirm choice
+                  </button>
+                  <button
+                    class="text-xs font-semibold text-[#1F2937] hover:underline flex items-center gap-1"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >chat</span
+                    >
+                    Discuss in chat
+                  </button>
+                </div>
+              </div>
+              <!-- FRAME 2: SHIPPING INVOICE STATE -->
+              <div
+                class="bg-[#FAF7F2] rounded-xl p-5 sm:p-6 border border-[#E7E2D9] flex flex-col justify-between shadow-sm"
+              >
+                <div>
+                  <div
+                    class="flex items-center justify-between gap-3 pb-3 border-b border-[#E7E2D9]"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="w-6 h-6 rounded-full bg-[#C9A24A] text-white flex items-center justify-center text-xs font-bold"
+                        >2</span
+                      >
+                      <h3
+                        class="font-title-md text-sm font-bold text-[#1F2937]"
+                      >
+                        Shipping Invoice Stage
+                      </h3>
+                    </div>
+                    <span
+                      class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#9A7426] border border-[#FDE68A]"
+                    >
+                      Awaiting shipping payment
+                    </span>
+                  </div>
+                  <div
+                    class="mt-4 flex gap-3 p-3.5 bg-white rounded-xl border border-[#E7E2D9]"
+                  >
+                    <img
+                      class="w-20 h-20 rounded-lg object-cover shrink-0 border border-[#E7E2D9]"
+                      data-alt="Stack of four export approved heavy duty cardboard freight shipping cartons banded on wooden pallet with air cargo handling labels and fragile marks"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQs04kEqqfcd5aZtdBioEHKx9vbGbM_w7zplscGdFSVJu68IoJKHAlHjkYty5dJMLfHNQfJEk-x-qWtn8_8Wr6Yr7_vvl9gQ8yTEL5AALRNrozYVZrFMRAYXwrH_TpJEQYRDf8tO-Q_-QqJ37pUW6WQQD3rINrZl-TztZu2TTb0g0LiASYEPeeLjP3t2m_3vtsXEzXrUm01zfvgFI0TUfF16iSJpCDtEJBXAJ0qBzzkHvL0BaBgfC0"
+                    />
+                    <div class="flex flex-col text-xs justify-center">
+                      <span class="font-bold text-sm text-[#1F2937]"
+                        >Packed: 4 cartons • 61 kg</span
+                      >
+                      <span class="text-[#6B7280]"
+                        >Consolidated shipment (Kopi Bali Asli + Ubud
+                        Weavers)</span
+                      >
+                      <span
+                        class="text-[11px] text-[#2E7D5B] font-semibold mt-1"
+                        >Palletized &amp; weatherproof shrink-wrapped</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="mt-4 bg-white rounded-xl p-4 border border-[#E7E2D9] space-y-2 text-xs"
+                  >
+                    <div class="flex justify-between text-[#6B7280]">
+                      <span>Air cargo freight (DPS → SVO)</span>
+                      <span class="font-bold text-[#1F2937]">$210.00</span>
+                    </div>
+                    <div class="flex justify-between text-[#6B7280]">
+                      <span>Export documentation &amp; phytosanitary</span>
+                      <span class="font-bold text-[#1F2937]">$34.00</span>
+                    </div>
+                    <div
+                      class="flex justify-between pt-2 border-t border-[#FAF7F2] text-sm"
+                    >
+                      <span class="font-bold text-[#1F2937]">Due now:</span>
+                      <span class="font-price-numeral font-bold text-[#0F4C5C]"
+                        >$244.00</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="mt-3 flex items-center gap-2 text-xs text-[#6B7280]"
+                  >
+                    <span
+                      class="material-symbols-outlined text-[16px] text-[#C9A24A]"
+                      >bolt</span
+                    >
+                    <span
+                      >Available methods: Bank Transfer (IDR) / USDT TRC20</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="mt-5 pt-3 border-t border-[#E7E2D9] flex flex-col gap-2"
+                >
+                  <button
+                    class="w-full bg-[#0F4C5C] text-white py-2.5 rounded-xl text-xs font-semibold hover:bg-[#0B3A46] shadow-sm flex items-center justify-center gap-2"
+                  >
+                    <span class="material-symbols-outlined text-[16px]"
+                      >credit_card</span
+                    >
+                    Pay shipping ($244.00)
+                  </button>
+                  <span class="text-[11px] text-[#6B7280] text-center"
+                    >Your goods ship after this payment is verified.</span
+                  >
+                </div>
+              </div>
+              <!-- FRAME 3: TRACKING & AIR CARGO MILESTONES -->
+              <div
+                class="bg-[#FAF7F2] rounded-xl p-5 sm:p-6 border border-[#E7E2D9] flex flex-col justify-between shadow-sm"
+              >
+                <div>
+                  <div
+                    class="flex items-center justify-between gap-3 pb-3 border-b border-[#E7E2D9]"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="w-6 h-6 rounded-full bg-[#2F6F8F] text-white flex items-center justify-center text-xs font-bold"
+                        >3</span
+                      >
+                      <h3
+                        class="font-title-md text-sm font-bold text-[#1F2937]"
+                      >
+                        Air Cargo Tracking • Ship Together
+                      </h3>
+                    </div>
+                    <span
+                      class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#EFF6FF] text-[#2F6F8F]"
+                    >
+                      In transit
+                    </span>
+                  </div>
+                  <p class="text-xs text-[#6B7280] mt-3">
+                    Tracking is updated manually by our team at each physical
+                    milestone.
+                  </p>
+                  <!-- Vertical Timeline -->
+                  <div
+                    class="mt-4 relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#E5E7EB] text-xs"
+                  >
+                    <!-- Milestone 1 -->
+                    <div class="relative">
+                      <div
+                        class="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#0F4C5C] text-white flex items-center justify-center text-[10px]"
+                      >
+                        <span class="material-symbols-outlined text-[10px]"
+                          >check</span
+                        >
+                      </div>
+                      <div class="font-bold text-[#1F2937]">
+                        Oct 28 • Handed to air cargo — AWB [AWB number]
+                      </div>
+                      <a
+                        class="text-[11px] text-[#0F4C5C] hover:underline flex items-center gap-0.5 mt-0.5"
+                        href="#"
+                      >
+                        Track on airline site →
+                      </a>
+                    </div>
+                    <!-- Milestone 2 -->
+                    <div class="relative">
+                      <div
+                        class="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#0F4C5C] text-white flex items-center justify-center text-[10px]"
+                      >
+                        <span class="material-symbols-outlined text-[10px]"
+                          >check</span
+                        >
+                      </div>
+                      <div class="font-bold text-[#1F2937]">
+                        Oct 29 • Departed Bali (DPS Airport)
+                      </div>
+                      <div class="text-[11px] text-[#6B7280]">
+                        Consolidated pallet stowed in freight container.
+                      </div>
+                    </div>
+                    <!-- Milestone 3 -->
+                    <div class="relative">
+                      <div
+                        class="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#0F4C5C] text-white flex items-center justify-center text-[10px]"
+                      >
+                        <span class="material-symbols-outlined text-[10px]"
+                          >check</span
+                        >
+                      </div>
+                      <div class="font-bold text-[#1F2937]">
+                        Oct 31 • Arrived at destination airport (SVO)
+                      </div>
+                      <div class="text-[11px] text-[#6B7280]">
+                        Transferred to bonded import warehouse.
+                      </div>
+                    </div>
+                    <!-- Milestone 4 (Active) -->
+                    <div class="relative">
+                      <div
+                        class="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#2F6F8F] ring-4 ring-[#2F6F8F]/20"
+                      ></div>
+                      <div class="font-bold text-[#2F6F8F]">
+                        Nov 01 • Customs processing
+                      </div>
+                      <div class="text-[11px] text-[#6B7280]">
+                        Customs clearance agent review in progress.
+                      </div>
+                    </div>
+                    <!-- Milestone 5 -->
+                    <div class="relative opacity-50">
+                      <div
+                        class="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#E5E7EB]"
+                      ></div>
+                      <div class="font-medium text-[#6B7280]">
+                        Nov 02 • With local partner
+                      </div>
+                    </div>
+                    <!-- Milestone 6 -->
+                    <div class="relative opacity-50">
+                      <div
+                        class="absolute -left-6 top-0.5 w-4 h-4 rounded-full bg-[#E5E7EB]"
+                      ></div>
+                      <div class="font-medium text-[#6B7280]">
+                        Nov 03 • Delivered
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="mt-5 pt-3 border-t border-[#E7E2D9] flex items-center justify-between text-xs text-[#6B7280]"
+                >
+                  <span>Consignment ID: #BT-DPS-2051</span>
+                  <span class="text-[#0F4C5C] font-semibold"
+                    >Airway Courier</span
+                  >
+                </div>
+              </div>
+              <!-- FRAME 4: ARRIVED & CONFIRM RECEIPT -->
+              <div
+                class="bg-[#FAF7F2] rounded-xl p-5 sm:p-6 border border-[#E7E2D9] flex flex-col justify-between shadow-sm"
+              >
+                <div>
+                  <div
+                    class="flex items-center justify-between gap-3 pb-3 border-b border-[#E7E2D9]"
+                  >
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="w-6 h-6 rounded-full bg-[#2E7D5B] text-white flex items-center justify-center text-xs font-bold"
+                        >4</span
+                      >
+                      <h3
+                        class="font-title-md text-sm font-bold text-[#1F2937]"
+                      >
+                        Arrived • Confirmation State
+                      </h3>
+                    </div>
+                    <span
+                      class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#2E7D5B]/10 text-[#2E7D5B]"
+                    >
+                      Delivered
+                    </span>
+                  </div>
+                  <!-- Receipt Banner -->
+                  <div
+                    class="mt-4 p-4 rounded-xl bg-white border border-[#2E7D5B]/30 flex flex-col gap-2"
+                  >
+                    <div
+                      class="flex items-center gap-2 text-sm font-bold text-[#2E7D5B]"
+                    >
+                      <span class="material-symbols-outlined text-[20px]"
+                        >task_alt</span
+                      >
+                      Your goods have arrived
+                    </div>
+                    <p class="text-xs text-[#1F2937]">
+                      Please check your goods and confirm. After you confirm,
+                      each seller gets paid from BaliTrade accounts.
+                    </p>
+                    <div class="mt-2 flex flex-wrap items-center gap-2">
+                      <button
+                        class="bg-[#2E7D5B] hover:bg-[#25664a] text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-sm flex items-center gap-1.5 transition-colors"
+                      >
+                        <span class="material-symbols-outlined text-[16px]"
+                          >check_box</span
+                        >
+                        Confirm I received my goods
+                      </button>
+                      <button
+                        class="text-[#C0392B] hover:underline text-xs font-semibold px-2 py-1"
+                      >
+                        Report a problem
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Post-Confirmation Artisan Review Section -->
+                  <div class="mt-4 space-y-3">
+                    <span
+                      class="text-xs font-bold uppercase tracking-wider text-[#6B7280]"
+                      >Seller Evaluations</span
+                    >
+                    <!-- Review Card 1 -->
+                    <div
+                      class="p-3 bg-white rounded-xl border border-[#E7E2D9] text-xs space-y-2"
+                    >
+                      <div class="flex items-center justify-between">
+                        <span class="font-bold text-[#1F2937]"
+                          >Rate Kopi Bali Asli</span
+                        >
+                        <div class="flex text-[#C9A24A]">
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                        </div>
+                      </div>
+                      <input
+                        class="w-full bg-[#FAF7F2] border border-[#E7E2D9] rounded-lg px-2.5 py-1.5 text-xs text-[#1F2937] focus:outline-none focus:border-[#0F4C5C]"
+                        placeholder="Share feedback on bean quality &amp; packing..."
+                        type="text"
+                      />
+                      <div class="flex justify-between items-center pt-1">
+                        <button
+                          class="text-[11px] text-[#0F4C5C] font-semibold flex items-center gap-1"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >add_a_photo</span
+                          >
+                          Add photos
+                        </button>
+                        <button
+                          class="bg-[#0F4C5C] text-white px-3 py-1 rounded-lg text-[11px] font-semibold"
+                        >
+                          Submit review
+                        </button>
+                      </div>
+                    </div>
+                    <!-- Review Card 2 -->
+                    <div
+                      class="p-3 bg-white rounded-xl border border-[#E7E2D9] text-xs space-y-2"
+                    >
+                      <div class="flex items-center justify-between">
+                        <span class="font-bold text-[#1F2937]"
+                          >Rate Ubud Weavers</span
+                        >
+                        <div class="flex text-[#C9A24A]">
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            style="font-variation-settings: 'FILL' 1;"
+                            >star</span
+                          >
+                          <span
+                            class="material-symbols-outlined text-[18px] cursor-pointer"
+                            >star</span
+                          >
+                        </div>
+                      </div>
+                      <input
+                        class="w-full bg-[#FAF7F2] border border-[#E7E2D9] rounded-lg px-2.5 py-1.5 text-xs text-[#1F2937] focus:outline-none focus:border-[#0F4C5C]"
+                        placeholder="Share feedback on socks and weave..."
+                        type="text"
+                      />
+                      <div class="flex justify-between items-center pt-1">
+                        <button
+                          class="text-[11px] text-[#0F4C5C] font-semibold flex items-center gap-1"
+                        >
+                          <span class="material-symbols-outlined text-[14px]"
+                            >add_a_photo</span
+                          >
+                          Add photos
+                        </button>
+                        <button
+                          class="bg-[#0F4C5C] text-white px-3 py-1 rounded-lg text-[11px] font-semibold"
+                        >
+                          Submit review
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="mt-4 pt-3 border-t border-[#E7E2D9] text-[11px] text-[#2E7D5B] font-medium text-center"
+                >
+                  Final settlement released to cooperatives upon buyer
+                  confirmation.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile Sticky Bottom Bar (Active for Quick Group Approval on Small Viewports) -->
+        <div
+          class="lg:hidden sticky bottom-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E7E2D9] p-4 flex items-center justify-between gap-3 shadow-lg"
+        >
+          <div class="flex flex-col">
+            <span
+              class="text-[11px] font-bold uppercase tracking-wider text-[#6B7280]"
+              >Group A (KBA)</span
+            >
+            <span class="text-xs font-bold text-[#1F2937]"
+              >QC Report Ready</span
+            >
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              class="border border-[#E7E2D9] text-[#1F2937] p-2 rounded-xl text-xs font-semibold"
+            >
+              <span class="material-symbols-outlined text-[18px]">chat</span>
+            </button>
+            <button
+              class="bg-[#0F4C5C] text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-sm"
+            >
+              Approve Group A
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="w-full bg-primary text-on-primary relative overflow-hidden">
+      <div
+        class="absolute inset-0 opacity-[0.03] pointer-events-none flex items-center justify-center"
+      >
+        <span class="material-symbols-outlined text-[540px]">spa</span>
+      </div>
+      <div class="max-w-7xl mx-auto px-6 lg:px-12 py-space-xl relative z-10">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-xl pb-space-xl border-b border-primary-container"
+        >
+          <div class="lg:col-span-1">
+            <div class="flex items-center gap-space-sm mb-space-md">
+              <div
+                class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >local_florist</span
+                >
+              </div>
+              <span
+                class="font-headline-sm text-headline-sm font-bold text-on-primary tracking-tight"
+                >BaliTrade</span
+              >
+            </div>
+            <p
+              class="font-body-md text-body-md text-on-primary-container leading-relaxed"
+            >
+              Wholesale export gateway bridging artisanal Indonesian
+              cooperatives with international trade networks.
+            </p>
+            <div
+              class="mt-space-md flex items-center gap-space-xs text-tertiary-fixed font-label-md text-label-md"
+            >
+              <span class="material-symbols-outlined text-[16px]">verified</span
+              >Certified Origin &amp; Quality Escrow
+            </div>
+          </div>
+          <div>
+            <h4
+              class="font-title-md text-title-md font-semibold text-on-primary mb-space-md"
+            >
+              About BaliTrade
+            </h4>
+            <ul
+              class="space-y-space-sm font-body-md text-body-md text-on-primary-container"
+            >
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="about-balitrade"
+                  href="#"
+                  >Company Profile</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="provenance-quality"
+                  href="#"
+                  >Artisan Heritage</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="sustainability"
+                  href="#"
+                  >Sustainability</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="newsroom"
+                  href="#"
+                  >Trade Newsroom</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4
+              class="font-title-md text-title-md font-semibold text-on-primary mb-space-md"
+            >
+              For Buyers
+            </h4>
+            <ul
+              class="space-y-space-sm font-body-md text-body-md text-on-primary-container"
+            >
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="how-it-works"
+                  href="#"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="request-a-product"
+                  href="#"
+                  >Request a Product</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="payment-methods"
+                  href="#"
+                  >Payment Methods</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="shipping-and-tracking"
+                  href="#"
+                  >Shipping &amp; Tracking</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4
+              class="font-title-md text-title-md font-semibold text-on-primary mb-space-md"
+            >
+              For Sellers
+            </h4>
+            <ul
+              class="space-y-space-sm font-body-md text-body-md text-on-primary-container"
+            >
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="sell-on-balitrade"
+                  href="#"
+                  >Sell on BaliTrade</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="seller-guidelines"
+                  href="#"
+                  >Seller Guidelines</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="export-compliance"
+                  href="#"
+                  >Export Compliance</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="cooperative-portal"
+                  href="#"
+                  >Cooperative Portal</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4
+              class="font-title-md text-title-md font-semibold text-on-primary mb-space-md"
+            >
+              Support
+            </h4>
+            <ul
+              class="space-y-space-sm font-body-md text-body-md text-on-primary-container mb-space-lg"
+            >
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="faq"
+                  href="#"
+                  >FAQ</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="contact"
+                  href="#"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="terms-of-service"
+                  href="#"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-on-primary transition-colors"
+                  data-path="privacy-policy"
+                  href="#"
+                  >Privacy Policy</a
+                >
+              </li>
+            </ul>
+            <div class="pt-space-xs">
+              <span
+                class="font-label-sm text-label-sm text-outline-variant uppercase tracking-wider block mb-space-xs"
+                >Select Language</span
+              >
+              <div
+                class="flex items-center gap-space-sm font-label-md text-label-md"
+              >
+                <a
+                  class="text-tertiary-fixed font-bold hover:underline"
+                  href="#"
+                  >English</a
+                ><span class="text-primary-container">/</span
+                ><a
+                  class="text-on-primary-container hover:text-on-primary transition-colors"
+                  href="#"
+                  >Bahasa Indonesia</a
+                ><span class="text-primary-container">/</span
+                ><a
+                  class="text-on-primary-container hover:text-on-primary transition-colors"
+                  href="#"
+                  >Русский</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md text-on-primary-container font-body-md text-body-md"
+        >
+          <div>
+            © 2026 BaliTrade. All rights reserved. Bali, Indonesia → Russia
+            &amp; CIS
+          </div>
+          <div
+            class="flex items-center gap-space-lg font-label-md text-label-md"
+          >
+            <span>Port of Tanjung Benoa (DPS)</span><span>•</span
+            ><span>Vladivostok Commercial Port (VVO)</span><span>•</span
+            ><span>Novorossiysk (NOVR)</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
