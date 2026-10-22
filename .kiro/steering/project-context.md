@@ -1,17 +1,22 @@
 # Project context — BaliTrade
 
-Sebelum menjawab apa pun tentang project ini, WAJIB baca:
-1. `BRAINSTORMING.md` — semua keputusan bisnis, flow, dan keputusan terbuka.
-2. `UI_PROMPT.md` — prompt Google Stitch + tabel **Progress** (status tiap halaman UI).
-3. `ARCHITECTURE.md` — stack, model data, alur status order, scope MVP 1.0 / 1.1, rencana kerja.
-4. `TASKS.md` — daftar task coding berurutan dengan DoD; lanjutkan dari task pertama yang belum dicentang (skill `/next-task`).
+Sebelum menjawab apa pun tentang project ini, baca:
+1. `TASKS.md` — daftar task coding berurutan dengan DoD; lanjutkan dari task pertama yang belum dicentang.
+2. `ARCHITECTURE.md` — stack (versi), model data, alur status order, scope MVP 1.0 / 1.1.
+3. `BRAINSTORMING.md` — keputusan bisnis, flow, dan keputusan terbuka (bagian 15).
+4. `UI_PROMPT.md` — terutama "Catatan implementasi (ringkasan)" saat mengerjakan UI.
+5. `README.md` — struktur folder & cara menjalankan.
 
-Skill project di `.kiro/skills/`: `nestjs`, `nextjs`, `prisma-postgres`, `typescript` (konvensi kode), `next-task` (alur kerja task).
+Skill project di `.kiro/skills/`: `nestjs`, `nextjs`, `prisma-postgres`, `typescript` (konvensi kode), `next-task` (alur kerja: ambil task → kerjakan → cek DoD → centang).
+
+Status (update setiap selesai task):
+- Ide & desain UI: selesai (2026-10-22). Stack sudah diputuskan (lihat ARCHITECTURE.md) — jangan ganti framework tanpa diskusi.
+- Coding MVP 1.0 berjalan; target 31 Okt 2026. Task terakhir selesai: lihat centang di `TASKS.md`.
 
 Aturan:
-- Tahap saat ini: desain UI selesai (2026-10-22); berikutnya arsitektur/teknis. Jangan memilih framework tanpa diskusi dengan user.
-- Lanjutkan pekerjaan UI dari tabel Progress di `UI_PROMPT.md`; update tabel itu setiap ada perubahan status.
-- Hasil generate disimpan di `design-ui/google-stitch/` (`01.html` = halaman 1, dst.). Saat review, cocokkan dengan keputusan di `BRAINSTORMING.md`.
-- Keputusan baru dari diskusi → catat di `BRAINSTORMING.md`. Prompt UI baru/revisi → `UI_PROMPT.md`.
-- Komunikasi dengan user dalam Bahasa Indonesia; prompt Stitch dalam bahasa Inggris.
-- Saat masuk tahap implementasi/coding UI: WAJIB baca bagian "Catatan implementasi (ringkasan)" di `UI_PROMPT.md` dan catatan implementasi per halaman. Design system `design-ui/google-stitch/01-v4.html` = sumber kebenaran visual; halaman lain hanya acuan alur.
+- Komunikasi dengan user dalam Bahasa Indonesia; kode, commit, dan teks UI default dalam bahasa Inggris.
+- Kerjakan hanya scope task; fitur yang terasa berlebihan → versi paling sederhana.
+- Setiap task: jalankan lint, typecheck, build, dan test yang relevan sebelum dianggap selesai.
+- Keputusan baru → catat di `BRAINSTORMING.md` (bisnis) atau `ARCHITECTURE.md` (teknis).
+- UI: design system `design-ui/google-stitch/01-v4.html` = sumber kebenaran visual (token sudah ada di `apps/web/src/app/globals.css`); halaman Stitch lain hanya acuan alur.
+- Git: commit hanya jika user meminta; author = user saja (tanpa trailer "Co-authored-by"); jangan commit `.env`.
