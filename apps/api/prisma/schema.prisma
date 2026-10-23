@@ -1,5 +1,5 @@
-// BaliTrade database schema — v1 (T02): users & roles only.
-// Next models (SellerProfile, Product, Order, ...) are added task by task — see TASKS.md / ARCHITECTURE.md §5.
+// BaliTrade database schema — grows task by task (see TASKS.md / ARCHITECTURE.md §5).
+// So far: users & roles (T02), seller profiles & QC zones (T07).
 
 generator client {
   provider            = "prisma-client"
@@ -22,16 +22,63 @@ enum Role {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String   @map("password_hash")
+  id           String  @id @default(cuid())
+  email        String  @unique
+  passwordHash String  @map("password_hash")
   name         String
   phone        String?
   /// UI language: en | id | ru
-  locale       String   @default("en")
-  roles        Role[]   @default([BUYER])
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  locale       String  @default("en")
+  roles        Role[]  @default([BUYER])
+
+  sellerProfile   SellerProfile?
+  reviewedSellers SellerProfile[] @relation("SellerReviewer")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
+}
+
+/// Keep in sync with packages/shared/src/seller.ts
+enum SellerStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/// Bali regency/city where a seller is located; the QC fee depends on it.
+model QcZone {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  /// QC fee per order group in USD (exact decimal, never float).
+  feeUsd    Decimal  @map("fee_usd") @db.Decimal(12, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  sellers SellerProfile[]
+
+  @@map("qc_zones")
+}
+
+/// A user's application/profile as a seller. Selling is allowed only when status = APPROVED (admin decision).
+model SellerProfile {
+  id              String       @id @default(cuid())
+  userId          String       @unique @map("user_id")
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName     String       @map("display_name")
+  about           String?
+  /// Null until the seller picks their location; admins cannot approve without it.
+  qcZoneId        String?      @map("qc_zone_id")
+  qcZone          QcZone?      @relation(fields: [qcZoneId], references: [id])
+  status          SellerStatus @default(PENDING)
+  rejectionReason String?      @map("rejection_reason")
+  reviewedById    String?      @map("reviewed_by_id")
+  reviewedBy      User?        @relation("SellerReviewer", fields: [reviewedById], references: [id])
+  reviewedAt      DateTime?    @map("reviewed_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  @@index([status, createdAt])
+  @@map("seller_profiles")
 }

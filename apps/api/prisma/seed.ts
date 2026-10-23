@@ -4,8 +4,25 @@ import { PrismaClient, Role } from '../src/generated/prisma/client.js';
 import { hashPassword } from '../src/common/password.js';
 
 /**
- * Seeds the first admin account from env (ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME).
- * Safe to run multiple times: existing users are not overwritten.
+ * QC zones = the 9 regencies/cities of Bali. The fees are PLACEHOLDERS: the real tariff per zone
+ * is still an open business decision (BRAINSTORMING.md, "Tarif QC per zona"). Existing zones are
+ * never overwritten by the seed, so fees edited later in the database are kept.
+ */
+const QC_ZONES: { name: string; feeUsd: string }[] = [
+  { name: 'Badung', feeUsd: '3.00' },
+  { name: 'Denpasar', feeUsd: '3.00' },
+  { name: 'Gianyar', feeUsd: '5.00' },
+  { name: 'Tabanan', feeUsd: '5.00' },
+  { name: 'Klungkung', feeUsd: '6.00' },
+  { name: 'Bangli', feeUsd: '6.00' },
+  { name: 'Karangasem', feeUsd: '8.00' },
+  { name: 'Buleleng', feeUsd: '8.00' },
+  { name: 'Jembrana', feeUsd: '8.00' },
+];
+
+/**
+ * Seeds the first admin account from env (ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME) and the QC zones.
+ * Safe to run multiple times: existing rows are not overwritten.
  */
 async function main(): Promise<void> {
   const email = process.env.ADMIN_EMAIL;
@@ -35,6 +52,11 @@ async function main(): Promise<void> {
       },
     });
     console.log(`Admin ready: ${admin.email} (${admin.roles.join(', ')})`);
+
+    for (const zone of QC_ZONES) {
+      await prisma.qcZone.upsert({ where: { name: zone.name }, update: {}, create: zone });
+    }
+    console.log(`QC zones ready: ${QC_ZONES.length}`);
   } finally {
     await prisma.$disconnect();
   }

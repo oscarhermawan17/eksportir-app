@@ -172,7 +172,7 @@ Setiap langkah: tanggal, catatan, foto (opsional). Nomor AWB bisa ditautkan ke t
 - Mekanisme ongkir: estimasi + penyesuaian vs ditagih terpisah.
 - Besaran sourcing fee / deposit / aturan refund.
 - Masa inspeksi setelah barang tiba (usulan 3–7 hari).
-- Tarif QC per zona.
+- Tarif QC per zona. (T07: tabel `QcZone` sudah ada dengan **angka placeholder** — Badung/Denpasar $3, Gianyar/Tabanan $5, Klungkung/Bangli $6, Karangasem/Buleleng/Jembrana $8 — ganti setelah tarif diputuskan.)
 - Daftar kategori terlarang.
 - Jaringan USDT (TRC-20 / ERC-20 / lainnya).
 - **Keranjang (cart) vs hanya "Buy now"** — DIPUTUSKAN 2026-10-21: pakai **cart, 1 checkout = 1 pengiriman gabungan**, QC & biaya QC **per penjual** (lihat bagian 5a).

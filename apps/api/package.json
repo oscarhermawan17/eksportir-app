@@ -23,13 +23,20 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.1156.0",
+    "@aws-sdk/s3-request-presigner": "3.1156.0",
     "@balitrade/shared": "workspace:*",
     "@nestjs/common": "12.2.0",
     "@nestjs/config": "12.0.1",
     "@nestjs/core": "12.2.0",
+    "@nestjs/jwt": "12.0.3",
     "@nestjs/platform-express": "12.2.0",
+    "@nestjs/throttler": "6.7.1",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "cookie-parser": "1.4.7",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2"
   },
@@ -37,6 +44,7 @@
     "@nestjs/cli": "12.0.10",
     "@nestjs/schematics": "12.0.10",
     "@nestjs/testing": "12.2.0",
+    "@types/cookie-parser": "1.4.10",
     "@types/express": "5.0.6",
     "@types/node": "22.20.5",
     "@types/supertest": "7.2.1",

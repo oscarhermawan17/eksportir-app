@@ -53,14 +53,16 @@ Modul NestJS: `auth`, `users`, `sellers`, `products`, `media`, `chat` (gateway),
 | ADMIN_FINANCE | verifikasi/tolak pembayaran, refund |
 | ADMIN_OPS | approve penjual & listing (+ terjemahan), QC, tagihan ongkir, tracking, ikut semua chat |
 
-- Satu user boleh punya beberapa role (kolom `roles` array). Cek akses via NestJS Guard + decorator `@Roles()`.
+- Satu user boleh punya beberapa role (kolom `roles` array). Cek akses via NestJS Guard + decorator `@Roles()`. Pola: `@UseGuards(JwtAuthGuard, RolesGuard)` + `@Roles(...)` (cocok bila salah satu role terpenuhi; tanpa token → 401, role kurang → 403). Role tidak otomatis mewarisi: ADMIN_OWNER harus disebut eksplisit di `@Roles()` (pakai `ADMIN_ROLES` dari `packages/shared` untuk "semua admin").
+- Alur onboarding penjual (T07): daftar sebagai SELLER (atau user yang sudah ada mengajukan lewat `POST /sellers/apply`, yang menambah role SELLER) → `SellerProfile` PENDING → penjual melengkapi nama toko & lokasi di `/seller` → ADMIN_OPS/OWNER approve/reject di `/admin/sellers`. Approve butuh lokasi terisi. Reject wajib beralasan; penjual ditolak yang mengedit profilnya otomatis diajukan ulang (PENDING). Admin bisa mencabut persetujuan (reject dari APPROVED). Penjual APPROVED tidak bisa mengganti lokasi sendiri (menentukan biaya QC). Endpoint khusus penjual wajib memakai `@UseGuards(JwtAuthGuard, RolesGuard, ApprovedSellerGuard)` + `@Roles('SELLER')`.
+- Pendaftaran publik boleh memilih BUYER atau SELLER, tetapi **role SELLER saja belum berarti boleh jualan**: hak jualan ditentukan oleh `SellerProfile.status = APPROVED`, yang hanya bisa diset admin (ADMIN_OPS/OWNER). Selama PENDING/REJECTED, seller tidak bisa membuat/submit listing (guard `ApprovedSellerGuard` di T07). Role admin tidak pernah bisa dipilih saat daftar; akun admin dibuat via seed (owner pertama) dan nanti oleh owner dari dashboard admin.
 - "BaliTrade Store" (BaliTrade sebagai penjual) = **akun SELLER terpisah** dari akun admin.
 
 ## 5. Model data inti (MVP 1.0)
 
 - **User**: email, passwordHash, name, phone, locale, roles[]
-- **SellerProfile**: userId, displayName, regency, about, status (PENDING / APPROVED / REJECTED), qcZoneId
-- **QcZone**: name (mis. Badung, Gianyar), feeUsd
+- **SellerProfile**: userId, displayName, about, status (PENDING / APPROVED / REJECTED), rejectionReason, reviewedBy/At, qcZoneId (= kabupaten/kota penjual; tidak ada kolom `regency` terpisah)
+- **QcZone**: name (9 kabupaten/kota Bali, di-seed), feeUsd (`Decimal(12,2)`; **nilai seed = placeholder**, tarif asli belum diputuskan)
 - **Product**: sellerId, type (READY_STOCK / MADE_TO_ORDER), category, unit, priceIdr, moq, stockQty, leadTimeDays, sourceLocale, status (DRAFT / PENDING_REVIEW / APPROVED / REJECTED / ARCHIVED)
 - **ProductTranslation**: productId, locale (en/id/ru), title, description, isAuto
 - **ProductMedia**: productId, r2Key, type (IMAGE / VIDEO), sort
@@ -93,10 +95,30 @@ Setiap perubahan status → notifikasi in-app ke pihak terkait + pesan sistem di
 
 ## 7. Komponen teknis
 
-- **Auth**: email + password (hash argon2/bcrypt), JWT di cookie httpOnly, rate limit login (`@nestjs/throttler`). Lupa password: token sekali pakai (disimpan hash, kedaluwarsa singkat) dikirim via Resend. Saat pindah domain production → verifikasi ulang domain di Resend.
+- **Auth**: email + password (hash scrypt bawaan Node), JWT di cookie httpOnly `bt_session` (payload hanya `sub`; user & role dibaca ulang dari DB di setiap request; `sameSite=lax`, `secure` di production), rate limit login 5/menit & register 10/menit per IP (`@nestjs/throttler`, in-memory — pindah ke Redis bila API di-scale ke >1 instance). Register hanya boleh role BUYER/SELLER; role admin hanya via seed/owner. Logout = hapus cookie (JWT stateless, tidak ada revocation). Lupa password: token sekali pakai (disimpan hash, kedaluwarsa singkat) dikirim via Resend. Saat pindah domain production → verifikasi ulang domain di Resend.
 - **Chat realtime**: Socket.IO gateway di NestJS; room per conversation; pesan juga disimpan di DB; lampiran via R2. Admin (ADMIN_OPS) otomatis jadi peserta semua conversation. Banner "Admin ikut dalam percakapan" + persetujuan saat daftar (UU PDP).
 - **Media (R2)**: frontend minta presigned URL ke API → upload langsung ke R2 → simpan key. Batas: foto 10 MB, video 50 MB. Bukti pembayaran di bucket/prefix privat, dibuka via presigned GET berumur pendek.
+  - Implementasi (T08): modul `media`. `POST /api/media/presign-upload {purpose, contentType, size}` → `{key, uploadUrl, headers, publicUrl}`; browser `PUT` ke `uploadUrl`. Tipe (JPG/PNG/WebP; MP4/WebM/MOV) dan ukuran persis ikut ditandatangani, jadi R2 menolak file lain. Ekstensi key berasal dari tipe, bukan nama file dari client.
+  - **Dua bucket**: publik (`R2_PUBLIC_BUCKET`, foto/video produk, key `products/<userId>/<uuid>.<ext>`, dibaca lewat `R2_PUBLIC_BASE_URL`) dan privat (`R2_PRIVATE_BUCKET`, key `private/<userId>/<uuid>.<ext>`, dibaca lewat `GET /api/media/download-url?key=` → presigned GET 5 menit). Hanya pengunggah atau admin yang boleh membuka file privat; task bukti bayar/QC/chat (T13, T17, T18) menambah peserta order/percakapan.
+  - `purpose`: `PRODUCT_MEDIA` (hanya seller APPROVED) dan `PRIVATE_FILE` (user login mana pun). Tanpa pengaturan R2 di development, endpoint menjawab 503 dan sisa aplikasi tetap jalan; di production semua pengaturan R2 wajib (aplikasi menolak start).
+  - Komponen web `MediaUploader` dipakai ulang oleh form produk (T09); halaman uji `/{locale}/dev/upload` hanya ada saat development.
+
+### Cloudflare R2 setup
+
+1. Cloudflare dashboard → **R2** → buat 2 bucket, mis. `balitrade-public` dan `balitrade-private`.
+2. Bucket publik → **Settings → Public access** → aktifkan `r2.dev subdomain` (cukup untuk dev/uji; production pakai custom domain). Salin URL `https://pub-xxxx.r2.dev` → `R2_PUBLIC_BASE_URL`.
+3. **CORS** di kedua bucket (Settings → CORS policy), ganti origin saat production:
+   ```json
+   [{ "AllowedOrigins": ["http://localhost:3000"], "AllowedMethods": ["PUT", "GET", "HEAD"], "AllowedHeaders": ["Content-Type"], "ExposeHeaders": ["ETag"], "MaxAgeSeconds": 3600 }]
+   ```
+4. R2 → **Manage API tokens** → buat token dengan izin **Object Read & Write** untuk kedua bucket → salin *Access Key ID* dan *Secret Access Key* (hanya tampil sekali). *Account ID* ada di halaman overview R2.
+5. Isi `apps/api/.env`: `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_PUBLIC_BUCKET`, `R2_PRIVATE_BUCKET`, `R2_PUBLIC_BASE_URL` (jangan commit).
+- **Web ↔ API auth**: browser memanggil API langsung (`NEXT_PUBLIC_API_URL`, default `http://localhost:4000/api`) dengan `credentials: 'include'`; sesi dibaca client lewat `GET /auth/me` di `AuthProvider`. Cookie berfungsi karena web dan API satu *site* (localhost; di production pakai subdomain dari domain yang sama, mis. `app.` dan `api.`). Checkbox persetujuan "admin ikut di semua chat" saat ini hanya wajib dicentang di form (belum disimpan di DB).
 - **i18n UI**: `next-intl`, file `messages/en.json`, `id.json`, `ru.json`; locale di URL (`/en`, `/id`, `/ru`) + cookie + `User.locale`.
+  - Implementasi (T06): rute `src/app/[locale]/...`, `src/proxy.ts` (next-intl; Next 16 memakai `proxy`, bukan `middleware`) mengarahkan `/` ke bahasa dari cookie `NEXT_LOCALE` → header Accept-Language → `en`. Link/redirect memakai `@/i18n/navigation`, bukan `next/link`.
+  - Semua teks UI ada di `apps/web/messages/*.json` (3 file harus punya key yang sama). Pesan error API (selalu Inggris) dipetakan ke key `Auth.errors.*` lewat status HTTP — UI tidak menampilkan teks mentah dari API.
+  - Language switcher di navbar & footer mengganti URL; bila login juga memanggil `PATCH /api/auth/me {locale}` → `User.locale`. Setelah login, user diarahkan ke bahasa tersimpan di akunnya. Daftar baru menyimpan bahasa halaman saat itu.
+  - Teks terjemahan ID/RU di `messages` ditulis oleh AI — minta penutur asli untuk memeriksa sebelum rilis.
 - **i18n konten produk**: penjual menulis EN atau ID (`sourceLocale`). MVP 1.0: admin mengisi/merapikan terjemahan saat approval listing. MVP 1.1: tombol/otomatis terjemah via API (mis. DeepL), `isAuto = true`, tetap direview admin. Fallback: tampilkan bahasa sumber + label.
 - **Kurs**: MVP 1.0 admin input manual. MVP 1.1: job harian ambil kurs dari API gratis → `suggestedRate` → wajib dikonfirmasi ADMIN_OWNER; peringatan jika selisih > 3% dari kurs terakhir. Harga disimpan IDR, tampil USD; order menyimpan snapshot kurs.
 - **Notifikasi**: in-app saja (tabel Notification + push via Socket.IO). Tanpa email/WA/Telegram.

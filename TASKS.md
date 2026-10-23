@@ -18,24 +18,26 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   DoD: `pnpm dev` menjalankan web & api bersamaan; `pnpm lint` dan `pnpm build` lulus. ✅ 2026-10-23
 - [x] **T02 Database lokal** — `docker-compose.yml` berisi PostgreSQL; Prisma di `apps/api`; schema v1 (User + role saja dulu); migrasi pertama; seed akun admin.
   DoD: `pnpm db:migrate` & `pnpm db:seed` jalan; tabel terlihat di DB. ✅ 2026-10-23 (+ `GET /api/health` & e2e test)
-- [ ] **T03 Auth API** — register, login, logout, me; hash password; JWT di cookie httpOnly; throttling login; DTO validation.
-  DoD: test e2e register → login → me → logout lulus.
-- [ ] **T04 RBAC** — enum role (BUYER, SELLER, ADMIN_OWNER, ADMIN_FINANCE, ADMIN_OPS) di `packages/shared`; `@Roles()` decorator + guard.
-  DoD: endpoint contoh admin-only menolak buyer (403), menerima admin.
+- [x] **T03 Auth API** — register, login, logout, me; hash password; JWT di cookie httpOnly; throttling login; DTO validation.
+  DoD: test e2e register → login → me → logout lulus. ✅ 2026-10-23 (`test/auth.e2e-spec.ts`, 7 test)
+- [x] **T04 RBAC** — enum role (BUYER, SELLER, ADMIN_OWNER, ADMIN_FINANCE, ADMIN_OPS) di `packages/shared`; `@Roles()` decorator + guard.
+  DoD: endpoint contoh admin-only menolak buyer (403), menerima admin. ✅ 2026-10-23 (`GET /api/admin/ping`, `test/rbac.e2e-spec.ts`)
 
 ## Fase 1 — Kerangka UI & penjual (24 Okt)
 
-- [ ] **T05 Layout web** — token warna/font/radius dari design system `01-v4.html` ke Tailwind; navbar & footer standar (sesuai catatan implementasi); halaman login/daftar (+ checkbox persetujuan "admin ikut di semua chat").
-  DoD: login/daftar dari web berfungsi; tampilan sesuai token.
-- [ ] **T06 i18n UI** — next-intl, `/en` `/id` `/ru`, file messages, language switcher, simpan pilihan (cookie + `User.locale`).
-  DoD: ganti bahasa mengubah semua teks navbar/footer/form auth.
-- [ ] **T07 Onboarding penjual** — user daftar sebagai penjual → SellerProfile (PENDING); admin melihat daftar & approve/reject; QcZone (seed 9 kabupaten + fee).
-  DoD: penjual baru tidak bisa listing sebelum di-approve.
+- [x] **T05 Layout web** — token warna/font/radius dari design system `01-v4.html` ke Tailwind; navbar & footer standar (sesuai catatan implementasi); halaman login/daftar (+ checkbox persetujuan "admin ikut di semua chat").
+  DoD: login/daftar dari web berfungsi; tampilan sesuai token. ✅ 2026-10-23 (diuji di browser headless: daftar → navbar tampil nama → reload tetap login → logout → login; teks masih hardcode English, dipindah ke next-intl di T06)
+- [x] **T06 i18n UI** — next-intl, `/en` `/id` `/ru`, file messages, language switcher, simpan pilihan (cookie + `User.locale`).
+  DoD: ganti bahasa mengubah semua teks navbar/footer/form auth. ✅ 2026-10-23 (diuji di browser: ganti EN→RU→ID, cookie `NEXT_LOCALE`, tersimpan ke akun via `PATCH /api/auth/me`, login mengarah ke bahasa akun)
+- [x] **T07 Onboarding penjual** — user daftar sebagai penjual → SellerProfile (PENDING); admin melihat daftar & approve/reject; QcZone (seed 9 kabupaten + fee).
+  Aturan: role SELLER dari pendaftaran publik hanya "calon penjual"; hak jualan = `SellerProfile.status = APPROVED` (guard `ApprovedSellerGuard`, hanya admin yang bisa approve). Pendaftar SELLER otomatis mendapat SellerProfile PENDING.
+  DoD: penjual baru tidak bisa listing sebelum di-approve. ✅ 2026-10-23 (`test/sellers.e2e-spec.ts`, 11 test; UI: `/seller` dan `/admin/sellers` diuji di browser, 3 bahasa)
 
 ## Fase 2 — Produk (25–26 Okt)
 
 - [ ] **T08 Upload media R2** — endpoint presigned PUT (validasi tipe & ukuran: foto ≤10 MB, video ≤50 MB); presigned GET untuk file privat.
   DoD: upload foto & video dari web sampai ke R2 dan bisa ditampilkan.
+  Status 2026-10-23: kode selesai & teruji (presign, aturan akses, batas ukuran/tipe, UI `/dev/upload`; unit + e2e lulus). **Belum dicentang**: uji ke R2 asli menunggu akun/kredensial R2 (lihat "Cloudflare R2 setup" di ARCHITECTURE.md).
 - [ ] **T09 CRUD produk penjual** — form produk (type, kategori, unit, harga IDR, MOQ, stok/lead time, bahasa sumber EN/ID, judul & deskripsi, media); submit → PENDING_REVIEW.
   DoD: penjual bisa buat/edit/arsipkan produk.
 - [ ] **T10 Approval listing + terjemahan manual** — halaman admin: review produk, isi/rapikan terjemahan en/id/ru, approve/reject dengan alasan.

@@ -20,7 +20,8 @@ Project docs: `BRAINSTORMING.md` (business) · `ARCHITECTURE.md` (technical) · 
 .
 ├── apps/
 │   ├── web/                    # Next.js — http://localhost:3000
-│   │   └── src/app/            # routes (App Router); globals.css = design tokens
+│   │   ├── messages/           # UI texts per language: en.json, id.json, ru.json
+│   │   └── src/app/[locale]/   # routes (App Router, /en /id /ru); globals.css = design tokens
 │   └── api/                    # NestJS — http://localhost:4000/api
 │       ├── prisma/             # schema.prisma, migrations/, seed.ts
 │       ├── prisma.config.ts    # Prisma CLI config (DB url, seed command)
@@ -29,6 +30,7 @@ Project docs: `BRAINSTORMING.md` (business) · `ARCHITECTURE.md` (technical) · 
 │       │   ├── app.module.ts   # root module
 │       │   ├── config/         # env validation
 │       │   ├── prisma/         # PrismaService (global)
+│       │   ├── auth/           # register, login, logout, me (JWT cookie)
 │       │   ├── health/         # GET /api/health
 │       │   ├── common/         # shared helpers (password hashing)
 │       │   └── generated/      # Prisma client (generated, not committed)

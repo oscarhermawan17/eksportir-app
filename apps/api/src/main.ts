@@ -2,13 +2,14 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module.js';
+import { configureApp } from './app.setup.js';
 import type { Env } from './config/env.js';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const config = app.get<ConfigService<Env, true>>(ConfigService);
 
-  app.setGlobalPrefix('api');
+  configureApp(app);
   app.enableCors({ origin: config.get('WEB_ORIGIN', { infer: true }), credentials: true });
   app.enableShutdownHooks();
 
