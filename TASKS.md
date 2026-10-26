@@ -38,10 +38,10 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 - [ ] **T08 Upload media R2** — endpoint presigned PUT (validasi tipe & ukuran: foto ≤10 MB, video ≤50 MB); presigned GET untuk file privat.
   DoD: upload foto & video dari web sampai ke R2 dan bisa ditampilkan.
   Status 2026-10-23: kode selesai & teruji (presign, aturan akses, batas ukuran/tipe, UI `/dev/upload`; unit + e2e lulus). **Belum dicentang**: uji ke R2 asli menunggu akun/kredensial R2 (lihat "Cloudflare R2 setup" di ARCHITECTURE.md).
-- [ ] **T09 CRUD produk penjual** — form produk (type, kategori, unit, harga IDR, MOQ, stok/lead time, bahasa sumber EN/ID, judul & deskripsi, media); submit → PENDING_REVIEW.
-  DoD: penjual bisa buat/edit/arsipkan produk.
-- [ ] **T10 Approval listing + terjemahan manual** — halaman admin: review produk, isi/rapikan terjemahan en/id/ru, approve/reject dengan alasan.
-  DoD: hanya produk APPROVED tampil di katalog.
+- [x] **T09 CRUD produk penjual** — form produk (type, kategori, unit, harga IDR, MOQ, stok/lead time, bahasa sumber EN/ID, judul & deskripsi, media); submit → PENDING_REVIEW.
+  DoD: penjual bisa buat/edit/arsipkan produk. ✅ 2026-10-23 (`test/products.e2e-spec.ts` 9 test + unit transisi status; UI `/seller/products` diuji di browser; **upload foto di form belum teruji** karena R2 belum dikonfigurasi, lihat T08)
+- [x] **T10 Approval listing + terjemahan manual** — halaman admin: review produk, isi/rapikan terjemahan en/id/ru, approve/reject dengan alasan.
+  DoD: hanya produk APPROVED tampil di katalog. ✅ 2026-10-23 (`test/admin-products.e2e-spec.ts` 8 test; UI `/admin/products` diuji di browser; daftar publik minimal `GET /api/products` sudah ada, T12 memperluasnya dengan pencarian, filter, detail & harga USD)
 - [ ] **T11 Kurs manual** — admin OWNER input kurs USD/IDR harian; harga tampil USD (IDR ÷ kurs, dibulatkan).
   DoD: ubah kurs → harga USD di katalog berubah; riwayat kurs tersimpan.
 - [ ] **T12 Katalog & detail produk** — list + search + filter sederhana (kategori, tipe listing); detail produk (galeri, harga, MOQ, stok, label "Auto-translated/Original"); profil penjual sederhana.

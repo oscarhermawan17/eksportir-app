@@ -31,3 +31,17 @@ Konfigurasi
 
 Testing
 - Unit test service penting (transisi status, kalkulasi harga). E2E test untuk auth & alur order utama.
+
+Pola yang sudah dipakai di project ini
+- Guard berlapis untuk endpoint penjual: `@UseGuards(JwtAuthGuard, RolesGuard, ApprovedSellerGuard)` + `@Roles('SELLER')`. Endpoint admin: `@Roles('ADMIN_OPS', 'ADMIN_OWNER')` (peran tidak mewarisi; sebutkan eksplisit atau pakai `ADMIN_ROLES`).
+- Resource milik user lain dijawab 404 (bukan 403) agar id tidak bisa ditebak. Cek kepemilikan di service.
+- Perubahan status lewat satu fungsi murni (`nextStatus()` di `products/product-status.ts`) + unit test; service memanggilnya, controller tidak pernah menerima `status` dari client.
+- Pipeline validasi dipasang lewat `configureApp()` (`src/app.setup.ts`) dan dipakai `main.ts` serta e2e test.
+- Upload media: API hanya membuat presigned URL (`media` module); file tidak lewat API. Key divalidasi dengan regex yang memuat id pemilik.
+- Env opsional (mis. R2) divalidasi di `config/env.ts`: boleh kosong di development, wajib di production, dan konfigurasi setengah-terisi ditolak.
+
+Testing e2e (Vitest + supertest)
+- Login dibatasi 5/menit per instance app → login sekali per user dan pakai ulang `request.agent`.
+- Tiap file spec membuat user dengan prefix email unik (`sellers-e2e-`, `products-e2e-`, ...) dan menghapusnya di `afterAll`; jangan pakai prefix yang sama di dua file (file berjalan paralel).
+- Butuh `pnpm db:up` dan `pnpm db:seed` (zona QC). R2 diuji dengan env palsu karena presign dihitung lokal.
+- `pnpm dev` (nest --watch) bisa mati setelah `pnpm build`; ubah file kecil di `apps/api/src` lalu kembalikan untuk memicu restart.

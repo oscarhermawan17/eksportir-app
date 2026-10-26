@@ -25,3 +25,13 @@ Form & data
 
 Aksesibilitas
 - Label untuk setiap input, `alt` untuk gambar, kontras teks ≥ 4.5:1, fokus keyboard terlihat, tombol bukan `div`.
+
+Pola yang sudah dipakai di project ini (Next.js 16)
+- `proxy.ts` (bukan `middleware.ts`) untuk next-intl. Link/redirect/useRouter/usePathname dari `@/i18n/navigation`, bukan `next/link` atau `next/navigation`.
+- Dengan `cacheComponents`: komponen client yang memakai `usePathname()`/`useSearchParams()` pada rute ber-segmen dinamis harus di dalam `<Suspense>` (Navbar & Footer sudah dibungkus di `[locale]/layout.tsx`); `params` rute dinamis dibaca di dalam `<Suspense>` (lihat `seller/products/[id]/edit/page.tsx`).
+- URL tak dikenal: `[locale]/[...rest]/page.tsx` (memanggil `notFound()`) + `[locale]/not-found.tsx` + `app/global-not-found.tsx`; tanpa ini halaman 404 ter-reload terus.
+- Panggilan API dari browser lewat `apiFetch` (`@/lib/api`); pesan error dari API tidak pernah ditampilkan mentah — petakan status HTTP ke key `Errors.*` dengan `errorKey()`.
+- Halaman yang butuh login memakai `LoginGate` (`components/auth/login-gate.tsx`), opsional dengan `allow={(user) => ...}` untuk cek role.
+- Memuat data di `useEffect`: jangan panggil setState sinkron di dalam effect (aturan lint `react-hooks/set-state-in-effect`); reset state di event handler, lalu biarkan effect hanya memanggil API.
+- Input yang berganti tipe di posisi yang sama perlu `key` berbeda, kalau tidak nilai lama ikut terbawa.
+- Semua key di `messages/en.json`, `id.json`, `ru.json` harus sama; cek dengan skrip kecil sebelum selesai.

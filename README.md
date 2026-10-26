@@ -2,7 +2,15 @@
 
 B2B export marketplace: products from Bali sellers → buyers in Russia & CIS, with BaliTrade handling QC, payment holding and air cargo.
 
-Project docs: `BRAINSTORMING.md` (business) · `ARCHITECTURE.md` (technical) · `TASKS.md` (work plan) · `UI_PROMPT.md` + `design-ui/` (design).
+Project docs: `BRAINSTORMING.md` (business) · `ARCHITECTURE.md` (technical) · `TASKS.md` (work plan) · `UI_PROMPT.md` + `design-ui/` (design) · `docs/DECISIONS.md` (decision log) · `docs/CONVENTIONS.md` (coding guides).
+
+## Working with an AI assistant
+
+Start every session by telling the assistant to read **`AGENTS.md`** (project context, rules, gotchas, current status), then `TASKS.md`.
+Claude Code reads `CLAUDE.md` automatically (it imports `AGENTS.md`); Codex/ChatGPT CLI, Cursor and most other tools read `AGENTS.md`;
+Kiro uses `.kiro/steering` + `.kiro/skills`. All of them point to the same files, so nothing needs to be repeated. Suggested first message:
+
+> Read AGENTS.md and TASKS.md, then continue with the next unticked task (follow .kiro/skills/next-task/SKILL.md).
 
 ## Stack
 
@@ -30,13 +38,20 @@ Project docs: `BRAINSTORMING.md` (business) · `ARCHITECTURE.md` (technical) · 
 │       │   ├── app.module.ts   # root module
 │       │   ├── config/         # env validation
 │       │   ├── prisma/         # PrismaService (global)
-│       │   ├── auth/           # register, login, logout, me (JWT cookie)
+│       │   ├── auth/           # register, login, logout, me (JWT cookie), RBAC guards
+│       │   ├── admin/          # admin-only endpoints (sellers, product review)
+│       │   ├── sellers/        # seller onboarding, QC zones, ApprovedSellerGuard
+│       │   ├── products/       # seller product CRUD, admin review, public catalog
+│       │   ├── media/          # presigned upload/download URLs (Cloudflare R2)
 │       │   ├── health/         # GET /api/health
 │       │   ├── common/         # shared helpers (password hashing)
 │       │   └── generated/      # Prisma client (generated, not committed)
 │       └── test/               # e2e tests
 ├── packages/
-│   └── shared/                 # enums & types used by web and api (roles, locales)
+│   └── shared/                 # enums, types, constants used by web and api
+├── docs/                       # DECISIONS.md, CONVENTIONS.md
+├── AGENTS.md  CLAUDE.md        # AI assistant context (tool-agnostic)
+├── .kiro/                      # Kiro steering + skills (skills are shared with other tools)
 ├── docker-compose.yml          # local PostgreSQL
 └── TASKS.md                    # what to build next
 ```
