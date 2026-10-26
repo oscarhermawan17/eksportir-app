@@ -135,6 +135,11 @@ export class MediaService {
     return { url, expiresInSeconds: DOWNLOAD_URL_TTL_SECONDS };
   }
 
+  /** Permanent URL of a public object, or null when media storage is not configured. */
+  publicUrlFor(key: string): string | null {
+    return this.r2 ? `${this.r2.publicBaseUrl}/${key}` : null;
+  }
+
   private requireR2(): R2Settings {
     if (!this.r2) {
       throw new ServiceUnavailableException('Media storage is not configured');

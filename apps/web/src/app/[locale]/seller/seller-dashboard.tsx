@@ -5,7 +5,8 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
 import { SellerForm } from '@/components/seller/seller-form';
-import { Button } from '@/components/ui/button';
+import { Button, buttonClasses } from '@/components/ui/button';
+import { Link } from '@/i18n/navigation';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { ApiError, apiFetch } from '@/lib/api';
 
@@ -21,6 +22,7 @@ export function SellerDashboard() {
 function SellerAccount({ defaultName }: { defaultName: string }) {
   const t = useTranslations('Seller');
   const tCommon = useTranslations('Common');
+  const tProducts = useTranslations('Products');
   const [state, setState] = useState<State>({ kind: 'loading' });
   const [attempt, setAttempt] = useState(0);
 
@@ -75,6 +77,12 @@ function SellerAccount({ defaultName }: { defaultName: string }) {
         </div>
 
         {profile ? <StatusMessage profile={profile} /> : <p className="mt-2 text-sm text-muted">{t('applyIntro')}</p>}
+
+        {profile?.status === 'APPROVED' ? (
+          <Link href="/seller/products" className={buttonClasses('primary', 'mt-4')}>
+            {tProducts('manage')}
+          </Link>
+        ) : null}
 
         <div className="mt-6">
           <SellerForm

@@ -3,6 +3,7 @@ export * from './locales.js';
 export * from './auth.js';
 export * from './seller.js';
 export * from './media.js';
+export * from './product.js';
 
 /** Response shape of GET /api/health. */
 export interface HealthResponse {

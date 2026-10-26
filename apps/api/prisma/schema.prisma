@@ -1,5 +1,5 @@
 // BaliTrade database schema — grows task by task (see TASKS.md / ARCHITECTURE.md §5).
-// So far: users & roles (T02), seller profiles & QC zones (T07).
+// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09).
 
 generator client {
   provider            = "prisma-client"
@@ -31,8 +31,9 @@ model User {
   locale       String  @default("en")
   roles        Role[]  @default([BUYER])
 
-  sellerProfile   SellerProfile?
-  reviewedSellers SellerProfile[] @relation("SellerReviewer")
+  sellerProfile    SellerProfile?
+  reviewedSellers  SellerProfile[] @relation("SellerReviewer")
+  reviewedProducts Product[]       @relation("ProductReviewer")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -79,6 +80,96 @@ model SellerProfile {
   createdAt       DateTime     @default(now()) @map("created_at")
   updatedAt       DateTime     @updatedAt @map("updated_at")
 
+  products Product[]
+
   @@index([status, createdAt])
   @@map("seller_profiles")
+}
+
+/// Keep in sync with packages/shared/src/product.ts
+enum ProductType {
+  READY_STOCK
+  MADE_TO_ORDER
+}
+
+/// Keep in sync with packages/shared/src/product.ts
+enum ProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+/// A listing. Only APPROVED products are visible to buyers (T10/T12).
+model Product {
+  id              String        @id @default(cuid())
+  sellerId        String        @map("seller_id")
+  seller          SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  type            ProductType
+  /// One of PRODUCT_CATEGORIES in packages/shared (validated in the API).
+  category        String
+  /// One of PRODUCT_UNITS in packages/shared (validated in the API).
+  unit            String
+  /// Price per unit in whole rupiah. USD is derived from the daily rate (T11), never stored here.
+  priceIdr        Int           @map("price_idr")
+  /// Minimum order quantity.
+  moq             Int           @default(1)
+  /// READY_STOCK only.
+  stockQty        Int?          @map("stock_qty")
+  /// MADE_TO_ORDER only.
+  leadTimeDays    Int?          @map("lead_time_days")
+  /// Language the seller wrote the listing in: en | id.
+  sourceLocale    String        @map("source_locale")
+  status          ProductStatus @default(DRAFT)
+  /// Set when an admin rejects the listing; cleared when it is approved.
+  rejectionReason String?       @map("rejection_reason")
+  reviewedById    String?       @map("reviewed_by_id")
+  reviewedBy      User?         @relation("ProductReviewer", fields: [reviewedById], references: [id])
+  reviewedAt      DateTime?     @map("reviewed_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  translations ProductTranslation[]
+  media        ProductMedia[]
+
+  @@index([sellerId, status])
+  @@index([status, createdAt])
+  @@map("products")
+}
+
+model ProductTranslation {
+  id          String   @id @default(cuid())
+  productId   String   @map("product_id")
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  /// en | id | ru
+  locale      String
+  title       String
+  description String
+  /// True when produced by machine translation and not yet reviewed (T10).
+  isAuto      Boolean  @default(false) @map("is_auto")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([productId, locale])
+  @@map("product_translations")
+}
+
+model ProductMedia {
+  id        String    @id @default(cuid())
+  productId String    @map("product_id")
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  /// Object key in the public R2 bucket.
+  r2Key     String    @unique @map("r2_key")
+  type      MediaType
+  sort      Int
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([productId, sort])
+  @@map("product_media")
 }

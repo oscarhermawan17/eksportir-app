@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { AuthProvider } from '@/components/auth/auth-provider';
 import { Footer } from '@/components/layout/footer';
 import { Navbar } from '@/components/layout/navbar';
@@ -35,9 +36,14 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
       <body className="flex min-h-full flex-col font-sans">
         <NextIntlClientProvider>
           <AuthProvider>
-            <Navbar />
+            {/* usePathname() inside Navbar needs a Suspense boundary on routes with a dynamic segment such as [id]. */}
+            <Suspense fallback={<div className="h-16 border-b border-border bg-card" aria-hidden="true" />}>
+              <Navbar />
+            </Suspense>
             <main className="flex flex-1 flex-col">{children}</main>
-            <Footer />
+            <Suspense fallback={null}>
+              <Footer />
+            </Suspense>
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

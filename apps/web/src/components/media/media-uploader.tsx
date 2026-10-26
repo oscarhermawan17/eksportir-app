@@ -25,17 +25,30 @@ let nextId = 1;
 /** Pick files, upload them to R2 with progress, show a preview. Reused by the product form (T09). */
 export function MediaUploader({
   purpose,
+  initialMedia = [],
   onUploaded,
   onRemoved,
 }: {
   purpose: MediaPurpose;
+  /** Files that were uploaded earlier (e.g. when editing a product); shown like finished uploads. */
+  initialMedia?: UploadedMedia[];
   onUploaded?: (media: UploadedMedia) => void;
   onRemoved?: (media: UploadedMedia) => void;
 }) {
   const t = useTranslations('Media');
   const tErrors = useTranslations('Errors');
   const inputRef = useRef<HTMLInputElement>(null);
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>(() =>
+    initialMedia.map((media) => ({
+      id: nextId++,
+      name: media.key.split('/').pop() ?? media.key,
+      status: 'done' as const,
+      progress: 1,
+      media,
+      previewUrl: media.publicUrl ?? '',
+      isVideo: media.kind === 'VIDEO',
+    })),
+  );
 
   const update = (id: number, patch: Partial<Item>) =>
     setItems((current) => current.map((item) => (item.id === id ? { ...item, ...patch } : item)));
@@ -91,7 +104,9 @@ export function MediaUploader({
   }
 
   function remove(item: Item) {
-    URL.revokeObjectURL(item.previewUrl);
+    if (item.previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(item.previewUrl);
+    }
     setItems((current) => current.filter((other) => other.id !== item.id));
     if (item.media) {
       onRemoved?.(item.media);
@@ -134,7 +149,7 @@ export function MediaUploader({
               <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-button bg-background">
                 {item.isVideo ? (
                   <Film className="h-6 w-6 text-muted" aria-hidden="true" />
-                ) : purpose === 'PRIVATE_FILE' ? (
+                ) : purpose === 'PRIVATE_FILE' || !item.previewUrl ? (
                   <Lock className="h-6 w-6 text-muted" aria-hidden="true" />
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element -- local blob preview, not optimizable

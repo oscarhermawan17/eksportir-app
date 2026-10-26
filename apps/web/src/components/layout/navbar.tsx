@@ -26,7 +26,7 @@ function useNavLinks(): NavLink[] {
     links.push({ href: '/seller', label: t('sellerArea') });
   }
   if (user?.roles.some((role) => role === 'ADMIN_OPS' || role === 'ADMIN_OWNER')) {
-    links.push({ href: '/admin/sellers', label: t('admin') });
+    links.push({ href: '/admin/sellers', label: t('admin') }, { href: '/admin/products', label: t('adminProducts') });
   }
   return links.filter((link, index, all) => all.findIndex((other) => other.href === link.href) === index);
 }
