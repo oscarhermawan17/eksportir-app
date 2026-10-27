@@ -29,7 +29,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 - QC fee per zone (current seed values are placeholders).
 - Final product category list and the forbidden-goods list.
 - Sourcing fee, deposit and refund rules.
-- Cloudflare R2 credentials (blocks ticking T08).
+- Separate private R2 bucket before real payment proofs/QC files (dev currently uses one bucket, `eksportir-testing`, for both).
 - Native-speaker review of the Indonesian and Russian UI texts.
 
 ## Earlier decisions

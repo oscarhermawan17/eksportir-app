@@ -86,15 +86,14 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth).
 
 - Done: T01 monorepo · T02 database · T03 auth API · T04 RBAC · T05 web layout/login/register · T06 i18n (en/id/ru) ·
-  T07 seller onboarding (admin approves sellers) · T09 seller product CRUD · T10 admin listing review + manual translations
-  (+ minimal public `GET /api/products`).
-- Code done but **not ticked**: T08 media upload (R2). Waiting for the owner to create Cloudflare R2 buckets and fill the six
-  `R2_*` variables in `apps/api/.env` (setup steps in `ARCHITECTURE.md` → "Cloudflare R2 setup"); then run a real upload check
-  (`/en/dev/upload` or a script) and tick T08.
+  T07 seller onboarding (admin approves sellers) · T08 media upload (verified against real R2 on 2026-10-27) ·
+  T09 seller product CRUD · T10 admin listing review + manual translations (+ minimal public `GET /api/products`).
+- R2 dev setup: one bucket (`eksportir-testing`) serves as both public and private for now. Split off a separate private
+  bucket before real payment proofs / QC files exist (T17+).
 - Next: **T11** manual USD/IDR exchange rate (admin owner), then **T12** catalog + product detail pages, then Phase 3 chat (T13–T14).
 - Uncommitted work may exist — check `git status` before starting.
 
 ## Open questions (owner decisions still needed)
 
 QC fee per zone (seed values are placeholders) · final product category list and forbidden-goods list · sourcing fee / deposit /
-refund rules · Cloudflare R2 credentials. Full list: `BRAINSTORMING.md` section 15 and `docs/DECISIONS.md`.
+refund rules. Full list: `BRAINSTORMING.md` section 15 and `docs/DECISIONS.md`.

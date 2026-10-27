@@ -35,11 +35,11 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 ## Fase 2 — Produk (25–26 Okt)
 
-- [ ] **T08 Upload media R2** — endpoint presigned PUT (validasi tipe & ukuran: foto ≤10 MB, video ≤50 MB); presigned GET untuk file privat.
+- [x] **T08 Upload media R2** — endpoint presigned PUT (validasi tipe & ukuran: foto ≤10 MB, video ≤50 MB); presigned GET untuk file privat.
   DoD: upload foto & video dari web sampai ke R2 dan bisa ditampilkan.
-  Status 2026-10-23: kode selesai & teruji (presign, aturan akses, batas ukuran/tipe, UI `/dev/upload`; unit + e2e lulus). **Belum dicentang**: uji ke R2 asli menunggu akun/kredensial R2 (lihat "Cloudflare R2 setup" di ARCHITECTURE.md).
+  ✅ 2026-10-27: kode teruji (presign, aturan akses, batas ukuran/tipe, UI `/dev/upload`; unit + e2e lulus) dan diuji ke R2 asli dari browser: foto (.webp) dan video (MP4 19 MB) terunggah, foto tampil lewat URL `r2.dev`. Sementara satu bucket (`eksportir-testing`) dipakai untuk publik & privat; **pisahkan bucket privat sebelum ada data nyata** (bukti bayar, QC; T17+).
 - [x] **T09 CRUD produk penjual** — form produk (type, kategori, unit, harga IDR, MOQ, stok/lead time, bahasa sumber EN/ID, judul & deskripsi, media); submit → PENDING_REVIEW.
-  DoD: penjual bisa buat/edit/arsipkan produk. ✅ 2026-10-23 (`test/products.e2e-spec.ts` 9 test + unit transisi status; UI `/seller/products` diuji di browser; **upload foto di form belum teruji** karena R2 belum dikonfigurasi, lihat T08)
+  DoD: penjual bisa buat/edit/arsipkan produk. ✅ 2026-10-23 (`test/products.e2e-spec.ts` 9 test + unit transisi status; UI `/seller/products` diuji di browser; upload foto di form teruji ke R2 asli 2026-10-27 dan listing di-approve admin lewat UI)
 - [x] **T10 Approval listing + terjemahan manual** — halaman admin: review produk, isi/rapikan terjemahan en/id/ru, approve/reject dengan alasan.
   DoD: hanya produk APPROVED tampil di katalog. ✅ 2026-10-23 (`test/admin-products.e2e-spec.ts` 8 test; UI `/admin/products` diuji di browser; daftar publik minimal `GET /api/products` sudah ada, T12 memperluasnya dengan pencarian, filter, detail & harga USD)
 - [ ] **T11 Kurs manual** — admin OWNER input kurs USD/IDR harian; harga tampil USD (IDR ÷ kurs, dibulatkan).
