@@ -113,6 +113,8 @@ export interface CatalogProduct {
   category: ProductCategory;
   unit: ProductUnit;
   priceIdr: number;
+  /** Price per unit in USD ("6.80"): priceIdr ÷ current rate, rounded to cents. Null until an exchange rate is set. */
+  priceUsd: string | null;
   moq: number;
   stockQty: number | null;
   leadTimeDays: number | null;

@@ -107,7 +107,8 @@ describe('Seller products (e2e)', () => {
       title: 'Handwoven rattan bag',
       sourceLocale: 'en',
     });
-    expect(res.body.media).toEqual([{ key, type: 'IMAGE', url: null }]);
+    // `url` depends on whether R2 is configured in apps/api/.env (null when it is not), so it is not asserted here.
+    expect(res.body.media).toMatchObject([{ key, type: 'IMAGE' }]);
 
     const made = await seller
       .post('/api/seller/products')

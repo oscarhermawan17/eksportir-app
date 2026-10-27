@@ -1,5 +1,5 @@
 // BaliTrade database schema — grows task by task (see TASKS.md / ARCHITECTURE.md §5).
-// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09).
+// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11).
 
 generator client {
   provider            = "prisma-client"
@@ -34,6 +34,7 @@ model User {
   sellerProfile    SellerProfile?
   reviewedSellers  SellerProfile[] @relation("SellerReviewer")
   reviewedProducts Product[]       @relation("ProductReviewer")
+  exchangeRates    ExchangeRate[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -172,4 +173,18 @@ model ProductMedia {
 
   @@index([productId, sort])
   @@map("product_media")
+}
+
+/// Manual USD/IDR rate set by the owner (T11). Append-only history: the newest row is the rate in force,
+/// older rows are the audit trail (who set which rate, when). Orders copy the rate they were priced with (T15).
+model ExchangeRate {
+  id        String   @id @default(cuid())
+  /// IDR per 1 USD.
+  rate      Decimal  @db.Decimal(12, 4)
+  setById   String   @map("set_by_id")
+  setBy     User     @relation(fields: [setById], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("exchange_rates")
 }

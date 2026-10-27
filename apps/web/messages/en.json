@@ -24,7 +24,8 @@
     "closeMenu": "Close menu",
     "sellerArea": "My seller account",
     "admin": "Admin",
-    "adminProducts": "Review products"
+    "adminProducts": "Review products",
+    "adminExchangeRate": "Exchange rate"
   },
   "Footer": {
     "tagline": "Authentic products from Bali sellers, quality-checked and shipped to buyers in Russia & CIS.",
@@ -316,5 +317,26 @@
     "readOnly": "This product is not waiting for review.",
     "rejectedWithReason": "Rejected:",
     "unsavedWarning": "Save the translations first."
+  },
+  "AdminRate": {
+    "title": "Exchange rate",
+    "intro": "Set the USD/IDR rate used to show prices in USD. Sellers list prices in rupiah; buyers see them in dollars (rupiah price ÷ rate, rounded to cents).",
+    "currentTitle": "Current rate",
+    "currentValue": "1 USD = Rp {rate}",
+    "setOn": "Set on {date} by {name}",
+    "notSet": "No rate has been set yet. Prices in USD are not shown until you set one.",
+    "formTitle": "Set a new rate",
+    "rateLabel": "IDR per 1 USD",
+    "rateHelper": "Between {min} and {max}, up to 4 decimals. Every change is saved in the history below.",
+    "invalid": "Enter a number between {min} and {max} with at most 4 decimals.",
+    "save": "Save rate",
+    "saved": "Rate saved. New USD prices apply now.",
+    "historyTitle": "History",
+    "historyEmpty": "No rates yet.",
+    "colRate": "Rate (IDR per USD)",
+    "colSetBy": "Set by",
+    "colDate": "Date",
+    "loading": "Loading…",
+    "loadError": "Could not load the exchange rate."
   }
 }

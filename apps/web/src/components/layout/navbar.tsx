@@ -28,6 +28,9 @@ function useNavLinks(): NavLink[] {
   if (user?.roles.some((role) => role === 'ADMIN_OPS' || role === 'ADMIN_OWNER')) {
     links.push({ href: '/admin/sellers', label: t('admin') }, { href: '/admin/products', label: t('adminProducts') });
   }
+  if (user?.roles.includes('ADMIN_OWNER')) {
+    links.push({ href: '/admin/exchange-rate', label: t('adminExchangeRate') });
+  }
   return links.filter((link, index, all) => all.findIndex((other) => other.href === link.href) === index);
 }
 

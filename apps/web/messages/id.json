@@ -24,7 +24,8 @@
     "closeMenu": "Tutup menu",
     "sellerArea": "Akun penjual saya",
     "admin": "Admin",
-    "adminProducts": "Tinjau produk"
+    "adminProducts": "Tinjau produk",
+    "adminExchangeRate": "Kurs"
   },
   "Footer": {
     "tagline": "Produk autentik dari penjual Bali, dicek kualitasnya dan dikirim ke pembeli di Rusia & CIS.",
@@ -316,5 +317,26 @@
     "readOnly": "Produk ini tidak sedang menunggu peninjauan.",
     "rejectedWithReason": "Ditolak:",
     "unsavedWarning": "Simpan terjemahan terlebih dahulu."
+  },
+  "AdminRate": {
+    "title": "Kurs",
+    "intro": "Atur kurs USD/IDR yang dipakai untuk menampilkan harga dalam USD. Penjual mencantumkan harga dalam rupiah; pembeli melihatnya dalam dolar (harga rupiah ÷ kurs, dibulatkan ke sen).",
+    "currentTitle": "Kurs saat ini",
+    "currentValue": "1 USD = Rp {rate}",
+    "setOn": "Diatur pada {date} oleh {name}",
+    "notSet": "Kurs belum diatur. Harga dalam USD belum ditampilkan sampai Anda mengaturnya.",
+    "formTitle": "Atur kurs baru",
+    "rateLabel": "IDR per 1 USD",
+    "rateHelper": "Antara {min} dan {max}, maksimal 4 desimal. Setiap perubahan tersimpan di riwayat di bawah.",
+    "invalid": "Masukkan angka antara {min} dan {max} dengan maksimal 4 desimal.",
+    "save": "Simpan kurs",
+    "saved": "Kurs tersimpan. Harga USD yang baru berlaku sekarang.",
+    "historyTitle": "Riwayat",
+    "historyEmpty": "Belum ada kurs.",
+    "colRate": "Kurs (IDR per USD)",
+    "colSetBy": "Diatur oleh",
+    "colDate": "Tanggal",
+    "loading": "Memuat…",
+    "loadError": "Tidak dapat memuat kurs."
   }
 }
