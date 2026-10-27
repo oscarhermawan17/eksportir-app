@@ -68,7 +68,7 @@ Modul NestJS: `auth`, `users`, `sellers`, `products`, `media`, `chat` (gateway),
 - Review listing (T10): ADMIN_OPS/OWNER membuka antrean `/admin/products` (tanpa DRAFT), menulis/merapikan terjemahan en/id/ru secara manual (`PUT /admin/products/:id/translations`, `isAuto=false`), lalu approve atau reject (alasan wajib; penjual melihat alasannya, `submit` ulang menghapusnya). **Approve butuh teks en, id, dan ru terisi** dan hanya berlaku untuk PENDING_REVIEW. Katalog publik `GET /api/products?locale=` hanya menampilkan produk APPROVED milik penjual APPROVED; bila terjemahan bahasa itu tidak ada, jatuh ke bahasa penjual. Terjemahan bahasa lain tidak dihapus saat penjual mengedit (admin memeriksanya ulang saat review berikutnya).
 - **ProductTranslation**: productId, locale (en/id/ru), title, description, isAuto
 - **ProductMedia**: productId, r2Key, type (IMAGE / VIDEO), sort
-- **ExchangeRate**: date, suggestedRate, confirmedRate, confirmedBy, source
+- **ExchangeRate** (T11): rate `Decimal(12,4)` = IDR per 1 USD, setById, createdAt. Hanya-tambah (append-only): baris terbaru = kurs berlaku, baris lama = riwayat (siapa & kapan). MVP 1.1 menambah kolom `suggestedRate`/`source` untuk kurs dari API.
 - **Order**: code (OR-xxxx), buyerId, sellerId (MVP 1.0: 1 penjual per order), status, deliveryAddress (json), fxRate (snapshot), itemsUsd, qcFeeUsd, shippingUsd, awbNumber
 - **OrderItem**: orderId, productId, qty, unitPriceUsd (snapshot), note, sellerResponse (PENDING / ACCEPTED / DECLINED / CHANGE_PROPOSED), proposedQty
 - **Payment**: orderId, kind (GOODS / SHIPPING), method (BANK_IDR / USDT), amountUsd, amountIdr, proofKey, txHash, senderName, status (SUBMITTED / VERIFIED / REJECTED), verifiedBy, verifiedAt
@@ -123,6 +123,7 @@ Setiap perubahan status → notifikasi in-app ke pihak terkait + pesan sistem di
   - Teks terjemahan ID/RU di `messages` ditulis oleh AI — minta penutur asli untuk memeriksa sebelum rilis.
 - **i18n konten produk**: penjual menulis EN atau ID (`sourceLocale`). MVP 1.0: admin mengisi/merapikan terjemahan saat approval listing. MVP 1.1: tombol/otomatis terjemah via API (mis. DeepL), `isAuto = true`, tetap direview admin. Fallback: tampilkan bahasa sumber + label.
 - **Kurs**: MVP 1.0 admin input manual. MVP 1.1: job harian ambil kurs dari API gratis → `suggestedRate` → wajib dikonfirmasi ADMIN_OWNER; peringatan jika selisih > 3% dari kurs terakhir. Harga disimpan IDR, tampil USD; order menyimpan snapshot kurs.
+  - Implementasi (T11): hanya `ADMIN_OWNER` yang mengisi kurs (`POST /api/admin/exchange-rates`, riwayat via `GET` yang sama; halaman `/admin/exchange-rate`). Batas wajar 1.000–100.000 IDR/USD (penangkap salah ketik, `FX_LIMITS` di `packages/shared`), maksimal 4 desimal. Kurs berlaku dibaca publik lewat `GET /api/fx/current`. Katalog publik menambah `priceUsd` = `priceIdr ÷ kurs`, dibulatkan half-up ke sen dengan aritmetika Decimal (`fx/fx-math.ts`), berupa string (`"6.80"`); `null` selama kurs belum diisi. Satu kurs dipakai untuk seluruh respons daftar. **Belum ada buffer kurs 2–3%** (keputusan terbuka, BRAINSTORMING §10): harga USD = kurs apa adanya.
 - **Notifikasi**: in-app saja (tabel Notification + push via Socket.IO). Tanpa email/WA/Telegram.
 
 ## 8. Environment & deploy

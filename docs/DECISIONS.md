@@ -22,6 +22,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 | Approving a product requires en + id + ru text (manual translation by admin) | Automatic translation is MVP 1.1 |
 | Public catalog shows only APPROVED products of APPROVED sellers; falls back to the seller's language | `GET /api/products?locale=`; T12 extends it |
 | Product categories and units are fixed lists in `packages/shared/src/product.ts` | Final list + forbidden goods still open |
+| Exchange rate (T11): append-only `ExchangeRate` table (newest row = in force), only ADMIN_OWNER sets it, bounds 1,000–100,000 IDR/USD | Table doubles as history/audit. Catalog `priceUsd` = IDR ÷ rate, half-up to cents, `null` until a rate exists. **No 2–3% buffer yet** (open) |
 | Dependencies pinned to exact versions; very new packages are added to `minimumReleaseAgeExclude` | Currently the AWS SDK |
 
 ## Open questions (need the owner)
@@ -29,6 +30,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 - QC fee per zone (current seed values are placeholders).
 - Final product category list and the forbidden-goods list.
 - Sourcing fee, deposit and refund rules.
+- Exchange-rate buffer (2–3% for rate risk) and how long a USD price stays locked at checkout.
 - Separate private R2 bucket before real payment proofs/QC files (dev currently uses one bucket, `eksportir-testing`, for both).
 - Native-speaker review of the Indonesian and Russian UI texts.
 

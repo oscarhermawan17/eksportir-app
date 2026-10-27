@@ -76,7 +76,7 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
   `apps/api/src` file and revert it. Also check nothing else holds port 4000 (`lsof -iTCP:4000 -sTCP:LISTEN`) before starting.
 - **API e2e tests:** login is rate-limited (5/min per app instance) → log in once per user and reuse the supertest agent.
   Each spec file cleans its own users by a unique email prefix (`e2e-`, `sellers-e2e-`, `media-e2e-`, `products-e2e-`,
-  `adminprod-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
+  `adminprod-e2e-`, `fx-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
 - Browser checks: headless Chrome via `puppeteer-core` works well (`/Applications/Google Chrome.app`). Delete test accounts afterwards.
 - `pnpm add` of very recent packages may add them to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` (already done for the AWS SDK).
 - Seed data: `pnpm db:seed` creates the admin from `ADMIN_*` env and the 9 Bali QC zones (fees are **placeholders**).
@@ -87,10 +87,12 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 
 - Done: T01 monorepo · T02 database · T03 auth API · T04 RBAC · T05 web layout/login/register · T06 i18n (en/id/ru) ·
   T07 seller onboarding (admin approves sellers) · T08 media upload (verified against real R2 on 2026-10-27) ·
-  T09 seller product CRUD · T10 admin listing review + manual translations (+ minimal public `GET /api/products`).
+  T09 seller product CRUD · T10 admin listing review + manual translations (+ minimal public `GET /api/products`) ·
+  T11 manual USD/IDR exchange rate (owner sets it at `/admin/exchange-rate`; catalog returns `priceUsd`, null until a rate exists —
+  the owner still has to enter the first real rate).
 - R2 dev setup: one bucket (`eksportir-testing`) serves as both public and private for now. Split off a separate private
   bucket before real payment proofs / QC files exist (T17+).
-- Next: **T11** manual USD/IDR exchange rate (admin owner), then **T12** catalog + product detail pages, then Phase 3 chat (T13–T14).
+- Next: **T12** catalog + product detail pages (show `priceUsd`), then Phase 3 chat (T13–T14).
 - Uncommitted work may exist — check `git status` before starting.
 
 ## Open questions (owner decisions still needed)
