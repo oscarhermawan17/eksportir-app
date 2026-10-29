@@ -23,6 +23,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 | Public catalog shows only APPROVED products of APPROVED sellers; falls back to the seller's language | `GET /api/products?locale=`; T12 extends it |
 | Product categories and units are fixed lists in `packages/shared/src/product.ts` | Final list + forbidden goods still open |
 | Exchange rate (T11): append-only `ExchangeRate` table (newest row = in force), only ADMIN_OWNER sets it, bounds 1,000–100,000 IDR/USD | Table doubles as history/audit. Catalog `priceUsd` = IDR ÷ rate, half-up to cents, `null` until a rate exists. **No 2–3% buffer yet** (open) |
+| Public catalog (T12): list/detail/seller page return 404 for anything not APPROVED (product and seller); search = every word must match title/description in any language; max 48 results, no pagination yet | Seller page exposes no email/contact/rating. QC fee not shown on product detail until the zone tariff is decided. Buy/Ask buttons are disabled for logged-in users until T13/T15 |
 | Dependencies pinned to exact versions; very new packages are added to `minimumReleaseAgeExclude` | Currently the AWS SDK |
 
 ## Open questions (need the owner)

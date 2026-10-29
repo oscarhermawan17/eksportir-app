@@ -44,8 +44,8 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   DoD: hanya produk APPROVED tampil di katalog. ✅ 2026-10-23 (`test/admin-products.e2e-spec.ts` 8 test; UI `/admin/products` diuji di browser; daftar publik minimal `GET /api/products` sudah ada, T12 memperluasnya dengan pencarian, filter, detail & harga USD)
 - [x] **T11 Kurs manual** — admin OWNER input kurs USD/IDR harian; harga tampil USD (IDR ÷ kurs, dibulatkan).
   DoD: ubah kurs → harga USD di katalog berubah; riwayat kurs tersimpan. ✅ 2026-10-27 (`test/fx.e2e-spec.ts` 5 test + `fx-math.spec.ts` 5 test; UI `/admin/exchange-rate` diuji di browser, 3 bahasa; `priceUsd` ada di `GET /api/products`, `null` sampai owner mengisi kurs pertama. Belum ada buffer kurs 2–3%, lihat DECISIONS)
-- [ ] **T12 Katalog & detail produk** — list + search + filter sederhana (kategori, tipe listing); detail produk (galeri, harga, MOQ, stok, label "Auto-translated/Original"); profil penjual sederhana.
-  DoD: pengunjung bisa browse; tombol beli/tanya mengarah ke login jika belum login.
+- [x] **T12 Katalog & detail produk** — list + search + filter sederhana (kategori, tipe listing); detail produk (galeri, harga, MOQ, stok, label "Auto-translated/Original"); profil penjual sederhana.
+  DoD: pengunjung bisa browse; tombol beli/tanya mengarah ke login jika belum login. ✅ 2026-10-29 (`test/catalog.e2e-spec.ts` 11 test; UI `/products`, `/products/[id]`, `/sellers/[id]` diuji di browser sebagai tamu dan user login, 3 bahasa. Tombol order/tanya untuk user login masih nonaktif sampai T13/T15. Tanpa pagination (maks. 48 produk) dan tanpa biaya QC di detail, lihat DECISIONS)
 
 ## Fase 3 — Chat (27 Okt)
 
