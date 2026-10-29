@@ -1,7 +1,7 @@
 # BRAINSTORMING — BaliTrade
 
 Dokumen konteks hasil diskusi ide (belum masuk arsitektur). AI/sesi berikutnya wajib membaca ini dulu.
-Prompt desain UI (Google Stitch) disimpan terpisah di `UI_PROMPT.md`.
+Spesifikasi dan catatan implementasi desain UI (Google Stitch) ada di `docs/DESIGN.md`.
 
 Status: tahap pematangan ide + desain UI **selesai (2026-10-22)**. Berikutnya: tahap arsitektur/teknis.
 
@@ -142,7 +142,7 @@ Setiap langkah: tanggal, catatan, foto (opsional). Nomor AWB bisa ditautkan ke t
 
 ## 14. Desain UI (Google Stitch)
 
-- **Keputusan (2026-10-17): Google Stitch = alat desain utama.** Google AI Studio sempat dicoba dengan prompt yang sama (hasil di `design-ui/google-studios/`), tidak dipakai sebagai acuan; mungkin dipakai nanti untuk prototipe interaktif alur rumit (chat, checkout). Alasan: revisi lewat chat & langsung terlihat, 1 file HTML mudah dibuka/dibagikan, tidak mengunci framework sebelum tahap arsitektur.
+- **Keputusan (2026-10-17): Google Stitch = alat desain utama.** Google AI Studio sempat dicoba dengan prompt yang sama (hasilnya sudah dihapus dari repo), tidak dipakai sebagai acuan; mungkin dipakai nanti untuk prototipe interaktif alur rumit (chat, checkout). Alasan: revisi lewat chat & langsung terlihat, 1 file HTML mudah dibuka/dibagikan, tidak mengunci framework sebelum tahap arsitektur.
 - Hasil Stitch disimpan di `design-ui/google-stitch/` (`01.html`, `02.html`, …).
 - Target: **Web**, **mobile responsive**.
 - Stitch lebih baik **satu halaman per prompt** → pakai satu blok **design system** yang ditempel di awal setiap prompt.
@@ -185,7 +185,7 @@ Setiap langkah: tanggal, catatan, foto (opsional). Nomor AWB bisa ditautkan ke t
 
 ## 16. Tahap teknis — jawaban owner & usulan (2026-10-22)
 
-**Keputusan owner (2026-10-22):** MVP dibagi **1.0 (target 31 Okt 2026)** dan **1.1**; backend **NestJS**; **tanpa notifikasi email** (cukup in-app), email hanya untuk **lupa password via Resend** (sender "noreply", paket gratis). Detail teknis → `ARCHITECTURE.md`.
+**Keputusan owner (2026-10-22):** MVP dibagi **1.0 (target 31 Okt 2026)** dan **1.1**; backend **NestJS**; **tanpa notifikasi email** (cukup in-app), email hanya untuk **lupa password via Resend** (sender "noreply", paket gratis). Detail teknis → `docs/ARCHITECTURE.md`.
 
 Jawaban owner:
 - Dikerjakan **sendiri dibantu AI**. Menguasai JS/TS: Next.js, React, Express. Sedang/akan belajar NestJS, Golang, PostgreSQL, Docker, Kubernetes, AWS (SAA/DVA) — project ini juga untuk portofolio cari kerja.

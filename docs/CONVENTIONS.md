@@ -16,12 +16,12 @@ the rules apply regardless of the assistant you use.)
 **`frontend-design` is advisory.** The BaliTrade design system (`design-ui/google-stitch/01-v4.html`, tokens in
 `apps/web/src/app/globals.css`) is the brief and always wins: keep the palette, Plus Jakarta Sans, the 12px radius and Lucide icons even
 where the skill calls them "default" looks. Use the skill for what the system leaves open: hierarchy, spacing, alignment, responsive
-layout, empty/error states, keyboard focus, and plain-language copy (see also "Catatan implementasi" in `UI_PROMPT.md`).
+layout, empty/error states, keyboard focus, and plain-language copy (see also "Catatan implementasi" in `docs/DESIGN.md`).
 
 ## How to use the "next task" workflow
 
 Tell the assistant: *"Follow `.claude/skills/next-task/SKILL.md`"* (optionally with a task id, e.g. T13). In Claude Code it is also
-available as the `next-task` skill. The steps are: read `TASKS.md` → read the relevant part of `ARCHITECTURE.md` (and `UI_PROMPT.md`
+available as the `next-task` skill. The steps are: read `TASKS.md` → read the relevant part of `docs/ARCHITECTURE.md` (and `docs/DESIGN.md`
 for UI) → apply the matching convention guides → give a short plan → implement in small steps → run lint/typecheck/build/tests →
 tick the task only if its DoD is verified → record decisions → report briefly.
 
@@ -32,5 +32,5 @@ tick the task only if its DoD is verified → record decisions → report briefl
 | Claude Code | `CLAUDE.md` (imports `AGENTS.md`) + `.claude/skills` |
 | Codex CLI / ChatGPT, Cursor, Copilot agents and others | `AGENTS.md` (open standard; no extra setup) |
 
-Keep the project knowledge in `AGENTS.md`, `ARCHITECTURE.md`, `BRAINSTORMING.md`, `TASKS.md` and `docs/`; keep `CLAUDE.md` tiny and
+Keep the project knowledge in `AGENTS.md`, `docs/ARCHITECTURE.md`, `docs/BRAINSTORMING.md`, `TASKS.md` and `docs/`; keep `CLAUDE.md` tiny and
 pointing at them, so nothing drifts.

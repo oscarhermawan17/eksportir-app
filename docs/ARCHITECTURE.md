@@ -1,6 +1,6 @@
 # ARCHITECTURE — BaliTrade MVP
 
-Dokumen teknis MVP. Konteks bisnis: `BRAINSTORMING.md`. Acuan desain: `UI_PROMPT.md` + `design-ui/google-stitch/` (sumber kebenaran visual: `01-v4.html`).
+Dokumen teknis MVP. Konteks bisnis: `docs/BRAINSTORMING.md`. Acuan desain: `docs/DESIGN.md` + `design-ui/google-stitch/` (sumber kebenaran visual: `01-v4.html`).
 
 Status: disetujui garis besar 2026-10-22 (MVP 1.0 / 1.1, NestJS, tanpa email notifikasi). Detail di bawah = usulan awal, boleh disederhanakan saat coding.
 

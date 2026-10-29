@@ -17,7 +17,7 @@ export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus];
 
 /**
  * Product categories. The final list (and the list of forbidden goods) is still an open business
- * decision (BRAINSTORMING.md); labels live in apps/web/messages under `Products.categories`.
+ * decision (docs/BRAINSTORMING.md); labels live in apps/web/messages under `Products.categories`.
  */
 export const PRODUCT_CATEGORIES = [
   'COFFEE_TEA',

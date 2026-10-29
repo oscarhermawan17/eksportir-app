@@ -2,7 +2,7 @@
 
 B2B export marketplace: products from Bali sellers → buyers in Russia & CIS, with BaliTrade handling QC, payment holding and air cargo.
 
-Project docs: `BRAINSTORMING.md` (business) · `ARCHITECTURE.md` (technical) · `TASKS.md` (work plan) · `UI_PROMPT.md` + `design-ui/` (design) · `docs/DECISIONS.md` (decision log) · `docs/CONVENTIONS.md` (coding guides).
+Project docs: `docs/BRAINSTORMING.md` (business) · `docs/ARCHITECTURE.md` (technical) · `TASKS.md` (work plan) · `docs/DESIGN.md` + `design-ui/` (design) · `docs/DECISIONS.md` (decision log) · `docs/CONVENTIONS.md` (coding guides) · `docs/API.md` (routes) · `docs/SECURITY.md` (security).
 
 ## Working with an AI assistant
 
@@ -49,7 +49,7 @@ and most other tools read `AGENTS.md`. Suggested first message:
 │       └── test/               # e2e tests
 ├── packages/
 │   └── shared/                 # enums, types, constants used by web and api
-├── docs/                       # DECISIONS.md, CONVENTIONS.md
+├── docs/                       # ARCHITECTURE, BRAINSTORMING, DESIGN, DECISIONS, CONVENTIONS, API, SECURITY
 ├── AGENTS.md  CLAUDE.md        # AI assistant context (tool-agnostic)
 ├── .claude/skills/             # convention guides + the next-task workflow (SKILL.md files)
 ├── docker-compose.yml          # local PostgreSQL

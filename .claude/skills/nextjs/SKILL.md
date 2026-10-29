@@ -16,7 +16,7 @@ i18n
 
 Tampilan
 - Token dari design system (`design-ui/google-stitch/01-v4.html`) di Tailwind config: primary `#0F4C5C`, hover `#0B3A46`, gold `#C9A24A` (teks gold di latar terang `#9A7426`), terracotta `#B5563A`, background `#FAF7F2`, border `#E7E2D9`, text `#1F2937`, muted `#6B7280`, radius 12px, font Plus Jakarta Sans, ikon Lucide.
-- Navbar & footer = satu komponen standar. Ikuti "Catatan implementasi" di `UI_PROMPT.md` (tanpa kata "escrow", tanpa janji/SLA karangan).
+- Navbar & footer = satu komponen standar. Ikuti "Catatan implementasi" di `docs/DESIGN.md` (tanpa kata "escrow", tanpa janji/SLA karangan).
 - Sederhana dulu: jika bagian desain terasa berlebihan, buat versi paling sederhana yang tetap jelas.
 
 Form & data

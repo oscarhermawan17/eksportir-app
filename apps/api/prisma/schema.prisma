@@ -1,4 +1,4 @@
-// BaliTrade database schema — grows task by task (see TASKS.md / ARCHITECTURE.md §5).
+// BaliTrade database schema — grows task by task (see TASKS.md / docs/ARCHITECTURE.md §5).
 // So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11).
 
 generator client {

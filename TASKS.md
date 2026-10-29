@@ -1,6 +1,6 @@
 # TASKS — BaliTrade MVP 1.0
 
-Daftar tugas coding. Konteks: `BRAINSTORMING.md` (bisnis), `ARCHITECTURE.md` (teknis), `UI_PROMPT.md` (desain + catatan implementasi).
+Daftar tugas coding. Konteks: `docs/BRAINSTORMING.md` (bisnis), `docs/ARCHITECTURE.md` (teknis), `docs/DESIGN.md` (desain + catatan implementasi).
 
 Cara pakai:
 - Kerjakan berurutan. Satu sesi AI = satu atau beberapa task; centang `[x]` saat selesai **dan** sudah dicek (build/test jalan).

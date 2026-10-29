@@ -1,6 +1,6 @@
 # Decision log
 
-Chronological, short. Business decisions are explained in `BRAINSTORMING.md`, technical ones in `ARCHITECTURE.md`; this file is the
+Chronological, short. Business decisions are explained in `docs/BRAINSTORMING.md`, technical ones in `docs/ARCHITECTURE.md`; this file is the
 quick index (newest first). Add a line whenever a decision is made or changed.
 
 ## Technical decisions (made while building, 2026-10-23)
@@ -18,12 +18,15 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 | API errors stay English; the UI maps HTTP status to translated messages (`errorKey`) | Never show raw API text to users |
 | Media: browser uploads straight to R2 via presigned PUT; two buckets (public product media, private files) | Type and exact size are part of the signature; photo ≤ 10 MB, video ≤ 50 MB |
 | R2 settings optional in development (media endpoints answer 503), **required in production** | App refuses to start with a partial config |
-| Product statuses change only through `nextStatus()`; editing an APPROVED product sends it back to review | See `ARCHITECTURE.md` §5 |
+| Product statuses change only through `nextStatus()`; editing an APPROVED product sends it back to review | See `docs/ARCHITECTURE.md` §5 |
 | Approving a product requires en + id + ru text (manual translation by admin) | Automatic translation is MVP 1.1 |
 | Public catalog shows only APPROVED products of APPROVED sellers; falls back to the seller's language | `GET /api/products?locale=`; T12 extends it |
 | Product categories and units are fixed lists in `packages/shared/src/product.ts` | Final list + forbidden goods still open |
 | Exchange rate (T11): append-only `ExchangeRate` table (newest row = in force), only ADMIN_OWNER sets it, bounds 1,000–100,000 IDR/USD | Table doubles as history/audit. Catalog `priceUsd` = IDR ÷ rate, half-up to cents, `null` until a rate exists. **No 2–3% buffer yet** (open) |
 | Public catalog (T12): list/detail/seller page return 404 for anything not APPROVED (product and seller); search = every word must match title/description in any language; max 48 results, no pagination yet | Seller page exposes no email/contact/rating. QC fee not shown on product detail until the zone tariff is decided. Buy/Ask buttons are disabled for logged-in users until T13/T15 |
+| AI context lives in `AGENTS.md` + `CLAUDE.md` + `.claude/skills` only (2026-10-30): `.kiro` removed; project docs moved into `docs/` (`ARCHITECTURE`, `BRAINSTORMING`, `DESIGN` (slimmed from `UI_PROMPT.md`), `API`, `SECURITY`) | Less context per session; `UI_PROMPT.md` was 98 KB. Old prompts stay in git history. Keep `docs/API.md` in sync with routes |
+| Security hardening (2026-10-30): `helmet` on the API, basic headers on the web app, `@nestjs/platform-express` 12.2.0 → 12.3.2 and `body-parser` 2.4.0 (audit clean), install scripts of `@swc/core` and `@parcel/watcher` denied | See `docs/SECURITY.md` for what is still open. No CSP yet |
+| List endpoints skip rows whose relation vanished between two reads instead of answering 500 | Found by parallel e2e specs deleting test users; Prisma `relationLoadStrategy: 'join'` was tried but its types rejected these queries |
 | Dependencies pinned to exact versions; very new packages are added to `minimumReleaseAgeExclude` | Currently the AWS SDK |
 
 ## Open questions (need the owner)
@@ -39,4 +42,4 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 
 Business and design decisions from the brainstorming phase (2026-10-17 → 2026-10-22: cart vs buy-now, no product variants in the MVP,
 seller confirmation before payment, chat in English with the admin in every chat, QC per seller, payment methods, stack choice, MVP 1.0 vs 1.1 scope)
-are recorded in `BRAINSTORMING.md` (sections 5a and 15) and `ARCHITECTURE.md`.
+are recorded in `docs/BRAINSTORMING.md` (sections 5a and 15) and `docs/ARCHITECTURE.md`.

@@ -18,7 +18,7 @@ MVP 1.0 target date: 2026-10-31. The owner (Oscar) works mostly alone with AI as
 - Work in **small steps** (a few files per step) and verify as you go; very long single responses have timed out before.
 - A task is done only when its Definition of Done (DoD) in `TASKS.md` is met **and** `pnpm lint`, `pnpm typecheck`,
   `pnpm build` and the relevant tests pass. Do not tick a task whose DoD you could not verify (say what is blocked).
-- Record new decisions: business → `BRAINSTORMING.md`, technical → `ARCHITECTURE.md`, and add a line to `docs/DECISIONS.md`.
+- Record new decisions: business → `docs/BRAINSTORMING.md`, technical → `docs/ARCHITECTURE.md`, and add a line to `docs/DECISIONS.md`. When you add or change an API route, update `docs/API.md`.
 - **Git:** commit only when the user asks. Author is the user only — no `Co-authored-by` trailer. Never commit `.env` files
   or secrets (`.env.example` placeholders are fine). Stage files explicitly; no `git add .`. No force-push / hard reset without asking.
 - Never print secret values (`.env`, API keys). Refer to them by variable name.
@@ -47,12 +47,14 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 | File | Content | Read when |
 |---|---|---|
 | `TASKS.md` | Ordered task list (T01–T25) with DoD and status ticks | Always, first |
-| `ARCHITECTURE.md` | Stack, roles/RBAC, data model, order status flow, MVP scope, decisions, R2 setup | Before backend/db work |
-| `BRAINSTORMING.md` | Business model, flows, open decisions (section 15) | Before product/flow decisions |
-| `UI_PROMPT.md` | Design prompts + "Catatan implementasi" (what NOT to copy from the designs) | Before UI work |
+| `docs/ARCHITECTURE.md` | Stack, roles/RBAC, data model, order status flow, MVP scope, decisions, R2 setup | Before backend/db work |
+| `docs/BRAINSTORMING.md` | Business model, flows, open decisions (section 15) | Before product/flow decisions |
+| `docs/DESIGN.md` | Design system, per-page screen specs and "Catatan implementasi" (what NOT to copy from the designs) | Before UI work |
 | `design-ui/google-stitch/*.html` | Reference designs (visual truth: `01-v4.html`) | UI work |
 | `docs/DECISIONS.md` | Chronological log of decisions + open questions | Before changing earlier choices |
 | `docs/CONVENTIONS.md` | Index of the convention guides (`.claude/skills/*`) | Before writing code |
+| `docs/API.md` | Every API route with its access rule | Before adding or calling an endpoint |
+| `docs/SECURITY.md` | What is protected, open security items, checklist before deploy | Before auth, upload, money or deploy work |
 
 ## Conventions (summary — details in `.claude/skills/*/SKILL.md`, indexed in `docs/CONVENTIONS.md`)
 
@@ -100,4 +102,4 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 ## Open questions (owner decisions still needed)
 
 QC fee per zone (seed values are placeholders) · final product category list and forbidden-goods list · sourcing fee / deposit /
-refund rules. Full list: `BRAINSTORMING.md` section 15 and `docs/DECISIONS.md`.
+refund rules. Full list: `docs/BRAINSTORMING.md` section 15 and `docs/DECISIONS.md`.

@@ -5,7 +5,7 @@ import { hashPassword } from '../src/common/password.js';
 
 /**
  * QC zones = the 9 regencies/cities of Bali. The fees are PLACEHOLDERS: the real tariff per zone
- * is still an open business decision (BRAINSTORMING.md, "Tarif QC per zona"). Existing zones are
+ * is still an open business decision (docs/BRAINSTORMING.md, "Tarif QC per zona"). Existing zones are
  * never overwritten by the seed, so fees edited later in the database are kept.
  */
 const QC_ZONES: { name: string; feeUsd: string }[] = [
