@@ -1,5 +1,5 @@
 // BaliTrade database schema — grows task by task (see TASKS.md / docs/ARCHITECTURE.md §5).
-// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11).
+// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13).
 
 generator client {
   provider            = "prisma-client"
@@ -35,6 +35,9 @@ model User {
   reviewedSellers  SellerProfile[] @relation("SellerReviewer")
   reviewedProducts Product[]       @relation("ProductReviewer")
   exchangeRates    ExchangeRate[]
+
+  buyerConversations Conversation[] @relation("ConversationBuyer")
+  messages           Message[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -81,7 +84,8 @@ model SellerProfile {
   createdAt       DateTime     @default(now()) @map("created_at")
   updatedAt       DateTime     @updatedAt @map("updated_at")
 
-  products Product[]
+  products      Product[]
+  conversations Conversation[]
 
   @@index([status, createdAt])
   @@map("seller_profiles")
@@ -136,8 +140,9 @@ model Product {
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
 
-  translations ProductTranslation[]
-  media        ProductMedia[]
+  translations  ProductTranslation[]
+  media         ProductMedia[]
+  conversations Conversation[]
 
   @@index([sellerId, status])
   @@index([status, createdAt])
@@ -187,4 +192,49 @@ model ExchangeRate {
 
   @@index([createdAt])
   @@map("exchange_rates")
+}
+
+/// Keep in sync with packages/shared/src/chat.ts
+enum ConversationType {
+  PRODUCT_INQUIRY
+  ORDER
+}
+
+/// A chat between one buyer and one seller. BaliTrade admins (ADMIN_OPS / ADMIN_OWNER) take part in every
+/// conversation implicitly (access comes from the role, so no participant rows are needed).
+model Conversation {
+  id            String           @id @default(cuid())
+  type          ConversationType
+  /// Set for product inquiries. Kept (set to null) if the product is ever deleted, so the history survives.
+  productId     String?          @map("product_id")
+  product       Product?         @relation(fields: [productId], references: [id], onDelete: SetNull)
+  buyerId       String           @map("buyer_id")
+  buyer         User             @relation("ConversationBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId      String           @map("seller_id")
+  seller        SellerProfile    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  lastMessageAt DateTime?        @map("last_message_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
+
+  messages Message[]
+
+  /// One inquiry per buyer and product (rows without a product, e.g. order chats, are not limited).
+  @@unique([buyerId, productId])
+  @@index([buyerId, lastMessageAt])
+  @@index([sellerId, lastMessageAt])
+  @@index([lastMessageAt])
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String       @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String       @map("sender_id")
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body           String
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
 }

@@ -1,0 +1,47 @@
+/** Keep ConversationType in sync with the enum in apps/api/prisma/schema.prisma. */
+export const ConversationType = {
+  PRODUCT_INQUIRY: 'PRODUCT_INQUIRY',
+  ORDER: 'ORDER',
+} as const;
+export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType];
+
+export const CHAT_LIMITS = {
+  bodyMax: 2000,
+  /** Messages returned per request (older ones are fetched with `before`). */
+  pageSize: 50,
+} as const;
+
+/** Which side of the conversation wrote a message. BaliTrade admins take part in every conversation. */
+export type ChatRole = 'BUYER' | 'SELLER' | 'ADMIN';
+
+export interface ChatMessageView {
+  id: string;
+  conversationId: string;
+  body: string;
+  /** ISO timestamp. */
+  createdAt: string;
+  /** Sellers appear under their shop name, everyone else under their own name. */
+  sender: { id: string; name: string; role: ChatRole };
+}
+
+export interface ConversationView {
+  id: string;
+  type: ConversationType;
+  /** The product the buyer asked about (null for conversations without one, or once the product is gone). */
+  product: { id: string; title: string; coverUrl: string | null } | null;
+  buyer: { id: string; name: string };
+  seller: { id: string; displayName: string };
+  lastMessage: { body: string; senderRole: ChatRole; createdAt: string } | null;
+  lastMessageAt: string | null;
+  createdAt: string;
+}
+
+/** Body of POST /api/conversations. */
+export interface StartInquiryInput {
+  productId: string;
+}
+
+/** Body of POST /api/conversations/:id/messages. */
+export interface SendMessageInput {
+  body: string;
+}
