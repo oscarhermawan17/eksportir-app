@@ -19,6 +19,12 @@ type CatalogRow = Prisma.ProductGetPayload<{ include: typeof catalogInclude }>;
 /** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them to match literally. */
 const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
 
+/**
+ * Relations are read in separate queries, so a seller deleted in between leaves `product.seller` null although the type says
+ * otherwise (it made the list answer 500). Such a product is skipped instead of failing the whole response.
+ */
+const hasSeller = (product: CatalogRow): boolean => (product.seller as CatalogRow['seller'] | null) !== null;
+
 /** Buyers only ever see APPROVED products from APPROVED sellers. */
 const visibleToBuyers: Prisma.ProductWhereInput = { status: 'APPROVED', seller: { status: 'APPROVED' } };
 
@@ -96,7 +102,7 @@ export class CatalogService {
   private async toCatalog(products: CatalogRow[], locale: TranslationLocale): Promise<CatalogProduct[]> {
     // One rate for the whole response, so every price in it uses the same rate.
     const rate = await this.fx.latest();
-    return products.map((product) => {
+    return products.filter(hasSeller).map((product) => {
       // Fall back to the seller's own language when this language has no translation.
       const text =
         product.translations.find((t) => t.locale === locale) ??

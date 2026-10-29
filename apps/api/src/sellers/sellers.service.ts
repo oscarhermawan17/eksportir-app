@@ -89,7 +89,8 @@ export class SellersService {
       include: profileInclude,
       orderBy: { createdAt: 'asc' },
     });
-    return profiles.map(toAdminView);
+    // A user deleted between the two reads leaves `user` null; skip such a row instead of failing the whole list.
+    return profiles.filter((profile) => (profile.user as ProfileWithRelations['user'] | null) !== null).map(toAdminView);
   }
 
   async approve(profileId: string, adminId: string): Promise<AdminSellerView> {

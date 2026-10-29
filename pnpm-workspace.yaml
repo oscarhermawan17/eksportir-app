@@ -9,6 +9,9 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
+  # Dev tooling (Nest CLI, next-intl, file watchers) ship prebuilt binaries; their install scripts are not needed.
+  '@swc/core': false
+  '@parcel/watcher': false
 
 minimumReleaseAgeExclude:
   - dotenv@18.0.9

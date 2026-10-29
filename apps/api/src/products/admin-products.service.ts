@@ -29,7 +29,10 @@ export class AdminProductsService {
       orderBy: { updatedAt: 'asc' },
       take: 200,
     });
-    return products.map((product) => this.toView(product));
+    // A seller or user deleted between the reads leaves a relation null; skip such a row instead of failing the whole list.
+    return products
+      .filter((product) => (product.seller?.user as ReviewProduct['seller']['user'] | null | undefined) != null)
+      .map((product) => this.toView(product));
   }
 
   async get(productId: string): Promise<AdminProductView> {
