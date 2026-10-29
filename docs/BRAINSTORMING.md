@@ -129,6 +129,13 @@ Keputusan tambahan (2026-10-17):
 - **Pembeli tidak wajib data perusahaan** (tidak ada field Company Tax ID / registrasi), karena kebanyakan pembeli perorangan.
 - **Bandara/rute tujuan ditentukan BaliTrade**, bukan pembeli. Pembeli cukup mengisi **alamat pengiriman**.
 
+Keputusan metode pembayaran (2026-10-30) — pembeli memilih satu dari **3 metode**:
+- **a. Transfer bank IDR (BCA)** — diperiksa manual oleh admin.
+- **b. Crypto (USDT)** — dikirim ke wallet Binance milik BaliTrade (alamat akan diberikan owner), lalu dikonversi ke rupiah lewat Binance.
+- **c. Exchange** — untuk pembeli yang tidak punya crypto dan **hanya punya rubel**: pembeli membayar ke exchange mitra di Indonesia (dijalankan orang Rusia), dan exchange itu mengirim rupiahnya ke BaliTrade secara manual.
+- Catatan risiko untuk (c): ini jenis pengaturan yang sama dengan butir 1 di atas (pihak yang menukar/meneruskan uang menjalankan jasa transfer uang). Mitigasi di app: catat nama pembeli asli, nama exchange dan referensi transfer, bukti pembayaran, invoice atas nama pembeli, utamakan mitra yang dikenal/repeat, dan **jangan memecah transaksi**. Sangat disarankan konsultasi hukum/compliance sebelum dipakai untuk uang nyata.
+- Masih terbuka: jaringan USDT (alamat wallet bergantung pada jaringan; salah jaringan = dana hilang), data rekening BCA, siapa exchange mitra dan petunjuk yang ditampilkan ke pembeli, serta apakah pembeli exchange perlu diberi nominal dalam rubel (saat ini UI hanya USD/IDR).
+
 ## 12. Tracking (sederhana, update manual oleh admin)
 
 Milestone: Order dikonfirmasi → QC selesai → Dikemas → Diserahkan ke cargo (**nomor AWB**) → Berangkat dari Bali → Tiba di bandara tujuan → Proses bea cukai → Diterima mitra lokal → Diterima pembeli.

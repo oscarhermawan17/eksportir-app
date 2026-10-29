@@ -22,6 +22,11 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | GET | `/api/auth/me` | logged in | `me` | auth |
 | PATCH | `/api/auth/me` | logged in | `updateMe` | auth |
 | POST | `/api/auth/register` | public · rate-limited | `register` | auth |
+| GET | `/api/conversations` | logged in | `list` | chat |
+| POST | `/api/conversations` | logged in | `start` | chat |
+| GET | `/api/conversations/:id` | logged in | `get` | chat |
+| GET | `/api/conversations/:id/messages` | logged in | `messages` | chat |
+| POST | `/api/conversations/:id/messages` | logged in | `send` | chat |
 | GET | `/api/fx/current` | public | `current` | fx |
 | GET | `/api/health` | public | `check` | health |
 | GET | `/api/media/download-url` | logged in | `downloadUrl` | media |

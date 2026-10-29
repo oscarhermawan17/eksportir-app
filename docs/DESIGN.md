@@ -83,6 +83,34 @@ Languages: UI available in English (default), Indonesian, Russian. Show English 
 
 ---
 
+## Layout admin (diputuskan 2026-10-30, dibangun di T17b)
+
+Area `/admin` tampil **terpisah dari toko**, supaya jelas sedang di mana dan muat banyak menu. Token tema tetap sama (teal, gold, Plus Jakarta Sans, radius 12px, ikon Lucide).
+
+- **Sidebar kiri** 240px, teal gelap `#0B3A46` (warna footer), teks putih. Menu aktif: latar sedikit lebih terang + garis gold `#C9A24A` di kiri. Atas: logo "BaliTrade" dengan penanda **ADMIN**. Bawah: tautan "← Back to site".
+- **Top bar** di area konten: judul halaman, language switcher, menu pengguna (nama, logout). **Tanpa navbar dan footer toko.** Latar konten off-white `#FAF7F2`, isi dalam kartu putih seperti halaman lain.
+- **Menu mengikuti peran** dan hanya memuat halaman yang sudah ada: `ADMIN_OPS` melihat penjual, listing (nanti QC dan tracking); `ADMIN_FINANCE` melihat pembayaran; `ADMIN_OWNER` melihat semuanya plus kurs dan pencairan.
+- **Layar kecil:** sidebar menjadi laci yang dibuka dari tombol menu; fokus keyboard terlihat; menu aktif diberi `aria-current`.
+- Rencana teknis: pisahkan chrome toko dan admin lewat route group atau pembungkus yang menyembunyikan navbar/footer di `/admin`; pilih yang paling kecil risikonya saat mengerjakan.
+- Wireframe (▓ = teal gelap, ▌ = penanda gold menu aktif):
+
+```
+┌────────────┬───────────────────────────────────┐
+│▓▓▓▓▓▓▓▓▓▓▓▓│  Sellers              EN   Oscar ▾│
+│▓ BaliTrade▓├───────────────────────────────────┤
+│▓ ADMIN    ▓│                                   │
+│▓▓▓▓▓▓▓▓▓▓▓▓│  ┌─────────────────────────────┐  │
+│▓ Overview ▓│  │ Seller applications         │  │
+│▓▌Sellers  ▓│  │ [Pending] [Approved] [All]  │  │
+│▓ Listings ▓│  │                             │  │
+│▓ Rates    ▓│  │  card ... card ... card     │  │
+│▓▓▓▓▓▓▓▓▓▓▓▓│  └─────────────────────────────┘  │
+│▓ ← Site   ▓│                                   │
+└────────────┴───────────────────────────────────┘
+```
+
+---
+
 ## 1. Design system
 
 Final: `design-ui/google-stitch/01-v4.html` (12 bagian: logo, palet, tipografi, tombol, badge, form, kartu produk, kartu penjual, chat 3 pihak, banner, language switcher, navbar & footer). Token tertanam di `globals.css`. Blok design system tertulis di atas.
@@ -307,6 +335,8 @@ Catatan implementasi: lihat ringkasan di atas (bagian halaman 7a–7b).
 ## 7b. Pembayaran & upload bukti
 
 Acuan: `design-ui/google-stitch/07-b.html`
+
+> **Pembaruan 2026-10-30:** halaman ini memakai **3 metode bayar**, bukan 2: transfer bank IDR (BCA), USDT (wallet Binance), dan **Exchange** (pembeli yang hanya punya rubel membayar ke exchange mitra di Indonesia). Desain Stitch hanya menggambar dua kartu; tambahkan kartu ketiga dengan gaya yang sama. Teks petunjuk untuk Exchange menunggu keputusan owner; jangan menampilkan nama jaringan USDT sebelum diputuskan.
 
 ```
 TASK: Design the PAYMENT page (desktop 1440px + mobile 390px), plus a "Payment submitted — waiting for verification" frame.

@@ -51,6 +51,7 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 - [ ] **T13 Chat realtime** — Socket.IO gateway (auth via cookie), Conversation PRODUCT_INQUIRY & ORDER, peserta otomatis buyer + seller + admin, simpan pesan, lampiran via R2, banner admin, hint "write in English".
   DoD: 3 browser (buyer, seller, admin) saling menerima pesan tanpa refresh.
+  Dipecah (2026-10-30): **langkah 1 selesai** — tabel `Conversation`/`Message` + REST `/api/conversations` (mulai dari produk, daftar, baca, kirim) dengan aturan akses dan 12 test e2e (`test/chat.e2e-spec.ts`). **Belum**: langkah 2 Socket.IO gateway (realtime, butuh dependensi baru), langkah 3 UI chat (laci di detail produk, kotak masuk, tampilan admin, banner admin, hint English), lampiran via R2. Belum dicentang.
 - [ ] **T14 Notifikasi in-app** — tabel Notification, badge lonceng, push via socket, tandai dibaca.
   DoD: pesan/status baru memunculkan notifikasi ke pihak terkait.
 
@@ -60,11 +61,13 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   DoD: order muncul di halaman pembeli, penjual, admin.
 - [ ] **T16 Respons penjual & pembeli** — penjual Accept / Decline / Propose change (qty); pembeli terima perubahan / batalkan → AWAITING_PAYMENT.
   DoD: semua transisi status sesuai ARCHITECTURE bagian 6; pesan sistem muncul di chat.
-- [ ] **T17 Pembayaran barang** — halaman bayar (IDR: nominal IDR dari kurs terkunci + placeholder rekening dari config; USDT: nominal + wallet dari config), upload bukti, sender name/tx hash; admin FINANCE verifikasi/tolak (+ audit log).
+- [ ] **T17 Pembayaran barang** — halaman bayar dengan **3 metode** (diputuskan 2026-10-30): `BANK_IDR` (transfer ke rekening BCA, nominal IDR dari kurs terkunci), `USDT` (nominal + alamat wallet Binance dari config; jaringan menunggu keputusan owner) dan `EXCHANGE` (pembeli yang hanya punya rubel membayar ke exchange mitra di Indonesia, yang mengirim rupiah ke BaliTrade secara manual); detail rekening/wallet/petunjuk exchange dari config. Upload bukti, nama pengirim / tx hash / nama exchange + referensi; admin FINANCE verifikasi/tolak (+ audit log).
   DoD: verifikasi → PAYMENT_VERIFIED → IN_QC.
+- [ ] **T17b Layout admin terpisah** (ditambahkan 2026-10-30, dikerjakan setelah T17) — area `/admin` memakai layout sendiri: sidebar kiri teal gelap, tanpa navbar/footer toko; menu mengikuti peran; pindahkan halaman admin yang ada (penjual, listing, kurs, pembayaran dari T17). Spesifikasi di `docs/DESIGN.md` bagian "Layout admin".
+  DoD: semua halaman admin tampil di layout baru; menu hanya menampilkan halaman yang boleh diakses perannya; di layar kecil sidebar menjadi laci; lint/typecheck/build lulus dan diuji di browser (3 bahasa, 3 peran admin).
 - [ ] **T18 QC** — admin OPS upload laporan QC (foto/video, checklist, komentar) → QC_READY; pembeli Approve atau Report problem (→ ISSUE, diselesaikan lewat chat/admin).
   DoD: approve → AWAITING_SHIPPING_PAYMENT.
-- [ ] **T19 Ongkir & tracking** — admin buat tagihan ongkir (berat, jumlah karton, nominal); pembeli bayar & upload bukti; admin verifikasi; admin tambah TrackingEvent (milestone, catatan, foto, AWB).
+- [ ] **T19 Ongkir & tracking** — admin buat tagihan ongkir (berat, jumlah karton, nominal); pembeli bayar (3 metode yang sama dengan T17) & upload bukti; admin verifikasi; admin tambah TrackingEvent (milestone, catatan, foto, AWB).
   DoD: timeline tracking tampil di halaman order pembeli.
 - [ ] **T20 Selesai & pencairan** — pembeli "Confirm received" → COMPLETED; admin OWNER catat Payout ke penjual (+ audit log).
   DoD: satu order bisa dijalankan dari REQUESTED sampai COMPLETED.

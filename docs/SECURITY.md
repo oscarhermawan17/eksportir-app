@@ -33,7 +33,8 @@ Ordered by importance. **Items 1 to 3 must be done before anything runs on a sha
 7. **Login throttling is per process.** Move it to Redis if the API ever runs more than one instance.
 8. **Public media URL.** `r2.dev` URLs are rate-limited by Cloudflare and meant for development; use a custom domain for the public bucket in production.
 9. **Consent for admin in chats.** The sign-up checkbox is required in the form but not stored in the database yet (privacy law requires transparency; see `docs/BRAINSTORMING.md` section 7).
-10. **Backups** are not set up yet (T24): daily `pg_dump` to R2, encrypted, with one tested restore.
+10. **Chat has no message rate limit yet.** A logged-in user can post messages as fast as they like (2000 characters each). Add a per-user limit when the realtime gateway lands (T13 step 2); attachments (T13) must be validated like other private uploads.
+11. **Backups** are not set up yet (T24): daily `pg_dump` to R2, encrypted, with one tested restore.
 
 ## Routine checks
 

@@ -27,6 +27,9 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 | AI context lives in `AGENTS.md` + `CLAUDE.md` + `.claude/skills` only (2026-10-30): `.kiro` removed; project docs moved into `docs/` (`ARCHITECTURE`, `BRAINSTORMING`, `DESIGN` (slimmed from `UI_PROMPT.md`), `API`, `SECURITY`) | Less context per session; `UI_PROMPT.md` was 98 KB. Old prompts stay in git history. Keep `docs/API.md` in sync with routes |
 | Security hardening (2026-10-30): `helmet` on the API, basic headers on the web app, `@nestjs/platform-express` 12.2.0 → 12.3.2 and `body-parser` 2.4.0 (audit clean), install scripts of `@swc/core` and `@parcel/watcher` denied | See `docs/SECURITY.md` for what is still open. No CSP yet |
 | List endpoints skip rows whose relation vanished between two reads instead of answering 500 | Found by parallel e2e specs deleting test users; Prisma `relationLoadStrategy: 'join'` was tried but its types rejected these queries |
+| Payment methods (2026-10-30): `BANK_IDR` (BCA), `USDT` (Binance wallet), `EXCHANGE` (rubles via a partner exchange in Indonesia that sends rupiah to BaliTrade manually); all verified manually by ADMIN_FINANCE | Replaces the 2-method assumption in the Stitch design (07-b). Built in T17/T19, no code exists yet. See `docs/BRAINSTORMING.md` §11 for the risk note on EXCHANGE |
+| Admin area gets its own layout (2026-10-30): dark-teal left sidebar, no storefront navbar/footer, menu by admin role. Built as task T17b, after T17 | Owner finds one shared look confusing to test and needs many admin menus. Chosen over a light sidebar and an icon rail. Spec in `docs/DESIGN.md` |
+| Chat (T13): no Participant table; participants are the conversation's buyer and seller, and ADMIN_OPS / ADMIN_OWNER take part in every conversation through their role (finance does not). One inquiry per buyer and product | Admins added later join automatically; non-participants get 404. Replaces the Participant model in ARCHITECTURE §5 |
 | Dependencies pinned to exact versions; very new packages are added to `minimumReleaseAgeExclude` | Currently the AWS SDK |
 
 ## Open questions (need the owner)
@@ -34,6 +37,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 - QC fee per zone (current seed values are placeholders).
 - Final product category list and the forbidden-goods list.
 - Sourcing fee, deposit and refund rules.
+- Payment details still to come from the owner: USDT network and Binance wallet address, BCA account details, the partner exchange and the instructions shown to buyers, and whether EXCHANGE buyers need an amount in rubles.
 - Exchange-rate buffer (2–3% for rate risk) and how long a USD price stays locked at checkout.
 - Separate private R2 bucket before real payment proofs/QC files (dev currently uses one bucket, `eksportir-testing`, for both).
 - Native-speaker review of the Indonesian and Russian UI texts.
