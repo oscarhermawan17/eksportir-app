@@ -19,7 +19,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 
 | # | Halaman | Status | Catatan |
 |---|---|---|---|
-| 1 | Design system | Final | Stitch: `design-ui/google-stitch/01-v4.html` (acuan); versi lama 01, 01-v2, 01-v3; AI Studio: `design-ui/google-studios/` (pembanding) |
+| 1 | Design system | Final | Stitch: `design-ui/google-stitch/01-v4.html` (acuan); draf lama 01, 01-v2, 01-v3 dan 02 dihapus 2026-10-30, masih ada di riwayat git; AI Studio: `design-ui/google-studios/` (pembanding) |
 | 2 | Landing page | Final (versi lengkap) | Stitch: `design-ui/google-stitch/02-lengkap.html` (acuan); versi ringkas (Prompt B) dilewati |
 | 3 | Katalog / pencarian produk | Final | Stitch: `design-ui/google-stitch/03.html` (acuan alur); ada pergeseran tema visual, lihat catatan bagian 3 |
 | 4 | Detail produk (+ chat bertiga) | Final | Stitch: `design-ui/google-stitch/04.html`; lihat catatan bagian 4. Keputusan cart & varian sudah diambil (BRAINSTORMING 5a) |

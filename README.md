@@ -7,10 +7,10 @@ Project docs: `BRAINSTORMING.md` (business) · `ARCHITECTURE.md` (technical) · 
 ## Working with an AI assistant
 
 Start every session by telling the assistant to read **`AGENTS.md`** (project context, rules, gotchas, current status), then `TASKS.md`.
-Claude Code reads `CLAUDE.md` automatically (it imports `AGENTS.md`); Codex/ChatGPT CLI, Cursor and most other tools read `AGENTS.md`;
-Kiro uses `.kiro/steering` + `.kiro/skills`. All of them point to the same files, so nothing needs to be repeated. Suggested first message:
+Claude Code reads `CLAUDE.md` automatically (it imports `AGENTS.md`) and loads the skills in `.claude/skills/`; Codex/ChatGPT CLI, Cursor
+and most other tools read `AGENTS.md`. Suggested first message:
 
-> Read AGENTS.md and TASKS.md, then continue with the next unticked task (follow .kiro/skills/next-task/SKILL.md).
+> Read AGENTS.md and TASKS.md, then continue with the next unticked task (follow .claude/skills/next-task/SKILL.md).
 
 ## Stack
 
@@ -51,7 +51,7 @@ Kiro uses `.kiro/steering` + `.kiro/skills`. All of them point to the same files
 │   └── shared/                 # enums, types, constants used by web and api
 ├── docs/                       # DECISIONS.md, CONVENTIONS.md
 ├── AGENTS.md  CLAUDE.md        # AI assistant context (tool-agnostic)
-├── .kiro/                      # Kiro steering + skills (skills are shared with other tools)
+├── .claude/skills/             # convention guides + the next-task workflow (SKILL.md files)
 ├── docker-compose.yml          # local PostgreSQL
 └── TASKS.md                    # what to build next
 ```

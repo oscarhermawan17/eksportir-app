@@ -20,6 +20,9 @@ apps/api/src/generated/
 !.env.example
 *.pem
 
+# personal Claude Code settings (the shared skills in .claude/skills are committed)
+.claude/settings.local.json
+
 # logs
 *.log
 npm-debug.log*

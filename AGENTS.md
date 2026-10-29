@@ -1,6 +1,6 @@
 # AGENTS.md — BaliTrade
 
-Entry point for any AI coding assistant (Claude Code, Codex/ChatGPT, Cursor, Kiro, Copilot, Gemini, ...).
+Entry point for any AI coding assistant (Claude Code, Codex/ChatGPT, Cursor, Copilot, Gemini, ...).
 Read this file first, then the documents listed under "Where to read more". Humans: see `README.md`.
 
 ## What this project is
@@ -25,6 +25,7 @@ MVP 1.0 target date: 2026-10-31. The owner (Oscar) works mostly alone with AI as
 - Do not change the stack/framework without discussion.
 - Visual source of truth for UI: `design-ui/google-stitch/01-v4.html` (tokens already in `apps/web/src/app/globals.css`).
   Other Stitch pages are only a reference for flows. Do not use the word "escrow" in UI (use "payment protection / payment held by BaliTrade").
+  The `frontend-design` skill (`.claude/skills/frontend-design`) is advisory only: it never overrides these tokens (see `docs/CONVENTIONS.md`).
 
 ## Stack
 
@@ -51,9 +52,9 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 | `UI_PROMPT.md` | Design prompts + "Catatan implementasi" (what NOT to copy from the designs) | Before UI work |
 | `design-ui/google-stitch/*.html` | Reference designs (visual truth: `01-v4.html`) | UI work |
 | `docs/DECISIONS.md` | Chronological log of decisions + open questions | Before changing earlier choices |
-| `docs/CONVENTIONS.md` | Index of the convention guides (`.kiro/skills/*`) | Before writing code |
+| `docs/CONVENTIONS.md` | Index of the convention guides (`.claude/skills/*`) | Before writing code |
 
-## Conventions (summary — details in `.kiro/skills/*/SKILL.md`, indexed in `docs/CONVENTIONS.md`)
+## Conventions (summary — details in `.claude/skills/*/SKILL.md`, indexed in `docs/CONVENTIONS.md`)
 
 - API (`apps/api`): one folder per feature module; thin controllers, logic in services; DB only via `PrismaService`;
   global `ValidationPipe` (whitelist + forbidNonWhitelisted); DTOs for all input; never trust client for price/status/role.
