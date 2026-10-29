@@ -143,3 +143,22 @@ export interface ProductInput {
   /** Uploaded files in display order; the first image is the cover. */
   media: { key: string }[];
 }
+
+/** Public seller page (no login): who the seller is and what they sell. No contact details, no ratings yet (MVP 1.1). */
+export interface PublicSellerProfile {
+  id: string;
+  displayName: string;
+  about: string | null;
+  /** Bali regency/city. */
+  location: string | null;
+  /** ISO date the seller was approved or joined. */
+  memberSince: string;
+  products: CatalogProduct[];
+}
+
+/** Limits of the public catalog query (GET /api/products). */
+export const CATALOG_LIMITS = {
+  searchMax: 100,
+  /** Products returned at most per request (pagination comes when the catalog grows). */
+  pageSize: 48,
+} as const;

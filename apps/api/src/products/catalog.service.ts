@@ -1,14 +1,28 @@
-import { Injectable } from '@nestjs/common';
-import type { CatalogProduct, TranslationLocale } from '@balitrade/shared';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CATALOG_LIMITS } from '@balitrade/shared';
+import type { CatalogProduct, PublicSellerProfile, TranslationLocale } from '@balitrade/shared';
 import { idrToUsd } from '../fx/fx-math.js';
 import { FxService } from '../fx/fx.service.js';
+import { Prisma } from '../generated/prisma/client.js';
 import { MediaService } from '../media/media.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { CatalogQueryDto } from './dto/catalog-query.dto.js';
 
-/**
- * Public read side. Buyers only ever see APPROVED products from APPROVED sellers.
- * T12 extends this with search, filters and detail.
- */
+const catalogInclude = {
+  translations: true,
+  media: { orderBy: { sort: 'asc' } },
+  seller: { include: { qcZone: true } },
+} satisfies Prisma.ProductInclude;
+
+type CatalogRow = Prisma.ProductGetPayload<{ include: typeof catalogInclude }>;
+
+/** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them to match literally. */
+const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
+
+/** Buyers only ever see APPROVED products from APPROVED sellers. */
+const visibleToBuyers: Prisma.ProductWhereInput = { status: 'APPROVED', seller: { status: 'APPROVED' } };
+
+/** Public read side: list with search and filters, product detail, seller page. */
 @Injectable()
 export class CatalogService {
   constructor(
@@ -17,16 +31,71 @@ export class CatalogService {
     private readonly fx: FxService,
   ) {}
 
-  async list(locale: TranslationLocale): Promise<CatalogProduct[]> {
+  async list(locale: TranslationLocale, query: Omit<CatalogQueryDto, 'locale'> = {}): Promise<CatalogProduct[]> {
+    const where: Prisma.ProductWhereInput = { ...visibleToBuyers };
+    if (query.category) where.category = query.category;
+    if (query.type) where.type = query.type;
+    if (query.q) {
+      // Words must all appear (in the title or description, in any language), so "rattan bag" narrows the result.
+      where.AND = query.q
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((word) => ({
+          translations: {
+            some: {
+              OR: [
+                { title: { contains: escapeLike(word), mode: 'insensitive' } },
+                { description: { contains: escapeLike(word), mode: 'insensitive' } },
+              ],
+            },
+          },
+        }));
+    }
+    const products = await this.prisma.product.findMany({
+      where,
+      include: catalogInclude,
+      orderBy: { updatedAt: 'desc' },
+      take: CATALOG_LIMITS.pageSize,
+    });
+    return this.toCatalog(products, locale);
+  }
+
+  async detail(id: string, locale: TranslationLocale): Promise<CatalogProduct> {
+    const product = await this.prisma.product.findFirst({ where: { id, ...visibleToBuyers }, include: catalogInclude });
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    const [view] = await this.toCatalog([product], locale);
+    return view!;
+  }
+
+  async sellerProfile(id: string, locale: TranslationLocale): Promise<PublicSellerProfile> {
+    const seller = await this.prisma.sellerProfile.findFirst({
+      where: { id, status: 'APPROVED' },
+      include: { qcZone: true },
+    });
+    if (!seller) {
+      throw new NotFoundException('Seller not found');
+    }
+    const products = await this.prisma.product.findMany({
+      where: { ...visibleToBuyers, sellerId: seller.id },
+      include: catalogInclude,
+      orderBy: { updatedAt: 'desc' },
+      take: CATALOG_LIMITS.pageSize,
+    });
+    return {
+      id: seller.id,
+      displayName: seller.displayName,
+      about: seller.about,
+      location: seller.qcZone?.name ?? null,
+      memberSince: (seller.reviewedAt ?? seller.createdAt).toISOString(),
+      products: await this.toCatalog(products, locale),
+    };
+  }
+
+  private async toCatalog(products: CatalogRow[], locale: TranslationLocale): Promise<CatalogProduct[]> {
     // One rate for the whole response, so every price in it uses the same rate.
     const rate = await this.fx.latest();
-    const products = await this.prisma.product.findMany({
-      where: { status: 'APPROVED', seller: { status: 'APPROVED' } },
-      include: { translations: true, media: { orderBy: { sort: 'asc' } }, seller: { include: { qcZone: true } } },
-      orderBy: { updatedAt: 'desc' },
-      take: 100,
-    });
-
     return products.map((product) => {
       // Fall back to the seller's own language when this language has no translation.
       const text =

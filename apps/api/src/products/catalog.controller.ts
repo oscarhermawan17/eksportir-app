@@ -1,22 +1,25 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { TRANSLATION_LOCALES } from '@balitrade/shared';
-import type { CatalogProduct, TranslationLocale } from '@balitrade/shared';
-import { IsIn, IsOptional } from 'class-validator';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import type { CatalogProduct, PublicSellerProfile } from '@balitrade/shared';
 import { CatalogService } from './catalog.service.js';
+import { CatalogQueryDto, LocaleQueryDto } from './dto/catalog-query.dto.js';
 
-class CatalogQuery {
-  @IsOptional()
-  @IsIn(TRANSLATION_LOCALES)
-  locale?: TranslationLocale;
-}
-
-/** Public (no login): the product list buyers can browse. */
-@Controller('products')
+/** Public (no login): what buyers can browse. */
+@Controller()
 export class CatalogController {
   constructor(private readonly catalog: CatalogService) {}
 
-  @Get()
-  list(@Query() query: CatalogQuery): Promise<CatalogProduct[]> {
-    return this.catalog.list(query.locale ?? 'en');
+  @Get('products')
+  list(@Query() { locale, ...filters }: CatalogQueryDto): Promise<CatalogProduct[]> {
+    return this.catalog.list(locale ?? 'en', filters);
+  }
+
+  @Get('products/:id')
+  detail(@Param('id') id: string, @Query() { locale }: LocaleQueryDto): Promise<CatalogProduct> {
+    return this.catalog.detail(id, locale ?? 'en');
+  }
+
+  @Get('public/sellers/:id')
+  seller(@Param('id') id: string, @Query() { locale }: LocaleQueryDto): Promise<PublicSellerProfile> {
+    return this.catalog.sellerProfile(id, locale ?? 'en');
   }
 }
