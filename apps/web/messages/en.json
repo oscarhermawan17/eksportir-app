@@ -25,7 +25,8 @@
     "sellerArea": "My seller account",
     "admin": "Admin",
     "adminProducts": "Review products",
-    "adminExchangeRate": "Exchange rate"
+    "adminExchangeRate": "Exchange rate",
+    "messages": "Messages"
   },
   "Footer": {
     "tagline": "Authentic products from Bali sellers, quality-checked and shipped to buyers in Russia & CIS.",
@@ -380,7 +381,7 @@
     "order": "Request to order",
     "ask": "Ask the seller & BaliTrade",
     "loginHint": "Log in to order or to ask a question.",
-    "soonHint": "Ordering and chat are opening soon.",
+    "soonHint": "Ordering is opening soon.",
     "shippingNote": "Shipping cost is calculated after packing and weighing, before shipment.",
     "trustPayment": "Payment held by BaliTrade until delivery",
     "trustQc": "Photo & video QC report before shipping — you approve",
@@ -397,5 +398,38 @@
     "noAbout": "This seller has not added a description yet.",
     "sellerProducts": "Products from this seller",
     "noSellerProducts": "This seller has no live products yet."
+  },
+  "Chat": {
+    "title": "Messages",
+    "navLabel": "Messages",
+    "inboxEmpty": "No conversations yet. Open a product and ask the seller to start one.",
+    "pickOne": "Select a conversation to read it.",
+    "loading": "Loading…",
+    "loadError": "Could not load the conversation.",
+    "inquiryTitle": "Product inquiry",
+    "conversation": "Conversation",
+    "you": "You",
+    "youBuyer": "You (Buyer)",
+    "sellerLabel": "{name} (Seller)",
+    "adminLabel": "BaliTrade Admin",
+    "roles": {
+      "BUYER": "Buyer",
+      "SELLER": "Seller",
+      "ADMIN": "BaliTrade Admin"
+    },
+    "adminBanner": "BaliTrade Admin is part of this conversation to keep your transaction safe.",
+    "writeHint": "Please write in English so everyone can understand.",
+    "placeholder": "Write a message…",
+    "messageLabel": "Message",
+    "send": "Send",
+    "sending": "Sending…",
+    "empty": "No messages yet. Say hello and ask your question.",
+    "noMessagesYet": "No messages yet",
+    "loadEarlier": "Show earlier messages",
+    "close": "Close chat",
+    "backToList": "All conversations",
+    "viewProduct": "View product",
+    "adminLine": "{buyer} with {seller}",
+    "startError": "Could not open the chat."
   }
 }

@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 import { useCatalogText } from '@/components/catalog/catalog-text';
+import { ChatDrawer } from '@/components/chat/chat-drawer';
 import { TypeBadge } from '@/components/catalog/type-badge';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -73,6 +74,7 @@ function Product({ product }: { product: CatalogProduct }) {
   const locale = useLocale();
   const text = useCatalogText();
   const { user, status } = useAuth();
+  const [chatOpen, setChatOpen] = useState(false);
   const price = text.price(product);
   const availability = text.availabilityValue(product);
   const location = text.location(product.seller.location);
@@ -80,6 +82,7 @@ function Product({ product }: { product: CatalogProduct }) {
 
   return (
     <article className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
+      {chatOpen ? <ChatDrawer product={product} onClose={() => setChatOpen(false)} /> : null}
       <Gallery product={product} />
 
       <div className="space-y-5">
@@ -121,10 +124,13 @@ function Product({ product }: { product: CatalogProduct }) {
               <Button className="w-full" disabled>
                 {t('order')}
               </Button>
-              <Button variant="secondary" className="w-full" disabled>
-                <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                {t('ask')}
-              </Button>
+              {/* Only buyers can ask; admins join conversations from the inbox, sellers answer there. */}
+              {user.roles.includes('BUYER') ? (
+                <Button variant="secondary" className="w-full" onClick={() => setChatOpen(true)}>
+                  <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                  {t('ask')}
+                </Button>
+              ) : null}
               <p className="text-sm text-muted">{t('soonHint')}</p>
             </>
           ) : (

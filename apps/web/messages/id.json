@@ -25,7 +25,8 @@
     "sellerArea": "Akun penjual saya",
     "admin": "Admin",
     "adminProducts": "Tinjau produk",
-    "adminExchangeRate": "Kurs"
+    "adminExchangeRate": "Kurs",
+    "messages": "Pesan"
   },
   "Footer": {
     "tagline": "Produk autentik dari penjual Bali, dicek kualitasnya dan dikirim ke pembeli di Rusia & CIS.",
@@ -380,7 +381,7 @@
     "order": "Ajukan pesanan",
     "ask": "Tanya penjual & BaliTrade",
     "loginHint": "Masuk untuk memesan atau bertanya.",
-    "soonHint": "Pemesanan dan chat segera dibuka.",
+    "soonHint": "Pemesanan segera dibuka.",
     "shippingNote": "Ongkos kirim dihitung setelah pengemasan dan penimbangan, sebelum pengiriman.",
     "trustPayment": "Pembayaran ditahan BaliTrade sampai barang tiba",
     "trustQc": "Laporan QC foto & video sebelum dikirim — Anda yang menyetujui",
@@ -397,5 +398,38 @@
     "noAbout": "Penjual ini belum menambahkan deskripsi.",
     "sellerProducts": "Produk dari penjual ini",
     "noSellerProducts": "Penjual ini belum punya produk yang tayang."
+  },
+  "Chat": {
+    "title": "Pesan",
+    "navLabel": "Pesan",
+    "inboxEmpty": "Belum ada percakapan. Buka sebuah produk dan tanya penjualnya untuk memulai.",
+    "pickOne": "Pilih percakapan untuk membacanya.",
+    "loading": "Memuat…",
+    "loadError": "Tidak dapat memuat percakapan.",
+    "inquiryTitle": "Pertanyaan produk",
+    "conversation": "Percakapan",
+    "you": "Anda",
+    "youBuyer": "Anda (Pembeli)",
+    "sellerLabel": "{name} (Penjual)",
+    "adminLabel": "Admin BaliTrade",
+    "roles": {
+      "BUYER": "Pembeli",
+      "SELLER": "Penjual",
+      "ADMIN": "Admin BaliTrade"
+    },
+    "adminBanner": "Admin BaliTrade ikut dalam percakapan ini untuk menjaga keamanan transaksi Anda.",
+    "writeHint": "Mohon menulis dalam bahasa Inggris agar semua pihak mengerti.",
+    "placeholder": "Tulis pesan…",
+    "messageLabel": "Pesan",
+    "send": "Kirim",
+    "sending": "Mengirim…",
+    "empty": "Belum ada pesan. Sapa penjual dan ajukan pertanyaan Anda.",
+    "noMessagesYet": "Belum ada pesan",
+    "loadEarlier": "Tampilkan pesan sebelumnya",
+    "close": "Tutup chat",
+    "backToList": "Semua percakapan",
+    "viewProduct": "Lihat produk",
+    "adminLine": "{buyer} dengan {seller}",
+    "startError": "Tidak dapat membuka chat."
   }
 }

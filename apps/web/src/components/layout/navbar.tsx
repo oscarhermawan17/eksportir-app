@@ -22,6 +22,9 @@ function useNavLinks(): NavLink[] {
     // Visitors sign up as sellers; logged-in users manage or start their seller application.
     user ? { href: '/seller', label: t('sell') } : { href: '/register?role=seller', label: t('sell') },
   ];
+  if (user) {
+    links.push({ href: '/messages', label: t('messages') });
+  }
   if (user?.roles.includes('SELLER')) {
     links.push({ href: '/seller', label: t('sellerArea') });
   }
