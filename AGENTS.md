@@ -96,7 +96,7 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
   search + category/type filters; order/ask buttons go to login for guests and are disabled for logged-in users until T13/T15).
 - R2 dev setup: one bucket (`eksportir-testing`) serves as both public and private for now. Split off a separate private
   bucket before real payment proofs / QC files exist (T17+).
-- Next: Phase 3 chat **T13** (Socket.IO, 3-party conversations) and **T14** notifications, then the order flow T15+.
+- In progress: **T13 chat** — REST API and the web UI (drawer on the product page, `/messages` inbox, 4 s polling) are done and tested; still open: Socket.IO realtime, attachments, message rate limit (see `TASKS.md`). Then **T14** notifications, the order flow T15+, and **T17b** admin layout.
 - Uncommitted work may exist — check `git status` before starting.
 
 ## Open questions (owner decisions still needed)

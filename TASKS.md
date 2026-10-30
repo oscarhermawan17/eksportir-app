@@ -51,7 +51,7 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 - [ ] **T13 Chat realtime** — Socket.IO gateway (auth via cookie), Conversation PRODUCT_INQUIRY & ORDER, peserta otomatis buyer + seller + admin, simpan pesan, lampiran via R2, banner admin, hint "write in English".
   DoD: 3 browser (buyer, seller, admin) saling menerima pesan tanpa refresh.
-  Dipecah (2026-10-30): **langkah 1 selesai** — tabel `Conversation`/`Message` + REST `/api/conversations` (mulai dari produk, daftar, baca, kirim) dengan aturan akses dan 12 test e2e (`test/chat.e2e-spec.ts`). **Belum**: langkah 2 Socket.IO gateway (realtime, butuh dependensi baru), langkah 3 UI chat (laci di detail produk, kotak masuk, tampilan admin, banner admin, hint English), lampiran via R2. Belum dicentang.
+  Dipecah (2026-10-30): **langkah 1 selesai** — tabel `Conversation`/`Message` + REST `/api/conversations` (mulai dari produk, daftar, baca, kirim) dengan aturan akses dan 12 test e2e (`test/chat.e2e-spec.ts`). **Langkah 3 (UI) selesai dengan polling** — laci chat di detail produk (tombol "Ask the seller & BaliTrade" untuk pembeli), kotak masuk `/messages` (pembeli, penjual, admin melihat semua), banner admin, hint English, pesan baru muncul otomatis tiap 4 detik; diuji di browser dengan 3 peran + tampilan mobile. **Belum**: langkah 2 Socket.IO gateway (realtime sungguhan, butuh dependensi baru, DoD T13 "tanpa refresh" masih dipenuhi lewat polling), lampiran foto/video via R2, batas laju pesan. Belum dicentang.
 - [ ] **T14 Notifikasi in-app** — tabel Notification, badge lonceng, push via socket, tandai dibaca.
   DoD: pesan/status baru memunculkan notifikasi ke pihak terkait.
 

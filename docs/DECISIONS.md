@@ -30,6 +30,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 | Payment methods (2026-10-30): `BANK_IDR` (BCA), `USDT` (Binance wallet), `EXCHANGE` (rubles via a partner exchange in Indonesia that sends rupiah to BaliTrade manually); all verified manually by ADMIN_FINANCE | Replaces the 2-method assumption in the Stitch design (07-b). Built in T17/T19, no code exists yet. See `docs/BRAINSTORMING.md` §11 for the risk note on EXCHANGE |
 | Admin area gets its own layout (2026-10-30): dark-teal left sidebar, no storefront navbar/footer, menu by admin role. Built as task T17b, after T17 | Owner finds one shared look confusing to test and needs many admin menus. Chosen over a light sidebar and an icon rail. Spec in `docs/DESIGN.md` |
 | Chat (T13): no Participant table; participants are the conversation's buyer and seller, and ADMIN_OPS / ADMIN_OWNER take part in every conversation through their role (finance does not). One inquiry per buyer and product | Admins added later join automatically; non-participants get 404. Replaces the Participant model in ARCHITECTURE §5 |
+| Chat UI first with polling (2026-10-30): messages refresh every 4 s while the tab is visible; Socket.IO replaces polling later in T13 | Gets a demo-able chat without new dependencies; the REST API stays the source of truth. Only buyers see the "Ask" button, admins and sellers use the inbox |
 | Dependencies pinned to exact versions; very new packages are added to `minimumReleaseAgeExclude` | Currently the AWS SDK |
 
 ## Open questions (need the owner)
