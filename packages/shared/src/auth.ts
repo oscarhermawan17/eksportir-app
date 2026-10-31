@@ -13,6 +13,12 @@ export const SELF_REGISTER_ROLES = [
 
 export type SelfRegisterRole = (typeof SELF_REGISTER_ROLES)[number];
 
+/**
+ * Version of the text users accept at sign-up ("a BaliTrade admin is included in all chats"). Stored with the consent;
+ * bump it when the wording changes, so it is clear which text each user agreed to.
+ */
+export const ADMIN_CHAT_CONSENT_VERSION = 'v1';
+
 /** The logged-in user as returned by the auth endpoints (never includes the password hash). */
 export interface AuthUser {
   id: string;

@@ -47,7 +47,7 @@ describe('Seller onboarding (e2e)', () => {
     await prisma.user.create({ data: { email: financeEmail, passwordHash, name: 'Fin', roles: [Role.ADMIN_FINANCE] } });
     await request(app.getHttpServer())
       .post('/api/auth/register')
-      .send({ email: buyerEmail, password, name: 'Buyer One' })
+      .send({ email: buyerEmail, password, name: 'Buyer One', acceptAdminInChat: true })
       .expect(201);
   });
 
@@ -69,7 +69,7 @@ describe('Seller onboarding (e2e)', () => {
     const agent = request.agent(app.getHttpServer());
     await agent
       .post('/api/auth/register')
-      .send({ email: sellerEmail, password, name: 'Ketut Weaver', role: 'SELLER' })
+      .send({ email: sellerEmail, password, name: 'Ketut Weaver', role: 'SELLER', acceptAdminInChat: true })
       .expect(201);
     const profile = await agent.get('/api/sellers/me').expect(200);
     expect(profile.body).toMatchObject({ displayName: 'Ketut Weaver', status: 'PENDING', qcZone: null });
@@ -128,7 +128,7 @@ describe('Seller onboarding (e2e)', () => {
   it('admin cannot approve a seller who has no location yet', async () => {
     const email = `sellers-e2e-nozone-${stamp}@example.com`;
     const agent = request.agent(app.getHttpServer());
-    await agent.post('/api/auth/register').send({ email, password, name: 'No Zone', role: 'SELLER' }).expect(201);
+    await agent.post('/api/auth/register').send({ email, password, name: 'No Zone', role: 'SELLER', acceptAdminInChat: true }).expect(201);
     const id = (await agent.get('/api/sellers/me').expect(200)).body.id as string;
     await (await agentFor(opsEmail)).post(`/api/admin/sellers/${id}/approve`).expect(400);
   });

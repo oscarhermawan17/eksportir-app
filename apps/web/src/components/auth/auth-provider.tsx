@@ -11,6 +11,8 @@ export interface RegisterInput {
   phone?: string;
   role: SelfRegisterRole;
   locale: Locale;
+  /** The sign-up checkbox "a BaliTrade admin is included in all chats"; the API rejects the request without it. */
+  acceptAdminInChat: boolean;
 }
 
 interface AuthContextValue {

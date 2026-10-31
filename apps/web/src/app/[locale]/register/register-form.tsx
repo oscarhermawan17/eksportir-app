@@ -45,6 +45,7 @@ export function RegisterForm() {
         ...(phone ? { phone } : {}),
         role,
         locale,
+        acceptAdminInChat: form.get('consent') === 'on',
       });
       router.push(role === 'SELLER' ? '/seller' : '/');
     } catch (error) {

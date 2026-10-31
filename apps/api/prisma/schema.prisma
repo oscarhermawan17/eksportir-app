@@ -30,6 +30,10 @@ model User {
   /// UI language: en | id | ru
   locale       String  @default("en")
   roles        Role[]  @default([BUYER])
+  /// When the user accepted that a BaliTrade admin takes part in all their chats (null for accounts made by seed/admin).
+  adminChatConsentAt      DateTime? @map("admin_chat_consent_at")
+  /// Which wording they accepted (ADMIN_CHAT_CONSENT_VERSION in packages/shared).
+  adminChatConsentVersion String?   @map("admin_chat_consent_version")
 
   sellerProfile    SellerProfile?
   reviewedSellers  SellerProfile[] @relation("SellerReviewer")

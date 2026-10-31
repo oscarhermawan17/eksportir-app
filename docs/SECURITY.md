@@ -32,7 +32,7 @@ Ordered by importance. **Items 1 to 3 must be done before anything runs on a sha
 6. **Logout does not revoke the JWT** (stateless). Acceptable for the MVP; shorten `JWT_EXPIRES_IN_SECONDS` if that worries you.
 7. **Login throttling is per process.** Move it to Redis if the API ever runs more than one instance.
 8. **Public media URL.** `r2.dev` URLs are rate-limited by Cloudflare and meant for development; use a custom domain for the public bucket in production.
-9. **Consent for admin in chats.** The sign-up checkbox is required in the form but not stored in the database yet (privacy law requires transparency; see `docs/BRAINSTORMING.md` section 7).
+9. **Consent for admin in chats.** Done in T13b: sign-up requires `acceptAdminInChat: true` (enforced by the API) and stores when and which wording was accepted. Accounts created before that, and admin accounts from the seed, have no consent record; the chat does not check it yet.
 10. **Chat limits and attachments.** (Notifications are private to their owner: every route filters by the logged-in user, other users' ids answer 404, and pushes only go to the owner's own socket room.) Messages are limited to 20 per user per minute (in memory, one API instance like the login throttle) and 2000 characters. Sockets cannot write, and refuse a foreign `Origin`. Open: a user whose role is removed keeps the rooms they already joined until their socket reconnects; attachments (T13) must be validated like other private uploads.
 11. **Backups** are not set up yet (T24): daily `pg_dump` to R2, encrypted, with one tested restore.
 

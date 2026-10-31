@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ADMIN_CHAT_CONSENT_VERSION } from '@balitrade/shared';
 import type { AuthUser, Locale } from '@balitrade/shared';
 import { hashPassword, verifyPassword } from '../common/password.js';
 import { Prisma } from '../generated/prisma/client.js';
@@ -29,6 +30,8 @@ export class AuthService {
           phone: dto.phone,
           locale: dto.locale ?? 'en',
           roles: [dto.role ?? 'BUYER'],
+          adminChatConsentAt: new Date(),
+          adminChatConsentVersion: ADMIN_CHAT_CONSENT_VERSION,
           // A public SELLER signup is only an application: the profile starts PENDING until an admin approves it.
           ...(dto.role === 'SELLER'
             ? { sellerProfile: { create: { displayName: dto.name } } }

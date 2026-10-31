@@ -2,6 +2,7 @@ import { SELF_REGISTER_ROLES, LOCALES } from '@balitrade/shared';
 import type { Locale, SelfRegisterRole } from '@balitrade/shared';
 import { Transform } from 'class-transformer';
 import {
+  Equals,
   IsEmail,
   IsIn,
   IsOptional,
@@ -39,6 +40,13 @@ export class RegisterDto {
   @IsOptional()
   @IsIn(LOCALES)
   locale?: Locale;
+
+  /**
+   * Must be `true`: the person accepts that a BaliTrade admin takes part in all their chats. The API enforces it (not only the
+   * sign-up form) and stores when and which wording was accepted.
+   */
+  @Equals(true, { message: 'You must accept that a BaliTrade admin is included in all chats' })
+  acceptAdminInChat: boolean;
 
   /** Defaults to BUYER. Admin roles can never be self-assigned. */
   @IsOptional()
