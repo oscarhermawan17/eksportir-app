@@ -4,6 +4,8 @@ import type { AuthUser, ChatMessageView, ChatRole, ConversationView } from '@bal
 import { Prisma } from '../generated/prisma/client.js';
 import { MediaService } from '../media/media.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { ChatEvents } from './chat.events.js';
+import { MessageRateLimiter } from './message-rate-limiter.js';
 
 const LIST_LIMIT = 100;
 
@@ -31,6 +33,8 @@ export class ChatService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
+    private readonly events: ChatEvents,
+    private readonly limiter: MessageRateLimiter,
   ) {}
 
   /** Starts the buyer's conversation about a product, or returns the one that already exists. */
@@ -99,8 +103,20 @@ export class ChatService {
     return rows.reverse().map((row) => this.toMessageView(row, conversation));
   }
 
+  /** Same rule as every REST route: buyer, seller of the conversation, or a moderating admin. */
+  async canAccess(user: AuthUser, conversationId: string): Promise<boolean> {
+    try {
+      await this.findAccessible(user, conversationId);
+      return true;
+    } catch (error) {
+      if (error instanceof NotFoundException) return false;
+      throw error;
+    }
+  }
+
   async send(user: AuthUser, conversationId: string, body: string): Promise<ChatMessageView> {
     const conversation = await this.findAccessible(user, conversationId);
+    this.limiter.consume(user.id);
     const message = await this.prisma.$transaction(async (tx) => {
       const created = await tx.message.create({
         data: { conversationId, senderId: user.id, body },
@@ -109,7 +125,14 @@ export class ChatService {
       await tx.conversation.update({ where: { id: conversationId }, data: { lastMessageAt: created.createdAt } });
       return created;
     });
-    return this.toMessageView(message, conversation);
+    const view = this.toMessageView(message, conversation);
+    this.events.messageCreated.next({
+      conversationId,
+      buyerId: conversation.buyerId,
+      sellerUserId: conversation.seller.userId,
+      message: view,
+    });
+    return view;
   }
 
   /** Participants are the buyer, the seller and the moderating admins; for anyone else the conversation "does not exist". */

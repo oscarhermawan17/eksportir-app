@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module.js';
 import { configureApp } from './app.setup.js';
+import { SocketIoAdapter } from './chat/socket-io.adapter.js';
 import type { Env } from './config/env.js';
 
 async function bootstrap(): Promise<void> {
@@ -11,6 +12,7 @@ async function bootstrap(): Promise<void> {
 
   configureApp(app);
   app.enableCors({ origin: config.get('WEB_ORIGIN', { infer: true }), credentials: true });
+  app.useWebSocketAdapter(new SocketIoAdapter(app, config.get('WEB_ORIGIN', { infer: true })));
   app.enableShutdownHooks();
 
   const port = config.get('PORT', { infer: true });

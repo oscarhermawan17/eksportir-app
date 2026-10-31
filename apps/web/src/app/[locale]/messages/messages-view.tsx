@@ -11,8 +11,11 @@ import { ChatPanel } from '@/components/chat/chat-panel';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
+import { subscribeToInbox } from '@/lib/chat-socket';
 
-const REFRESH_MS = 8000;
+/** Re-read interval with a live socket (safety net) and without one. */
+const REFRESH_LIVE_MS = 60_000;
+const REFRESH_FALLBACK_MS = 8000;
 
 export function MessagesView() {
   return <LoginGate>{(user) => <Inbox user={user} />}</LoginGate>;
@@ -26,6 +29,21 @@ function Inbox({ user }: { user: AuthUser }) {
   const [conversations, setConversations] = useState<ConversationView[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [live, setLive] = useState(false);
+  /** Bumped by every `conversation:updated` signal (and reconnect), which re-reads the list right away. */
+  const [signal, setSignal] = useState(0);
+
+  useEffect(
+    () =>
+      subscribeToInbox({
+        onEvent: () => setSignal((n) => n + 1),
+        onStatus: (connected) => {
+          setLive(connected);
+          if (connected) setSignal((n) => n + 1);
+        },
+      }),
+    [],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -43,14 +61,14 @@ function Inbox({ user }: { user: AuthUser }) {
     const refresh = () => {
       if (!document.hidden) void load();
     };
-    const timer = setInterval(refresh, REFRESH_MS);
+    const timer = setInterval(refresh, live ? REFRESH_LIVE_MS : REFRESH_FALLBACK_MS);
     document.addEventListener('visibilitychange', refresh);
     return () => {
       cancelled = true;
       clearInterval(timer);
       document.removeEventListener('visibilitychange', refresh);
     };
-  }, [attempt]);
+  }, [attempt, live, signal]);
 
   const admin = isAdmin(user.roles);
   const selected = conversations?.find((conversation) => conversation.id === selectedId) ?? null;

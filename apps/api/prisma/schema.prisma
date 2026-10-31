@@ -1,5 +1,5 @@
 // BaliTrade database schema — grows task by task (see TASKS.md / docs/ARCHITECTURE.md §5).
-// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13).
+// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13), notifications (T14).
 
 generator client {
   provider            = "prisma-client"
@@ -38,6 +38,7 @@ model User {
 
   buyerConversations Conversation[] @relation("ConversationBuyer")
   messages           Message[]
+  notifications      Notification[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -237,4 +238,29 @@ model Message {
 
   @@index([conversationId, createdAt])
   @@map("messages")
+}
+
+/// Keep in sync with packages/shared/src/notifications.ts
+enum NotificationType {
+  CHAT_MESSAGE
+}
+
+/// An in-app notification for one user. Unread notifications about the same subject are folded into one row
+/// (e.g. 5 new messages in a conversation = one row with count 5); once read, the next event creates a fresh row.
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String           @map("user_id")
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  /// What the notification is about, e.g. "conversation:<id>".
+  subject   String
+  /// Shape depends on `type` (see packages/shared/src/notifications.ts).
+  payload   Json
+  readAt    DateTime?        @map("read_at")
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  @@index([userId, readAt, updatedAt])
+  @@index([userId, type, subject, readAt])
+  @@map("notifications")
 }

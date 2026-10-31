@@ -516,5 +516,17 @@
     "viewProduct": "Lihat produk",
     "adminLine": "{buyer} dengan {seller}",
     "startError": "Tidak dapat membuka chat."
+  },
+  "Notifications": {
+    "title": "Notifikasi",
+    "bell": "Notifikasi",
+    "bellUnread": "Notifikasi, {count} belum dibaca",
+    "empty": "Belum ada notifikasi.",
+    "markAllRead": "Tandai semua dibaca",
+    "newMessages": "{count, plural, other {# pesan baru}}",
+    "fromSender": "Dari {sender}",
+    "openMessages": "Buka semua pesan",
+    "loadError": "Tidak dapat memuat notifikasi.",
+    "close": "Tutup notifikasi"
   }
 }

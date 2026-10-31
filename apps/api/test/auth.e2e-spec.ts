@@ -10,7 +10,7 @@ import { PrismaService } from '../src/prisma/prisma.service.js';
 describe('Auth (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
-  const email = `e2e-${Date.now()}@example.com`;
+  const email = `auth-e2e-${Date.now()}@example.com`;
   const password = 'correct-horse-battery';
 
   const http = () => request(app.getHttpServer());
@@ -24,7 +24,7 @@ describe('Auth (e2e)', () => {
   });
 
   afterAll(async () => {
-    await prisma.user.deleteMany({ where: { email: { startsWith: 'e2e-' } } });
+    await prisma.user.deleteMany({ where: { email: { startsWith: 'auth-e2e-' } } });
     await app.close();
   });
 
@@ -74,13 +74,13 @@ describe('Auth (e2e)', () => {
   it('allows registering as SELLER but never as an admin role', async () => {
     const seller = await http()
       .post('/api/auth/register')
-      .send({ email: `e2e-seller-${Date.now()}@example.com`, password, name: 'Seller', role: 'SELLER' })
+      .send({ email: `auth-e2e-seller-${Date.now()}@example.com`, password, name: 'Seller', role: 'SELLER' })
       .expect(201);
     expect(seller.body.roles).toEqual(['SELLER']);
 
     await http()
       .post('/api/auth/register')
-      .send({ email: `e2e-admin-${Date.now()}@example.com`, password, name: 'Evil', role: 'ADMIN_OWNER' })
+      .send({ email: `auth-e2e-admin-${Date.now()}@example.com`, password, name: 'Evil', role: 'ADMIN_OWNER' })
       .expect(400);
   });
 
@@ -88,7 +88,7 @@ describe('Auth (e2e)', () => {
     await http().post('/api/auth/register').send({ email: 'nope', password: 'short', name: '' }).expect(400);
     await http()
       .post('/api/auth/register')
-      .send({ email: `e2e-x-${Date.now()}@example.com`, password, name: 'X', roles: ['ADMIN_OWNER'] })
+      .send({ email: `auth-e2e-x-${Date.now()}@example.com`, password, name: 'X', roles: ['ADMIN_OWNER'] })
       .expect(400);
   });
 

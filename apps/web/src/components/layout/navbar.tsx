@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 import { LanguageSwitcher } from '@/components/layout/language-switcher';
+import { NotificationBell } from '@/components/notifications/notification-bell';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -41,6 +42,7 @@ export function Navbar() {
   const t = useTranslations('Navbar');
   const pathname = usePathname();
   const links = useNavLinks();
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -64,16 +66,16 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        {/* One group for every screen size, so the language switcher and the bell exist once (the bell holds a socket subscription). */}
+        <div className="flex items-center gap-1 lg:gap-2">
           <LanguageSwitcher />
-          <AuthActions />
-        </div>
-
-        <div className="flex items-center gap-1 lg:hidden">
-          <LanguageSwitcher />
+          {user ? <NotificationBell /> : null}
+          <div className="hidden items-center gap-2 lg:flex">
+            <AuthActions />
+          </div>
           <button
             type="button"
-            className="rounded-button p-2 text-primary hover:bg-primary/5"
+            className="rounded-button p-2 text-primary hover:bg-primary/5 lg:hidden"
             aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"

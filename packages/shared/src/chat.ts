@@ -9,7 +9,25 @@ export const CHAT_LIMITS = {
   bodyMax: 2000,
   /** Messages returned per request (older ones are fetched with `before`). */
   pageSize: 50,
+  /** Messages one user may send per minute (all conversations together). */
+  messagesPerMinute: 20,
 } as const;
+
+/** Socket.IO events (the API pushes; the browser only joins and leaves rooms, messages are written through REST). */
+export const CHAT_EVENTS = {
+  /** Client → server, payload: conversation id; the acknowledgement is a `ChatJoinAck`. */
+  join: 'conversation:join',
+  /** Client → server, payload: conversation id. */
+  leave: 'conversation:leave',
+  /** Server → clients in the conversation room, payload: `ChatMessageView`. */
+  message: 'message:new',
+  /** Server → the conversation's buyer and seller and the moderating admins, payload: `{ conversationId }`. */
+  updated: 'conversation:updated',
+} as const;
+
+export interface ChatJoinAck {
+  ok: boolean;
+}
 
 /** Which side of the conversation wrote a message. BaliTrade admins take part in every conversation. */
 export type ChatRole = 'BUYER' | 'SELLER' | 'ADMIN';

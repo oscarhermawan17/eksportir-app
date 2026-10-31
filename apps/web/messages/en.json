@@ -516,5 +516,17 @@
     "viewProduct": "View product",
     "adminLine": "{buyer} with {seller}",
     "startError": "Could not open the chat."
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "bell": "Notifications",
+    "bellUnread": "Notifications, {count} unread",
+    "empty": "No notifications yet.",
+    "markAllRead": "Mark all as read",
+    "newMessages": "{count, plural, one {# new message} other {# new messages}}",
+    "fromSender": "From {sender}",
+    "openMessages": "Open all messages",
+    "loadError": "Could not load notifications.",
+    "close": "Close notifications"
   }
 }

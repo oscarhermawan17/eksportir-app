@@ -9,9 +9,12 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { FormErrors, inputClasses } from '@/components/ui/field';
 import { apiFetch, errorKey } from '@/lib/api';
+import { subscribeToConversation } from '@/lib/chat-socket';
 
-/** New messages are fetched this often while the tab is visible (realtime via Socket.IO comes later in T13). */
-const POLL_MS = 4000;
+/** Safety net next to the live socket: how often the newest messages are re-read while the tab is visible. */
+const POLL_LIVE_MS = 30_000;
+/** Without a live socket (connecting, blocked, server restarting) the panel polls this often instead. */
+const POLL_FALLBACK_MS = 4000;
 
 /** Adds `incoming` to `current`, drops duplicates and keeps the order by time. */
 function merge(current: ChatMessageView[], incoming: ChatMessageView[]): ChatMessageView[] {
@@ -38,12 +41,17 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
+  const [live, setLive] = useState(false);
+  /** Counts reconnects, so the polling effect re-reads right away to catch up on messages missed while offline. */
+  const [reconnects, setReconnects] = useState(0);
 
   const listRef = useRef<HTMLDivElement>(null);
   /** True while the reader is at the bottom, so new messages scroll into view without yanking an older read position. */
   const stickToBottom = useRef(true);
   /** Scroll height before older messages were added, to keep the reading position afterwards. */
   const heightBeforePrepend = useRef<number | null>(null);
+  /** Live messages that arrive while the first page is still loading; merged in when it lands. */
+  const pending = useRef<ChatMessageView[]>([]);
 
   const path = `/conversations/${encodeURIComponent(conversationId)}/messages`;
 
@@ -52,7 +60,8 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
     apiFetch<ChatMessageView[]>(path)
       .then((page) => {
         if (cancelled) return;
-        setMessages(page);
+        setMessages(merge(page, pending.current));
+        pending.current = [];
         setHasMore(page.length >= CHAT_LIMITS.pageSize);
       })
       .catch((error: unknown) => {
@@ -64,8 +73,42 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
     };
   }, [path, attempt]);
 
-  // Fetch the newest page regularly and merge it in; failures are ignored (the next tick tries again).
-  // Nothing is fetched while the tab is hidden; coming back to the tab refreshes right away.
+  // Reading the conversation settles its notification: on opening, for every new message shown, and when the tab comes back.
+  const shown = messages?.length ?? 0;
+  useEffect(() => {
+    if (shown === 0) return;
+    const markRead = () => {
+      if (document.hidden) return;
+      apiFetch(`/notifications/conversations/${encodeURIComponent(conversationId)}/read`, { method: 'POST' }).catch(() => undefined);
+    };
+    markRead();
+    document.addEventListener('visibilitychange', markRead);
+    return () => document.removeEventListener('visibilitychange', markRead);
+  }, [shown, conversationId]);
+
+  // Live messages arrive over the socket; the connection state decides how much polling is still needed.
+  useEffect(
+    () =>
+      subscribeToConversation(conversationId, {
+        onEvent: (message) => {
+          setMessages((current) => {
+            if (current === null) {
+              pending.current.push(message);
+              return current;
+            }
+            return merge(current, [message]);
+          });
+        },
+        onStatus: (connected) => {
+          setLive(connected);
+          if (connected) setReconnects((n) => n + 1);
+        },
+      }),
+    [conversationId],
+  );
+
+  // Fetch the newest page and merge it in; failures are ignored (the next tick tries again). Nothing is fetched while the
+  // tab is hidden; coming back to the tab refreshes right away, and so does every (re)connect of the socket.
   const loaded = messages !== null;
   useEffect(() => {
     if (!loaded) return;
@@ -75,13 +118,14 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
         .then((page) => setMessages((current) => merge(current ?? [], page)))
         .catch(() => undefined);
     };
-    const timer = setInterval(refresh, POLL_MS);
+    if (reconnects > 0) refresh();
+    const timer = setInterval(refresh, live ? POLL_LIVE_MS : POLL_FALLBACK_MS);
     document.addEventListener('visibilitychange', refresh);
     return () => {
       clearInterval(timer);
       document.removeEventListener('visibilitychange', refresh);
     };
-  }, [loaded, path]);
+  }, [loaded, path, live, reconnects]);
 
   useLayoutEffect(() => {
     const element = listRef.current;

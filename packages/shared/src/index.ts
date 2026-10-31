@@ -6,6 +6,7 @@ export * from './media.js';
 export * from './product.js';
 export * from './fx.js';
 export * from './chat.js';
+export * from './notifications.js';
 
 /** Response shape of GET /api/health. */
 export interface HealthResponse {

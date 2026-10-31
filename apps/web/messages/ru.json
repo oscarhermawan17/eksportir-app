@@ -516,5 +516,17 @@
     "viewProduct": "Открыть товар",
     "adminLine": "{buyer} и {seller}",
     "startError": "Не удалось открыть чат."
+  },
+  "Notifications": {
+    "title": "Уведомления",
+    "bell": "Уведомления",
+    "bellUnread": "Уведомления, непрочитанных: {count}",
+    "empty": "Уведомлений пока нет.",
+    "markAllRead": "Отметить все как прочитанные",
+    "newMessages": "{count, plural, one {# новое сообщение} few {# новых сообщения} many {# новых сообщений} other {# новых сообщения}}",
+    "fromSender": "От: {sender}",
+    "openMessages": "Открыть все сообщения",
+    "loadError": "Не удалось загрузить уведомления.",
+    "close": "Закрыть уведомления"
   }
 }

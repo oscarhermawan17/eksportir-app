@@ -1,0 +1,14 @@
+import { Module } from '@nestjs/common';
+import { AuthModule } from '../auth/auth.module.js';
+import { ChatModule } from '../chat/chat.module.js';
+import { NotificationEvents } from './notification.events.js';
+import { NotificationsController } from './notifications.controller.js';
+import { NotificationsGateway } from './notifications.gateway.js';
+import { NotificationsService } from './notifications.service.js';
+
+@Module({
+  imports: [AuthModule, ChatModule],
+  controllers: [NotificationsController],
+  providers: [NotificationsService, NotificationEvents, NotificationsGateway],
+})
+export class NotificationsModule {}
