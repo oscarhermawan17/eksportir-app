@@ -65,16 +65,22 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
   }, [path, attempt]);
 
   // Fetch the newest page regularly and merge it in; failures are ignored (the next tick tries again).
+  // Nothing is fetched while the tab is hidden; coming back to the tab refreshes right away.
   const loaded = messages !== null;
   useEffect(() => {
     if (!loaded) return;
-    const timer = setInterval(() => {
+    const refresh = () => {
       if (document.hidden) return;
       apiFetch<ChatMessageView[]>(path)
         .then((page) => setMessages((current) => merge(current ?? [], page)))
         .catch(() => undefined);
-    }, POLL_MS);
-    return () => clearInterval(timer);
+    };
+    const timer = setInterval(refresh, POLL_MS);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', refresh);
+    };
   }, [loaded, path]);
 
   useLayoutEffect(() => {

@@ -1,7 +1,7 @@
 'use client';
 
 import type { AuthUser, Locale, SelfRegisterRole } from '@balitrade/shared';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { ApiError, apiFetch } from '@/lib/api';
 
 export interface RegisterInput {
@@ -82,10 +82,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+const subscribeNothing = () => () => undefined;
+
+/** False while React hydrates server-rendered HTML (and on the server), true afterwards. */
+function useHydrated(): boolean {
+  return useSyncExternalStore(subscribeNothing, () => true, () => false);
+}
+
 export function useAuth(): AuthContextValue {
   const value = useContext(AuthContext);
   if (!value) {
     throw new Error('useAuth must be used inside <AuthProvider>');
   }
-  return value;
+  // The server always renders "session still loading". A part of the page that hydrates later (such as the navbar, inside
+  // a Suspense boundary) could otherwise already see the answer of /auth/me and no longer match the server HTML.
+  const hydrated = useHydrated();
+  return useMemo(() => (hydrated ? value : { ...value, user: null, status: 'loading' as const }), [hydrated, value]);
 }

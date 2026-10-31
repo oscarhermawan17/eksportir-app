@@ -39,13 +39,16 @@ function Inbox({ user }: { user: AuthUser }) {
           if (!cancelled) setFailed(true);
         });
     void load();
-    // Keep the list (previews, order) fresh while the tab is visible.
-    const timer = setInterval(() => {
+    // Keep the list (previews, order) fresh while the tab is visible, and refresh as soon as the tab is shown again.
+    const refresh = () => {
       if (!document.hidden) void load();
-    }, REFRESH_MS);
+    };
+    const timer = setInterval(refresh, REFRESH_MS);
+    document.addEventListener('visibilitychange', refresh);
     return () => {
       cancelled = true;
       clearInterval(timer);
+      document.removeEventListener('visibilitychange', refresh);
     };
   }, [attempt]);
 
