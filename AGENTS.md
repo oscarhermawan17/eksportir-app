@@ -94,6 +94,7 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
   T11 manual USD/IDR exchange rate (owner sets it at `/admin/exchange-rate`; catalog returns `priceUsd`, null until a rate exists —
   the owner still has to enter the first real rate) · T12 public catalog (`/products`, `/products/[id]`, `/sellers/[id]`,
   search + category/type filters; order/ask buttons go to login for guests and are disabled for logged-in users until T13/T15).
+- Home page is built (hero, trust, steps, categories, latest products, FAQ). Navbar/footer still link to pages that do not exist yet (they show the 404 page): `/request`, `/how-it-works`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`, `/seller-guidelines`.
 - R2 dev setup: one bucket (`eksportir-testing`) serves as both public and private for now. Split off a separate private
   bucket before real payment proofs / QC files exist (T17+).
 - In progress: **T13 chat** — REST API and the web UI (drawer on the product page, `/messages` inbox, 4 s polling) are done and tested; still open: Socket.IO realtime, attachments, message rate limit (see `TASKS.md`). Then **T14** notifications, the order flow T15+, and **T17b** admin layout.

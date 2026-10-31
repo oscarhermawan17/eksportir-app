@@ -12,7 +12,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 | # | Halaman | Status | Catatan |
 |---|---|---|---|
 | 1 | Design system | Final | Stitch: `design-ui/google-stitch/01-v4.html` (acuan); draf lama 01, 01-v2, 01-v3 dan 02 dihapus 2026-10-30, masih ada di riwayat git; hasil AI Studio (pembanding) sudah dihapus dari repo |
-| 2 | Landing page | Final (versi lengkap) | Stitch: `design-ui/google-stitch/02-lengkap.html` (acuan); versi ringkas (Prompt B) dilewati |
+| 2 | Landing page | **Diimplementasikan (2026-10-30, versi ringkas)** | Stitch: `design-ui/google-stitch/02-lengkap.html` (acuan). Dibangun: hero (pencarian + kolase foto produk asli), 4 kartu kepercayaan, cara kerja 6 langkah, kategori, produk terbaru dari API, ajakan jadi penjual, FAQ 5 butir. **Belum**: banner "Request a product", pratinjau laporan QC, kartu metode bayar, tautan "How it works" (halamannya belum ada). Teks mengikuti catatan implementasi (tanpa "escrow", janji, jadwal, atau klaim rute) |
 | 3 | Katalog / pencarian produk | Final | Stitch: `design-ui/google-stitch/03.html` (acuan alur); ada pergeseran tema visual, lihat catatan bagian 3 |
 | 4 | Detail produk (+ chat bertiga) | Final | Stitch: `design-ui/google-stitch/04.html`; lihat catatan bagian 4. Keputusan cart & varian sudah diambil (BRAINSTORMING 5a) |
 | 5 | Profil penjual | Final | Stitch: `design-ui/google-stitch/05.html` (acuan alur); lihat catatan bagian 5 |
