@@ -31,6 +31,10 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | GET | `/api/health` | public | `check` | health |
 | GET | `/api/media/download-url` | logged in | `downloadUrl` | media |
 | POST | `/api/media/presign-upload` | logged in | `presignUpload` | media |
+| GET | `/api/notifications` | logged in | `list` | notifications |
+| POST | `/api/notifications/:id/read` | logged in | `read` | notifications |
+| POST | `/api/notifications/conversations/:conversationId/read` | logged in | `readConversation` | notifications |
+| POST | `/api/notifications/read-all` | logged in | `readAll` | notifications |
 | GET | `/api/products` | public | `list` | catalog |
 | GET | `/api/products/:id` | public | `detail` | catalog |
 | GET | `/api/public/sellers/:id` | public | `seller` | catalog |
@@ -46,5 +50,19 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/sellers/apply` | logged in | `apply` | sellers |
 | GET | `/api/sellers/me` | logged in | `getOwn` | sellers |
 | PATCH | `/api/sellers/me` | logged in | `updateOwn` | sellers |
+
+## Realtime (Socket.IO)
+
+The Socket.IO server runs on the API origin (path `/socket.io`). The browser connects with its session cookie; the server checks the cookie and the `Origin` (must equal `WEB_ORIGIN`) in a handshake middleware, so an unauthenticated or foreign-origin client gets `connect_error`. Messages are **written through REST only** (`POST /api/conversations/:id/messages`, limited to 20 per user per minute: 429 beyond that); sockets only join rooms and receive pushes. Constants: `CHAT_EVENTS` in `packages/shared/src/chat.ts`.
+
+| Direction | Event | Payload | Notes |
+|---|---|---|---|
+| client → server | `conversation:join` | conversation id | Ack `{ ok: true }` for the buyer, the seller and ADMIN_OPS / ADMIN_OWNER; `{ ok: false }` for anyone else or an invalid id |
+| client → server | `conversation:leave` | conversation id | |
+| server → room `conversation:<id>` | `message:new` | `ChatMessageView` | Only sockets that joined the room |
+| server → buyer, seller and moderators | `conversation:updated` | `{ conversationId }` | Id only; the inbox re-reads the list through REST, which checks access again |
+| server → user room `user:<id>` | `notification:new` | `NotificationPush` (`item`, `unreadCount`) | A notification was created or updated (all tabs of that user) |
+| server → user room `user:<id>` | `notification:count` | `NotificationCount` | Unread count changed, e.g. read in another tab |
+
 
 Query/body shapes: the DTOs in each module's `dto/` folder and the shared types in `packages/shared/src`. Business rules per feature: `docs/ARCHITECTURE.md`.

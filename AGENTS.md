@@ -18,7 +18,7 @@ MVP 1.0 target date: 2026-10-31. The owner (Oscar) works mostly alone with AI as
 - Work in **small steps** (a few files per step) and verify as you go; very long single responses have timed out before.
 - A task is done only when its Definition of Done (DoD) in `TASKS.md` is met **and** `pnpm lint`, `pnpm typecheck`,
   `pnpm build` and the relevant tests pass. Do not tick a task whose DoD you could not verify (say what is blocked).
-- Record new decisions: business → `docs/BRAINSTORMING.md`, technical → `docs/ARCHITECTURE.md`, and add a line to `docs/DECISIONS.md`. When you add or change an API route, update `docs/API.md`.
+- Record new decisions: business → `docs/BRAINSTORMING.md`, technical → `docs/ARCHITECTURE.md`, and add a line to `docs/DECISIONS.md`. When you add or change an API route, run `pnpm docs:api` to update `docs/API.md`.
 - **Git:** commit only when the user asks. Author is the user only — no `Co-authored-by` trailer. Never commit `.env` files
   or secrets (`.env.example` placeholders are fine). Stage files explicitly; no `git add .`. No force-push / hard reset without asking.
 - Never print secret values (`.env`, API keys). Refer to them by variable name.
@@ -78,8 +78,8 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 - **`pnpm dev` API (nest --watch) can stay dead after `pnpm build`** (build wipes `dist`). Fix: make a trivial edit in any
   `apps/api/src` file and revert it. Also check nothing else holds port 4000 (`lsof -iTCP:4000 -sTCP:LISTEN`) before starting.
 - **API e2e tests:** login is rate-limited (5/min per app instance) → log in once per user and reuse the supertest agent; a spec with more than 5 users mints session cookies with `JwtService` instead (see `test/chat.e2e-spec.ts`).
-  Each spec file cleans its own users by a unique email prefix (`e2e-`, `sellers-e2e-`, `media-e2e-`, `products-e2e-`,
-  `adminprod-e2e-`, `fx-e2e-`, `catalog-e2e-`, `chat-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
+  Each spec file cleans its own users by a unique email prefix (`auth-e2e-`, `e2e-rbac-`, `sellers-e2e-`, `media-e2e-`, `products-e2e-`,
+  `adminprod-e2e-`, `fx-e2e-`, `catalog-e2e-`, `chat-e2e-`, `chatrt-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
 - Browser checks: headless Chrome via `puppeteer-core` works well (`/Applications/Google Chrome.app`). Delete test accounts afterwards.
 - `pnpm add` of very recent packages may add them to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` (already done for the AWS SDK).
 - Seed data: `pnpm db:seed` creates the admin from `ADMIN_*` env and the 9 Bali QC zones (fees are **placeholders**).
@@ -97,7 +97,7 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 - Home page is built (hero, trust, steps, categories, latest products, FAQ). Navbar/footer still link to pages that do not exist yet (they show the 404 page): `/request`, `/how-it-works`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`, `/seller-guidelines`.
 - R2 dev setup: one bucket (`eksportir-testing`) serves as both public and private for now. Split off a separate private
   bucket before real payment proofs / QC files exist (T17+).
-- In progress: **T13 chat** — REST API and the web UI (drawer on the product page, `/messages` inbox, 4 s polling) are done and tested; still open: Socket.IO realtime, attachments, message rate limit (see `TASKS.md`). Then **T14** notifications, the order flow T15+, and **T17b** admin layout.
+- Chat (T13, text only; attachments moved to MVP 1.1) and in-app notifications (T14: bell in the navbar, live over Socket.IO) are done. Next: **T13b** store the "admin joins chats" consent, then the order flow **T15–T20**, **T17b** admin layout, T21 password reset, then deploy T22–T25. Deploy plan: CI automatic on GitHub, CD manual over SSH, PostgreSQL in Docker on an Ubuntu VPS (T22/T23). `pnpm docs:api` regenerates `docs/API.md` after route changes.
 - Uncommitted work may exist — check `git status` before starting.
 
 ## Open questions (owner decisions still needed)

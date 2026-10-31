@@ -18,7 +18,7 @@ Rules for working with secrets are in `AGENTS.md` (never print or commit them); 
 | Uploads | Browser uploads straight to R2 with presigned URLs; type and exact size are part of the signature (photo ≤ 10 MB, video ≤ 50 MB); private files readable only by the uploader or an admin, through 5-minute signed URLs |
 | Config | Env validated at startup (`JWT_SECRET` ≥ 32 chars, R2 settings all-or-nothing and mandatory in production); `.env` files are git-ignored |
 | Secrets in git | Checked on 2026-10-30: no real secret value (JWT, R2 keys) in the working tree or in any of the 12 commits. Only placeholders live in `.env.example` |
-| Dependencies | `pnpm audit` reported no known vulnerabilities on 2026-10-30 (after upgrading `@nestjs/platform-express` and `body-parser`); versions pinned exactly; `minimumReleaseAge` delays brand-new releases; install scripts are deny-by-default (`allowBuilds` in `pnpm-workspace.yaml`) |
+| Dependencies | `pnpm audit` was clean on 2026-10-30 (after upgrading `@nestjs/platform-express` and `body-parser`); on 2026-10-31 it reports 1 moderate advisory for `minimatch` inside the lint toolchain (`eslint-config-next`, dev-only, not shipped or run on the server), accepted until that package updates; versions pinned exactly; `minimumReleaseAge` delays brand-new releases; install scripts are deny-by-default (`allowBuilds` in `pnpm-workspace.yaml`) |
 
 ## Open items
 
@@ -33,7 +33,7 @@ Ordered by importance. **Items 1 to 3 must be done before anything runs on a sha
 7. **Login throttling is per process.** Move it to Redis if the API ever runs more than one instance.
 8. **Public media URL.** `r2.dev` URLs are rate-limited by Cloudflare and meant for development; use a custom domain for the public bucket in production.
 9. **Consent for admin in chats.** The sign-up checkbox is required in the form but not stored in the database yet (privacy law requires transparency; see `docs/BRAINSTORMING.md` section 7).
-10. **Chat has no message rate limit yet.** A logged-in user can post messages as fast as they like (2000 characters each). Add a per-user limit when the realtime gateway lands (T13 step 2); attachments (T13) must be validated like other private uploads.
+10. **Chat limits and attachments.** (Notifications are private to their owner: every route filters by the logged-in user, other users' ids answer 404, and pushes only go to the owner's own socket room.) Messages are limited to 20 per user per minute (in memory, one API instance like the login throttle) and 2000 characters. Sockets cannot write, and refuse a foreign `Origin`. Open: a user whose role is removed keeps the rooms they already joined until their socket reconnects; attachments (T13) must be validated like other private uploads.
 11. **Backups** are not set up yet (T24): daily `pg_dump` to R2, encrypted, with one tested restore.
 
 ## Routine checks

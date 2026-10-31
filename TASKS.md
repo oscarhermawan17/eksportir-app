@@ -49,11 +49,13 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 ## Fase 3 — Chat (27 Okt)
 
-- [ ] **T13 Chat realtime** — Socket.IO gateway (auth via cookie), Conversation PRODUCT_INQUIRY & ORDER, peserta otomatis buyer + seller + admin, simpan pesan, lampiran via R2, banner admin, hint "write in English".
+- [x] **T13 Chat realtime** — Socket.IO gateway (auth via cookie), Conversation PRODUCT_INQUIRY & ORDER, peserta otomatis buyer + seller + admin, simpan pesan, lampiran via R2, banner admin, hint "write in English".
   DoD: 3 browser (buyer, seller, admin) saling menerima pesan tanpa refresh.
-  Dipecah (2026-10-30): **langkah 1 selesai** — tabel `Conversation`/`Message` + REST `/api/conversations` (mulai dari produk, daftar, baca, kirim) dengan aturan akses dan 12 test e2e (`test/chat.e2e-spec.ts`). **Langkah 3 (UI) selesai dengan polling** — laci chat di detail produk (tombol "Ask the seller & BaliTrade" untuk pembeli), kotak masuk `/messages` (pembeli, penjual, admin melihat semua), banner admin, hint English, pesan baru muncul otomatis tiap 4 detik; diuji di browser dengan 3 peran + tampilan mobile. **Belum**: langkah 2 Socket.IO gateway (realtime sungguhan, butuh dependensi baru, DoD T13 "tanpa refresh" masih dipenuhi lewat polling), lampiran foto/video via R2, batas laju pesan. Belum dicentang.
-- [ ] **T14 Notifikasi in-app** — tabel Notification, badge lonceng, push via socket, tandai dibaca.
-  DoD: pesan/status baru memunculkan notifikasi ke pihak terkait.
+  Dipecah (2026-10-30): **langkah 1 selesai** — tabel `Conversation`/`Message` + REST `/api/conversations` (mulai dari produk, daftar, baca, kirim) dengan aturan akses dan 12 test e2e (`test/chat.e2e-spec.ts`). **Langkah 3 (UI) selesai dengan polling** — laci chat di detail produk (tombol "Ask the seller & BaliTrade" untuk pembeli), kotak masuk `/messages` (pembeli, penjual, admin melihat semua), banner admin, hint English, pesan baru muncul otomatis tiap 4 detik; diuji di browser dengan 3 peran + tampilan mobile. **Langkah 2 selesai (2026-10-31)** — Socket.IO gateway: pesan sampai seketika (±0,1 detik lokal, tanpa polling), otentikasi cookie + cek Origin, room hanya untuk peserta, batas 20 pesan/menit per user, 9 test e2e (`test/chat-realtime.e2e-spec.ts`) + uji browser 3 peran. ✅ 2026-10-31: DoD terpenuhi. Lampiran foto/video di chat dipindah ke MVP 1.1 (daftar di bawah); persetujuan "admin ikut chat" yang belum tersimpan di DB menjadi T13b.
+- [ ] **T13b Simpan persetujuan "admin ikut chat"** (ditambahkan 2026-10-31) — checkbox saat daftar saat ini hanya divalidasi di form; simpan waktu persetujuan di `User` (dan bukti versi teks) agar sesuai keterbukaan yang disebut di `docs/BRAINSTORMING.md` §7 (UU PDP).
+  DoD: daftar tanpa centang ditolak oleh API (bukan hanya form); `consentedAt` tersimpan; teruji e2e.
+- [x] **T14 Notifikasi in-app** — tabel Notification, badge lonceng, push via socket, tandai dibaca.
+  DoD: pesan/status baru memunculkan notifikasi ke pihak terkait. ✅ 2026-10-31 untuk **pesan chat** (`test/notifications.e2e-spec.ts` 14 test + 3 unit; UI lonceng di navbar diuji di browser: lencana muncul live tanpa reload, pesan beruntun digabung jadi satu dengan hitungan, klik membuka percakapan dan menandai dibaca, sinkron antar tab, tampilan mobile). Notifikasi **status order** ditambahkan oleh task order (T15 dst.) lewat jenis `NotificationType` baru; admin tidak menerima notifikasi chat (memakai kotak masuk).
 
 ## Fase 4 — Order (28–30 Okt)
 
@@ -76,9 +78,9 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 ## Fase 5 — Rilis (31 Okt)
 
-- [ ] **T22 CI/CD** — GitHub Actions: lint + build → build image Docker web & api → push ke GHCR; VPS `docker compose pull && up -d`.
+- [ ] **T22 CI + image** (diputuskan 2026-10-31: **CI otomatis, CD manual**) — GitHub Actions: lint + typecheck + test (+ e2e dengan service Postgres) + build → build image Docker web & api → push ke GHCR. Image web dibangun dengan `NEXT_PUBLIC_API_URL` alamat API produksi (nilai itu ditanam saat build). **Deploy dilakukan manual** lewat SSH: `docker compose pull` (menarik image dari GHCR) lalu `docker compose up -d`.
   DoD: push ke branch main men-deploy versi baru ke VPS dev.
-- [ ] **T23 Deploy VPS** — `docker-compose.prod.yml` (web, api, postgres, reverse proxy + HTTPS), domain `.my.id`, migrasi otomatis saat deploy.
+- [ ] **T23 Deploy VPS** — VPS Ubuntu 22.04/24.04; `docker-compose.prod.yml` (web, api, Caddy + HTTPS) dan **PostgreSQL dipasang manual di VPS (bukan kontainer)**: kontainer API menyambung ke Postgres host (`host.docker.internal` / gateway Docker), Postgres hanya mendengarkan localhost dan jaringan Docker, tidak terbuka ke internet. Web dan API di subdomain satu domain (mis. `app.` dan `api.`, wajib agar cookie dan chat jalan), domain `.my.id`, migrasi `prisma migrate deploy` dijalankan manual saat deploy. Backup dan administrasi database lewat `psql` / `pg_dump` langsung di host.
   DoD: app bisa diakses via HTTPS di domain.
 - [ ] **T24 Backup & dokumentasi** — `pg_dump` harian ke R2; `docs/DEPLOY.md` (setup VPS, env, deploy, pindah domain, restore backup); README.
   DoD: restore backup ke DB kosong berhasil dicoba sekali.
@@ -89,6 +91,7 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 ## MVP 1.1 (setelah 31 Okt)
 
+- [ ] Lampiran foto/video di chat (unggah ke bucket privat R2, izin baca untuk peserta percakapan)
 - [ ] Keranjang multi-penjual (dikelompokkan per penjual) + Ship together / Ship separately
 - [ ] Form Request terstruktur + quotation
 - [ ] Terjemahan otomatis konten produk (API, mis. DeepL) + review admin
