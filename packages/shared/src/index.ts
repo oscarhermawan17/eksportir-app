@@ -7,6 +7,7 @@ export * from './product.js';
 export * from './fx.js';
 export * from './chat.js';
 export * from './notifications.js';
+export * from './orders.js';
 
 /** Response shape of GET /api/health. */
 export interface HealthResponse {

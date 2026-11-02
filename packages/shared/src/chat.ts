@@ -29,8 +29,8 @@ export interface ChatJoinAck {
   ok: boolean;
 }
 
-/** Which side of the conversation wrote a message. BaliTrade admins take part in every conversation. */
-export type ChatRole = 'BUYER' | 'SELLER' | 'ADMIN';
+/** Which side wrote a message. BaliTrade admins take part in every conversation; SYSTEM messages (order events) have no author. */
+export type ChatRole = 'BUYER' | 'SELLER' | 'ADMIN' | 'SYSTEM';
 
 export interface ChatMessageView {
   id: string;
@@ -38,8 +38,8 @@ export interface ChatMessageView {
   body: string;
   /** ISO timestamp. */
   createdAt: string;
-  /** Sellers appear under their shop name, everyone else under their own name. */
-  sender: { id: string; name: string; role: ChatRole };
+  /** Sellers appear under their shop name, everyone else under their own name; `id` is null for SYSTEM messages. */
+  sender: { id: string | null; name: string; role: ChatRole };
 }
 
 export interface ConversationView {
@@ -49,6 +49,8 @@ export interface ConversationView {
   product: { id: string; title: string; coverUrl: string | null } | null;
   buyer: { id: string; name: string };
   seller: { id: string; displayName: string };
+  /** Set for the chat of an order (then `product` is null). */
+  order: { id: string; code: string } | null;
   lastMessage: { body: string; senderRole: ChatRole; createdAt: string } | null;
   lastMessageAt: string | null;
   createdAt: string;

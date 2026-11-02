@@ -7,6 +7,7 @@ import { ChatModule } from './chat/chat.module.js';
 import { FxModule } from './fx/fx.module.js';
 import { MediaModule } from './media/media.module.js';
 import { NotificationsModule } from './notifications/notifications.module.js';
+import { OrdersModule } from './orders/orders.module.js';
 import { ProductsModule } from './products/products.module.js';
 import { SellersModule } from './sellers/sellers.module.js';
 import { HealthModule } from './health/health.module.js';
@@ -22,6 +23,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     MediaModule,
     ChatModule,
     NotificationsModule,
+    OrdersModule,
     FxModule,
     ProductsModule,
     HealthModule,

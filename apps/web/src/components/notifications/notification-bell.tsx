@@ -98,6 +98,28 @@ export function NotificationBell() {
     };
   }, [open]);
 
+  /** What a notification shows and where it leads, by type. */
+  function describe(item: NotificationView): { href: string; title: string; subtitle: string | null; body: string; badge: string | null } {
+    if (item.type === 'ORDER_REQUESTED') {
+      const { orderId, code, buyerName, qty, productTitle } = item.payload;
+      return {
+        href: `/orders/${orderId}`,
+        title: t('orderRequested', { code }),
+        subtitle: null,
+        body: t('orderRequestedBody', { buyer: buyerName, qty, product: productTitle }),
+        badge: null,
+      };
+    }
+    const { conversationId, senderName, productTitle, preview, count } = item.payload;
+    return {
+      href: `/messages?c=${conversationId}`,
+      title: t('fromSender', { sender: senderName }),
+      subtitle: productTitle,
+      body: preview,
+      badge: t('newMessages', { count }),
+    };
+  }
+
   function markRead(item: NotificationView) {
     setOpen(false);
     if (item.readAt) return;
@@ -162,27 +184,28 @@ export function NotificationBell() {
               <p className="px-4 py-8 text-center text-sm text-muted">{t('empty')}</p>
             ) : (
               <ul>
-                {items.map((item) => (
-                  <li key={item.id} className="border-b border-border last:border-0">
-                    <Link
-                      href={`/messages?c=${item.payload.conversationId}`}
-                      onClick={() => markRead(item)}
-                      className={`block px-4 py-3 hover:bg-background focus-visible:outline-2 focus-visible:outline-primary ${item.readAt ? '' : 'bg-primary/5'}`}
-                    >
-                      <span className="flex items-start justify-between gap-2">
-                        <span className={`text-sm text-text ${item.readAt ? '' : 'font-semibold'}`}>{t('fromSender', { sender: item.payload.senderName })}</span>
-                        <span className="shrink-0 text-[11px] text-muted">{format.relativeTime(new Date(item.updatedAt), now)}</span>
-                      </span>
-                      {item.payload.productTitle ? <span className="block truncate text-xs text-muted">{item.payload.productTitle}</span> : null}
-                      <span className="mt-0.5 block truncate text-sm text-text">{item.payload.preview}</span>
-                      {!item.readAt ? (
-                        <span className="mt-1 inline-block rounded-full bg-terracotta/10 px-2 py-px text-[11px] font-semibold text-terracotta">
-                          {t('newMessages', { count: item.payload.count })}
+                {items.map((item) => {
+                  const line = describe(item);
+                  return (
+                    <li key={item.id} className="border-b border-border last:border-0">
+                      <Link
+                        href={line.href}
+                        onClick={() => markRead(item)}
+                        className={`block px-4 py-3 hover:bg-background focus-visible:outline-2 focus-visible:outline-primary ${item.readAt ? '' : 'bg-primary/5'}`}
+                      >
+                        <span className="flex items-start justify-between gap-2">
+                          <span className={`text-sm text-text ${item.readAt ? '' : 'font-semibold'}`}>{line.title}</span>
+                          <span className="shrink-0 text-[11px] text-muted">{format.relativeTime(new Date(item.updatedAt), now)}</span>
                         </span>
-                      ) : null}
-                    </Link>
-                  </li>
-                ))}
+                        {line.subtitle ? <span className="block truncate text-xs text-muted">{line.subtitle}</span> : null}
+                        <span className="mt-0.5 block truncate text-sm text-text">{line.body}</span>
+                        {line.badge && !item.readAt ? (
+                          <span className="mt-1 inline-block rounded-full bg-terracotta/10 px-2 py-px text-[11px] font-semibold text-terracotta">{line.badge}</span>
+                        ) : null}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

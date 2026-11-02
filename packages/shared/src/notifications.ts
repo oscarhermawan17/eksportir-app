@@ -1,6 +1,7 @@
-/** Keep NotificationType in sync with the enum in apps/api/prisma/schema.prisma (order events are added in T15+). */
+/** Keep NotificationType in sync with the enum in apps/api/prisma/schema.prisma (more order events are added in T16+). */
 export const NotificationType = {
   CHAT_MESSAGE: 'CHAT_MESSAGE',
+  ORDER_REQUESTED: 'ORDER_REQUESTED',
 } as const;
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
 
@@ -32,15 +33,27 @@ export interface ChatMessageNotificationPayload {
   count: number;
 }
 
-export interface NotificationView {
+/** A buyer asked a seller to supply an order; sent to the seller. */
+export interface OrderRequestedNotificationPayload {
+  orderId: string;
+  code: string;
+  buyerName: string;
+  productTitle: string;
+  qty: number;
+}
+
+interface NotificationBase {
   id: string;
-  type: NotificationType;
-  payload: ChatMessageNotificationPayload;
   /** ISO timestamp, or null while unread. */
   readAt: string | null;
   /** ISO timestamp of the latest update (a new message refreshes an unread notification). */
   updatedAt: string;
 }
+
+/** Discriminated by `type`, so the payload shape is known after checking it. */
+export type NotificationView =
+  | (NotificationBase & { type: 'CHAT_MESSAGE'; payload: ChatMessageNotificationPayload })
+  | (NotificationBase & { type: 'ORDER_REQUESTED'; payload: OrderRequestedNotificationPayload });
 
 /** Response of GET /api/notifications. */
 export interface NotificationsResponse {

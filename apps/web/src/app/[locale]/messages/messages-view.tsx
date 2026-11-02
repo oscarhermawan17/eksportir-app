@@ -79,6 +79,10 @@ function Inbox({ user }: { user: AuthUser }) {
     return conversation.buyer.id === user.id ? conversation.seller.displayName : conversation.buyer.name;
   };
 
+  /** What the conversation is about: the product asked about, or the order. */
+  const subject = (conversation: ConversationView): string =>
+    conversation.product?.title ?? (conversation.order ? t('orderTitle', { code: conversation.order.code }) : t('conversation'));
+
   const formatWhen = (iso: string) => {
     const date = new Date(iso);
     const sameDay = date.toDateString() === new Date().toDateString();
@@ -138,7 +142,7 @@ function Inbox({ user }: { user: AuthUser }) {
                           <span className="shrink-0 text-[11px] text-muted">{formatWhen(conversation.lastMessageAt)}</span>
                         ) : null}
                       </span>
-                      <span className="block truncate text-xs text-muted">{conversation.product?.title ?? t('conversation')}</span>
+                      <span className="block truncate text-xs text-muted">{subject(conversation)}</span>
                       <span className="block truncate text-sm text-text">
                         {conversation.lastMessage ? conversation.lastMessage.body : <span className="text-muted">{t('noMessagesYet')}</span>}
                       </span>
@@ -161,9 +165,13 @@ function Inbox({ user }: { user: AuthUser }) {
                   </Link>
                   <div className="min-w-0 flex-1">
                     <h2 className="truncate text-base font-semibold text-text">{counterpart(selected)}</h2>
-                    <p className="truncate text-xs text-muted">{selected.product?.title ?? t('conversation')}</p>
+                    <p className="truncate text-xs text-muted">{subject(selected)}</p>
                   </div>
-                  {selected.product ? (
+                  {selected.order ? (
+                    <Link href={`/orders/${selected.order.id}`} className="shrink-0 text-sm font-semibold text-primary hover:underline">
+                      {t('viewOrder')}
+                    </Link>
+                  ) : selected.product ? (
                     <Link href={`/products/${selected.product.id}`} className="shrink-0 text-sm font-semibold text-primary hover:underline">
                       {t('viewProduct')}
                     </Link>

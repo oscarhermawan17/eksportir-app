@@ -1,5 +1,5 @@
 // BaliTrade database schema — grows task by task (see TASKS.md / docs/ARCHITECTURE.md §5).
-// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13), notifications (T14).
+// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13), notifications (T14), orders (T15).
 
 generator client {
   provider            = "prisma-client"
@@ -43,6 +43,7 @@ model User {
   buyerConversations Conversation[] @relation("ConversationBuyer")
   messages           Message[]
   notifications      Notification[]
+  buyerOrders        Order[]        @relation("OrderBuyer")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -91,6 +92,7 @@ model SellerProfile {
 
   products      Product[]
   conversations Conversation[]
+  orders        Order[]
 
   @@index([status, createdAt])
   @@map("seller_profiles")
@@ -148,6 +150,7 @@ model Product {
   translations  ProductTranslation[]
   media         ProductMedia[]
   conversations Conversation[]
+  orderItems    OrderItem[]
 
   @@index([sellerId, status])
   @@index([status, createdAt])
@@ -217,6 +220,9 @@ model Conversation {
   buyer         User             @relation("ConversationBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
   sellerId      String           @map("seller_id")
   seller        SellerProfile    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  /// Set for the chat of an order (productId is then null).
+  orderId       String?          @unique @map("order_id")
+  order         Order?           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   lastMessageAt DateTime?        @map("last_message_at")
   createdAt     DateTime         @default(now()) @map("created_at")
   updatedAt     DateTime         @updatedAt @map("updated_at")
@@ -235,8 +241,10 @@ model Message {
   id             String       @id @default(cuid())
   conversationId String       @map("conversation_id")
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  senderId       String       @map("sender_id")
-  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  /// Null for SYSTEM messages (order events), which have no author.
+  senderId       String?      @map("sender_id")
+  sender         User?        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  kind           MessageKind  @default(USER)
   body           String
   createdAt      DateTime     @default(now()) @map("created_at")
 
@@ -247,6 +255,7 @@ model Message {
 /// Keep in sync with packages/shared/src/notifications.ts
 enum NotificationType {
   CHAT_MESSAGE
+  ORDER_REQUESTED
 }
 
 /// An in-app notification for one user. Unread notifications about the same subject are folded into one row
@@ -267,4 +276,90 @@ model Notification {
   @@index([userId, readAt, updatedAt])
   @@index([userId, type, subject, readAt])
   @@map("notifications")
+}
+
+enum MessageKind {
+  USER
+  SYSTEM
+}
+
+/// Keep in sync with packages/shared/src/orders.ts (flow: docs/ARCHITECTURE.md §6).
+enum OrderStatus {
+  REQUESTED
+  ACCEPTED
+  CHANGE_PROPOSED
+  DECLINED
+  AWAITING_PAYMENT
+  PAYMENT_SUBMITTED
+  PAYMENT_VERIFIED
+  IN_QC
+  QC_READY
+  QC_APPROVED
+  ISSUE
+  AWAITING_SHIPPING_PAYMENT
+  SHIPPING_PAID
+  SHIPPED
+  ARRIVED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+/// Keep in sync with packages/shared/src/orders.ts
+enum OrderItemResponse {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CHANGE_PROPOSED
+}
+
+/// One buyer, one seller, one item (MVP 1.0). Prices, the exchange rate and the QC fee are copied at the moment of the
+/// request, so later changes to the product, the rate or the QC tariff never alter an existing order.
+model Order {
+  id              String      @id @default(cuid())
+  /// Shown as OR-<1000 + number>.
+  number          Int         @unique @default(autoincrement())
+  buyerId         String      @map("buyer_id")
+  buyer           User        @relation("OrderBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId        String      @map("seller_id")
+  seller          SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  status          OrderStatus @default(REQUESTED)
+  /// DeliveryAddress (packages/shared/src/orders.ts); visible to the buyer and admins only.
+  deliveryAddress Json        @map("delivery_address")
+  /// IDR per 1 USD used for this order.
+  fxRate          Decimal     @map("fx_rate") @db.Decimal(12, 4)
+  itemsUsd        Decimal     @map("items_usd") @db.Decimal(12, 2)
+  qcFeeUsd        Decimal     @map("qc_fee_usd") @db.Decimal(12, 2)
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  items        OrderItem[]
+  conversation Conversation?
+
+  @@index([buyerId, createdAt])
+  @@index([sellerId, createdAt])
+  @@index([status, createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             String            @id @default(cuid())
+  orderId        String            @map("order_id")
+  order          Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  /// Kept (set to null) if the product is ever deleted; the snapshot below is what counts.
+  productId      String?           @map("product_id")
+  product        Product?          @relation(fields: [productId], references: [id], onDelete: SetNull)
+  /// Snapshot of the product at the time of the request.
+  title          String
+  unit           String
+  qty            Int
+  unitPriceIdr   Int               @map("unit_price_idr")
+  unitPriceUsd   Decimal           @map("unit_price_usd") @db.Decimal(12, 2)
+  /// "Note to seller" from the buyer.
+  note           String?
+  sellerResponse OrderItemResponse @default(PENDING) @map("seller_response")
+  proposedQty    Int?              @map("proposed_qty")
+
+  @@index([orderId])
+  @@map("order_items")
 }

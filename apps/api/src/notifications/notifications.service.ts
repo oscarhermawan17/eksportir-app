@@ -4,6 +4,7 @@ import type {
   AuthUser,
   ChatMessageNotificationPayload,
   NotificationCount,
+  OrderRequestedNotificationPayload,
   NotificationsResponse,
   NotificationView,
 } from '@balitrade/shared';
@@ -86,6 +87,19 @@ export class NotificationsService implements OnModuleInit, OnModuleDestroy {
     return count > 0 ? this.announceCount(user.id) : { unreadCount: await this.unreadCount(user.id) };
   }
 
+  /** Tells a seller that a buyer asked them to supply an order. */
+  async notifyOrderRequested(sellerUserId: string, payload: OrderRequestedNotificationPayload): Promise<void> {
+    const row = await this.prisma.notification.create({
+      data: {
+        userId: sellerUserId,
+        type: NotificationType.ORDER_REQUESTED,
+        subject: `order:${payload.orderId}`,
+        payload: payload as unknown as Prisma.InputJsonValue,
+      },
+    });
+    this.events.stream.next({ userId: sellerUserId, kind: 'created', push: { item: toView(row), unreadCount: await this.unreadCount(sellerUserId) } });
+  }
+
   private unreadCount(userId: string): Promise<number> {
     return this.prisma.notification.count({ where: { userId, readAt: null } });
   }
@@ -98,6 +112,8 @@ export class NotificationsService implements OnModuleInit, OnModuleDestroy {
   }
 
   private async onMessage(event: MessageCreatedEvent): Promise<void> {
+    // Order events have their own notifications; a system message must not also create a chat one.
+    if (event.message.sender.role === 'SYSTEM') return;
     const recipients = [event.buyerId, event.sellerUserId].filter((id) => id !== event.message.sender.id);
     if (recipients.length === 0) return;
 
@@ -142,11 +158,12 @@ export class NotificationsService implements OnModuleInit, OnModuleDestroy {
 }
 
 function toView(row: NotificationRow): NotificationView {
+  // `payload` is stored as JSON; its shape is fixed by `type` (packages/shared/src/notifications.ts).
   return {
     id: row.id,
     type: row.type,
-    payload: row.payload as unknown as ChatMessageNotificationPayload,
+    payload: row.payload,
     readAt: row.readAt?.toISOString() ?? null,
     updatedAt: row.updatedAt.toISOString(),
-  };
+  } as unknown as NotificationView;
 }

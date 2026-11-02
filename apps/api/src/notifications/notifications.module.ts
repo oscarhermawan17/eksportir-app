@@ -10,5 +10,6 @@ import { NotificationsService } from './notifications.service.js';
   imports: [AuthModule, ChatModule],
   controllers: [NotificationsController],
   providers: [NotificationsService, NotificationEvents, NotificationsGateway],
+  exports: [NotificationsService],
 })
 export class NotificationsModule {}

@@ -230,6 +230,15 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
             ) : null}
             {messages.length === 0 ? <p className="py-8 text-center text-sm text-muted">{t('empty')}</p> : null}
             {messages.map((message) => {
+              // Event messages ("Order OR-1001 requested…") have no author: a centered note instead of a bubble.
+              if (message.sender.role === 'SYSTEM') {
+                return (
+                  <div key={message.id} className="flex flex-col items-center">
+                    <p className="max-w-[90%] whitespace-pre-wrap break-words rounded-card border border-border bg-card px-3 py-2 text-center text-xs text-muted">{message.body}</p>
+                    <p className="mt-1 text-[11px] text-muted">{formatTime(message.createdAt)}</p>
+                  </div>
+                );
+              }
               const own = message.sender.id === user?.id;
               const admin = message.sender.role === 'ADMIN';
               return (

@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { CHAT_LIMITS, ConversationType } from '@balitrade/shared';
+import { CHAT_LIMITS, ConversationType, orderCode } from '@balitrade/shared';
 import type { AuthUser, ChatMessageView, ChatRole, ConversationView } from '@balitrade/shared';
 import { Prisma } from '../generated/prisma/client.js';
 import { MediaService } from '../media/media.service.js';
@@ -18,6 +18,7 @@ const conversationInclude = {
   },
   buyer: { select: { id: true, name: true } },
   seller: { select: { id: true, displayName: true, userId: true } },
+  order: { select: { id: true, number: true } },
   messages: { orderBy: { createdAt: 'desc' }, take: 1 },
 } satisfies Prisma.ConversationInclude;
 
@@ -26,6 +27,13 @@ type MessageRow = Prisma.MessageGetPayload<{ include: { sender: { select: { id: 
 
 /** ADMIN_OPS and ADMIN_OWNER take part in every conversation (ARCHITECTURE §7); finance and other roles do not. */
 const isModerator = (user: AuthUser): boolean => user.roles.includes('ADMIN_OPS') || user.roles.includes('ADMIN_OWNER');
+
+/** Sellers appear under their shop name, system messages under "BaliTrade", everyone else under their own name. */
+function senderName(role: ChatRole, message: MessageRow, conversation: ConversationRow): string {
+  if (role === 'SYSTEM') return 'BaliTrade';
+  if (role === 'SELLER') return conversation.seller.displayName;
+  return message.sender?.name ?? 'BaliTrade';
+}
 
 /** Conversations between buyers and sellers, with the BaliTrade admin always able to read and write. */
 @Injectable()
@@ -103,6 +111,37 @@ export class ChatService {
     return rows.reverse().map((row) => this.toMessageView(row, conversation));
   }
 
+  /**
+   * Writes an event message ("Order OR-1001 requested…") that has no author. Takes the caller's transaction client, so the
+   * message is stored together with the change it announces; call `publishSystemMessage` after the commit.
+   */
+  async createSystemMessage(tx: Prisma.TransactionClient, conversationId: string, body: string): Promise<ChatMessageView> {
+    const created = await tx.message.create({ data: { conversationId, senderId: null, kind: 'SYSTEM', body } });
+    await tx.conversation.update({ where: { id: conversationId }, data: { lastMessageAt: created.createdAt } });
+    return {
+      id: created.id,
+      conversationId,
+      body: created.body,
+      createdAt: created.createdAt.toISOString(),
+      sender: { id: null, name: 'BaliTrade', role: 'SYSTEM' },
+    };
+  }
+
+  /** Pushes a stored system message to the people who have the conversation open, and refreshes their lists. */
+  async publishSystemMessage(message: ChatMessageView): Promise<void> {
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { id: message.conversationId },
+      select: { buyerId: true, seller: { select: { userId: true } } },
+    });
+    if (!conversation) return;
+    this.events.messageCreated.next({
+      conversationId: message.conversationId,
+      buyerId: conversation.buyerId,
+      sellerUserId: conversation.seller.userId,
+      message,
+    });
+  }
+
   /** Same rule as every REST route: buyer, seller of the conversation, or a moderating admin. */
   async canAccess(user: AuthUser, conversationId: string): Promise<boolean> {
     try {
@@ -150,7 +189,8 @@ export class ChatService {
     return conversation;
   }
 
-  private roleOf(senderId: string, conversation: ConversationRow): ChatRole {
+  private roleOf(senderId: string | null, conversation: ConversationRow): ChatRole {
+    if (senderId === null) return 'SYSTEM';
     if (senderId === conversation.buyerId) return 'BUYER';
     if (senderId === conversation.seller.userId) return 'SELLER';
     return 'ADMIN';
@@ -163,7 +203,7 @@ export class ChatService {
       conversationId: message.conversationId,
       body: message.body,
       createdAt: message.createdAt.toISOString(),
-      sender: { id: message.senderId, name: role === 'SELLER' ? conversation.seller.displayName : message.sender.name, role },
+      sender: { id: message.senderId, name: senderName(role, message, conversation), role },
     };
   }
 
@@ -182,6 +222,7 @@ export class ChatService {
       product: product ? { id: product.id, title: text?.title ?? '', coverUrl: cover ? this.media.publicUrlFor(cover.r2Key) : null } : null,
       buyer: row.buyer,
       seller: { id: row.seller.id, displayName: row.seller.displayName },
+      order: row.order ? { id: row.order.id, code: orderCode(row.order.number) } : null,
       lastMessage: last ? { body: last.body, senderRole: this.roleOf(last.senderId, row), createdAt: last.createdAt.toISOString() } : null,
       lastMessageAt: row.lastMessageAt?.toISOString() ?? null,
       createdAt: row.createdAt.toISOString(),

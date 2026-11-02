@@ -21,6 +21,16 @@ describe('MessageRateLimiter', () => {
     expect(() => limiter.consume('a')).toThrow(HttpException);
   });
 
+  it('supports another window and message (used for order requests per hour)', () => {
+    let now = 0;
+    const limiter = new MessageRateLimiter(1, () => now, 3_600_000, 'Too many order requests.');
+    limiter.consume('a');
+    now = 59 * 60_000; // still inside the hour
+    expect(() => limiter.consume('a')).toThrow('Too many order requests.');
+    now = 3_600_001;
+    expect(() => limiter.consume('a')).not.toThrow();
+  });
+
   it('frees a slot after a minute, and rejected attempts do not extend the wait', () => {
     let now = 0;
     const limiter = new MessageRateLimiter(2, () => now);

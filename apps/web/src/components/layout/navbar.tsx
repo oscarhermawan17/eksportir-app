@@ -24,7 +24,7 @@ function useNavLinks(): NavLink[] {
     user ? { href: '/seller', label: t('sell') } : { href: '/register?role=seller', label: t('sell') },
   ];
   if (user) {
-    links.push({ href: '/messages', label: t('messages') });
+    links.push({ href: '/orders', label: t('orders') }, { href: '/messages', label: t('messages') });
   }
   if (user?.roles.includes('SELLER')) {
     links.push({ href: '/seller', label: t('sellerArea') });

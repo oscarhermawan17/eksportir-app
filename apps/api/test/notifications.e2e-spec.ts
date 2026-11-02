@@ -170,7 +170,7 @@ describe('Notifications (e2e)', () => {
     it('cuts a long message to a one-line preview', async () => {
       await say('ops', `${'long '.repeat(80)}\nend`);
       await settle();
-      const preview = (await list('buyer')).items[0]!.payload.preview;
+      const preview = ((await list('buyer')).items[0]!.payload as { preview: string }).preview;
       expect(preview).toHaveLength(100);
       expect(preview).not.toContain('\n');
       expect(preview.endsWith('…')).toBe(true);
