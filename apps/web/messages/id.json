@@ -531,7 +531,15 @@
     "loadError": "Tidak dapat memuat notifikasi.",
     "close": "Tutup notifikasi",
     "orderRequested": "Permintaan pesanan baru {code}",
-    "orderRequestedBody": "{buyer} ingin {qty} × {product}"
+    "orderRequestedBody": "{buyer} ingin {qty} × {product}",
+    "orderStatus": {
+      "AWAITING_PAYMENT": "Pesanan {code} diterima: menunggu pembayaran",
+      "CHANGE_PROPOSED": "Perubahan diusulkan untuk pesanan {code}",
+      "DECLINED": "Pesanan {code} ditolak",
+      "CANCELLED": "Pesanan {code} dibatalkan"
+    },
+    "orderStatusFallback": "Pesanan {code}: {status}",
+    "orderStatusBody": "{qty} × {product}"
   },
   "Orders": {
     "title": "Pesanan",
@@ -549,7 +557,11 @@
     "orderTitle": "Pesanan {code}",
     "requestedOn": "Diajukan {date}",
     "statusHint": {
-      "REQUESTED": "Menunggu jawaban penjual."
+      "REQUESTED": "Menunggu jawaban penjual.",
+      "CHANGE_PROPOSED": "Penjual mengusulkan jumlah lain. Pembeli yang memutuskan.",
+      "AWAITING_PAYMENT": "Diterima. Langkah berikutnya adalah pembayaran (segera dibuka).",
+      "DECLINED": "Penjual menolak pesanan ini.",
+      "CANCELLED": "Pesanan ini dibatalkan."
     },
     "itemTitle": "Barang",
     "quantity": "Jumlah",
@@ -626,6 +638,32 @@
       "REFUNDED": "Dana dikembalikan"
     },
     "buyer": "Pembeli",
-    "seller": "Penjual"
+    "seller": "Penjual",
+    "actions": {
+      "sellerTitle": "Tanggapi permintaan ini",
+      "sellerHint": "Terima untuk melanjutkan ke pembayaran, usulkan jumlah yang lebih sedikit, atau tolak.",
+      "sellerWaiting": "Anda mengusulkan jumlah lain. Menunggu keputusan pembeli.",
+      "proposalTitle": "Penjual mengusulkan perubahan",
+      "proposalText": "{qty} dari {old} {unit}. Barang menjadi {items}; total sementara {total}.",
+      "buyerHint": "Anda bisa membatalkan pesanan ini sebelum membayar.",
+      "accept": "Terima pesanan",
+      "propose": "Usulkan perubahan",
+      "reviseProposal": "Ubah usulan",
+      "decline": "Tolak",
+      "withdraw": "Tarik dan tolak",
+      "acceptChange": "Terima perubahan",
+      "cancel": "Batalkan pesanan",
+      "proposeQty": "Jumlah yang bisa Anda sediakan",
+      "proposeQtyHelper": "Lebih sedikit dari {qty} yang diminta.",
+      "reason": "Alasan (opsional)",
+      "reasonHelper": "Ditampilkan kepada pihak lain di chat pesanan.",
+      "sendProposal": "Kirim usulan",
+      "confirmDecline": "Tolak pesanan",
+      "confirmCancel": "Batalkan pesanan",
+      "back": "Kembali",
+      "working": "Mohon tunggu…",
+      "staleNotice": "Pesanan ini baru saja diubah oleh pihak lain. Halaman sudah dimuat ulang."
+    },
+    "proposedQty": "Jumlah usulan"
   }
 }

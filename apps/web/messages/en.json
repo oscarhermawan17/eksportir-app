@@ -531,7 +531,15 @@
     "loadError": "Could not load notifications.",
     "close": "Close notifications",
     "orderRequested": "New order request {code}",
-    "orderRequestedBody": "{buyer} wants {qty} × {product}"
+    "orderRequestedBody": "{buyer} wants {qty} × {product}",
+    "orderStatus": {
+      "AWAITING_PAYMENT": "Order {code} accepted: awaiting payment",
+      "CHANGE_PROPOSED": "Change proposed for order {code}",
+      "DECLINED": "Order {code} was declined",
+      "CANCELLED": "Order {code} was cancelled"
+    },
+    "orderStatusFallback": "Order {code}: {status}",
+    "orderStatusBody": "{qty} × {product}"
   },
   "Orders": {
     "title": "Orders",
@@ -549,7 +557,11 @@
     "orderTitle": "Order {code}",
     "requestedOn": "Requested {date}",
     "statusHint": {
-      "REQUESTED": "Waiting for the seller to respond."
+      "REQUESTED": "Waiting for the seller to respond.",
+      "CHANGE_PROPOSED": "The seller proposed a different quantity. The buyer decides.",
+      "AWAITING_PAYMENT": "Accepted. The next step is payment (opening soon).",
+      "DECLINED": "The seller declined this order.",
+      "CANCELLED": "This order was cancelled."
     },
     "itemTitle": "Item",
     "quantity": "Quantity",
@@ -626,6 +638,32 @@
       "REFUNDED": "Refunded"
     },
     "buyer": "Buyer",
-    "seller": "Seller"
+    "seller": "Seller",
+    "actions": {
+      "sellerTitle": "Respond to this request",
+      "sellerHint": "Accept to move the order to payment, propose a lower quantity, or decline.",
+      "sellerWaiting": "You proposed a different quantity. Waiting for the buyer to decide.",
+      "proposalTitle": "The seller proposed a change",
+      "proposalText": "{qty} instead of {old} {unit}. Items would be {items}; total so far {total}.",
+      "buyerHint": "You can cancel this order until you have paid.",
+      "accept": "Accept order",
+      "propose": "Propose a change",
+      "reviseProposal": "Revise proposal",
+      "decline": "Decline",
+      "withdraw": "Withdraw and decline",
+      "acceptChange": "Accept the change",
+      "cancel": "Cancel order",
+      "proposeQty": "Quantity you can supply",
+      "proposeQtyHelper": "Lower than the {qty} requested.",
+      "reason": "Reason (optional)",
+      "reasonHelper": "Shown to the other side in the order chat.",
+      "sendProposal": "Send proposal",
+      "confirmDecline": "Decline order",
+      "confirmCancel": "Cancel order",
+      "back": "Back",
+      "working": "Please wait…",
+      "staleNotice": "This order was just changed by someone else. It has been refreshed."
+    },
+    "proposedQty": "Proposed quantity"
   }
 }

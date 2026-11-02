@@ -2,6 +2,7 @@
 export const NotificationType = {
   CHAT_MESSAGE: 'CHAT_MESSAGE',
   ORDER_REQUESTED: 'ORDER_REQUESTED',
+  ORDER_STATUS: 'ORDER_STATUS',
 } as const;
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
 
@@ -42,6 +43,16 @@ export interface OrderRequestedNotificationPayload {
   qty: number;
 }
 
+/** An order moved to a new status because of the other side (accepted, declined, change proposed, cancelled, ...). */
+export interface OrderStatusNotificationPayload {
+  orderId: string;
+  code: string;
+  /** The new status (an `OrderStatus`). */
+  status: string;
+  productTitle: string;
+  qty: number;
+}
+
 interface NotificationBase {
   id: string;
   /** ISO timestamp, or null while unread. */
@@ -53,7 +64,8 @@ interface NotificationBase {
 /** Discriminated by `type`, so the payload shape is known after checking it. */
 export type NotificationView =
   | (NotificationBase & { type: 'CHAT_MESSAGE'; payload: ChatMessageNotificationPayload })
-  | (NotificationBase & { type: 'ORDER_REQUESTED'; payload: OrderRequestedNotificationPayload });
+  | (NotificationBase & { type: 'ORDER_REQUESTED'; payload: OrderRequestedNotificationPayload })
+  | (NotificationBase & { type: 'ORDER_STATUS'; payload: OrderStatusNotificationPayload });
 
 /** Response of GET /api/notifications. */
 export interface NotificationsResponse {

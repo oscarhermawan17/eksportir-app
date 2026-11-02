@@ -43,6 +43,8 @@ export const ORDER_LIMITS = {
   addressMax: 500,
   /** Order requests one buyer may send per hour (all products together). */
   requestsPerHour: 20,
+  /** Optional reason that goes with declining, proposing a change or cancelling. */
+  reasonMax: 500,
 } as const;
 
 /** Where BaliTrade delivers. Only the buyer and the admins see it; sellers hand their goods to BaliTrade. */
@@ -67,6 +69,56 @@ export interface CreateOrderInput {
 /** "OR-1001": the human-readable number of an order. */
 export const orderCode = (number: number): string => `OR-${1000 + number}`;
 
+/** What a person can do to an order. The seller answers a request; the buyer decides about a proposed change or cancels. */
+export type OrderAction = 'ACCEPT' | 'DECLINE' | 'PROPOSE_CHANGE' | 'ACCEPT_CHANGE' | 'CANCEL';
+
+/** Who may take each action (admins read orders but do not take these actions). */
+const ACTION_ACTOR: Record<OrderAction, 'BUYER' | 'SELLER'> = {
+  ACCEPT: 'SELLER',
+  DECLINE: 'SELLER',
+  PROPOSE_CHANGE: 'SELLER',
+  ACCEPT_CHANGE: 'BUYER',
+  CANCEL: 'BUYER',
+};
+
+/**
+ * Allowed transitions (docs/ARCHITECTURE.md §6) for this stage of the project. ACCEPT goes straight to AWAITING_PAYMENT
+ * because there is one item per order; ACCEPTED is kept for the multi-seller cart of MVP 1.1. Later tasks add the
+ * payment, QC and shipping transitions here.
+ */
+const TRANSITIONS: Partial<Record<OrderStatus, Partial<Record<OrderAction, OrderStatus>>>> = {
+  REQUESTED: { ACCEPT: 'AWAITING_PAYMENT', DECLINE: 'DECLINED', PROPOSE_CHANGE: 'CHANGE_PROPOSED', CANCEL: 'CANCELLED' },
+  // The seller may revise the proposal or withdraw it (DECLINE); the buyer accepts it or cancels.
+  CHANGE_PROPOSED: { ACCEPT_CHANGE: 'AWAITING_PAYMENT', PROPOSE_CHANGE: 'CHANGE_PROPOSED', DECLINE: 'DECLINED', CANCEL: 'CANCELLED' },
+  AWAITING_PAYMENT: { CANCEL: 'CANCELLED' },
+};
+
+/** The status an action leads to, or null when the action is not possible in this status. The single source of truth for transitions. */
+export function nextOrderStatus(status: OrderStatus, action: OrderAction): OrderStatus | null {
+  return TRANSITIONS[status]?.[action] ?? null;
+}
+
+export function actionActor(action: OrderAction): 'BUYER' | 'SELLER' {
+  return ACTION_ACTOR[action];
+}
+
+/** The actions this viewer can take now (none for admins, and none once the order has ended). */
+export function orderActionsFor(viewer: OrderViewer, status: OrderStatus): OrderAction[] {
+  if (viewer === 'ADMIN') return [];
+  return (Object.keys(ACTION_ACTOR) as OrderAction[]).filter((action) => ACTION_ACTOR[action] === viewer && nextOrderStatus(status, action) !== null);
+}
+
+/** Body of POST /api/orders/:id/decline and /cancel. */
+export interface OrderReasonInput {
+  reason?: string;
+}
+
+/** Body of POST /api/orders/:id/propose-change: a smaller quantity than requested. */
+export interface ProposeChangeInput {
+  qty: number;
+  reason?: string;
+}
+
 /** Which side of the order the viewer is on. */
 export type OrderViewer = 'BUYER' | 'SELLER' | 'ADMIN';
 
@@ -80,6 +132,10 @@ export interface OrderView {
   viewer: OrderViewer;
   buyer: { id: string; name: string };
   seller: { id: string; displayName: string };
+  /** What this viewer can do now (empty for admins and for ended orders). */
+  actions: OrderAction[];
+  /** The seller's proposed change with its totals (status CHANGE_PROPOSED), else null. */
+  proposal: { qty: number; itemsUsd: string; totalUsd: string } | null;
   /** One item per order in MVP 1.0. Title, unit and prices are snapshots from the moment of the request. */
   item: {
     productId: string | null;

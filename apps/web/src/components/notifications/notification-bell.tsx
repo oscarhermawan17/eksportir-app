@@ -19,6 +19,7 @@ function upsert(items: NotificationView[], item: NotificationView): Notification
 /** Bell with an unread badge and a dropdown of the latest notifications (new ones arrive live over the socket). */
 export function NotificationBell() {
   const t = useTranslations('Notifications');
+  const tOrders = useTranslations('Orders');
   const format = useFormatter();
   // An explicit "now" for relative times; it also keeps "1 minute ago" up to date while the panel is open.
   const now = useNow({ updateInterval: 30_000 });
@@ -107,6 +108,17 @@ export function NotificationBell() {
         title: t('orderRequested', { code }),
         subtitle: null,
         body: t('orderRequestedBody', { buyer: buyerName, qty, product: productTitle }),
+        badge: null,
+      };
+    }
+    if (item.type === 'ORDER_STATUS') {
+      const { orderId, code, status, productTitle, qty } = item.payload;
+      const key = `orderStatus.${status}`;
+      return {
+        href: `/orders/${orderId}`,
+        title: t.has(key) ? t(key, { code }) : t('orderStatusFallback', { code, status: tOrders(`status.${status}`) }),
+        subtitle: null,
+        body: t('orderStatusBody', { qty, product: productTitle }),
         badge: null,
       };
     }

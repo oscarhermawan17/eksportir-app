@@ -4,6 +4,7 @@ import type { DeliveryAddress, OrderView } from '@balitrade/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
+import { OrderActions } from '@/components/orders/order-actions';
 import { OrderStatusBadge } from '@/components/orders/order-status-badge';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -20,6 +21,8 @@ function Detail({ id }: { id: string }) {
   const tCommon = useTranslations('Common');
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<State | null>(null);
+  /** Set when an action hit an order that someone else had just changed; the page was reloaded with the fresh state. */
+  const [stale, setStale] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,13 +70,30 @@ function Detail({ id }: { id: string }) {
           )}
         </div>
       ) : (
-        <Order order={current.order} />
+        <>
+          {stale ? (
+            <p role="status" className="mb-4 rounded-card border border-info/30 bg-info/5 px-4 py-3 text-sm text-info">
+              {t('actions.staleNotice')}
+            </p>
+          ) : null}
+          <Order
+            order={current.order}
+            onUpdated={(order) => {
+              setStale(false);
+              setState({ id, order, notFound: false });
+            }}
+            onStale={() => {
+              setStale(true);
+              setAttempt((n) => n + 1);
+            }}
+          />
+        </>
       )}
     </div>
   );
 }
 
-function Order({ order }: { order: OrderView }) {
+function Order({ order, onUpdated, onStale }: { order: OrderView; onUpdated: (order: OrderView) => void; onStale: () => void }) {
   const t = useTranslations('Orders');
   const tProducts = useTranslations('Products');
   const format = useFormatter();
@@ -91,6 +111,8 @@ function Order({ order }: { order: OrderView }) {
         {t.has(statusHintKey) ? <p className="text-sm text-text">{t(statusHintKey)}</p> : null}
       </header>
 
+      <OrderActions order={order} onUpdated={onUpdated} onStale={onStale} />
+
       <section aria-labelledby="order-item" className="rounded-card border border-border bg-card p-5 shadow-sm">
         <h2 id="order-item" className="text-xs font-bold uppercase tracking-wider text-muted">
           {t('itemTitle')}
@@ -100,6 +122,7 @@ function Order({ order }: { order: OrderView }) {
           <Row label={t('quantity')} value={`${format.number(order.item.qty)} ${tProducts(`units.${order.item.unit}`)}`} />
           <Row label={t('unitPrice')} value={money(order.item.unitPriceUsd)} />
           <Row label={t('note')} value={order.item.note ?? t('noNote')} />
+          {order.proposal ? <Row label={t('proposedQty')} value={`${format.number(order.proposal.qty)} ${tProducts(`units.${order.item.unit}`)}`} /> : null}
         </dl>
         {order.item.productId ? (
           <Link href={`/products/${order.item.productId}`} className="mt-3 inline-block text-sm font-semibold text-primary hover:underline">

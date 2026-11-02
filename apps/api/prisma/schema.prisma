@@ -256,6 +256,7 @@ model Message {
 enum NotificationType {
   CHAT_MESSAGE
   ORDER_REQUESTED
+  ORDER_STATUS
 }
 
 /// An in-app notification for one user. Unread notifications about the same subject are folded into one row

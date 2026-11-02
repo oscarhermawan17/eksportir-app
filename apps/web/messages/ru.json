@@ -531,7 +531,15 @@
     "loadError": "Не удалось загрузить уведомления.",
     "close": "Закрыть уведомления",
     "orderRequested": "Новый запрос на заказ {code}",
-    "orderRequestedBody": "{buyer}: {qty} × {product}"
+    "orderRequestedBody": "{buyer}: {qty} × {product}",
+    "orderStatus": {
+      "AWAITING_PAYMENT": "Заказ {code} принят: ожидает оплаты",
+      "CHANGE_PROPOSED": "Предложено изменение заказа {code}",
+      "DECLINED": "Заказ {code} отклонён",
+      "CANCELLED": "Заказ {code} отменён"
+    },
+    "orderStatusFallback": "Заказ {code}: {status}",
+    "orderStatusBody": "{qty} × {product}"
   },
   "Orders": {
     "title": "Заказы",
@@ -549,7 +557,11 @@
     "orderTitle": "Заказ {code}",
     "requestedOn": "Запрошен {date}",
     "statusHint": {
-      "REQUESTED": "Ожидаем ответа продавца."
+      "REQUESTED": "Ожидаем ответа продавца.",
+      "CHANGE_PROPOSED": "Продавец предложил другое количество. Решает покупатель.",
+      "AWAITING_PAYMENT": "Принято. Следующий шаг — оплата (скоро откроется).",
+      "DECLINED": "Продавец отказал в этом заказе.",
+      "CANCELLED": "Этот заказ отменён."
     },
     "itemTitle": "Товар",
     "quantity": "Количество",
@@ -626,6 +638,32 @@
       "REFUNDED": "Средства возвращены"
     },
     "buyer": "Покупатель",
-    "seller": "Продавец"
+    "seller": "Продавец",
+    "actions": {
+      "sellerTitle": "Ответьте на этот запрос",
+      "sellerHint": "Примите, чтобы перейти к оплате, предложите меньшее количество или откажитесь.",
+      "sellerWaiting": "Вы предложили другое количество. Ждём решения покупателя.",
+      "proposalTitle": "Продавец предложил изменение",
+      "proposalText": "{qty} вместо {old} {unit}. Товары составят {items}; итого на данный момент {total}.",
+      "buyerHint": "Вы можете отменить этот заказ до оплаты.",
+      "accept": "Принять заказ",
+      "propose": "Предложить изменение",
+      "reviseProposal": "Изменить предложение",
+      "decline": "Отказать",
+      "withdraw": "Отозвать и отказать",
+      "acceptChange": "Принять изменение",
+      "cancel": "Отменить заказ",
+      "proposeQty": "Количество, которое вы можете поставить",
+      "proposeQtyHelper": "Меньше запрошенных {qty}.",
+      "reason": "Причина (необязательно)",
+      "reasonHelper": "Показывается другой стороне в чате заказа.",
+      "sendProposal": "Отправить предложение",
+      "confirmDecline": "Отказать в заказе",
+      "confirmCancel": "Отменить заказ",
+      "back": "Назад",
+      "working": "Подождите…",
+      "staleNotice": "Этот заказ только что изменил кто-то другой. Страница обновлена."
+    },
+    "proposedQty": "Предложенное количество"
   }
 }

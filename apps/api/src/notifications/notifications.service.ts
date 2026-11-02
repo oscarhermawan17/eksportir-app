@@ -5,6 +5,7 @@ import type {
   ChatMessageNotificationPayload,
   NotificationCount,
   OrderRequestedNotificationPayload,
+  OrderStatusNotificationPayload,
   NotificationsResponse,
   NotificationView,
 } from '@balitrade/shared';
@@ -98,6 +99,19 @@ export class NotificationsService implements OnModuleInit, OnModuleDestroy {
       },
     });
     this.events.stream.next({ userId: sellerUserId, kind: 'created', push: { item: toView(row), unreadCount: await this.unreadCount(sellerUserId) } });
+  }
+
+  /** Tells the other side of an order that it moved to a new status. */
+  async notifyOrderStatus(userId: string, payload: OrderStatusNotificationPayload): Promise<void> {
+    const row = await this.prisma.notification.create({
+      data: {
+        userId,
+        type: NotificationType.ORDER_STATUS,
+        subject: `order:${payload.orderId}`,
+        payload: payload as unknown as Prisma.InputJsonValue,
+      },
+    });
+    this.events.stream.next({ userId, kind: 'created', push: { item: toView(row), unreadCount: await this.unreadCount(userId) } });
   }
 
   private unreadCount(userId: string): Promise<number> {
