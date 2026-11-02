@@ -35,6 +35,9 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/notifications/:id/read` | logged in | `read` | notifications |
 | POST | `/api/notifications/conversations/:conversationId/read` | logged in | `readConversation` | notifications |
 | POST | `/api/notifications/read-all` | logged in | `readAll` | notifications |
+| GET | `/api/orders` | logged in | `list` | orders |
+| POST | `/api/orders` | logged in | `create` | orders |
+| GET | `/api/orders/:id` | logged in | `get` | orders |
 | GET | `/api/products` | public | `list` | catalog |
 | GET | `/api/products/:id` | public | `detail` | catalog |
 | GET | `/api/public/sellers/:id` | public | `seller` | catalog |

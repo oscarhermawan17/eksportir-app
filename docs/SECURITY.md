@@ -14,6 +14,7 @@ Rules for working with secrets are in `AGENTS.md` (never print or commit them); 
 | Brute force | Login 5/min and register 10/min per IP (`@nestjs/throttler`, in-memory) |
 | Headers | API: `helmet` (tested in `test/security.e2e-spec.ts`); web: nosniff, frame, referrer and permissions policy, no `X-Powered-By` (`apps/web/next.config.ts`) |
 | CORS | Only `WEB_ORIGIN`, with credentials |
+| Orders | Every order route filters by the logged-in user (buyer, seller of the order, or an admin role), others get 404; the buyer's delivery address is never sent to the seller; order requests are limited to 20 per buyer per hour; price, rate and fee are copied into the order on the server (the client sends only product, quantity, note and address) |
 | Money | Whole-number IDR, `Decimal` for USD and rates; USD prices computed with decimal arithmetic, never floats |
 | Uploads | Browser uploads straight to R2 with presigned URLs; type and exact size are part of the signature (photo ≤ 10 MB, video ≤ 50 MB); private files readable only by the uploader or an admin, through 5-minute signed URLs |
 | Config | Env validated at startup (`JWT_SECRET` ≥ 32 chars, R2 settings all-or-nothing and mandatory in production); `.env` files are git-ignored |
