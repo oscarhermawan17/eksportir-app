@@ -39,6 +39,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 | Sign-up consent (2026-10-31): the API requires `acceptAdminInChat: true` and stores `adminChatConsentAt` + a wording version | Privacy-law transparency about the admin in all chats; the chat itself does not check the consent yet (older and seed accounts have none) |
 | Orders (T15): the order copies price, exchange rate and QC fee; the USD unit price is rounded to cents first and the total is qty × that; ordering is refused (409) while no exchange rate is set; one item per order; seller never receives the delivery address; every admin role (incl. finance) can see all orders; 20 requests per buyer per hour | Prices must not change under an existing order. The order chat has no product (`productId` null, linked by `orderId`) so it does not clash with the one-inquiry-per-product rule. The QC fee shown uses the placeholder zone tariff |
 | System chat messages (T15): `MessageKind.SYSTEM`, no author, shown as a centered note; they create no chat notification (the order has its own) | `Message.senderId` is now optional |
+| Order actions (T16): the seller can only propose a *lower* quantity; accept goes straight to AWAITING_PAYMENT (ACCEPTED is kept for the MVP 1.1 cart); the buyer can cancel until paying; the seller can revise or withdraw a proposal; admins read orders but cannot act on them; concurrent answers resolve with one winner and a 409 | Transitions live in one shared function (`nextOrderStatus`). No seller response deadline and no stock reservation yet (still open) |
 | Dependencies pinned to exact versions; very new packages are added to `minimumReleaseAgeExclude` | Currently the AWS SDK |
 
 ## Open questions (need the owner)
@@ -46,6 +47,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 - QC fee per zone (current seed values are placeholders).
 - Final product category list and the forbidden-goods list.
 - Sourcing fee, deposit and refund rules.
+- A deadline for the seller to answer an order request, and whether stock is held while an order waits (T16 has neither).
 - Payment details still to come from the owner: USDT network and Binance wallet address, BCA account details, the partner exchange and the instructions shown to buyers, and whether EXCHANGE buyers need an amount in rubles.
 - Exchange-rate buffer (2–3% for rate risk) and how long a USD price stays locked at checkout.
 - Separate private R2 bucket before real payment proofs/QC files (dev currently uses one bucket, `eksportir-testing`, for both).

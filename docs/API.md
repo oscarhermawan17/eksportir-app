@@ -38,6 +38,11 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | GET | `/api/orders` | logged in | `list` | orders |
 | POST | `/api/orders` | logged in | `create` | orders |
 | GET | `/api/orders/:id` | logged in | `get` | orders |
+| POST | `/api/orders/:id/accept` | logged in | `accept` | orders |
+| POST | `/api/orders/:id/accept-change` | logged in | `acceptChange` | orders |
+| POST | `/api/orders/:id/cancel` | logged in | `cancel` | orders |
+| POST | `/api/orders/:id/decline` | logged in | `decline` | orders |
+| POST | `/api/orders/:id/propose-change` | logged in | `proposeChange` | orders |
 | GET | `/api/products` | public | `list` | catalog |
 | GET | `/api/products/:id` | public | `detail` | catalog |
 | GET | `/api/public/sellers/:id` | public | `seller` | catalog |
