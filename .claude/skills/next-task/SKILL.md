@@ -13,6 +13,7 @@ Pertama baca `AGENTS.md` (konteks, aturan, gotchas, status terkini) bila belum.
 4. Jelaskan rencana singkat ke user sebelum mengubah banyak file.
 5. Kerjakan task. Jalankan lint, build, dan test yang relevan. Perbaiki error sebelum lapor.
 6. Jika DoD terpenuhi: centang task di `TASKS.md`. Jika ada keputusan baru → catat di `docs/BRAINSTORMING.md` atau `docs/ARCHITECTURE.md`.
-7. Lapor singkat: apa yang dibuat, cara mengecek, task berikutnya.
+7. **Commit sebelum lanjut** (aturan tetap dari owner): setelah task dicentang, commit dulu semua pekerjaan task itu (stage file satu per satu, tanpa `Co-authored-by`; biasanya dua commit: kode `feat:`/`fix:` lalu dokumen `docs:`) dan pastikan `git status` bersih sebelum mengerjakan task berikutnya. Jangan membawa pekerjaan yang belum ter-commit dari satu task ke task lain.
+8. Lapor singkat: apa yang dibuat, cara mengecek, task berikutnya.
 
 Aturan: jangan menambah fitur di luar task; jika task terasa terlalu besar, pecah dan tanyakan ke user.

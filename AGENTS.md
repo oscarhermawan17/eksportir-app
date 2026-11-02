@@ -19,8 +19,12 @@ MVP 1.0 target date: 2026-10-31. The owner (Oscar) works mostly alone with AI as
 - A task is done only when its Definition of Done (DoD) in `TASKS.md` is met **and** `pnpm lint`, `pnpm typecheck`,
   `pnpm build` and the relevant tests pass. Do not tick a task whose DoD you could not verify (say what is blocked).
 - Record new decisions: business → `docs/BRAINSTORMING.md`, technical → `docs/ARCHITECTURE.md`, and add a line to `docs/DECISIONS.md`. When you add or change an API route, run `pnpm docs:api` to update `docs/API.md`.
-- **Git:** commit only when the user asks. Author is the user only — no `Co-authored-by` trailer. Never commit `.env` files
-  or secrets (`.env.example` placeholders are fine). Stage files explicitly; no `git add .`. No force-push / hard reset without asking.
+- **Git — one commit per finished task (standing instruction from the owner, 2026-11-02):** as soon as a task meets its DoD and
+  lint/typecheck/tests pass, tick it in `TASKS.md` and **commit it before starting the next task**, without waiting to be asked.
+  Usually two commits: the code (`feat:` / `fix:`), then the docs (`docs:`). Never carry one task's uncommitted work into the next;
+  if a task is only partly done, commit nothing that does not build and say what is open. For anything else (a half-done task, a
+  push, a branch) ask first. Author is the user only — **no `Co-authored-by` trailer**. Never commit `.env` files or secrets
+  (`.env.example` placeholders are fine). Stage files explicitly; no `git add .`. No force-push / hard reset without asking.
 - Never print secret values (`.env`, API keys). Refer to them by variable name.
 - Do not change the stack/framework without discussion.
 - Visual source of truth for UI: `design-ui/google-stitch/01-v4.html` (tokens already in `apps/web/src/app/globals.css`).
