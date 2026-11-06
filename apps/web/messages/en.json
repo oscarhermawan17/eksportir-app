@@ -135,6 +135,105 @@
       }
     }
   },
+  "HowItWorks": {
+    "title": "How BaliTrade works",
+    "intro": "BaliTrade sits between you and the seller in Bali: we check the goods, hold your payment and arrange the air cargo. Here is what happens from the moment you find a product.",
+    "howTitle": "How it works",
+    "steps": {
+      "s1": {
+        "title": "Find a product",
+        "text": "Browse products from Bali sellers and pick what you need."
+      },
+      "s2": {
+        "title": "Discuss",
+        "text": "Chat with the seller and our team, and agree on the details."
+      },
+      "s3": {
+        "title": "Pay securely",
+        "text": "Your payment is held by BaliTrade until your goods arrive."
+      },
+      "s4": {
+        "title": "Quality check",
+        "text": "We inspect and send you a photo and video report to approve."
+      },
+      "s5": {
+        "title": "Ship",
+        "text": "We pack and send by air cargo, and you can follow the tracking."
+      },
+      "s6": {
+        "title": "Receive",
+        "text": "Confirm arrival, then the seller gets paid."
+      }
+    },
+    "trustTitle": "What BaliTrade does for you",
+    "trust": {
+      "qc": {
+        "title": "Quality control",
+        "text": "We inspect goods and send you photos & videos before shipping."
+      },
+      "payment": {
+        "title": "Protected payment",
+        "text": "Your money is held by BaliTrade and released to the seller only after delivery."
+      },
+      "chat": {
+        "title": "Talk to everyone",
+        "text": "Every chat includes you, the seller and the BaliTrade team."
+      },
+      "cargo": {
+        "title": "Door to airport",
+        "text": "We handle packing, export documents from Bali and air cargo."
+      }
+    },
+    "paymentTitle": "Payment methods",
+    "payment": {
+      "bank": {
+        "title": "Bank transfer (IDR)",
+        "text": "Transfer rupiah to our Indonesian bank account and upload the receipt. The amount is fixed at the exchange rate shown on your order."
+      },
+      "usdt": {
+        "title": "USDT",
+        "text": "Send USDT to our wallet, then submit the transaction hash together with a screenshot."
+      },
+      "exchange": {
+        "title": "Through a partner exchange",
+        "text": "If you can only pay in rubles, pay a partner exchange in Indonesia. They send the rupiah to BaliTrade and we match it to your order."
+      }
+    },
+    "paymentNote": "The account details are shown on your order once it is ready to pay. Every payment is checked by our team by hand, and your money stays with BaliTrade until your goods arrive.",
+    "shippingTitle": "Shipping & tracking",
+    "shipping": {
+      "s1": "We pack your goods in Bali after you approve the quality report.",
+      "s2": "Shipping is billed separately once the real weight and carton count are known, so you never pay an estimate.",
+      "s3": "Everything travels by air cargo to Russia and CIS countries.",
+      "s4": "Our team adds each step to the tracking timeline on your order page."
+    },
+    "faqTitle": "Questions",
+    "faq": {
+      "q1": {
+        "q": "How does BaliTrade protect my payment?",
+        "a": "Your payment is held by BaliTrade until your goods arrive. The seller is paid only after you confirm delivery."
+      },
+      "q2": {
+        "q": "What if the goods don’t pass quality control?",
+        "a": "We will first help you find a replacement. If you prefer, you can get a full refund."
+      },
+      "q3": {
+        "q": "Can I order more than the stock shown?",
+        "a": "Yes. Ask the seller and BaliTrade in the product chat about a larger quantity. Made-to-order products have a lead time set by the seller."
+      },
+      "q4": {
+        "q": "Which countries do you ship to?",
+        "a": "Russia and CIS countries, for example Kazakhstan, Uzbekistan, Kyrgyzstan, Armenia and Belarus. You only enter a delivery address; our team arranges the air cargo."
+      },
+      "q5": {
+        "q": "How long does shipping take?",
+        "a": "Shipping time depends on the destination. Our team confirms it before you pay."
+      }
+    },
+    "sellersTitle": "Sell your Bali products to Russia & CIS",
+    "sellersText": "Register, get approved by our team, and list your products. We handle buyers, quality control, export and shipping.",
+    "becomeSeller": "Become a seller"
+  },
   "Auth": {
     "email": "Email",
     "password": "Password",

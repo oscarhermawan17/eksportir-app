@@ -135,6 +135,105 @@
       }
     }
   },
+  "HowItWorks": {
+    "title": "Cara kerja BaliTrade",
+    "intro": "BaliTrade berdiri di antara Anda dan penjual di Bali: kami memeriksa barang, menahan pembayaran Anda, dan mengurus kargo udara. Berikut yang terjadi sejak Anda menemukan produk.",
+    "howTitle": "Cara kerja",
+    "steps": {
+      "s1": {
+        "title": "Temukan produk",
+        "text": "Telusuri produk penjual Bali dan pilih yang Anda butuhkan."
+      },
+      "s2": {
+        "title": "Diskusi",
+        "text": "Chat dengan penjual dan tim kami, lalu sepakati detailnya."
+      },
+      "s3": {
+        "title": "Bayar dengan aman",
+        "text": "Pembayaran Anda ditahan BaliTrade sampai barang tiba."
+      },
+      "s4": {
+        "title": "Pemeriksaan kualitas",
+        "text": "Kami memeriksa dan mengirim laporan foto dan video untuk Anda setujui."
+      },
+      "s5": {
+        "title": "Kirim",
+        "text": "Kami mengemas dan mengirim lewat kargo udara, dan Anda bisa memantau pelacakannya."
+      },
+      "s6": {
+        "title": "Terima",
+        "text": "Konfirmasi barang tiba, lalu penjual dibayar."
+      }
+    },
+    "trustTitle": "Yang BaliTrade kerjakan untuk Anda",
+    "trust": {
+      "qc": {
+        "title": "Kontrol kualitas",
+        "text": "Kami memeriksa barang dan mengirimkan foto & video sebelum pengiriman."
+      },
+      "payment": {
+        "title": "Pembayaran terlindungi",
+        "text": "Uang Anda ditahan BaliTrade dan baru diteruskan ke penjual setelah barang tiba."
+      },
+      "chat": {
+        "title": "Bicara dengan semua pihak",
+        "text": "Setiap chat mencakup Anda, penjual, dan tim BaliTrade."
+      },
+      "cargo": {
+        "title": "Dari pintu ke bandara",
+        "text": "Kami mengurus pengemasan, dokumen ekspor dari Bali, dan kargo udara."
+      }
+    },
+    "paymentTitle": "Metode pembayaran",
+    "payment": {
+      "bank": {
+        "title": "Transfer bank (IDR)",
+        "text": "Transfer rupiah ke rekening bank kami di Indonesia dan unggah buktinya. Nominalnya dikunci pada kurs yang tertera di pesanan Anda."
+      },
+      "usdt": {
+        "title": "USDT",
+        "text": "Kirim USDT ke dompet kami, lalu kirimkan hash transaksi beserta tangkapan layarnya."
+      },
+      "exchange": {
+        "title": "Lewat exchange mitra",
+        "text": "Kalau Anda hanya bisa membayar dengan rubel, bayarkan ke exchange mitra di Indonesia. Mereka mengirim rupiahnya ke BaliTrade dan kami cocokkan dengan pesanan Anda."
+      }
+    },
+    "paymentNote": "Detail rekeningnya ditampilkan di pesanan Anda saat sudah siap dibayar. Setiap pembayaran diperiksa tim kami satu per satu, dan uang Anda tetap di BaliTrade sampai barang tiba.",
+    "shippingTitle": "Pengiriman & pelacakan",
+    "shipping": {
+      "s1": "Barang Anda kami kemas di Bali setelah Anda menyetujui laporan kualitas.",
+      "s2": "Ongkos kirim ditagih terpisah setelah berat dan jumlah karton sebenarnya diketahui, jadi Anda tidak membayar perkiraan.",
+      "s3": "Semuanya dikirim lewat kargo udara ke Rusia dan negara-negara CIS.",
+      "s4": "Tim kami menambahkan setiap tahap ke lini masa pelacakan di halaman pesanan Anda."
+    },
+    "faqTitle": "Pertanyaan",
+    "faq": {
+      "q1": {
+        "q": "Bagaimana BaliTrade melindungi pembayaran saya?",
+        "a": "Pembayaran Anda ditahan BaliTrade sampai barang tiba. Penjual baru dibayar setelah Anda mengonfirmasi penerimaan."
+      },
+      "q2": {
+        "q": "Bagaimana jika barang tidak lolos kontrol kualitas?",
+        "a": "Kami akan lebih dulu membantu mencarikan barang pengganti. Jika Anda lebih suka, Anda bisa mendapat pengembalian dana penuh."
+      },
+      "q3": {
+        "q": "Bisakah saya memesan lebih dari stok yang tampil?",
+        "a": "Bisa. Tanyakan jumlah yang lebih besar kepada penjual dan BaliTrade di chat produk. Produk made to order memiliki waktu produksi yang ditentukan penjual."
+      },
+      "q4": {
+        "q": "Ke negara mana saja Anda mengirim?",
+        "a": "Rusia dan negara CIS, misalnya Kazakhstan, Uzbekistan, Kirgizstan, Armenia, dan Belarus. Anda cukup mengisi alamat pengiriman; tim kami yang mengatur kargo udaranya."
+      },
+      "q5": {
+        "q": "Berapa lama pengirimannya?",
+        "a": "Lama pengiriman bergantung pada tujuan. Tim kami mengonfirmasinya sebelum Anda membayar."
+      }
+    },
+    "sellersTitle": "Jual produk Bali Anda ke Rusia & CIS",
+    "sellersText": "Daftar, dapatkan persetujuan tim kami, lalu pasang produk Anda. Kami mengurus pembeli, kontrol kualitas, ekspor, dan pengiriman.",
+    "becomeSeller": "Jadi penjual"
+  },
   "Auth": {
     "email": "Email",
     "password": "Kata sandi",
