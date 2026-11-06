@@ -5,8 +5,11 @@ Daftar tugas coding. Konteks: `docs/BRAINSTORMING.md` (bisnis), `docs/ARCHITECTU
 Cara pakai:
 - Kerjakan berurutan. Satu sesi AI = satu atau beberapa task; centang `[x]` saat selesai **dan** sudah dicek (build/test jalan).
 - Di sesi baru cukup bilang: **"Lanjutkan task berikutnya di TASKS.md"** (atau pakai skill `/next-task`).
-- Task yang tidak selesai sampai 31 Okt → pindah ke bagian **MVP 1.1**.
-- Prioritas jika waktu mepet: alur order end-to-end + chat > yang lain.
+- Target 31 Okt 2026 sudah lewat; pemilik setuju mundur (belum ada tanggal baru). Yang tidak mendesak pindah ke bagian **MVP 1.1**.
+- Prioritas: alur order end-to-end (sampai pembayaran, QC, ongkir, pencairan) > yang lain.
+- **Aturan:** selesai satu task → centang → commit (kode lalu dokumen, tanpa `Co-authored-by`) sebelum task berikutnya.
+
+**Status singkat (2026-11-06):** 17 dari 27 task selesai (T01–T16 dan T13b). Berikutnya: perubahan UI yang diminta pemilik (rinciannya belum diberikan), lalu **T17** pembayaran (menunggu data USDT/BCA/exchange dari pemilik), **T17b** layout admin, T18–T25. Rincian dan keadaan lingkungan dev ada di `AGENTS.md` bagian "Current status".
 
 Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 

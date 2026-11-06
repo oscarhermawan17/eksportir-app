@@ -90,21 +90,48 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 ## Current status
 
-Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth).
+Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-06**,
+commit `192b995`, working tree clean, 17 of 27 tasks done (T01–T16 and T13b).
 
-- Done: T01 monorepo · T02 database · T03 auth API · T04 RBAC · T05 web layout/login/register · T06 i18n (en/id/ru) ·
-  T07 seller onboarding (admin approves sellers) · T08 media upload (verified against real R2 on 2026-10-27) ·
-  T09 seller product CRUD · T10 admin listing review + manual translations (+ minimal public `GET /api/products`) ·
-  T11 manual USD/IDR exchange rate (owner sets it at `/admin/exchange-rate`; catalog returns `priceUsd`, null until a rate exists —
-  the owner still has to enter the first real rate) · T12 public catalog (`/products`, `/products/[id]`, `/sellers/[id]`,
-  search + category/type filters; order/ask buttons go to login for guests and are disabled for logged-in users until T13/T15).
-- Home page is built (hero, trust, steps, categories, latest products, FAQ). Navbar/footer still link to pages that do not exist yet (they show the 404 page): `/request`, `/how-it-works`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`, `/seller-guidelines`.
-- R2 dev setup: one bucket (`eksportir-testing`) serves as both public and private for now. Split off a separate private
-  bucket before real payment proofs / QC files exist (T17+).
-- Chat (T13, text only; attachments moved to MVP 1.1) and in-app notifications (T14: bell in the navbar, live over Socket.IO) are done. Orders so far: T15 request (buyer dialog on the product page, `/orders` list and detail for buyer, seller and admin, order chat, seller notification) and T16 responses (seller accepts, declines or proposes a lower quantity; buyer accepts the change or cancels; every step is a system message in the order chat plus a notification). Next: **T17** payment (3 methods; needs the owner's USDT network + wallet, BCA details and exchange-partner instructions), **T17b** admin layout, T18–T20, T21 password reset, then deploy T22–T25. Deploy plan: CI automatic on GitHub, CD manual over SSH, PostgreSQL in Docker on an Ubuntu VPS (T22/T23). `pnpm docs:api` regenerates `docs/API.md` after route changes.
-- Uncommitted work may exist — check `git status` before starting.
+**Done**
+- Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
+- Products: T08 R2 upload · T09 seller CRUD · T10 admin review + manual translations · T11 manual USD/IDR rate (owner, `/admin/exchange-rate`) ·
+  T12 public catalog (`/products`, `/products/[id]`, `/sellers/[id]`, search + filters). Home page (`/`) is built.
+- Chat and notifications: T13 chat over Socket.IO (drawer on the product page, `/messages` inbox; text only, attachments moved to MVP 1.1) ·
+  T13b admin-in-chat consent stored at sign-up · T14 in-app notifications (bell in the navbar, live).
+- Orders: T15 request (dialog on the product page, `/orders` list and detail, order chat, seller notification) · T16 responses (seller accepts /
+  declines / proposes a *lower* quantity; buyer accepts the change or cancels; each step = system message in the order chat + notification).
+  All transitions live in `nextOrderStatus()` in `packages/shared/src/orders.ts`.
+- Quality: lint and typecheck clean, 49 unit + 135 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
+
+**Next (in this order, unless the owner says otherwise)**
+1. **UI changes requested by the owner (2026-11-06) — details NOT given yet.** Ask which pages, what is wrong, and whether the BaliTrade tokens
+   stay. Do this before T17b so the admin layout follows the new look. `frontend-design` skill is advisory; tokens win (`docs/CONVENTIONS.md`).
+2. **T17 payment (3 methods).** Blocked on owner input, see "Waiting on the owner". Can start with placeholders in config if still missing.
+3. **T17b** admin layout (dark-teal sidebar, spec in `docs/DESIGN.md`), then T18 QC, T19 shipping + tracking, T20 completion + payout,
+   T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
+
+**Waiting on the owner**
+- T17: USDT network and the Binance wallet address, BCA account details, the partner exchange and the instructions buyers must read, and
+  whether exchange buyers need an amount in rubles. These belong in `.env`/config, never in code or chat.
+- The first real exchange rate (`/en/admin/exchange-rate`); without it "Request to order" is disabled and prices show "Price coming soon".
+- Decide later: seller response deadline and stock reservation for waiting orders (T16 has neither), QC tariff per zone (seed values are
+  placeholders and show up on orders), forbidden-goods list, native-speaker review of the id/ru texts.
+
+**Environment facts (dev)**
+- Dev database has only 2 accounts: `admin@balitrade.local` (seed; password = `ADMIN_PASSWORD` in `apps/api/.env`, still the public placeholder) and
+  `oscar.hermawan90@gmail.com` (SELLER, approved; no BUYER role, so it cannot order). There is no buyer account: register one at `/en/register`.
+  The database may be reset freely at this stage.
+- R2: one bucket (`eksportir-testing`) serves as both public and private for now; split a private bucket before real payment proofs exist (T17+).
+- Deploy plan: CI automatic on GitHub (T22), CD manual over SSH; **PostgreSQL is installed natively on the Ubuntu VPS, not in Docker**; only web
+  and api run as containers (`docs/ARCHITECTURE.md` §8). `NEXT_PUBLIC_API_URL` is baked into the web image at build time.
+- Navbar/footer still link to pages that do not exist (they show the 404 page): `/request`, `/how-it-works`, `/faq`, `/contact`, `/terms`,
+  `/privacy`, `/about`, `/seller-guidelines`.
+- `pnpm docs:api` regenerates `docs/API.md` after route changes. Browser checks were ad-hoc headless-Chrome scripts in a temp folder and are not
+  in the repo; recreate them with `puppeteer-core` when needed (login is limited to 5/min, so space out runs).
 
 ## Open questions (owner decisions still needed)
 
 QC fee per zone (seed values are placeholders) · final product category list and forbidden-goods list · sourcing fee / deposit /
-refund rules. Full list: `docs/BRAINSTORMING.md` section 15 and `docs/DECISIONS.md`.
+refund rules · payment details for T17 (see "Waiting on the owner") · seller response deadline and stock reservation ·
+exchange-rate buffer. Full list: `docs/BRAINSTORMING.md` section 15 and `docs/DECISIONS.md`.
