@@ -91,7 +91,7 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 ## Current status
 
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-06**,
-commit `20da0be`, working tree clean, 18 of 28 tasks done (T01–T16, T13b and T16b).
+commit `6bcaecf`, working tree clean, 19 of 29 tasks done (T01–T16, T13b, T16b and T16c).
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
@@ -105,14 +105,20 @@ commit `20da0be`, working tree clean, 18 of 28 tasks done (T01–T16, T13b and T
 - UI: T16b simplified navbar (logo + search + language + bell + round avatar menu; no permanent text links, so it never wraps) ·
   `/` is the catalog (category chips, listing-type filter, thin trust band) · `/products` removed · new `/how-it-works` holds the six steps,
   trust cards, payment methods, shipping, FAQ and the seller invitation.
+- T16c **home per role** (`homePathFor()` in `apps/web/src/lib/home-path.ts` decides where login lands and where the logo points):
+  seller → `/seller` dashboard, admin → admin area, buyer → `/`. Sellers and admins get "View the shop" in the account menu.
+  The seller account form moved to `/seller/account`. **Admin accounts are admin-only**: no "My orders" or "Sell on BaliTrade" in their
+  menu (a person who also trades uses a second account); the order list sits in the Admin group instead.
 - Quality: lint and typecheck clean, 49 unit + 135 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
 1. **T17 payment (3 methods).** Blocked on owner input, see "Waiting on the owner". Can start with placeholders in config if still missing.
 2. **T17b** admin layout: dark-teal left sidebar **plus a plain top bar** (page title, language switcher, messages icon, avatar menu) — the owner
    confirmed both on 2026-11-06; spec in `docs/DESIGN.md`. The messages icon lives in the top bar only, not also in the sidebar. Add a simple
-   Overview landing page (counts of pending sellers, listings and orders that need action). No buyer-management page: buyers are not moderated.
-   The admin links now sitting in the storefront avatar menu move into the sidebar there.
+   Overview landing page (counts of pending sellers, listings and orders that need action), modelled on the seller dashboard from T16c.
+   No buyer-management page: buyers are not moderated. The admin links now sitting in the storefront avatar menu move into the sidebar, and
+   `homePathFor()` should then point every admin role at `/admin` (today: OPS/OWNER → `/admin/sellers`, FINANCE → `/orders`).
+   Roles stay as they are for now: one admin account holds OWNER + FINANCE + OPS; splitting the work across separate admin accounts comes later.
 3. Then T18 QC, T19 shipping + tracking, T20 completion + payout, T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
 
 **Waiting on the owner**

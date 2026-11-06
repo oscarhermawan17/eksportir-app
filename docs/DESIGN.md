@@ -21,7 +21,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 | 7b | Pembayaran & upload bukti | Final | Stitch: `design-ui/google-stitch/07-b.html`; lihat catatan bagian 7b |
 | 8 | Detail order (approval QC, tagihan ongkir, tracking, terima barang) | Final | Stitch: `design-ui/google-stitch/08.html`; lihat catatan bagian 8. **Tahap desain Stitch selesai.** |
 | 9 | Ruang chat | Dilewati (dibuat saat implementasi) | Komponen sudah ada di chat drawer halaman 4 |
-| 10 | Dashboard penjual | Dilewati (dibuat saat implementasi) | Pola standar: listing, status approval, respons order request (accept/decline/propose change), QC |
+| 10 | Dashboard penjual | **Dibuat 2026-11-06 (T16c)** | `/seller` = dasbor: nama toko + status, 3 kartu angka (pesanan menunggu jawaban · produk tayang · produk menunggu ditinjau/menunggu penjual), tombol tambah & kelola produk. Formulir akun penjual pindah ke `/seller/account`. Tanpa sidebar: penjual hanya punya 3 halaman, navbar biasa sudah cukup |
 | 11 | Dashboard admin | Dilewati (dibuat saat implementasi) | Pola standar: approve listing/penjual, verifikasi pembayaran, upload laporan QC, tagihan ongkir, update tracking, kurs harian |
 | 12 | How It Works (halaman penjelasan lengkap: alur, QC, pembayaran, FAQ lengkap) | **Dibuat 2026-11-06 (T16b)** | `/how-it-works`: cara kerja 6 langkah, 4 kartu kepercayaan, metode bayar (3 kartu, tanpa detail rekening), pengiriman & pelacakan, FAQ 5 butir, ajakan jadi penjual. Jangkar `#payment` dan `#shipping` dipakai footer |
 
@@ -32,6 +32,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 Hal yang sengaja tidak direvisi di Stitch dan harus dibereskan saat implementasi. Detail per halaman ada di bagian "Catatan implementasi" masing-masing.
 
 - **Sumber kebenaran visual = design system `01-v4.html`** (token warna, font, radius 12px, ikon Lucide, badge, kartu, chat bubble). Halaman lain hanya acuan alur/struktur.
+- **Arti "halaman depan" berbeda per peran (T16c, 2026-11-06):** pembeli → `/` katalog, penjual → `/seller` dasbor, admin → area admin. Login dan logo mengikuti satu aturan di `homePathFor()` (`apps/web/src/lib/home-path.ts`); penjual dan admin punya "Lihat toko" di menu avatar. **Akun admin khusus admin** — menunya tanpa "Pesanan saya" dan "Jual di BaliTrade".
 - **Navbar & footer = 1 komponen standar** untuk semua halaman. **Navbar diubah 2026-11-06 (T16b)** dan tidak lagi mengikuti design system di titik ini: isinya hanya logo, kolom pencarian, language switcher, lonceng notifikasi, dan avatar bulat (tanpa satu pun tautan teks permanen — halaman pribadi dan admin ada di menu avatar). Alasannya tercatat di `docs/DECISIONS.md`. Footer tetap: About, For Buyers, For Sellers, Support (FAQ, Contact, Terms of Service, Privacy Policy); abaikan variasi link karangan di tiap halaman Stitch.
 - **Jangan pakai kata "escrow"** di UI → "Payment protection" / "Payment held by BaliTrade until delivery".
 - **Tanpa janji yang belum diputuskan**: SLA respons/verifikasi, waktu kirim, jadwal mingguan/Jumat, rute langsung, dokumen bea cukai negara tujuan, sertifikasi.
