@@ -141,8 +141,15 @@ commit `6bcaecf`, working tree clean, 19 of 29 tasks done (T01–T16, T13b, T16b
 - Footer still links to pages that do not exist (they show the 404 page): `/request`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`,
   `/seller-guidelines`. `/how-it-works` exists since T16b (with the `#payment` and `#shipping` anchors the footer uses). The navbar links to
   nothing that is missing: it has no text links at all.
-- `pnpm docs:api` regenerates `docs/API.md` after route changes. Browser checks were ad-hoc headless-Chrome scripts in a temp folder and are not
-  in the repo; recreate them with `puppeteer-core` when needed (login is limited to 5/min, so space out runs).
+- `pnpm docs:api` regenerates `docs/API.md` after route changes.
+- **Browser checks (updated 2026-11-06):** the owner has granted Claude in Chrome access, which drives their real Chrome and is now the easiest
+  way to check `localhost:3000` — no script needed. Notes: the Claude desktop app's own browser pane is often hidden, and while hidden it cannot
+  screenshot or scroll (read it with `get_page_text` / `read_page` instead), and its `resize_window` emulates a viewport, which is how the mobile
+  layout was checked; Chrome's `resize_window` did not change what the screenshot showed. Older ad-hoc `puppeteer-core` scripts are not in the repo.
+  Login is limited to 5/min, so space out runs.
+- **Pattern for checking a role you have no account for:** write a throwaway fixture script in the scratchpad (register through the API so the
+  password is hashed properly, then adjust status/products with Prisma), check it in the browser, then delete the account again and confirm the
+  row counts are back. Used for the T16c seller dashboard; nothing of it belongs in the repo or in `pnpm db:seed`.
 
 ## Open questions (owner decisions still needed)
 
