@@ -45,7 +45,7 @@ export function ProductDetail({ id }: { id: string }) {
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
       <nav aria-label={t('title')} className="mb-5 text-sm text-muted">
-        <Link href="/products" className="hover:text-primary hover:underline">
+        <Link href="/" className="hover:text-primary hover:underline">
           ← {t('back')}
         </Link>
       </nav>

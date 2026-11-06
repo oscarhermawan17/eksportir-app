@@ -17,7 +17,7 @@ export function NavSearch({ className = '' }: { className?: string }) {
   const q = params.get('q') ?? '';
 
   return (
-    <form action={`/${locale}/products`} method="get" role="search" className={`relative ${className}`}>
+    <form action={`/${locale}`} method="get" role="search" className={`relative ${className}`}>
       <label htmlFor={id} className="sr-only">
         {t('searchLabel')}
       </label>

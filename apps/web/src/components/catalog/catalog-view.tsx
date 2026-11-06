@@ -2,18 +2,22 @@
 
 import { PRODUCT_CATEGORIES, PRODUCT_TYPES } from '@balitrade/shared';
 import type { CatalogProduct, ProductCategory, ProductType } from '@balitrade/shared';
-import { Search } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { ProductCard } from '@/components/catalog/product-card';
 import { Button, buttonClasses } from '@/components/ui/button';
-import { inputClasses } from '@/components/ui/field';
 import { useRouter } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
 
 type Result = { key: string; products: CatalogProduct[] | null };
+type Search = { q: string; category: ProductCategory | ''; type: ProductType | '' };
 
+const CHIP = 'inline-flex h-9 items-center rounded-button border px-3.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+const CHIP_ON = `${CHIP} border-primary bg-primary text-white`;
+const CHIP_OFF = `${CHIP} border-border bg-card text-text hover:border-primary hover:text-primary`;
+
+/** The catalog, which is also the landing page. The search field itself lives in the navbar. */
 export function CatalogView() {
   const t = useTranslations('Catalog');
   const tProducts = useTranslations('Products');
@@ -21,7 +25,6 @@ export function CatalogView() {
   const locale = useLocale();
   const router = useRouter();
   const params = useSearchParams();
-  const formRef = useRef<HTMLFormElement>(null);
 
   // The URL is the single source of truth: bookmarks and the back button keep working.
   const q = params.get('q')?.trim() ?? '';
@@ -56,79 +59,60 @@ export function CatalogView() {
   // A result that belongs to an older search is treated as "still loading".
   const current = result?.key === `${key}#${attempt}` ? result : null;
 
-  function search(next: { q: string; category: ProductCategory | ''; type: ProductType | '' }) {
+  function search(next: Search) {
     const nextQuery: Record<string, string> = {};
     if (next.q) nextQuery.q = next.q;
     if (next.category) nextQuery.category = next.category;
     if (next.type) nextQuery.type = next.type;
-    router.replace({ pathname: '/products', query: nextQuery });
-  }
-
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    search({
-      q: String(data.get('q') ?? '').trim(),
-      category: (String(data.get('category') ?? '') as ProductCategory | ''),
-      type: (String(data.get('type') ?? '') as ProductType | ''),
-    });
+    router.replace({ pathname: '/', query: nextQuery });
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:py-14">
-      <h1 className="text-3xl font-bold text-text">{t('title')}</h1>
+    <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-10">
+      <h1 className="text-2xl font-bold text-text">{q ? t('resultsFor', { q }) : t('title')}</h1>
 
-      {/* Remounted when the URL changes, so the fields always show the active search. */}
-      <form
-        key={key}
-        ref={formRef}
-        onSubmit={onSubmit}
-        role="search"
-        className="mt-6 grid gap-3 rounded-card border border-border bg-card p-4 shadow-sm sm:grid-cols-[1fr_auto_auto_auto]"
-      >
-        <div>
-          <label htmlFor="catalog-q" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-text">
-            {t('searchLabel')}
-          </label>
-          <input
-            id="catalog-q"
-            name="q"
-            type="search"
-            defaultValue={q}
-            maxLength={100}
-            placeholder={t('searchPlaceholder')}
-            className={inputClasses}
-          />
-        </div>
-        <div>
-          <label htmlFor="catalog-category" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-text">
-            {t('categoryLabel')}
-          </label>
-          <select
-            id="catalog-category"
-            name="category"
-            defaultValue={category}
-            onChange={() => formRef.current?.requestSubmit()}
-            className={inputClasses}
-          >
-            <option value="">{t('allCategories')}</option>
-            {PRODUCT_CATEGORIES.map((value) => (
-              <option key={value} value={value}>
+      {/* Categories are the main filter, so they are visible rather than hidden in a dropdown. */}
+      {/* Narrow screens scroll the row sideways; from sm up there is room to wrap instead. */}
+      <nav aria-label={t('categoryLabel')} className="-mx-4 mt-5 overflow-x-auto px-4 pb-1 sm:mx-0 sm:overflow-visible sm:px-0">
+        <ul className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
+          <li>
+            <button
+              type="button"
+              aria-current={category === '' ? 'true' : undefined}
+              onClick={() => search({ q, category: '', type })}
+              className={category === '' ? CHIP_ON : CHIP_OFF}
+            >
+              {t('allCategories')}
+            </button>
+          </li>
+          {PRODUCT_CATEGORIES.map((value) => (
+            <li key={value}>
+              <button
+                type="button"
+                aria-current={category === value ? 'true' : undefined}
+                onClick={() => search({ q, category: value, type })}
+                className={category === value ? CHIP_ON : CHIP_OFF}
+              >
                 {tProducts(`categories.${value}`)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="catalog-type" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-text">
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <p className="text-sm font-medium text-muted" aria-live="polite">
+          {current?.products ? t('resultCount', { count: current.products.length }) : ''}
+        </p>
+        <div className="ml-auto flex items-center gap-2">
+          <label htmlFor="catalog-type" className="text-sm font-medium text-muted">
             {t('typeLabel')}
           </label>
           <select
             id="catalog-type"
-            name="type"
-            defaultValue={type}
-            onChange={() => formRef.current?.requestSubmit()}
-            className={inputClasses}
+            value={type}
+            onChange={(event) => search({ q, category, type: event.target.value as ProductType | '' })}
+            className="h-9 rounded-button border border-border bg-card px-3 text-sm font-medium text-text transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
           >
             <option value="">{t('allTypes')}</option>
             {PRODUCT_TYPES.map((value) => (
@@ -137,27 +121,15 @@ export function CatalogView() {
               </option>
             ))}
           </select>
+          {filtered ? (
+            <button type="button" onClick={() => search({ q: '', category: '', type: '' })} className={buttonClasses('ghost', 'h-9 px-3')}>
+              {t('clear')}
+            </button>
+          ) : null}
         </div>
-        <div className="flex items-end">
-          <Button type="submit" className="w-full sm:w-auto">
-            <Search className="h-4 w-4" aria-hidden="true" />
-            {t('searchButton')}
-          </Button>
-        </div>
-      </form>
-
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3" aria-live="polite">
-        <p className="text-sm font-medium text-muted">
-          {current?.products ? t('resultCount', { count: current.products.length }) : ''}
-        </p>
-        {filtered ? (
-          <button type="button" onClick={() => search({ q: '', category: '', type: '' })} className={buttonClasses('ghost', 'h-9 px-3')}>
-            {t('clear')}
-          </button>
-        ) : null}
       </div>
 
-      <div className="mt-4">
+      <div className="mt-5">
         {current === null ? (
           <p className="text-muted" aria-busy="true">
             {t('loading')}
