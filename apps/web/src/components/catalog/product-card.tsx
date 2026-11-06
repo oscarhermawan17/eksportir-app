@@ -18,12 +18,19 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
 
   return (
     <article className="flex w-full flex-col overflow-hidden rounded-card border border-border bg-card shadow-sm transition hover:shadow-md">
-      <Link href={`/products/${product.id}`} tabIndex={-1} aria-hidden="true" className="relative block aspect-[4/3] bg-background">
+      {/* The media is positioned, not in flow: as a flex item this box would otherwise take its height
+          from the photo (a portrait shot made the card half as tall again) instead of from the ratio. */}
+      <Link
+        href={`/products/${product.id}`}
+        tabIndex={-1}
+        aria-hidden="true"
+        className="relative block aspect-[4/3] w-full shrink-0 overflow-hidden bg-background"
+      >
         {cover?.url ? (
           // eslint-disable-next-line @next/next/no-img-element -- remote R2 image, sized by CSS
-          <img src={cover.url} alt="" loading="lazy" className="h-full w-full object-cover" />
+          <img src={cover.url} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
         ) : (
-          <span className="flex h-full w-full flex-col items-center justify-center gap-1 text-sm text-muted">
+          <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-sm text-muted">
             <ImageOff className="h-6 w-6" aria-hidden="true" />
             {t('noPhoto')}
           </span>
