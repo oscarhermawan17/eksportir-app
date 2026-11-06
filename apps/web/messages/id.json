@@ -16,9 +16,11 @@
     "accountMenu": "Menu akun {name}",
     "orders": "Pesanan saya",
     "messages": "Pesan",
+    "viewShop": "Lihat toko",
     "sellerArea": "Akun penjual saya",
     "sell": "Jual di BaliTrade",
     "adminSection": "Admin",
+    "adminOrders": "Pesanan",
     "adminSellers": "Penjual",
     "adminProducts": "Tinjau produk",
     "adminExchangeRate": "Kurs",
@@ -203,6 +205,17 @@
     "noAccess": "Anda tidak memiliki akses ke halaman ini."
   },
   "Seller": {
+    "home": {
+      "title": "Dasbor penjual",
+      "toAnswer": "Pesanan menunggu jawaban Anda",
+      "live": "Produk tayang di katalog",
+      "waiting": "Produk menunggu ditinjau atau menunggu Anda",
+      "addProduct": "Tambah produk",
+      "allProducts": "Semua produk saya",
+      "accountLink": "Akun penjual",
+      "noProducts": "Anda belum punya produk. Tambahkan yang pertama, nanti tim kami meninjaunya sebelum tayang di katalog.",
+      "notAppliedText": "Anda belum punya akun penjual. Ajukan dulu, nanti tim kami meninjaunya."
+    },
     "title": "Akun penjual",
     "applyTitle": "Menjadi penjual",
     "applyIntro": "Ceritakan tentang usaha Anda. BaliTrade meninjau setiap penjual sebelum bisa memasang produk.",

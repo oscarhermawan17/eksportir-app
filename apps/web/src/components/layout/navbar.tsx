@@ -6,6 +6,7 @@ import { LanguageSwitcher } from '@/components/layout/language-switcher';
 import { NavSearch } from '@/components/layout/nav-search';
 import { NotificationBell } from '@/components/notifications/notification-bell';
 import { Logo } from '@/components/ui/logo';
+import { homePathFor } from '@/lib/home-path';
 
 /**
  * Logo, search and the account avatar — no permanent text links, so the bar stays one line in every
@@ -18,7 +19,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6">
         <div className="flex h-16 items-center gap-4">
-          <Logo />
+          <Logo href={homePathFor(user)} />
 
           {/* Wide screens: search sits in the bar. Narrow screens: it moves to its own row below. */}
           <NavSearch className="hidden max-w-xl flex-1 md:block" />

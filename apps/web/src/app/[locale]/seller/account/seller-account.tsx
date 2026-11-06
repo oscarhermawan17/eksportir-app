@@ -15,7 +15,7 @@ type State =
   | { kind: 'error' }
   | { kind: 'ready'; profile: SellerProfileView | null; zones: QcZoneOption[] };
 
-export function SellerDashboard() {
+export function SellerAccountPage() {
   return <LoginGate>{(user) => <SellerAccount defaultName={user.name} />}</LoginGate>;
 }
 

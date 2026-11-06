@@ -7,6 +7,7 @@ import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Field, FormErrors } from '@/components/ui/field';
 import { Link, useRouter } from '@/i18n/navigation';
+import { homePathFor } from '@/lib/home-path';
 import { authErrorKey } from '@/lib/api';
 
 export function LoginForm() {
@@ -24,7 +25,7 @@ export function LoginForm() {
     try {
       const user = await login(String(form.get('email')), String(form.get('password')));
       // Continue in the language saved on the account.
-      router.push('/', { locale: user.locale });
+      router.push(homePathFor(user), { locale: user.locale });
     } catch (error) {
       setErrors([t(`errors.${authErrorKey(error)}`)]);
       setSubmitting(false);

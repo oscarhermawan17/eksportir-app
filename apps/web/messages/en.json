@@ -16,9 +16,11 @@
     "accountMenu": "Account menu for {name}",
     "orders": "My orders",
     "messages": "Messages",
+    "viewShop": "View the shop",
     "sellerArea": "My seller account",
     "sell": "Sell on BaliTrade",
     "adminSection": "Admin",
+    "adminOrders": "Orders",
     "adminSellers": "Sellers",
     "adminProducts": "Review products",
     "adminExchangeRate": "Exchange rate",
@@ -203,6 +205,17 @@
     "noAccess": "You do not have access to this page."
   },
   "Seller": {
+    "home": {
+      "title": "Seller dashboard",
+      "toAnswer": "Orders waiting for your answer",
+      "live": "Products live in the catalog",
+      "waiting": "Products waiting on review or on you",
+      "addProduct": "Add a product",
+      "allProducts": "All my products",
+      "accountLink": "Seller account",
+      "noProducts": "You have no products yet. Add your first one and our team will review it before it appears in the catalog.",
+      "notAppliedText": "You do not have a seller account yet. Apply and our team will review it."
+    },
     "title": "Seller account",
     "applyTitle": "Become a seller",
     "applyIntro": "Tell us about your business. BaliTrade reviews every seller before they can list products.",
