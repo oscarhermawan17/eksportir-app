@@ -19,11 +19,7 @@
     "viewShop": "Lihat toko",
     "sellerArea": "Akun penjual saya",
     "sell": "Jual di BaliTrade",
-    "adminSection": "Admin",
-    "adminOrders": "Pesanan",
-    "adminSellers": "Penjual",
-    "adminProducts": "Tinjau produk",
-    "adminExchangeRate": "Kurs",
+    "adminArea": "Area admin",
     "login": "Masuk",
     "signup": "Daftar",
     "logout": "Keluar"
@@ -246,6 +242,30 @@
     "loadError": "Kami tidak dapat memuat akun penjual Anda."
   },
   "Admin": {
+    "adminBadge": "Admin",
+    "sidebarLabel": "Menu admin",
+    "openMenu": "Buka menu admin",
+    "closeMenu": "Tutup menu admin",
+    "backToSite": "← Kembali ke toko",
+    "inbox": "Kotak masuk",
+    "nav": {
+      "overview": "Ringkasan",
+      "sellers": "Penjual",
+      "listings": "Listing",
+      "orders": "Pesanan",
+      "rates": "Kurs"
+    },
+    "overview": {
+      "title": "Yang perlu Anda kerjakan",
+      "intro": "Semua yang sedang menunggu tim BaliTrade.",
+      "pendingSellers": "Penjual menunggu persetujuan",
+      "pendingListings": "Listing menunggu ditinjau",
+      "openOrders": "Pesanan masih berjalan",
+      "rate": "Kurs yang berlaku: Rp {rate} per USD.",
+      "rateSet": "Diisi {date}.",
+      "noRate": "Kurs belum diisi, jadi pembeli belum bisa memesan dan harga tampil \"Price coming soon\".",
+      "loadError": "Ringkasan tidak bisa dimuat."
+    },
     "sellersTitle": "Pengajuan penjual",
     "filter": {
       "PENDING": "Menunggu",

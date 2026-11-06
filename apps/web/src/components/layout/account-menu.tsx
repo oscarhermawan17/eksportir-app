@@ -1,7 +1,7 @@
 'use client';
 
 import type { AuthUser } from '@balitrade/shared';
-import { ChevronDown, ClipboardList, Coins, LogOut, MessageSquare, ShoppingBag, Store, UserCheck } from 'lucide-react';
+import { ChevronDown, ClipboardList, LayoutDashboard, LogOut, MessageSquare, ShoppingBag, Store } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
@@ -56,8 +56,6 @@ export function AccountMenu({ user }: { user: AuthUser }) {
   // An admin account neither buys nor sells: someone who also trades uses a separate account.
   const admin = isAdmin(user);
   const isSeller = user.roles.includes('SELLER');
-  const isOps = user.roles.some((role) => role === 'ADMIN_OPS' || role === 'ADMIN_OWNER');
-  const isOwner = user.roles.includes('ADMIN_OWNER');
 
   function item(href: string, icon: ReactNode, label: string) {
     return (
@@ -106,15 +104,10 @@ export function AccountMenu({ user }: { user: AuthUser }) {
             {admin || isSeller ? item('/', <ShoppingBag className="h-4 w-4 text-muted" aria-hidden="true" />, t('viewShop')) : null}
           </div>
 
+          {/* The admin pages live in the sidebar of the admin area, so one entry is enough here. */}
           {admin ? (
             <div className="border-t border-border py-1.5">
-              <p className="px-3 pb-1 pt-0.5 text-xs font-bold uppercase tracking-wider text-muted">{t('adminSection')}</p>
-              {item('/orders', <ClipboardList className="h-4 w-4 text-muted" aria-hidden="true" />, t('adminOrders'))}
-              {isOps ? item('/admin/sellers', <UserCheck className="h-4 w-4 text-muted" aria-hidden="true" />, t('adminSellers')) : null}
-              {isOps ? item('/admin/products', <ClipboardList className="h-4 w-4 text-muted" aria-hidden="true" />, t('adminProducts')) : null}
-              {isOwner
-                ? item('/admin/exchange-rate', <Coins className="h-4 w-4 text-muted" aria-hidden="true" />, t('adminExchangeRate'))
-                : null}
+              {item('/admin', <LayoutDashboard className="h-4 w-4 text-muted" aria-hidden="true" />, t('adminArea'))}
             </div>
           ) : null}
 

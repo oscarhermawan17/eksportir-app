@@ -3,10 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 import { AuthProvider } from '@/components/auth/auth-provider';
-import { Footer } from '@/components/layout/footer';
-import { Navbar } from '@/components/layout/navbar';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
 
@@ -25,6 +22,10 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
   return { title: t('title'), description: t('description') };
 }
 
+/**
+ * Document, translations and session only. The chrome around a page differs per area and lives in the
+ * route groups: `(shop)` has the storefront navbar and footer, `(admin)` has the sidebar and top bar.
+ */
 export default async function LocaleLayout({ children, params }: LayoutProps<'/[locale]'>) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
@@ -35,16 +36,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
     <html lang={locale} className={`${jakarta.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <NextIntlClientProvider>
-          <AuthProvider>
-            {/* usePathname() inside Navbar needs a Suspense boundary on routes with a dynamic segment such as [id]. */}
-            <Suspense fallback={<div className="h-16 border-b border-border bg-card" aria-hidden="true" />}>
-              <Navbar />
-            </Suspense>
-            <main className="flex flex-1 flex-col">{children}</main>
-            <Suspense fallback={null}>
-              <Footer />
-            </Suspense>
-          </AuthProvider>
+          <AuthProvider>{children}</AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

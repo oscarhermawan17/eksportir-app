@@ -19,11 +19,7 @@
     "viewShop": "Открыть магазин",
     "sellerArea": "Мой аккаунт продавца",
     "sell": "Продавайте на BaliTrade",
-    "adminSection": "Админ",
-    "adminOrders": "Заказы",
-    "adminSellers": "Продавцы",
-    "adminProducts": "Проверка товаров",
-    "adminExchangeRate": "Курс валюты",
+    "adminArea": "Админ-панель",
     "login": "Войти",
     "signup": "Регистрация",
     "logout": "Выйти"
@@ -246,6 +242,30 @@
     "loadError": "Не удалось загрузить ваш аккаунт продавца."
   },
   "Admin": {
+    "adminBadge": "Админ",
+    "sidebarLabel": "Меню администратора",
+    "openMenu": "Открыть меню администратора",
+    "closeMenu": "Закрыть меню администратора",
+    "backToSite": "← Вернуться в магазин",
+    "inbox": "Входящие",
+    "nav": {
+      "overview": "Обзор",
+      "sellers": "Продавцы",
+      "listings": "Объявления",
+      "orders": "Заказы",
+      "rates": "Курс валюты"
+    },
+    "overview": {
+      "title": "Что требует внимания",
+      "intro": "Всё, что сейчас ждёт команду BaliTrade.",
+      "pendingSellers": "Продавцы ждут одобрения",
+      "pendingListings": "Объявления ждут проверки",
+      "openOrders": "Заказов в работе",
+      "rate": "Действующий курс: {rate} IDR за USD.",
+      "rateSet": "Установлен {date}.",
+      "noRate": "Курс ещё не задан, поэтому покупатели не могут оформить заказ, а вместо цены показывается «Price coming soon».",
+      "loadError": "Не удалось загрузить обзор."
+    },
     "sellersTitle": "Заявки продавцов",
     "filter": {
       "PENDING": "На проверке",

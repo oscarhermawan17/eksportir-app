@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
 
-export function OrdersList() {
-  return <LoginGate>{() => <Orders />}</LoginGate>;
+/** `basePath` decides which area the rows link into: the shop (default) or the admin layout. */
+export function OrdersList({ basePath = '/orders' }: { basePath?: string }) {
+  return <LoginGate>{() => <Orders basePath={basePath} />}</LoginGate>;
 }
 
-function Orders() {
+function Orders({ basePath }: { basePath: string }) {
   const t = useTranslations('Orders');
   const tCommon = useTranslations('Common');
   const format = useFormatter();
@@ -72,7 +73,7 @@ function Orders() {
           {orders.map((order) => (
             <li key={order.id}>
               <Link
-                href={`/orders/${order.id}`}
+                href={`${basePath}/${order.id}`}
                 className="block rounded-card border border-border bg-card p-4 shadow-sm transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
               >
                 <span className="flex flex-wrap items-center justify-between gap-2">

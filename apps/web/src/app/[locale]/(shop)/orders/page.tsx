@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { OrdersList } from './orders-list';
+import { OrdersList } from '@/components/orders/orders-list';
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/orders'>): Promise<Metadata> {
   const { locale } = await params;

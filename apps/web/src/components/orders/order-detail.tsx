@@ -12,11 +12,12 @@ import { ApiError, apiFetch } from '@/lib/api';
 
 type State = { id: string; order: OrderView | null; notFound: boolean };
 
-export function OrderDetail({ id }: { id: string }) {
-  return <LoginGate>{() => <Detail id={id} />}</LoginGate>;
+/** `basePath` decides which area the back link points at: the shop (default) or the admin layout. */
+export function OrderDetail({ id, basePath = '/orders' }: { id: string; basePath?: string }) {
+  return <LoginGate>{() => <Detail id={id} basePath={basePath} />}</LoginGate>;
 }
 
-function Detail({ id }: { id: string }) {
+function Detail({ id, basePath }: { id: string; basePath: string }) {
   const t = useTranslations('Orders');
   const tCommon = useTranslations('Common');
   const [attempt, setAttempt] = useState(0);
@@ -52,7 +53,7 @@ function Detail({ id }: { id: string }) {
   return (
     <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:py-10">
       <nav className="mb-5 text-sm text-muted">
-        <Link href="/orders" className="hover:text-primary hover:underline">
+        <Link href={basePath} className="hover:text-primary hover:underline">
           ← {t('back')}
         </Link>
       </nav>

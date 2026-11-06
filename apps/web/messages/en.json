@@ -19,11 +19,7 @@
     "viewShop": "View the shop",
     "sellerArea": "My seller account",
     "sell": "Sell on BaliTrade",
-    "adminSection": "Admin",
-    "adminOrders": "Orders",
-    "adminSellers": "Sellers",
-    "adminProducts": "Review products",
-    "adminExchangeRate": "Exchange rate",
+    "adminArea": "Admin area",
     "login": "Log in",
     "signup": "Sign up",
     "logout": "Log out"
@@ -246,6 +242,30 @@
     "loadError": "We could not load your seller account."
   },
   "Admin": {
+    "adminBadge": "Admin",
+    "sidebarLabel": "Admin menu",
+    "openMenu": "Open the admin menu",
+    "closeMenu": "Close the admin menu",
+    "backToSite": "← Back to the shop",
+    "inbox": "Inbox",
+    "nav": {
+      "overview": "Overview",
+      "sellers": "Sellers",
+      "listings": "Listings",
+      "orders": "Orders",
+      "rates": "Exchange rate"
+    },
+    "overview": {
+      "title": "What needs you",
+      "intro": "Everything waiting on the BaliTrade team right now.",
+      "pendingSellers": "Sellers waiting for approval",
+      "pendingListings": "Listings waiting for review",
+      "openOrders": "Orders still running",
+      "rate": "Exchange rate in force: Rp {rate} per USD.",
+      "rateSet": "Set {date}.",
+      "noRate": "No exchange rate is set yet, so buyers cannot order and prices show \"Price coming soon\".",
+      "loadError": "We could not load the overview."
+    },
     "sellersTitle": "Seller applications",
     "filter": {
       "PENDING": "Pending",
