@@ -91,30 +91,34 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 ## Current status
 
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-06**,
-commit `192b995`, working tree clean, 17 of 27 tasks done (T01–T16 and T13b).
+commit `20da0be`, working tree clean, 18 of 28 tasks done (T01–T16, T13b and T16b).
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
 - Products: T08 R2 upload · T09 seller CRUD · T10 admin review + manual translations · T11 manual USD/IDR rate (owner, `/admin/exchange-rate`) ·
-  T12 public catalog (`/products`, `/products/[id]`, `/sellers/[id]`, search + filters). Home page (`/`) is built.
+  T12 public catalog (`/sellers/[id]`, search + filters; the catalog itself lives at `/` since T16b, detail at `/products/[id]`).
 - Chat and notifications: T13 chat over Socket.IO (drawer on the product page, `/messages` inbox; text only, attachments moved to MVP 1.1) ·
   T13b admin-in-chat consent stored at sign-up · T14 in-app notifications (bell in the navbar, live).
 - Orders: T15 request (dialog on the product page, `/orders` list and detail, order chat, seller notification) · T16 responses (seller accepts /
   declines / proposes a *lower* quantity; buyer accepts the change or cancels; each step = system message in the order chat + notification).
   All transitions live in `nextOrderStatus()` in `packages/shared/src/orders.ts`.
+- UI: T16b simplified navbar (logo + search + language + bell + round avatar menu; no permanent text links, so it never wraps) ·
+  `/` is the catalog (category chips, listing-type filter, thin trust band) · `/products` removed · new `/how-it-works` holds the six steps,
+  trust cards, payment methods, shipping, FAQ and the seller invitation.
 - Quality: lint and typecheck clean, 49 unit + 135 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
-1. **UI changes requested by the owner (2026-11-06) — details NOT given yet.** Ask which pages, what is wrong, and whether the BaliTrade tokens
-   stay. Do this before T17b so the admin layout follows the new look. `frontend-design` skill is advisory; tokens win (`docs/CONVENTIONS.md`).
-2. **T17 payment (3 methods).** Blocked on owner input, see "Waiting on the owner". Can start with placeholders in config if still missing.
-3. **T17b** admin layout (dark-teal sidebar, spec in `docs/DESIGN.md`), then T18 QC, T19 shipping + tracking, T20 completion + payout,
-   T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
+1. **T17 payment (3 methods).** Blocked on owner input, see "Waiting on the owner". Can start with placeholders in config if still missing.
+2. **T17b** admin layout: dark-teal left sidebar **plus a plain top bar** (page title, language switcher, messages icon, avatar menu) — the owner
+   confirmed both on 2026-11-06; spec in `docs/DESIGN.md`. The messages icon lives in the top bar only, not also in the sidebar. Add a simple
+   Overview landing page (counts of pending sellers, listings and orders that need action). No buyer-management page: buyers are not moderated.
+   The admin links now sitting in the storefront avatar menu move into the sidebar there.
+3. Then T18 QC, T19 shipping + tracking, T20 completion + payout, T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
 
 **Waiting on the owner**
 - T17: USDT network and the Binance wallet address, BCA account details, the partner exchange and the instructions buyers must read, and
   whether exchange buyers need an amount in rubles. These belong in `.env`/config, never in code or chat.
-- The first real exchange rate (`/en/admin/exchange-rate`); without it "Request to order" is disabled and prices show "Price coming soon".
+- A real exchange rate. A dev value of **Rp 18,100 / USD** was entered on 2026-11-06 so the catalog could be judged; replace it with the real one.
 - Decide later: seller response deadline and stock reservation for waiting orders (T16 has neither), QC tariff per zone (seed values are
   placeholders and show up on orders), forbidden-goods list, native-speaker review of the id/ru texts.
 
@@ -122,11 +126,15 @@ commit `192b995`, working tree clean, 17 of 27 tasks done (T01–T16 and T13b).
 - Dev database has only 2 accounts: `admin@balitrade.local` (seed; password = `ADMIN_PASSWORD` in `apps/api/.env`, still the public placeholder) and
   `oscar.hermawan90@gmail.com` (SELLER, approved; no BUYER role, so it cannot order). There is no buyer account: register one at `/en/register`.
   The database may be reset freely at this stage.
+- Sample data (2026-11-06, dev only): 12 approved products on the "Oscar Testing" seller across 7 categories, $2.49–$132.60, plus the Rp 18,100
+  rate. Their photos are **generated placeholders** labelled "BaliTrade sample", not real product photos, and their id/ru texts are AI-written.
+  The throwaway script is not in the repo; `pnpm db:seed` does not create them.
 - R2: one bucket (`eksportir-testing`) serves as both public and private for now; split a private bucket before real payment proofs exist (T17+).
 - Deploy plan: CI automatic on GitHub (T22), CD manual over SSH; **PostgreSQL is installed natively on the Ubuntu VPS, not in Docker**; only web
   and api run as containers (`docs/ARCHITECTURE.md` §8). `NEXT_PUBLIC_API_URL` is baked into the web image at build time.
-- Navbar/footer still link to pages that do not exist (they show the 404 page): `/request`, `/how-it-works`, `/faq`, `/contact`, `/terms`,
-  `/privacy`, `/about`, `/seller-guidelines`.
+- Footer still links to pages that do not exist (they show the 404 page): `/request`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`,
+  `/seller-guidelines`. `/how-it-works` exists since T16b (with the `#payment` and `#shipping` anchors the footer uses). The navbar links to
+  nothing that is missing: it has no text links at all.
 - `pnpm docs:api` regenerates `docs/API.md` after route changes. Browser checks were ad-hoc headless-Chrome scripts in a temp folder and are not
   in the repo; recreate them with `puppeteer-core` when needed (login is limited to 5/min, so space out runs).
 

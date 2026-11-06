@@ -12,8 +12,8 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 | # | Halaman | Status | Catatan |
 |---|---|---|---|
 | 1 | Design system | Final | Stitch: `design-ui/google-stitch/01-v4.html` (acuan); draf lama 01, 01-v2, 01-v3 dan 02 dihapus 2026-10-30, masih ada di riwayat git; hasil AI Studio (pembanding) sudah dihapus dari repo |
-| 2 | Landing page | **Diimplementasikan (2026-10-30, versi ringkas)** | Stitch: `design-ui/google-stitch/02-lengkap.html` (acuan). Dibangun: hero (pencarian + kolase foto produk asli), 4 kartu kepercayaan, cara kerja 6 langkah, kategori, produk terbaru dari API, ajakan jadi penjual, FAQ 5 butir. **Belum**: banner "Request a product", pratinjau laporan QC, kartu metode bayar, tautan "How it works" (halamannya belum ada). Teks mengikuti catatan implementasi (tanpa "escrow", janji, jadwal, atau klaim rute) |
-| 3 | Katalog / pencarian produk | Final | Stitch: `design-ui/google-stitch/03.html` (acuan alur); ada pergeseran tema visual, lihat catatan bagian 3 |
+| 2 | Landing page | **Dibubarkan 2026-11-06 (T16b)** | Halaman depan `/` sekarang **adalah katalog** (lihat baris 3). Yang dulu ada di sini pindah ke `/how-it-works` (baris 12): 4 kartu kepercayaan, cara kerja 6 langkah, FAQ, ajakan jadi penjual. Hero, kolase foto, dan kisi kategori dihapus. Sisa di halaman depan: satu baris tipis berisi 3 butir kepercayaan + tautan "How it works" dan "Sell on BaliTrade". Spesifikasi lama ada di riwayat git |
+| 3 | Katalog / pencarian produk | Final (jadi halaman depan 2026-11-06) | Stitch: `design-ui/google-stitch/03.html` (acuan alur); ada pergeseran tema visual, lihat catatan bagian 3. Sejak T16b katalog berada di `/` (bukan `/products`), kolom pencarian pindah ke navbar, dan filter kategori jadi baris chip |
 | 4 | Detail produk (+ chat bertiga) | Final | Stitch: `design-ui/google-stitch/04.html`; lihat catatan bagian 4. Keputusan cart & varian sudah diambil (BRAINSTORMING 5a) |
 | 5 | Profil penjual | Final | Stitch: `design-ui/google-stitch/05.html` (acuan alur); lihat catatan bagian 5 |
 | 6 | Form Request (sourcing) | Final | Stitch: `design-ui/google-stitch/06.html` (acuan alur); lihat catatan bagian 6 |
@@ -23,7 +23,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 | 9 | Ruang chat | Dilewati (dibuat saat implementasi) | Komponen sudah ada di chat drawer halaman 4 |
 | 10 | Dashboard penjual | Dilewati (dibuat saat implementasi) | Pola standar: listing, status approval, respons order request (accept/decline/propose change), QC |
 | 11 | Dashboard admin | Dilewati (dibuat saat implementasi) | Pola standar: approve listing/penjual, verifikasi pembayaran, upload laporan QC, tagihan ongkir, update tracking, kurs harian |
-| 12 | How It Works (halaman penjelasan lengkap: alur, QC, pembayaran, FAQ lengkap) | Dilewati (dibuat saat implementasi) | Isi diambil dari landing versi lengkap |
+| 12 | How It Works (halaman penjelasan lengkap: alur, QC, pembayaran, FAQ lengkap) | **Dibuat 2026-11-06 (T16b)** | `/how-it-works`: cara kerja 6 langkah, 4 kartu kepercayaan, metode bayar (3 kartu, tanpa detail rekening), pengiriman & pelacakan, FAQ 5 butir, ajakan jadi penjual. Jangkar `#payment` dan `#shipping` dipakai footer |
 
 ---
 
@@ -32,7 +32,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 Hal yang sengaja tidak direvisi di Stitch dan harus dibereskan saat implementasi. Detail per halaman ada di bagian "Catatan implementasi" masing-masing.
 
 - **Sumber kebenaran visual = design system `01-v4.html`** (token warna, font, radius 12px, ikon Lucide, badge, kartu, chat bubble). Halaman lain hanya acuan alur/struktur.
-- **Navbar & footer = 1 komponen standar** untuk semua halaman (sesuai design system): navbar Products / Request a Product / How It Works / Sell on BaliTrade / Log in / Sign up; footer About, For Buyers, For Sellers, Support (FAQ, Contact, Terms of Service, Privacy Policy). Abaikan variasi link karangan di tiap halaman Stitch.
+- **Navbar & footer = 1 komponen standar** untuk semua halaman. **Navbar diubah 2026-11-06 (T16b)** dan tidak lagi mengikuti design system di titik ini: isinya hanya logo, kolom pencarian, language switcher, lonceng notifikasi, dan avatar bulat (tanpa satu pun tautan teks permanen — halaman pribadi dan admin ada di menu avatar). Alasannya tercatat di `docs/DECISIONS.md`. Footer tetap: About, For Buyers, For Sellers, Support (FAQ, Contact, Terms of Service, Privacy Policy); abaikan variasi link karangan di tiap halaman Stitch.
 - **Jangan pakai kata "escrow"** di UI → "Payment protection" / "Payment held by BaliTrade until delivery".
 - **Tanpa janji yang belum diputuskan**: SLA respons/verifikasi, waktu kirim, jadwal mingguan/Jumat, rute langsung, dokumen bea cukai negara tujuan, sertifikasi.
 - Halaman 2 (landing): hapus "weekly"/"customs documents" di For Sellers; sesuaikan teks "custom sourcing"; pertimbangkan meringkas (trust strip duplikat). Teks FAQ QC gagal ganti jadi: "We'll first help you find a replacement. If you prefer, you can get a full refund."
@@ -88,7 +88,9 @@ Languages: UI available in English (default), Indonesian, Russian. Show English 
 Area `/admin` tampil **terpisah dari toko**, supaya jelas sedang di mana dan muat banyak menu. Token tema tetap sama (teal, gold, Plus Jakarta Sans, radius 12px, ikon Lucide).
 
 - **Sidebar kiri** 240px, teal gelap `#0B3A46` (warna footer), teks putih. Menu aktif: latar sedikit lebih terang + garis gold `#C9A24A` di kiri. Atas: logo "BaliTrade" dengan penanda **ADMIN**. Bawah: tautan "← Back to site".
-- **Top bar** di area konten: judul halaman, language switcher, menu pengguna (nama, logout). **Tanpa navbar dan footer toko.** Latar konten off-white `#FAF7F2`, isi dalam kartu putih seperti halaman lain.
+- **Top bar** di area konten: judul halaman, language switcher, **ikon pesan (✉, hanya di sini — jangan diduplikat di sidebar)** dan menu avatar bulat (nama, logout). **Tanpa navbar dan footer toko.** Latar konten off-white `#FAF7F2`, isi dalam kartu putih seperti halaman lain. Dikonfirmasi pemilik 2026-11-06.
+- **Tanpa pencarian produk di area admin.** Pencarian toko hanya mengembalikan produk APPROVED dari penjual APPROVED — kebalikan dari yang dikerjakan admin. Tiap daftar admin punya filternya sendiri; pencarian admin lintas data ditambahkan nanti kalau memang dibutuhkan.
+- **Halaman Overview** (menu pertama): angka pekerjaan yang menunggu — penjual belum disetujui, listing belum ditinjau, order perlu tindakan — masing-masing bisa diklik ke daftar yang sudah terfilter, plus kurs yang berlaku. Tanpa halaman kelola pembeli: pembeli tidak disetujui atau dimoderasi.
 - **Menu mengikuti peran** dan hanya memuat halaman yang sudah ada: `ADMIN_OPS` melihat penjual, listing (nanti QC dan tracking); `ADMIN_FINANCE` melihat pembayaran; `ADMIN_OWNER` melihat semuanya plus kurs dan pencairan.
 - **Layar kecil:** sidebar menjadi laci yang dibuka dari tombol menu; fokus keyboard terlihat; menu aktif diberi `aria-current`.
 - Rencana teknis: pisahkan chrome toko dan admin lewat route group atau pembungkus yang menyembunyikan navbar/footer di `/admin`; pilih yang paling kecil risikonya saat mengerjakan.
