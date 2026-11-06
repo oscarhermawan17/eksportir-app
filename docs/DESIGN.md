@@ -22,7 +22,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 | 8 | Detail order (approval QC, tagihan ongkir, tracking, terima barang) | Final | Stitch: `design-ui/google-stitch/08.html`; lihat catatan bagian 8. **Tahap desain Stitch selesai.** |
 | 9 | Ruang chat | Dilewati (dibuat saat implementasi) | Komponen sudah ada di chat drawer halaman 4 |
 | 10 | Dashboard penjual | **Dibuat 2026-11-06 (T16c)** | `/seller` = dasbor: nama toko + status, 3 kartu angka (pesanan menunggu jawaban · produk tayang · produk menunggu ditinjau/menunggu penjual), tombol tambah & kelola produk. Formulir akun penjual pindah ke `/seller/account`. Tanpa sidebar: penjual hanya punya 3 halaman, navbar biasa sudah cukup |
-| 11 | Dashboard admin | Dilewati (dibuat saat implementasi) | Pola standar: approve listing/penjual, verifikasi pembayaran, upload laporan QC, tagihan ongkir, update tracking, kurs harian |
+| 11 | Dashboard admin | **Dibuat 2026-11-06 (T17b)** | Layout `/admin` sendiri: sidebar teal gelap 240px + top bar polos, tanpa navbar/footer toko dan tanpa pencarian produk. Menu: Ringkasan · Penjual · Listing · Pesanan · Kurs (mengikuti peran). Pembayaran, QC, pengiriman, pencairan menyusul di T17–T20 sebagai entri baru di `ADMIN_NAV` |
 | 12 | How It Works (halaman penjelasan lengkap: alur, QC, pembayaran, FAQ lengkap) | **Dibuat 2026-11-06 (T16b)** | `/how-it-works`: cara kerja 6 langkah, 4 kartu kepercayaan, metode bayar (3 kartu, tanpa detail rekening), pengiriman & pelacakan, FAQ 5 butir, ajakan jadi penjual. Jangkar `#payment` dan `#shipping` dipakai footer |
 
 ---

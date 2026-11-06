@@ -79,6 +79,17 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
   `usePathname()/useSearchParams()` on a route with dynamic segments needs a `<Suspense>` boundary (Navbar/Footer are wrapped in
   `[locale]/layout.tsx`); dynamic route params are read inside `<Suspense>`. Docs are in `apps/web/node_modules/next/dist/docs/`.
 - Unknown URLs: `[locale]/[...rest]/page.tsx` + `not-found.tsx` + `app/global-not-found.tsx` (experimental flag) avoid a reload loop.
+- **Never run `pnpm build` while `pnpm dev` is running.** `next dev` and `next build` share `apps/web/.next`, and the build overwrites
+  manifests the dev server is holding open. The symptom is every page answering 500 with
+  `SyntaxError: Unexpected non-whitespace character after JSON` from the dev log — the message files are fine, a `.next` manifest is not.
+  The same applies to `pnpm typecheck` for the web app: it runs `next typegen`, which writes into `.next` too.
+  **Stop `pnpm dev` before running either, then start it again.**
+  Recovery without a restart: the broken file is usually `apps/web/.next/dev/prerender-manifest.json`
+  (`find . -name '*.json' -not -path '*/node_modules/*' | xargs -n1 python3 -c "import json,sys; json.load(open(sys.argv[1]))"` finds it).
+  Writing a minimal one — `{"version":4,"routes":{},"dynamicRoutes":{},"notFoundRoutes":[],"preview":{…}}`, reusing the `preview` block from a
+  real build — and touching a source file brings the dev server back. Otherwise `rm -rf apps/web/.next` and restart `pnpm dev`.
+  Do not try `next start` on another port instead: the API's CORS only allows `WEB_ORIGIN` (`http://localhost:3000`), so logins fail.
+  A `distDir` override was tried and reverted: `next typegen` then rewrites `tsconfig.json` on every run.
 - **`pnpm dev` API (nest --watch) can stay dead after `pnpm build`** (build wipes `dist`). Fix: make a trivial edit in any
   `apps/api/src` file and revert it. Also check nothing else holds port 4000 (`lsof -iTCP:4000 -sTCP:LISTEN`) before starting.
 - **API e2e tests:** login is rate-limited (5/min per app instance) → log in once per user and reuse the supertest agent; a spec with more than 5 users mints session cookies with `JwtService` instead (see `test/chat.e2e-spec.ts`).
@@ -91,7 +102,7 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 ## Current status
 
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-06**,
-commit `6bcaecf`, working tree clean, 19 of 29 tasks done (T01–T16, T13b, T16b and T16c).
+commit `04ca8af`, working tree clean, 20 of 29 tasks done (T01–T16, T13b, T16b, T16c and T17b).
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
@@ -109,17 +120,24 @@ commit `6bcaecf`, working tree clean, 19 of 29 tasks done (T01–T16, T13b, T16b
   seller → `/seller` dashboard, admin → admin area, buyer → `/`. Sellers and admins get "View the shop" in the account menu.
   The seller account form moved to `/seller/account`. **Admin accounts are admin-only**: no "My orders" or "Sell on BaliTrade" in their
   menu (a person who also trades uses a second account); the order list sits in the Admin group instead.
+- T17b **admin area has its own chrome**: route groups split it from the shop — `[locale]/layout.tsx` is document + translations + session only,
+  `(shop)` holds the navbar and footer, `(admin)` holds a 240px dark-teal sidebar plus a plain top bar (page title, language, inbox icon,
+  avatar) and no product search. URLs are unchanged. Menu by role in `navItemsFor()` (`src/components/admin/admin-nav.ts`); `/admin` is an
+  Overview of work waiting; `/admin/orders` reuses the shop's order components through a `basePath` prop. Below `lg` the sidebar is a drawer.
 - Quality: lint and typecheck clean, 49 unit + 135 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
 1. **T17 payment (3 methods).** Blocked on owner input, see "Waiting on the owner". Can start with placeholders in config if still missing.
-2. **T17b** admin layout: dark-teal left sidebar **plus a plain top bar** (page title, language switcher, messages icon, avatar menu) — the owner
-   confirmed both on 2026-11-06; spec in `docs/DESIGN.md`. The messages icon lives in the top bar only, not also in the sidebar. Add a simple
-   Overview landing page (counts of pending sellers, listings and orders that need action), modelled on the seller dashboard from T16c.
-   No buyer-management page: buyers are not moderated. The admin links now sitting in the storefront avatar menu move into the sidebar, and
-   `homePathFor()` should then point every admin role at `/admin` (today: OPS/OWNER → `/admin/sellers`, FINANCE → `/orders`).
-   Roles stay as they are for now: one admin account holds OWNER + FINANCE + OPS; splitting the work across separate admin accounts comes later.
-3. Then T18 QC, T19 shipping + tracking, T20 completion + payout, T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
+   Its admin page is a new entry in `ADMIN_NAV` (`src/components/admin/admin-nav.ts`), roles FINANCE + OWNER.
+2. Then T18 QC, T19 shipping + tracking, T20 completion + payout, T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
+   Each adds its own `ADMIN_NAV` entry and, where it makes sense, a tile on the admin Overview.
+
+**Small things left open (not blocking anything)**
+- The admin top bar's ✉ icon opens `/messages`, which still renders in the shop chrome. Giving it `/admin/messages` needs the same treatment
+  orders got (a second route plus a `basePath`-style prop); the inbox also carries its own `?c=` parameter.
+- Roles were only exercised with one admin account holding OWNER + FINANCE + OPS, because that is all the dev database has. Separate
+  ADMIN_OPS / ADMIN_FINANCE accounts would be worth a check when they exist.
+- `/admin/orders` and `/orders` show the same heading twice on an admin screen (top bar title and the page's own h1).
 
 **Waiting on the owner**
 - T17: USDT network and the Binance wallet address, BCA account details, the partner exchange and the instructions buyers must read, and
