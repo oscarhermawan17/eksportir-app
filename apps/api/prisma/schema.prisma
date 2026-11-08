@@ -22,14 +22,14 @@ enum Role {
 }
 
 model User {
-  id           String  @id @default(cuid())
-  email        String  @unique
-  passwordHash String  @map("password_hash")
-  name         String
-  phone        String?
+  id                      String    @id @default(cuid())
+  email                   String    @unique
+  passwordHash            String    @map("password_hash")
+  name                    String
+  phone                   String?
   /// UI language: en | id | ru
-  locale       String  @default("en")
-  roles        Role[]  @default([BUYER])
+  locale                  String    @default("en")
+  roles                   Role[]    @default([BUYER])
   /// When the user accepted that a BaliTrade admin takes part in all their chats (null for accounts made by seed/admin).
   adminChatConsentAt      DateTime? @map("admin_chat_consent_at")
   /// Which wording they accepted (ADMIN_CHAT_CONSENT_VERSION in packages/shared).
@@ -44,6 +44,8 @@ model User {
   messages           Message[]
   notifications      Notification[]
   buyerOrders        Order[]        @relation("OrderBuyer")
+  submittedPayments  Payment[]      @relation("PaymentSubmittedBy")
+  decidedPayments    Payment[]      @relation("PaymentDecidedBy")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -314,33 +316,93 @@ enum OrderItemResponse {
   CHANGE_PROPOSED
 }
 
+/// Keep in sync with packages/shared/src/payments.ts
+enum PaymentMethod {
+  BANK_IDR
+  USDT
+  EXCHANGE
+}
+
+/// Keep in sync with packages/shared/src/payments.ts. SHIPPING is used by T19.
+enum PaymentPurpose {
+  GOODS
+  SHIPPING
+}
+
+/// Keep in sync with packages/shared/src/payments.ts
+enum PaymentStatus {
+  SUBMITTED
+  VERIFIED
+  REJECTED
+}
+
 /// One buyer, one seller, one item (MVP 1.0). Prices, the exchange rate and the QC fee are copied at the moment of the
 /// request, so later changes to the product, the rate or the QC tariff never alter an existing order.
 model Order {
-  id              String      @id @default(cuid())
+  id              String        @id @default(cuid())
   /// Shown as OR-<1000 + number>.
-  number          Int         @unique @default(autoincrement())
-  buyerId         String      @map("buyer_id")
-  buyer           User        @relation("OrderBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
-  sellerId        String      @map("seller_id")
+  number          Int           @unique @default(autoincrement())
+  buyerId         String        @map("buyer_id")
+  buyer           User          @relation("OrderBuyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  sellerId        String        @map("seller_id")
   seller          SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  status          OrderStatus @default(REQUESTED)
+  status          OrderStatus   @default(REQUESTED)
   /// DeliveryAddress (packages/shared/src/orders.ts); visible to the buyer and admins only.
-  deliveryAddress Json        @map("delivery_address")
+  deliveryAddress Json          @map("delivery_address")
   /// IDR per 1 USD used for this order.
-  fxRate          Decimal     @map("fx_rate") @db.Decimal(12, 4)
-  itemsUsd        Decimal     @map("items_usd") @db.Decimal(12, 2)
-  qcFeeUsd        Decimal     @map("qc_fee_usd") @db.Decimal(12, 2)
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
+  fxRate          Decimal       @map("fx_rate") @db.Decimal(12, 4)
+  itemsUsd        Decimal       @map("items_usd") @db.Decimal(12, 2)
+  qcFeeUsd        Decimal       @map("qc_fee_usd") @db.Decimal(12, 2)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
 
   items        OrderItem[]
   conversation Conversation?
+  payments     Payment[]
 
   @@index([buyerId, createdAt])
   @@index([sellerId, createdAt])
   @@index([status, createdAt])
   @@map("orders")
+}
+
+/// One attempt by the buyer to pay (T17). Rows are never edited or replaced: a rejected or partial payment stays, and
+/// the next proof is a new row, so the admin reads the whole history. Partial amounts are allowed on purpose, which is
+/// why nothing here computes "paid" — a FINANCE admin decides that by moving the order to PAYMENT_VERIFIED.
+model Payment {
+  id              String         @id @default(cuid())
+  orderId         String         @map("order_id")
+  order           Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  purpose         PaymentPurpose @default(GOODS)
+  method          PaymentMethod
+  status          PaymentStatus  @default(SUBMITTED)
+  /// Always set: for the rupiah routes it is `amountIdr` converted at the order's locked `fxRate`.
+  amountUsd       Decimal        @map("amount_usd") @db.Decimal(12, 2)
+  /// What the buyer actually typed on the rupiah routes (the figure the admin looks for in the statement); null for USDT.
+  amountIdr       Int?           @map("amount_idr")
+  /// BANK_IDR: whose account the transfer came from (often not the buyer).
+  senderName      String?        @map("sender_name")
+  /// USDT: transaction hash.
+  txHash          String?        @map("tx_hash")
+  /// EXCHANGE: which exchange was paid, and its transfer reference.
+  exchangeName    String?        @map("exchange_name")
+  reference       String?
+  note            String?
+  /// Key in the private R2 bucket; readable only through a short-lived signed URL (buyer and admins).
+  proofKey        String         @map("proof_key")
+  submittedById   String         @map("submitted_by_id")
+  submittedBy     User           @relation("PaymentSubmittedBy", fields: [submittedById], references: [id], onDelete: Cascade)
+  submittedAt     DateTime       @default(now()) @map("submitted_at")
+  /// The FINANCE admin who verified or rejected it. Together with the timestamps this is the audit trail for money
+  /// (a full admin audit log is MVP 1.1); every decision also writes a system message into the order chat.
+  decidedById     String?        @map("decided_by_id")
+  decidedBy       User?          @relation("PaymentDecidedBy", fields: [decidedById], references: [id], onDelete: SetNull)
+  decidedAt       DateTime?      @map("decided_at")
+  rejectionReason String?        @map("rejection_reason")
+
+  @@index([orderId, submittedAt])
+  @@index([status, submittedAt])
+  @@map("payments")
 }
 
 model OrderItem {
