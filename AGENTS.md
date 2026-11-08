@@ -132,9 +132,9 @@ commit `04ca8af`, working tree clean, 20 of 29 tasks done (T01–T16, T13b, T16b
    reasoning in `docs/BRAINSTORMING.md` §11 and `docs/DECISIONS.md`): payments are recorded **per attempt and never replaced** (one order,
    many `Payment` rows; partial transfers accepted; the buyer may switch method while nothing is verified); `PAYMENT_VERIFIED` is the FINANCE
    admin's judgement, not a formula; **no ruble amount in the UI**; a **separate private R2 bucket** is part of this task, because payment
-   proofs carry account numbers and the current bucket is public. **No transaction-splitting feature exists or will be built** — the owner
-   splits exchange payments manually outside the app (structuring; the risk is recorded in `BRAINSTORMING.md` §11, which later sessions
-   should not delete), and EXCHANGE money never passes through BaliTrade, so the app has nothing to split.
+   proofs carry account numbers and the current bucket is public. **No payment-splitting feature for now** — the owner pays
+   untrusted exchanges in instalments as counterparty risk management (**not** structuring; clarified 2026-11-08), and EXCHANGE money never
+   passes through BaliTrade, so the app has nothing to split: per-attempt payments already show staged payments as several rows.
    Its admin page is a new entry in `ADMIN_NAV` (`src/components/admin/admin-nav.ts`), roles FINANCE + OWNER.
 2. Then T18 QC, T19 shipping + tracking, T20 completion + payout, T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
    Each adds its own `ADMIN_NAV` entry and, where it makes sense, a tile on the admin Overview.

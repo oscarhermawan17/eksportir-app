@@ -146,13 +146,17 @@ Praktik nyata & keputusan T17 (2026-11-08, dari pemilik) — ini yang benar-bena
 - **Exchange (rubel)** — pembeli yang hanya punya rubel membayar ke exchange milik penduduk Rusia di Bali (resmi maupun tidak),
   dan exchange itu mengirim rupiahnya ke BaliTrade secara manual. Uangnya **tidak langsung masuk rekening BaliTrade**, jadi app
   hanya bisa mencatat nama exchange + referensi transfer + bukti; verifikasi tetap mata manusia di mutasi bank.
-- Pemilik menjalankan **pemecahan transaksi** untuk jalur exchange: belanja di atas Rp 15 juta dipecah (mis. 3× Rp 5 juta).
-  **Catatan risiko (tetap berlaku, lihat butir 3 di atas):** ini *structuring*. Deteksi bank/PPATK bekerja pada **pola** — beberapa
-  transfer berurutan dengan angka bulat tepat di bawah ambang — bukan pada nominal satuannya; akibat yang paling mungkin adalah
-  **pembekuan rekening penerima** (rekening perusahaan, atau rekening exchange mitra yang lalu berhenti melayani). Jika pemecahan
-  memang karena kapasitas exchange (tidak bisa mengirim sekaligus), itu persoalan lain dan bukan structuring.
-  **Tidak ada fitur pemecah transaksi di app** dan tidak akan dibuat: uang EXCHANGE tidak pernah melewati BaliTrade, jadi app
-  tidak punya transaksi untuk dipecah. Yang dilakukan manual di luar app adalah keputusan pemilik.
+- Pemilik **memecah pembayaran** di jalur exchange: belanja di atas Rp 15 juta dibayarkan bertahap (mis. 3× Rp 5 juta).
+  **Alasannya keamanan terhadap pihak exchange, bukan ambang pelaporan** (dikoreksi 2026-11-08): exchange-nya milik perorangan
+  Rusia di Bali, sebagian tidak resmi, dan belum jelas apakah benar-benar badan usaha — jadi pembayaran dipecah supaya kalau dana
+  dibawa kabur yang hilang satu termin, bukan seluruh nilai order. Ini manajemen risiko *counterparty* yang wajar dan **bukan**
+  *structuring* (structuring = memecah agar tiap bagian lolos ambang pelaporan; di sini motifnya kebalikannya). Butir 3 di bagian
+  atas yang menyarankan "jangan memecah transaksi" berlaku untuk motif ambang itu, bukan untuk kasus ini.
+  **Tidak ada fitur pemecah pembayaran di app** untuk sekarang: uang EXCHANGE tidak pernah melewati BaliTrade, jadi app tidak punya
+  transaksi untuk dipecah — ia hanya mencatat nama exchange, referensi dan bukti tiap termin. Karena pembayaran dicatat **per
+  percobaan** (lihat di bawah), pembayaran bertahap seperti ini otomatis terlihat sebagai beberapa baris `Payment` pada satu order.
+  Catatan yang tetap berlaku: pihak yang menukar/meneruskan uang menjalankan jasa transfer uang (lihat butir 1 dan 3 di atas), dan
+  pembayaran bertahap ke pihak yang belum dipercaya sebaiknya diikuti pencatatan rapi per termin — yang memang sudah dilakukan app.
 - **Nominal rubel: tidak ditampilkan** (diputuskan 2026-11-08). UI tetap USD (+ IDR untuk BANK_IDR); exchange yang mengurus
   konversi rubelnya. Konsekuensi: tidak perlu kurs RUB kedua, jadi tabel kurs dan `/admin/exchange-rate` tidak melebar.
 - **Pembayaran sebagian diterima** (diputuskan 2026-11-08): pembeli yang terlanjur mengirim setengah tidak ditolak — niatnya
