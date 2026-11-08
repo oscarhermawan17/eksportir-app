@@ -136,6 +136,34 @@ Keputusan metode pembayaran (2026-10-30) — pembeli memilih satu dari **3 metod
 - Catatan risiko untuk (c): ini jenis pengaturan yang sama dengan butir 1 di atas (pihak yang menukar/meneruskan uang menjalankan jasa transfer uang). Mitigasi di app: catat nama pembeli asli, nama exchange dan referensi transfer, bukti pembayaran, invoice atas nama pembeli, utamakan mitra yang dikenal/repeat, dan **jangan memecah transaksi**. Sangat disarankan konsultasi hukum/compliance sebelum dipakai untuk uang nyata.
 - Masih terbuka: jaringan USDT (alamat wallet bergantung pada jaringan; salah jaringan = dana hilang), data rekening BCA, siapa exchange mitra dan petunjuk yang ditampilkan ke pembeli, serta apakah pembeli exchange perlu diberi nominal dalam rubel (saat ini UI hanya USD/IDR).
 
+Praktik nyata & keputusan T17 (2026-11-08, dari pemilik) — ini yang benar-benar dijalankan hari ini:
+- **BCA** — sudah ada beberapa penduduk Rusia di Bali yang punya rekening bank Indonesia, jadi mereka transfer Rupiah→Rupiah
+  (transfer domestik biasa) dan uang masuk mudah dicek di mutasi BCA. Ini jalur termudah dan paling bersih dari ketiganya.
+- **USDT** — pembeli mengirim nominal USDT ke wallet Binance BaliTrade, lalu pemilik menarik (withdraw) hasilnya ke rekening bank
+  dalam Rupiah dan memakainya sebagai uang masuk perusahaan. **Pencatatan di app mengikuti kenyataan**: order ↔ tx hash ↔ bukti
+  penarikan disimpan apa adanya, tidak dicatat seolah penjualan USDT ke Binance. Alasannya praktis: kalau bank atau pajak
+  menanyakan asal dana, ada jejak invoice per order; kalau tidak ada, transfer itu muncul sebagai uang masuk tanpa penjelasan.
+- **Exchange (rubel)** — pembeli yang hanya punya rubel membayar ke exchange milik penduduk Rusia di Bali (resmi maupun tidak),
+  dan exchange itu mengirim rupiahnya ke BaliTrade secara manual. Uangnya **tidak langsung masuk rekening BaliTrade**, jadi app
+  hanya bisa mencatat nama exchange + referensi transfer + bukti; verifikasi tetap mata manusia di mutasi bank.
+- Pemilik menjalankan **pemecahan transaksi** untuk jalur exchange: belanja di atas Rp 15 juta dipecah (mis. 3× Rp 5 juta).
+  **Catatan risiko (tetap berlaku, lihat butir 3 di atas):** ini *structuring*. Deteksi bank/PPATK bekerja pada **pola** — beberapa
+  transfer berurutan dengan angka bulat tepat di bawah ambang — bukan pada nominal satuannya; akibat yang paling mungkin adalah
+  **pembekuan rekening penerima** (rekening perusahaan, atau rekening exchange mitra yang lalu berhenti melayani). Jika pemecahan
+  memang karena kapasitas exchange (tidak bisa mengirim sekaligus), itu persoalan lain dan bukan structuring.
+  **Tidak ada fitur pemecah transaksi di app** dan tidak akan dibuat: uang EXCHANGE tidak pernah melewati BaliTrade, jadi app
+  tidak punya transaksi untuk dipecah. Yang dilakukan manual di luar app adalah keputusan pemilik.
+- **Nominal rubel: tidak ditampilkan** (diputuskan 2026-11-08). UI tetap USD (+ IDR untuk BANK_IDR); exchange yang mengurus
+  konversi rubelnya. Konsekuensi: tidak perlu kurs RUB kedua, jadi tabel kurs dan `/admin/exchange-rate` tidak melebar.
+- **Pembayaran sebagian diterima** (diputuskan 2026-11-08): pembeli yang terlanjur mengirim setengah tidak ditolak — niatnya
+  menahan dana pembeli sesedikit mungkin. Satu order karena itu punya **banyak** `Payment`, masing-masing dengan metode, nominal,
+  bukti dan statusnya sendiri; **bukti lama tidak pernah diganti**, bukti baru menjadi baris riwayat berikutnya, dan pembeli boleh
+  berpindah metode selama belum diverifikasi. Order maju ke `PAYMENT_VERIFIED` ketika **admin menilai** jumlah terverifikasi sudah
+  cukup — penilaian admin, bukan rumus. Rencana lanjutan "bayar 50% dulu, sisanya setelah QC" untuk order sangat besar memakai
+  struktur yang sama tanpa migrasi ulang.
+- **Data BCA dan alamat wallet Binance di development = MOCK** (diputuskan 2026-11-08), dibaca dari config sehingga cukup diganti
+  di `.env` saat data asli siap. Jaringan USDT masih TBA dan juga datang dari config — salah jaringan = dana pembeli hilang.
+
 ## 12. Tracking (sederhana, update manual oleh admin)
 
 Milestone: Order dikonfirmasi → QC selesai → Dikemas → Diserahkan ke cargo (**nomor AWB**) → Berangkat dari Bali → Tiba di bandara tujuan → Proses bea cukai → Diterima mitra lokal → Diterima pembeli.
@@ -181,7 +209,8 @@ Setiap langkah: tanggal, catatan, foto (opsional). Nomor AWB bisa ditautkan ke t
 - Masa inspeksi setelah barang tiba (usulan 3–7 hari).
 - Tarif QC per zona. (T07: tabel `QcZone` sudah ada dengan **angka placeholder** — Badung/Denpasar $3, Gianyar/Tabanan $5, Klungkung/Bangli $6, Karangasem/Buleleng/Jembrana $8 — ganti setelah tarif diputuskan.)
 - Daftar kategori terlarang.
-- Jaringan USDT (TRC-20 / ERC-20 / lainnya).
+- Jaringan USDT (TRC-20 / ERC-20 / lainnya) — masih terbuka; dibaca dari config, di development memakai nilai mock.
+- **Nominal rubel untuk pembeli exchange** — DIPUTUSKAN 2026-11-08: **tidak ditampilkan**, UI tetap USD (lihat bagian 11).
 - **Keranjang (cart) vs hanya "Buy now"** — DIPUTUSKAN 2026-10-21: pakai **cart, 1 checkout = 1 pengiriman gabungan**, QC & biaya QC **per penjual** (lihat bagian 5a).
 - **Varian produk** — DIPUTUSKAN 2026-10-21: **tidak ada fitur varian di MVP**. Ukuran/warna dibahas lewat chat + kolom catatan per item di cart (lihat bagian 5a).
 - Sub-keputusan cart: lihat bagian 5a (dikonfirmasi 2026-10-21; tersisa pertanyaan waktu konfirmasi penjual).

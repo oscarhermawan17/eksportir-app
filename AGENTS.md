@@ -127,7 +127,14 @@ commit `04ca8af`, working tree clean, 20 of 29 tasks done (T01–T16, T13b, T16b
 - Quality: lint and typecheck clean, 49 unit + 135 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
-1. **T17 payment (3 methods).** Blocked on owner input, see "Waiting on the owner". Can start with placeholders in config if still missing.
+1. **T17 payment (3 methods).** **Unblocked 2026-11-08**: the owner decided development uses **mock** BCA details and Binance wallet
+   address from config, so the flow can be built end to end and going live is an `.env` change. Rules settled the same day (details and
+   reasoning in `docs/BRAINSTORMING.md` §11 and `docs/DECISIONS.md`): payments are recorded **per attempt and never replaced** (one order,
+   many `Payment` rows; partial transfers accepted; the buyer may switch method while nothing is verified); `PAYMENT_VERIFIED` is the FINANCE
+   admin's judgement, not a formula; **no ruble amount in the UI**; a **separate private R2 bucket** is part of this task, because payment
+   proofs carry account numbers and the current bucket is public. **No transaction-splitting feature exists or will be built** — the owner
+   splits exchange payments manually outside the app (structuring; the risk is recorded in `BRAINSTORMING.md` §11, which later sessions
+   should not delete), and EXCHANGE money never passes through BaliTrade, so the app has nothing to split.
    Its admin page is a new entry in `ADMIN_NAV` (`src/components/admin/admin-nav.ts`), roles FINANCE + OWNER.
 2. Then T18 QC, T19 shipping + tracking, T20 completion + payout, T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
    Each adds its own `ADMIN_NAV` entry and, where it makes sense, a tile on the admin Overview.
@@ -140,8 +147,9 @@ commit `04ca8af`, working tree clean, 20 of 29 tasks done (T01–T16, T13b, T16b
 - `/admin/orders` and `/orders` show the same heading twice on an admin screen (top bar title and the page's own h1).
 
 **Waiting on the owner**
-- T17: USDT network and the Binance wallet address, BCA account details, the partner exchange and the instructions buyers must read, and
-  whether exchange buyers need an amount in rubles. These belong in `.env`/config, never in code or chat.
+- T17 (no longer blocking, mock values agreed 2026-11-08): the **USDT network** is still TBA — a wrong network loses the buyer's funds — and
+  the real Binance wallet address, real BCA account details and the partner exchange's instructions are still needed before real money moves.
+  These belong in `.env`/config, never in code or chat. The ruble question is settled: no ruble amount in the UI.
 - A real exchange rate. A dev value of **Rp 18,100 / USD** was entered on 2026-11-06 so the catalog could be judged; replace it with the real one.
 - Decide later: seller response deadline and stock reservation for waiting orders (T16 has neither), QC tariff per zone (seed values are
   placeholders and show up on orders), forbidden-goods list, native-speaker review of the id/ru texts.
@@ -153,7 +161,7 @@ commit `04ca8af`, working tree clean, 20 of 29 tasks done (T01–T16, T13b, T16b
 - Sample data (2026-11-06, dev only): 12 approved products on the "Oscar Testing" seller across 7 categories, $2.49–$132.60, plus the Rp 18,100
   rate. Their photos are **generated placeholders** labelled "BaliTrade sample", not real product photos, and their id/ru texts are AI-written.
   The throwaway script is not in the repo; `pnpm db:seed` does not create them.
-- R2: one bucket (`eksportir-testing`) serves as both public and private for now; split a private bucket before real payment proofs exist (T17+).
+- R2: one bucket (`eksportir-testing`) serves as both public and private for now. **Splitting off a private bucket is part of T17** (decided 2026-11-08): payment proofs show account numbers and full names, and the current bucket is public, so a URL is the only thing between a proof and anyone holding it. Presigned GET exists since T08, so the change is one bucket plus one env variable; QC files (T18) need it too.
 - Deploy plan: CI automatic on GitHub (T22), CD manual over SSH; **PostgreSQL is installed natively on the Ubuntu VPS, not in Docker**; only web
   and api run as containers (`docs/ARCHITECTURE.md` §8). `NEXT_PUBLIC_API_URL` is baked into the web image at build time.
 - Footer still links to pages that do not exist (they show the 404 page): `/request`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`,

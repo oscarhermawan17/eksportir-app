@@ -52,6 +52,13 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 | Admin Overview counts **orders still running**, not "orders needing an admin" (2026-11-06) | `orderActionsFor()` returns nothing for admins, so there is no admin-actionable status yet; T17/T18 add the real ones (payment to verify, QC to upload) and the tile can then narrow |
 | Tried and reverted (2026-11-06): a `distDir` override so `next build` could run beside `next dev` | `next typegen` then rewrites `apps/web/tsconfig.json` on every run. The rule is simply to stop `pnpm dev` before building or type-checking the web app; `AGENTS.md` carries the symptom and the recovery |
 | Dependencies pinned to exact versions; very new packages are added to `minimumReleaseAgeExclude` | Currently the AWS SDK |
+| Payments are recorded **per attempt, never replaced** (2026-11-08) | The owner accepts partial transfers to hold as little of the buyer's money as possible, so one order has many `Payment` rows (method, amount, proof, status each). Proof is never overwritten; a new proof is the next row, and the buyer may switch method while nothing is verified yet. The planned "50% up front, the rest after QC" for very large orders reuses the same structure |
+| An order reaches `PAYMENT_VERIFIED` by **admin judgement**, not by a formula (2026-11-08) | Partial payments are allowed, so no amount comparison can decide it; the FINANCE admin says when the verified total is enough. Keeps the rule in one place and leaves room for deposit-style payments later |
+| **No ruble amount in the UI** (2026-11-08) | Exchange buyers are told their ruble figure by the exchange itself. Showing it would need a second RUB rate, widening the rate table and `/admin/exchange-rate` — and the owner already maintains the USD rate by hand |
+| BCA details and the Binance wallet address are **mock values in development** (2026-11-08) | Read from config, so going live is an `.env` change, not a code change. The USDT network is still TBA and comes from config too — a wrong network loses the buyer's funds |
+| A **separate private R2 bucket** is part of T17, not deferred (2026-11-08) | Payment proofs carry account numbers and full names; the current bucket is public, so anyone holding (or guessing) a URL can open the file. Presigned GET has existed since T08, so the change is one bucket plus one env variable. QC photos (T18) need it too |
+| **No transaction-splitting feature in the app, and none will be built** (2026-11-08) | The owner splits exchange payments above Rp 15 million manually (e.g. 3 x Rp 5 million). That is *structuring*, flagged against in `BRAINSTORMING.md` §11 since 2026-10-17, and it is detected by the **pattern** rather than by single amounts; the likely consequence is a frozen recipient account. It changes nothing in the code, because EXCHANGE money never passes through BaliTrade — the app only records the exchange name, the reference and the proof. The practice and its risk are recorded in `BRAINSTORMING.md` §11 so a later session does not quietly delete either |
+| USDT proceeds are recorded **as what they are**: order ↔ tx hash ↔ withdrawal (2026-11-08) | The owner withdraws USDT to IDR and books it as company income. Keeping the real link means an invoice trail exists per order if a bank or the tax office asks where the money came from; without it the deposit looks like income with no explanation |
 
 ## Open questions (need the owner)
 
@@ -59,9 +66,9 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 - Final product category list and the forbidden-goods list.
 - Sourcing fee, deposit and refund rules.
 - A deadline for the seller to answer an order request, and whether stock is held while an order waits (T16 has neither).
-- Payment details still to come from the owner: USDT network and Binance wallet address, BCA account details, the partner exchange and the instructions shown to buyers, and whether EXCHANGE buyers need an amount in rubles.
+- Payment details still to come from the owner: the **USDT network** (TBA; a wrong network loses the buyer's funds) and the real Binance wallet address, the real BCA account details, and the partner exchange plus the instructions shown to buyers. Development uses mock values from config; the ruble question is settled (no ruble amount in the UI).
 - Exchange-rate buffer (2–3% for rate risk) and how long a USD price stays locked at checkout.
-- Separate private R2 bucket before real payment proofs/QC files (dev currently uses one bucket, `eksportir-testing`, for both).
+- ~~Separate private R2 bucket~~ — settled 2026-11-08: it is part of T17 (payment proofs must not land in a public bucket).
 - Native-speaker review of the Indonesian and Russian UI texts (the sample product texts added on 2026-11-06 are AI-written dev data).
 
 ## Earlier decisions
