@@ -1,7 +1,44 @@
-import { OrderStatus, actionActor, nextOrderStatus, orderActionsFor } from '@balitrade/shared';
+import { OrderStatus, actionActor, canSubmitPayment, nextOrderStatus, orderActionsFor } from '@balitrade/shared';
 import type { OrderAction } from '@balitrade/shared';
 
 describe('order transitions (docs/ARCHITECTURE.md §6)', () => {
+  it('payment: the buyer may send several, and only CONFIRM_PAID reaches PAYMENT_VERIFIED (T17)', () => {
+    expect(nextOrderStatus('AWAITING_PAYMENT', 'SUBMIT_PAYMENT')).toBe('PAYMENT_SUBMITTED');
+    // Partial transfers are accepted, so paying again while one proof is still being checked is normal.
+    expect(nextOrderStatus('PAYMENT_SUBMITTED', 'SUBMIT_PAYMENT')).toBe('PAYMENT_SUBMITTED');
+    expect(nextOrderStatus('PAYMENT_SUBMITTED', 'REJECT_PAYMENT')).toBe('AWAITING_PAYMENT');
+    expect(nextOrderStatus('PAYMENT_SUBMITTED', 'CONFIRM_PAID')).toBe('PAYMENT_VERIFIED');
+    // Confirming "paid" is only possible while a payment is on the table, never before one arrives.
+    expect(nextOrderStatus('AWAITING_PAYMENT', 'CONFIRM_PAID')).toBeNull();
+  });
+
+  it('quality control starts as its own step, after the payment is verified (T17 DoD, T18 fills it in)', () => {
+    expect(nextOrderStatus('PAYMENT_VERIFIED', 'START_QC')).toBe('IN_QC');
+    expect(nextOrderStatus('PAYMENT_SUBMITTED', 'START_QC')).toBeNull();
+    expect(nextOrderStatus('AWAITING_PAYMENT', 'START_QC')).toBeNull();
+  });
+
+  it('money and QC belong to the admin side; paying is the buyer\'s', () => {
+    expect(actionActor('CONFIRM_PAID')).toBe('ADMIN');
+    expect(actionActor('REJECT_PAYMENT')).toBe('ADMIN');
+    expect(actionActor('START_QC')).toBe('ADMIN');
+    expect(actionActor('SUBMIT_PAYMENT')).toBe('BUYER');
+  });
+
+  it('the payment screen is not a button: it never shows up in the order page action list', () => {
+    expect(canSubmitPayment('BUYER', 'AWAITING_PAYMENT')).toBe(true);
+    expect(canSubmitPayment('BUYER', 'PAYMENT_SUBMITTED')).toBe(true);
+    expect(canSubmitPayment('BUYER', 'PAYMENT_VERIFIED')).toBe(false);
+    expect(canSubmitPayment('SELLER', 'AWAITING_PAYMENT')).toBe(false);
+    expect(orderActionsFor('BUYER', 'AWAITING_PAYMENT')).toEqual(['CANCEL']);
+    for (const status of Object.values(OrderStatus)) {
+      expect(orderActionsFor('ADMIN', status)).toEqual([]);
+      for (const viewer of ['BUYER', 'SELLER'] as const) {
+        expect(orderActionsFor(viewer, status)).not.toContain('SUBMIT_PAYMENT');
+      }
+    }
+  });
+
   it('a requested order: the seller accepts, declines or proposes a change; the buyer cancels', () => {
     expect(nextOrderStatus('REQUESTED', 'ACCEPT')).toBe('AWAITING_PAYMENT');
     expect(nextOrderStatus('REQUESTED', 'DECLINE')).toBe('DECLINED');

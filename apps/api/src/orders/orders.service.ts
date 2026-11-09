@@ -150,6 +150,10 @@ export class OrdersService {
     if (!row || !(isAdmin(user.roles) || isBuyer || isSeller)) {
       throw new NotFoundException('Order not found');
     }
+    // Money and QC steps belong to PaymentsService, which checks the admin role; they never come in through here.
+    if (actionActor(action) === 'ADMIN') {
+      throw new ForbiddenException('This step is not taken here');
+    }
     if ((actionActor(action) === 'SELLER' && !isSeller) || (actionActor(action) === 'BUYER' && !isBuyer)) {
       throw new ForbiddenException('You cannot do this on this order');
     }

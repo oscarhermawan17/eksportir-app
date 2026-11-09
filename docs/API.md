@@ -8,6 +8,11 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 |---|---|---|---|---|
 | GET | `/api/admin/exchange-rates` | ADMIN_OWNER | `history` | admin-exchange-rates |
 | POST | `/api/admin/exchange-rates` | ADMIN_OWNER | `set` | admin-exchange-rates |
+| POST | `/api/admin/orders/:id/confirm-paid` | ADMIN_FINANCE, ADMIN_OWNER | `confirmPaid` | admin-order-payments |
+| POST | `/api/admin/orders/:id/start-qc` | ADMIN_OPS, ADMIN_OWNER | `startQc` | admin-order-payments |
+| GET | `/api/admin/payments` | ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-payments |
+| POST | `/api/admin/payments/:id/reject` | ADMIN_FINANCE, ADMIN_OWNER | `reject` | admin-payments |
+| POST | `/api/admin/payments/:id/verify` | ADMIN_FINANCE, ADMIN_OWNER | `verify` | admin-payments |
 | GET | `/api/admin/ping` | any admin | `ping` | admin |
 | GET | `/api/admin/products` | ADMIN_OPS, ADMIN_OWNER | `list` | admin-products |
 | GET | `/api/admin/products/:id` | ADMIN_OPS, ADMIN_OWNER | `get` | admin-products |
@@ -42,7 +47,10 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/orders/:id/accept-change` | logged in | `acceptChange` | orders |
 | POST | `/api/orders/:id/cancel` | logged in | `cancel` | orders |
 | POST | `/api/orders/:id/decline` | logged in | `decline` | orders |
+| GET | `/api/orders/:id/payments` | logged in | `summary` | payments |
+| POST | `/api/orders/:id/payments` | logged in | `submit` | payments |
 | POST | `/api/orders/:id/propose-change` | logged in | `proposeChange` | orders |
+| GET | `/api/payments/instructions` | logged in | `instructions` | payments |
 | GET | `/api/products` | public | `list` | catalog |
 | GET | `/api/products/:id` | public | `detail` | catalog |
 | GET | `/api/public/sellers/:id` | public | `seller` | catalog |
