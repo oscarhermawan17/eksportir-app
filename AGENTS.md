@@ -101,8 +101,8 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 ## Current status
 
-Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-06**,
-commit `04ca8af`, working tree clean, 20 of 29 tasks done (T01–T16, T13b, T16b, T16c and T17b).
+Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-10**,
+working tree clean, 21 of 29 tasks done (T01–T17, T13b, T16b, T16c and T17b).
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
@@ -124,32 +124,35 @@ commit `04ca8af`, working tree clean, 20 of 29 tasks done (T01–T16, T13b, T16b
   `(shop)` holds the navbar and footer, `(admin)` holds a 240px dark-teal sidebar plus a plain top bar (page title, language, inbox icon,
   avatar) and no product search. URLs are unchanged. Menu by role in `navItemsFor()` (`src/components/admin/admin-nav.ts`); `/admin` is an
   Overview of work waiting; `/admin/orders` reuses the shop's order components through a `basePath` prop. Below `lg` the sidebar is a drawer.
-- Quality: lint and typecheck clean, 49 unit + 135 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
+- T17 **payments, three methods, checked by hand**: `Payment` rows are recorded **per attempt and never replaced**, so one order can have several
+  (partial transfers are accepted on purpose) and a rejected attempt stays visible with its reason. Verifying one payment only records that the
+  money arrived; the order moves to `PAYMENT_VERIFIED` when a FINANCE admin presses "payment is complete" (`POST /api/admin/orders/:id/confirm-paid`),
+  because no sum can decide that when partial payments are allowed. Quality control is a separate OPS step (`/start-qc` → `IN_QC`), so the data never
+  claims QC began before the goods are in hand. Buyer screen `/orders/[id]/pay`, admin screen `/admin/payments` (FINANCE + OWNER). Account details come
+  from `PAY_*` in `.env`; a method whose fields are empty is not offered, and `PAY_MOCK=true` puts a warning on the payment page. Proof files go to the
+  private bucket under `private/<uploaderId>/`, so only the buyer and admins can open them, and the API refuses a key that is not the buyer's own.
+- Quality: lint and typecheck clean, 53 unit + 153 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
-1. **T17 payment (3 methods).** **Unblocked 2026-11-08**: the owner decided development uses **mock** BCA details and Binance wallet
-   address from config, so the flow can be built end to end and going live is an `.env` change. Rules settled the same day (details and
-   reasoning in `docs/BRAINSTORMING.md` §11 and `docs/DECISIONS.md`): payments are recorded **per attempt and never replaced** (one order,
-   many `Payment` rows; partial transfers accepted; the buyer may switch method while nothing is verified); `PAYMENT_VERIFIED` is the FINANCE
-   admin's judgement, not a formula; **no ruble amount in the UI**; a **separate private R2 bucket** is part of this task, because payment
-   proofs carry account numbers and the current bucket is public. **No payment-splitting feature for now** — the owner pays
-   untrusted exchanges in instalments as counterparty risk management (**not** structuring; clarified 2026-11-08), and EXCHANGE money never
-   passes through BaliTrade, so the app has nothing to split: per-attempt payments already show staged payments as several rows.
-   Its admin page is a new entry in `ADMIN_NAV` (`src/components/admin/admin-nav.ts`), roles FINANCE + OWNER.
-2. Then T18 QC, T19 shipping + tracking, T20 completion + payout, T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
+1. **T18 QC.** Starts from `IN_QC`, which T17 already reaches. ADMIN_OPS uploads the report (photos/video, checklist, comment) → `QC_READY`;
+   the buyer approves or reports a problem. Its admin page is a new entry in `ADMIN_NAV` (`src/components/admin/admin-nav.ts`), roles OPS + OWNER,
+   and QC files belong in the **private** bucket, like payment proofs.
+2. Then T19 shipping + tracking (it reuses the payment screens through `PaymentPurpose.SHIPPING`, already in the schema), T20 completion + payout,
+   T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
    Each adds its own `ADMIN_NAV` entry and, where it makes sense, a tile on the admin Overview.
 
 **Small things left open (not blocking anything)**
 - The admin top bar's ✉ icon opens `/messages`, which still renders in the shop chrome. Giving it `/admin/messages` needs the same treatment
   orders got (a second route plus a `basePath`-style prop); the inbox also carries its own `?c=` parameter.
-- Roles were only exercised with one admin account holding OWNER + FINANCE + OPS, because that is all the dev database has. Separate
-  ADMIN_OPS / ADMIN_FINANCE accounts would be worth a check when they exist.
+- Separate ADMIN_OPS and ADMIN_FINANCE accounts **were** exercised on 2026-11-10 (throwaway fixtures, deleted afterwards): each sidebar showed only
+  its own pages and the cross-role buttons are gone. Two bugs that only appear with a non-OWNER admin were found and fixed then — see `docs/DECISIONS.md`.
 - `/admin/orders` and `/orders` show the same heading twice on an admin screen (top bar title and the page's own h1).
 
 **Waiting on the owner**
-- T17 (no longer blocking, mock values agreed 2026-11-08): the **USDT network** is still TBA — a wrong network loses the buyer's funds — and
-  the real Binance wallet address, real BCA account details and the partner exchange's instructions are still needed before real money moves.
-  These belong in `.env`/config, never in code or chat. The ruble question is settled: no ruble amount in the UI.
+- **Before any real money moves (T17 is otherwise finished):** the **USDT network** (still TBA — a wrong network loses the buyer's funds) and the real
+  Binance wallet address, the real BCA account details, and the partner exchange's contact and instructions. Put them in `apps/api/.env` under the
+  `PAY_*` names in `.env.example` and set `PAY_MOCK=false`; no code changes. Also **split off a private R2 bucket**: create one with public access off
+  and point `R2_PRIVATE_BUCKET` at it (it currently holds the same name as the public bucket, so payment proofs land in a world-readable bucket).
 - A real exchange rate. A dev value of **Rp 18,100 / USD** was entered on 2026-11-06 so the catalog could be judged; replace it with the real one.
 - Decide later: seller response deadline and stock reservation for waiting orders (T16 has neither), QC tariff per zone (seed values are
   placeholders and show up on orders), forbidden-goods list, native-speaker review of the id/ru texts.
