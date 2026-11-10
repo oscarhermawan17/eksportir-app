@@ -1,6 +1,6 @@
 'use client';
 
-import type { AdminProductView, AdminSellerView, ExchangeRateView, OrderView } from '@balitrade/shared';
+import type { AdminProductView, AdminSellerView, CurrentRateView, OrderView } from '@balitrade/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
@@ -31,7 +31,7 @@ interface Counts {
   sellers: number | null;
   listings: number | null;
   orders: number;
-  rate: ExchangeRateView | null;
+  rate: CurrentRateView;
 }
 
 export function AdminOverview() {
@@ -52,18 +52,20 @@ function Overview() {
       try {
         // Roles differ, so a page this admin may not read answers 403; that tile is simply hidden.
         const optional = <T,>(path: string) => apiFetch<T>(path).catch(() => null);
-        const [sellers, listings, orders, rates] = await Promise.all([
+        const [sellers, listings, orders, rate] = await Promise.all([
           optional<AdminSellerView[]>('/admin/sellers?status=PENDING'),
           optional<AdminProductView[]>('/admin/products?status=PENDING_REVIEW'),
           apiFetch<OrderView[]>('/orders'),
-          optional<ExchangeRateView[]>('/admin/exchange-rates'),
+          // The public endpoint, not the owner-only history: every admin may see which rate is in force, and
+          // reading the history would answer 403 for OPS and FINANCE — which used to look like "no rate set".
+          apiFetch<CurrentRateView>('/fx/current'),
         ]);
         if (!cancelled) {
           setCounts({
             sellers: sellers?.length ?? null,
             listings: listings?.length ?? null,
             orders: orders.filter((order) => OPEN_ORDER_STATUSES.has(order.status)).length,
-            rate: rates?.[0] ?? null,
+            rate,
           });
         }
       } catch (error) {
@@ -110,12 +112,14 @@ function Overview() {
           </ul>
 
           <div className="mt-6 rounded-card border border-border bg-card p-5 text-sm shadow-sm">
-            {counts.rate ? (
+            {counts.rate.rate !== null ? (
               <p className="text-text">
                 {t('overview.rate', { rate: format.number(Number(counts.rate.rate)) })}{' '}
-                <span className="text-muted">
-                  {t('overview.rateSet', { date: format.dateTime(new Date(counts.rate.createdAt), { dateStyle: 'medium' }) })}
-                </span>
+                {counts.rate.updatedAt ? (
+                  <span className="text-muted">
+                    {t('overview.rateSet', { date: format.dateTime(new Date(counts.rate.updatedAt), { dateStyle: 'medium' }) })}
+                  </span>
+                ) : null}
               </p>
             ) : (
               <p className="font-semibold text-warning">{t('overview.noRate')}</p>

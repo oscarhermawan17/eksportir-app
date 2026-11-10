@@ -1,5 +1,5 @@
 import type { AuthUser, Role } from '@balitrade/shared';
-import { ClipboardList, Coins, LayoutDashboard, ShoppingCart, UserCheck, type LucideIcon } from 'lucide-react';
+import { Banknote, ClipboardList, Coins, LayoutDashboard, ShoppingCart, UserCheck, type LucideIcon } from 'lucide-react';
 
 export interface AdminNavItem {
   href: string;
@@ -11,14 +11,16 @@ export interface AdminNavItem {
 }
 
 const OPS: Role[] = ['ADMIN_OPS', 'ADMIN_OWNER'];
+const FINANCE: Role[] = ['ADMIN_FINANCE', 'ADMIN_OWNER'];
 const EVERY_ADMIN: Role[] = ['ADMIN_OPS', 'ADMIN_FINANCE', 'ADMIN_OWNER'];
 
-/** The admin sidebar, in order. Payments (T17), QC (T18), shipping (T19) and payouts (T20) join later. */
+/** The admin sidebar, in order. QC (T18), shipping (T19) and payouts (T20) join later. */
 export const ADMIN_NAV: AdminNavItem[] = [
   { href: '/admin', key: 'overview', icon: LayoutDashboard, roles: EVERY_ADMIN },
   { href: '/admin/sellers', key: 'sellers', icon: UserCheck, roles: OPS },
   { href: '/admin/products', key: 'listings', icon: ClipboardList, roles: OPS },
   { href: '/admin/orders', key: 'orders', icon: ShoppingCart, roles: EVERY_ADMIN },
+  { href: '/admin/payments', key: 'payments', icon: Banknote, roles: FINANCE },
   { href: '/admin/exchange-rate', key: 'rates', icon: Coins, roles: ['ADMIN_OWNER'] },
 ];
 

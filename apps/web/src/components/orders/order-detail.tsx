@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
 import { OrderActions } from '@/components/orders/order-actions';
 import { OrderStatusBadge } from '@/components/orders/order-status-badge';
+import { OrderPaymentPanel } from '@/components/payments/order-payment-panel';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { ApiError, apiFetch } from '@/lib/api';
@@ -79,6 +80,7 @@ function Detail({ id, basePath }: { id: string; basePath: string }) {
           ) : null}
           <Order
             order={current.order}
+            onReload={() => setAttempt((n) => n + 1)}
             onUpdated={(order) => {
               setStale(false);
               setState({ id, order, notFound: false });
@@ -94,7 +96,7 @@ function Detail({ id, basePath }: { id: string; basePath: string }) {
   );
 }
 
-function Order({ order, onUpdated, onStale }: { order: OrderView; onUpdated: (order: OrderView) => void; onStale: () => void }) {
+function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUpdated: (order: OrderView) => void; onStale: () => void; onReload: () => void }) {
   const t = useTranslations('Orders');
   const tProducts = useTranslations('Products');
   const format = useFormatter();
@@ -113,6 +115,8 @@ function Order({ order, onUpdated, onStale }: { order: OrderView; onUpdated: (or
       </header>
 
       <OrderActions order={order} onUpdated={onUpdated} onStale={onStale} />
+
+      <OrderPaymentPanel order={order} onChanged={onReload} />
 
       <section aria-labelledby="order-item" className="rounded-card border border-border bg-card p-5 shadow-sm">
         <h2 id="order-item" className="text-xs font-bold uppercase tracking-wider text-muted">

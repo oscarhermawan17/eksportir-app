@@ -253,7 +253,8 @@
       "sellers": "Sellers",
       "listings": "Listings",
       "orders": "Orders",
-      "rates": "Exchange rate"
+      "rates": "Exchange rate",
+      "payments": "Payments"
     },
     "overview": {
       "title": "What needs you",
@@ -712,5 +713,110 @@
       "staleNotice": "This order was just changed by someone else. It has been refreshed."
     },
     "proposedQty": "Proposed quantity"
+  },
+  "Payments": {
+    "pageTitle": "Pay for your order",
+    "title": "Pay for order {code}",
+    "backToOrder": "Back to the order",
+    "protectionNote": "BaliTrade holds your payment and releases it to the seller only after quality control and delivery.",
+    "mockWarning": "Development data: these account details are placeholders, not real BaliTrade accounts. Do not send money.",
+    "amountsTitle": "Amounts",
+    "due": "Order total",
+    "verified": "Confirmed received",
+    "remaining": "Still open",
+    "rateUsed": "Rate used for this order: {rate} IDR per USD.",
+    "partialAllowed": "You may pay in parts. Each transfer is checked on its own, and nothing is deleted or overwritten.",
+    "noMethods": "No payment method is set up yet. Please ask BaliTrade before transferring anything.",
+    "closedNotice": "This order is not waiting for a payment right now.",
+    "historyTitle": "Your payments for this order",
+    "noneYet": "No payment has been submitted yet.",
+    "formTitle": "Tell us about your transfer",
+    "chooseMethod": "How you paid",
+    "whereToSend": "Where to send the money",
+    "copy": "Copy",
+    "copied": "Copied",
+    "sending": "Sending…",
+    "submitButton": "Submit the payment",
+    "submitted": "Thank you. BaliTrade is checking your payment and you will be told the result in the order chat.",
+    "uploading": "Uploading… {percent}%",
+    "proofRequired": "Please attach a photo or screenshot of your transfer.",
+    "proofType": "Please attach a JPG, PNG or WebP image.",
+    "proofSize": "That image is too large (10 MB at most).",
+    "amountUsdt": "{amount} USDT",
+    "amountIdrWithUsd": "Rp {idr} (about ${usd})",
+    "submittedBy": "Sent by {name} on {date}",
+    "decidedBy": "Checked by {name} on {date}",
+    "rejectedBecause": "Not accepted: {reason}",
+    "viewProof": "View the proof",
+    "openingProof": "Opening…",
+    "proofFailed": "Could not open the file.",
+    "panelTitle": "Payment",
+    "waitingCount": "{count, plural, one {# payment is waiting to be checked} other {# payments are waiting to be checked}}",
+    "historyCount": "{count, plural, one {# payment on record} other {# payments on record}}",
+    "payNow": "Pay now",
+    "payRest": "Pay the rest",
+    "reviewPayments": "All payments",
+    "confirmPaidButton": "Payment is complete",
+    "confirmPaidHint": "Use this once you are satisfied that enough money has arrived. The order then moves on to quality control.",
+    "startQcButton": "Start quality control",
+    "adminTitle": "Payments",
+    "adminIntro": "Check each transfer against the bank statement or the wallet before you accept it.",
+    "adminNone": "Nothing here.",
+    "adminLoadError": "Could not load the payments.",
+    "filterAll": "All",
+    "openOrder": "Order {code}",
+    "verifyButton": "Money received",
+    "rejectButton": "Not received",
+    "rejectReason": "What the buyer should know",
+    "confirmReject": "Reject the payment",
+    "method": {
+      "BANK_IDR": "Bank transfer (IDR)",
+      "USDT": "USDT",
+      "EXCHANGE": "Partner exchange"
+    },
+    "methodHint": {
+      "BANK_IDR": "Transfer rupiah from an Indonesian bank account.",
+      "USDT": "Send USDT to our wallet. Check the network before you send.",
+      "EXCHANGE": "For buyers who hold rubles: pay our partner exchange in Bali."
+    },
+    "status": {
+      "SUBMITTED": "Waiting",
+      "VERIFIED": "Received",
+      "REJECTED": "Not accepted"
+    },
+    "bank": {
+      "accountNumber": "Account number",
+      "accountHolder": "Account holder",
+      "bankName": "Bank"
+    },
+    "usdt": {
+      "network": "Network",
+      "address": "Wallet address",
+      "networkWarning": "Send only on the {network} network. Funds sent on another network cannot be recovered."
+    },
+    "exchange": {
+      "name": "Exchange",
+      "contact": "Contact",
+      "instructions": "What to do"
+    },
+    "form": {
+      "amountIdr": "Amount you sent (IDR)",
+      "amountIdrHelper": "The full order comes to about Rp {total}. A smaller amount is fine.",
+      "amountUsdt": "Amount you sent (USDT)",
+      "amountUsdtHelper": "The full order comes to ${total}. A smaller amount is fine.",
+      "senderName": "Name on the sending account",
+      "senderNameHelper": "Exactly as it appears on the transfer, even if that is not your own name.",
+      "txHash": "Transaction hash",
+      "txHashHelper": "Copy it from your wallet or from Binance after sending.",
+      "exchangeName": "Which exchange you paid",
+      "exchangeNameHelper": "The name the exchange goes by.",
+      "reference": "Transfer reference",
+      "referenceHelper": "Ask the exchange for it. Without it we cannot match the incoming rupiah to your order.",
+      "note": "Anything else we should know",
+      "noteHelper": "Optional.",
+      "proof": "Proof of transfer",
+      "proofHelper": "A photo or screenshot of the receipt. JPG, PNG or WebP, 10 MB at most. Only you and BaliTrade can open it.",
+      "afterSubmit": "The seller does not see your payment details. Only BaliTrade checks them."
+    }
   }
 }

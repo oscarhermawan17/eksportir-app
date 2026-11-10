@@ -253,7 +253,8 @@
       "sellers": "Penjual",
       "listings": "Listing",
       "orders": "Pesanan",
-      "rates": "Kurs"
+      "rates": "Kurs",
+      "payments": "Pembayaran"
     },
     "overview": {
       "title": "Yang perlu Anda kerjakan",
@@ -712,5 +713,110 @@
       "staleNotice": "Pesanan ini baru saja diubah oleh pihak lain. Halaman sudah dimuat ulang."
     },
     "proposedQty": "Jumlah usulan"
+  },
+  "Payments": {
+    "pageTitle": "Bayar pesanan Anda",
+    "title": "Bayar pesanan {code}",
+    "backToOrder": "Kembali ke pesanan",
+    "protectionNote": "BaliTrade menahan pembayaran Anda dan meneruskannya ke penjual hanya setelah pemeriksaan kualitas dan pengiriman.",
+    "mockWarning": "Data pengembangan: nomor rekening di halaman ini masih contoh, bukan rekening BaliTrade yang sebenarnya. Jangan mengirim uang.",
+    "amountsTitle": "Nominal",
+    "due": "Total pesanan",
+    "verified": "Sudah dipastikan masuk",
+    "remaining": "Masih terbuka",
+    "rateUsed": "Kurs yang dipakai untuk pesanan ini: {rate} IDR per USD.",
+    "partialAllowed": "Anda boleh membayar sebagian. Setiap transfer diperiksa sendiri-sendiri, dan tidak ada yang dihapus atau ditimpa.",
+    "noMethods": "Belum ada metode pembayaran yang disiapkan. Tanyakan dulu ke BaliTrade sebelum mentransfer apa pun.",
+    "closedNotice": "Pesanan ini sedang tidak menunggu pembayaran.",
+    "historyTitle": "Pembayaran Anda untuk pesanan ini",
+    "noneYet": "Belum ada pembayaran yang dikirim.",
+    "formTitle": "Beri tahu kami tentang transfer Anda",
+    "chooseMethod": "Cara Anda membayar",
+    "whereToSend": "Ke mana uangnya dikirim",
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "sending": "Mengirim…",
+    "submitButton": "Kirim bukti pembayaran",
+    "submitted": "Terima kasih. BaliTrade sedang memeriksa pembayaran Anda, dan hasilnya akan disampaikan di chat pesanan.",
+    "uploading": "Mengunggah… {percent}%",
+    "proofRequired": "Lampirkan foto atau tangkapan layar bukti transfer Anda.",
+    "proofType": "Lampirkan gambar JPG, PNG, atau WebP.",
+    "proofSize": "Gambarnya terlalu besar (maksimal 10 MB).",
+    "amountUsdt": "{amount} USDT",
+    "amountIdrWithUsd": "Rp {idr} (sekitar ${usd})",
+    "submittedBy": "Dikirim oleh {name} pada {date}",
+    "decidedBy": "Diperiksa oleh {name} pada {date}",
+    "rejectedBecause": "Tidak diterima: {reason}",
+    "viewProof": "Lihat buktinya",
+    "openingProof": "Membuka…",
+    "proofFailed": "Tidak bisa membuka berkasnya.",
+    "panelTitle": "Pembayaran",
+    "waitingCount": "{count, plural, other {# pembayaran menunggu diperiksa}}",
+    "historyCount": "{count, plural, other {# pembayaran tercatat}}",
+    "payNow": "Bayar sekarang",
+    "payRest": "Bayar sisanya",
+    "reviewPayments": "Semua pembayaran",
+    "confirmPaidButton": "Pembayaran sudah cukup",
+    "confirmPaidHint": "Tekan ini kalau Anda yakin uang yang masuk sudah cukup. Pesanan lalu lanjut ke pemeriksaan kualitas.",
+    "startQcButton": "Mulai pemeriksaan kualitas",
+    "adminTitle": "Pembayaran",
+    "adminIntro": "Cocokkan setiap transfer dengan mutasi rekening atau wallet sebelum Anda menerimanya.",
+    "adminNone": "Tidak ada apa pun di sini.",
+    "adminLoadError": "Tidak bisa memuat daftar pembayaran.",
+    "filterAll": "Semua",
+    "openOrder": "Pesanan {code}",
+    "verifyButton": "Uang sudah masuk",
+    "rejectButton": "Belum masuk",
+    "rejectReason": "Yang perlu diketahui pembeli",
+    "confirmReject": "Tolak pembayaran",
+    "method": {
+      "BANK_IDR": "Transfer bank (IDR)",
+      "USDT": "USDT",
+      "EXCHANGE": "Exchange mitra"
+    },
+    "methodHint": {
+      "BANK_IDR": "Transfer rupiah dari rekening bank Indonesia.",
+      "USDT": "Kirim USDT ke wallet kami. Periksa jaringannya sebelum mengirim.",
+      "EXCHANGE": "Untuk pembeli yang hanya punya rubel: bayar ke exchange mitra kami di Bali."
+    },
+    "status": {
+      "SUBMITTED": "Menunggu",
+      "VERIFIED": "Masuk",
+      "REJECTED": "Tidak diterima"
+    },
+    "bank": {
+      "accountNumber": "Nomor rekening",
+      "accountHolder": "Nama pemilik rekening",
+      "bankName": "Bank"
+    },
+    "usdt": {
+      "network": "Jaringan",
+      "address": "Alamat wallet",
+      "networkWarning": "Kirim hanya di jaringan {network}. Dana yang dikirim di jaringan lain tidak bisa dikembalikan."
+    },
+    "exchange": {
+      "name": "Exchange",
+      "contact": "Kontak",
+      "instructions": "Yang perlu dilakukan"
+    },
+    "form": {
+      "amountIdr": "Nominal yang Anda kirim (IDR)",
+      "amountIdrHelper": "Seluruh pesanan sekitar Rp {total}. Nominal lebih kecil juga boleh.",
+      "amountUsdt": "Nominal yang Anda kirim (USDT)",
+      "amountUsdtHelper": "Seluruh pesanan ${total}. Nominal lebih kecil juga boleh.",
+      "senderName": "Nama di rekening pengirim",
+      "senderNameHelper": "Tulis persis seperti di bukti transfer, walau itu bukan nama Anda sendiri.",
+      "txHash": "Transaction hash",
+      "txHashHelper": "Salin dari wallet Anda atau dari Binance setelah mengirim.",
+      "exchangeName": "Exchange yang Anda bayar",
+      "exchangeNameHelper": "Nama yang dipakai exchange tersebut.",
+      "reference": "Referensi transfer",
+      "referenceHelper": "Minta ke exchange. Tanpa ini kami tidak bisa mencocokkan rupiah yang masuk dengan pesanan Anda.",
+      "note": "Hal lain yang perlu kami tahu",
+      "noteHelper": "Opsional.",
+      "proof": "Bukti transfer",
+      "proofHelper": "Foto atau tangkapan layar bukti transfer. JPG, PNG, atau WebP, maksimal 10 MB. Hanya Anda dan BaliTrade yang bisa membukanya.",
+      "afterSubmit": "Penjual tidak melihat data pembayaran Anda. Hanya BaliTrade yang memeriksanya."
+    }
   }
 }
