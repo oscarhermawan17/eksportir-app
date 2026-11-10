@@ -1,3 +1,4 @@
+import path from 'node:path';
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
@@ -12,6 +13,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // A self-contained server (.next/standalone) so the Docker image carries only what it runs, not the whole
+  // node_modules of the monorepo. `outputFileTracingRoot` points at the repo root: without it Next traces from
+  // apps/web and misses files that live in packages/shared or the hoisted pnpm store.
+  output: 'standalone',
+  outputFileTracingRoot: path.join(process.cwd(), '..', '..'),
   poweredByHeader: false,
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];

@@ -220,6 +220,9 @@ importers:
       cookie-parser:
         specifier: 1.4.7
         version: 1.4.7
+      dotenv:
+        specifier: 18.0.9
+        version: 18.0.9
       helmet:
         specifier: 8.3.0
         version: 8.3.0
@@ -254,9 +257,6 @@ importers:
       '@types/supertest':
         specifier: 7.2.1
         version: 7.2.1
-      dotenv:
-        specifier: 18.0.9
-        version: 18.0.9
       oxlint:
         specifier: 1.89.0
         version: 1.89.0

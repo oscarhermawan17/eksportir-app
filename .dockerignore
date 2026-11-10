@@ -1,0 +1,19 @@
+# Keep the build context small and reproducible: everything the image needs is built inside it.
+node_modules
+**/node_modules
+**/.next
+**/dist
+apps/api/src/generated
+.git
+.github
+.claude
+design-ui
+docs
+scripts
+*.md
+.env
+**/.env
+!**/.env.example
+.DS_Store
+**/.DS_Store
+docker-compose.yml

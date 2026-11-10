@@ -1,0 +1,57 @@
+# Production stack for the VPS. PostgreSQL is NOT here: it runs natively on the host (ARCHITECTURE §8),
+# listening on localhost only, so one `docker compose down -v` can never take the data with it.
+#
+# Deploy (manual, by hand — CI builds, you deploy):
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Needs a .env file next to this one; see .env.prod.example.
+
+name: balitrade
+
+services:
+  api:
+    image: ghcr.io/${GITHUB_OWNER}/balitrade-api:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+    # The API container reaches the host's PostgreSQL through the Docker gateway. Put that same name in
+    # DATABASE_URL, e.g. postgresql://balitrade:...@host.docker.internal:5432/balitrade
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    expose:
+      - '4000'
+    networks: [edge]
+
+  web:
+    image: ghcr.io/${GITHUB_OWNER}/balitrade-web:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    # NEXT_PUBLIC_API_URL is baked in at build time, not read here.
+    environment:
+      NODE_ENV: production
+    expose:
+      - '3000'
+    depends_on: [api]
+    networks: [edge]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    # The only two ports open to the internet. 80 is needed for the certificate challenge and redirects to 443.
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Certificates live here. Losing this volume means re-issuing them, so do not prune it casually.
+      - caddy_data:/data
+      - caddy_config:/config
+    env_file: .env
+    depends_on: [web, api]
+    networks: [edge]
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  edge:
