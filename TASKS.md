@@ -92,7 +92,16 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 ## Fase 5 — Rilis (31 Okt)
 
 - [ ] **T22 CI + image** (diputuskan 2026-10-31: **CI otomatis, CD manual**) — GitHub Actions: lint + typecheck + test (+ e2e dengan service Postgres) + build → build image Docker web & api → push ke GHCR. Image web dibangun dengan `NEXT_PUBLIC_API_URL` alamat API produksi (nilai itu ditanam saat build). **Deploy dilakukan manual** lewat SSH: `docker compose pull` (menarik image dari GHCR) lalu `docker compose up -d`.
-  DoD: push ke branch main men-deploy versi baru ke VPS dev.
+  **DoD diperbarui 2026-11-11** agar cocok dengan keputusan "CI otomatis, CD manual" (DoD lama menyebut deploy otomatis, yang bertentangan):
+  push ke `main` menjalankan lint/typecheck/test/e2e dan mendorong image web & api ke GHCR; deploy tetap dijalankan pemilik lewat SSH.
+  🔄 2026-11-11 **kode selesai, menunggu push pertama untuk diverifikasi**: `apps/api/Dockerfile`, `apps/web/Dockerfile`, `.github/workflows/ci.yml`,
+  `.dockerignore`, `output: 'standalone'` di `next.config.ts`, dan `scripts/check-messages.py` (pemeriksa paritas kunci terjemahan yang selama ini
+  ad-hoc). Kedua image **dibangun dan dijalankan lokal sampai terbukti**: API menjawab `/api/health` `{"status":"ok","database":"up"}`, web
+  menyajikan `/id`, `/en/how-it-works`, `/id/admin`, dan container web berhasil mengambil 14 produk dari container API. Ukuran image 440 MB (api)
+  dan 315 MB (web) setelah install difilter per app — tanpa filter, image api ikut membawa Next.js dan React dan membengkak jadi 966 MB.
+  Belum terverifikasi: jalannya workflow di GitHub Actions dan push ke GHCR. **Sebelum push pertama**, set repository variable `NEXT_PUBLIC_API_URL`
+  (Settings → Secrets and variables → Actions → Variables); tanpa itu job image sengaja gagal dengan pesan yang jelas, karena alamat API ditanam
+  ke dalam bundel saat build.
 - [ ] **T23 Deploy VPS** — VPS Ubuntu 22.04/24.04; `docker-compose.prod.yml` (web, api, Caddy + HTTPS) dan **PostgreSQL dipasang manual di VPS (bukan kontainer)**: kontainer API menyambung ke Postgres host (`host.docker.internal` / gateway Docker), Postgres hanya mendengarkan localhost dan jaringan Docker, tidak terbuka ke internet. Web dan API di subdomain satu domain (mis. `app.` dan `api.`, wajib agar cookie dan chat jalan), domain `.my.id`, migrasi `prisma migrate deploy` dijalankan manual saat deploy. Backup dan administrasi database lewat `psql` / `pg_dump` langsung di host.
   Ditegaskan 2026-11-10 (alasan lengkap di `docs/DECISIONS.md` dan `ARCHITECTURE.md` §8): **satu VPS untuk semuanya, database ikut di dalamnya**;
   Supabase/Neon ditunda sampai ada uang sungguhan. **VPS di Singapura**, **tanpa Vercel** (web ikut di VPS). **Swap 2 GB dibuat sejak awal.**
@@ -101,6 +110,7 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   Belum diputuskan: `NEXT_PUBLIC_API_URL` ditanam saat build, jadi image web testing **tidak bisa** dipakai ulang untuk produksi. Pilih salah satu saat
   mengerjakan task ini — (a) satu image per environment, atau (b) Caddy mem-proxy API di domain yang sama pada path `/api` sehingga URL jadi relatif,
   satu image jalan di mana saja dan cookie menjadi same-origin (konsekuensinya rencana `app.`+`api.` berubah).
+  Sudah tertulis duluan saat T22 (belum pernah dijalankan di VPS sungguhan): `docker-compose.prod.yml`, `Caddyfile`, `.env.prod.example`.
   DoD: app bisa diakses via HTTPS di domain; swap aktif; `docker image prune` tercatat di `DEPLOY.md` sebagai perawatan rutin.
 - [ ] **T24 Backup & dokumentasi** — `pg_dump` harian ke R2; `docs/DEPLOY.md` (setup VPS, env, deploy, pindah domain, restore backup); README.
   **Prioritasnya naik sejak keputusan 2026-11-10**: selama database tinggal di VPS yang sama dengan aplikasi, ini **satu-satunya** jaring pengaman
