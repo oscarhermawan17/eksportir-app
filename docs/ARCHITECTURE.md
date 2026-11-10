@@ -138,10 +138,36 @@ Setiap perubahan status → notifikasi in-app ke pihak terkait + pesan sistem di
 
 - `.env.example` berisi semua variabel (DATABASE_URL, JWT_SECRET, R2_*, RESEND_API_KEY, APP_URL, dll.). Tidak ada secret di repo.
 - Dev: VPS sumopod (2 GB) atau lokal; Postgres via Docker.
+- **Satu VPS untuk semuanya, database ikut di dalamnya (keputusan 2026-11-10).** Supabase/Neon dipertimbangkan dan ditunda, alasannya
+  ada di `docs/DECISIONS.md`. Singkatnya: free tier memberi kerumitannya (pooler Prisma, project tidur, latensi jaringan) tanpa
+  keunggulan utamanya (backup terkelola), sedangkan VPS 4 GB sangat jauh dari kewalahan di skala MVP. **Pindah ke Postgres terkelola
+  saat uang sungguhan mulai mengalir** — pemicunya ada di bagian "Kapan memisahkan database" di bawah.
+- **Lokasi: Singapura.** Penjual, admin dan QC bekerja harian dari Bali (~30 ms); pembeli Rusia/CIS datang sesekali (~170–200 ms).
+  Yang menentukan rasa cepat adalah jarak browser→API, bukan browser→halaman — jadi memindahkan frontend ke CDN Eropa (Vercel) tidak
+  memperbaiki bagian yang penting. **Tidak memakai Vercel** (2026-11-10): tidak menyelesaikan latensi yang sebenarnya, paket gratisnya
+  melarang penggunaan komersial, dan web berjalan di VPS yang sama dengan biaya ±300 MB RAM dan satu domain saja.
 - Build image Docker di GitHub Actions (build Next.js di VPS 2 GB berisiko kehabisan RAM), VPS hanya menjalankan. **CI otomatis, CD manual** (keputusan 2026-10-31): push ke GitHub menjalankan lint/typecheck/test/build dan mendorong image ke GHCR; pemilik men-deploy sendiri lewat SSH dengan `docker compose pull && docker compose up -d`. VPS Ubuntu 22.04/24.04. **PostgreSQL dipasang manual di host VPS (bukan kontainer)**; hanya web dan API yang berjalan sebagai kontainer dan menyambung ke Postgres host (`host.docker.internal` dengan `extra_hosts: host-gateway`, atau IP gateway Docker). Postgres mendengarkan localhost dan jaringan Docker saja (`listen_addresses`, `pg_hba.conf`), tanpa membuka port 5432 ke internet; dikelola dengan `psql` dan `pg_dump`. Docker untuk Postgres hanya dipakai di laptop pengembangan (`docker-compose.yml`).
-- Syarat agar sesi login dan chat (WebSocket) berjalan di produksi: HTTPS; web dan API satu *site* (subdomain dari domain yang sama, mis. `app.` dan `api.`); `WEB_ORIGIN` di API = alamat web; `NEXT_PUBLIC_API_URL` ditanam saat build image web; reverse proxy (Caddy) meneruskan WebSocket ke API.
+- Syarat agar sesi login dan chat (WebSocket) berjalan di produksi: HTTPS; web dan API satu *site* (subdomain dari domain yang sama, mis. `app.` dan `api.`); `WEB_ORIGIN` di API = alamat web; `NEXT_PUBLIC_API_URL` ditanam saat build image web
+  (**konsekuensi:** image web testing tidak bisa dipakai ulang untuk produksi — perlu satu image per environment. Alternatif yang
+  dipertimbangkan untuk T23: Caddy mem-proxy API di domain yang sama pada path `/api` sehingga URL-nya relatif, satu image jalan di
+  mana saja dan cookie menjadi same-origin; konsekuensinya rencana `app.`+`api.` berubah — **belum diputuskan**); reverse proxy (Caddy) meneruskan WebSocket ke API.
 - Prod: `docker-compose.prod.yml` (web, api, caddy) di VPS ±$10, dengan PostgreSQL native di host; domain sementara `.my.id`.
-- Backup: `pg_dump` harian ke R2.
+- Swap **2 GB wajib** dibuat sejak hari pertama: melindungi dari OOM kill saat lonjakan sesaat.
+- Backup: `pg_dump` harian ke R2. **Ini satu-satunya jaring pengaman data** selama database tinggal di VPS yang sama dengan aplikasi,
+  jadi restore-nya wajib pernah dicoba (DoD T24) — backup yang belum pernah di-restore bukan backup.
+- **Kapan memisahkan database ke layanan terkelola** (bukan karena performa, tapi supaya catatan pesanan dan bukti bayar tidak mati
+  bersama satu kotak): saat ada pesanan dengan uang sungguhan, atau RAM/CPU bertahan di atas 80%/70%, atau database tumbuh beberapa GB.
+  Perpindahannya murah — bagi aplikasi ini semua Postgres hanya `DATABASE_URL`, jadi `pg_dump` + `pg_restore` + ganti satu variabel.
+  Jebakan yang menunggu di sana dicatat di "Kalau nanti pindah ke Postgres terkelola" di bawah.
+- **Kalau nanti pindah ke Postgres terkelola (Supabase/Neon):** (1) Prisma 7 + `adapter-pg` memakai prepared statement yang bentrok
+  dengan *transaction pooler* — gejalanya `prepared statement "s0" already exists`, muncul setelah app jalan beberapa menit, bukan
+  langsung; pakai session mode atau parameter pooler. (2) `prisma migrate deploy` butuh koneksi langsung/session, bukan transaction
+  pooler, jadi kemungkinan perlu `DIRECT_URL` di samping `DATABASE_URL` (belum ada di kode). (3) Koneksi langsung Supabase hanya IPv6.
+  (4) Free tier menidurkan project setelah ±1 minggu nganggur dan praktis tanpa backup yang bisa di-restore sendiri.
+- **Banyak ISP rumah di Indonesia memblokir port keluar 5432** (dipastikan 2026-11-10; lewat Telkomsel seluler bisa). Ini tidak
+  menyentuh alur kerja yang sesungguhnya: pengembangan lokal memakai Postgres Docker di laptop, migrasi produksi dijalankan **dari VPS**,
+  dan untuk mengintip data produksi pakai `ssh` lalu `psql` di sana (port 22, tidak diblokir). Laptop tidak pernah perlu menyambung
+  langsung ke database produksi.
 - `docs/DEPLOY.md`: langkah setup VPS → deploy → pindah domain.
 
 ## 9. Scope

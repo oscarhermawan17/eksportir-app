@@ -94,8 +94,18 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 - [ ] **T22 CI + image** (diputuskan 2026-10-31: **CI otomatis, CD manual**) — GitHub Actions: lint + typecheck + test (+ e2e dengan service Postgres) + build → build image Docker web & api → push ke GHCR. Image web dibangun dengan `NEXT_PUBLIC_API_URL` alamat API produksi (nilai itu ditanam saat build). **Deploy dilakukan manual** lewat SSH: `docker compose pull` (menarik image dari GHCR) lalu `docker compose up -d`.
   DoD: push ke branch main men-deploy versi baru ke VPS dev.
 - [ ] **T23 Deploy VPS** — VPS Ubuntu 22.04/24.04; `docker-compose.prod.yml` (web, api, Caddy + HTTPS) dan **PostgreSQL dipasang manual di VPS (bukan kontainer)**: kontainer API menyambung ke Postgres host (`host.docker.internal` / gateway Docker), Postgres hanya mendengarkan localhost dan jaringan Docker, tidak terbuka ke internet. Web dan API di subdomain satu domain (mis. `app.` dan `api.`, wajib agar cookie dan chat jalan), domain `.my.id`, migrasi `prisma migrate deploy` dijalankan manual saat deploy. Backup dan administrasi database lewat `psql` / `pg_dump` langsung di host.
-  DoD: app bisa diakses via HTTPS di domain.
+  Ditegaskan 2026-11-10 (alasan lengkap di `docs/DECISIONS.md` dan `ARCHITECTURE.md` §8): **satu VPS untuk semuanya, database ikut di dalamnya**;
+  Supabase/Neon ditunda sampai ada uang sungguhan. **VPS di Singapura**, **tanpa Vercel** (web ikut di VPS). **Swap 2 GB dibuat sejak awal.**
+  **Migrasi dijalankan dari VPS, bukan dari laptop** — banyak ISP rumah di Indonesia memblokir port keluar 5432; untuk melihat data produksi pakai
+  `ssh` lalu `psql` di sana.
+  Belum diputuskan: `NEXT_PUBLIC_API_URL` ditanam saat build, jadi image web testing **tidak bisa** dipakai ulang untuk produksi. Pilih salah satu saat
+  mengerjakan task ini — (a) satu image per environment, atau (b) Caddy mem-proxy API di domain yang sama pada path `/api` sehingga URL jadi relatif,
+  satu image jalan di mana saja dan cookie menjadi same-origin (konsekuensinya rencana `app.`+`api.` berubah).
+  DoD: app bisa diakses via HTTPS di domain; swap aktif; `docker image prune` tercatat di `DEPLOY.md` sebagai perawatan rutin.
 - [ ] **T24 Backup & dokumentasi** — `pg_dump` harian ke R2; `docs/DEPLOY.md` (setup VPS, env, deploy, pindah domain, restore backup); README.
+  **Prioritasnya naik sejak keputusan 2026-11-10**: selama database tinggal di VPS yang sama dengan aplikasi, ini **satu-satunya** jaring pengaman
+  terhadap kehilangan catatan pesanan dan bukti pembayaran. DoD-nya tidak boleh dilonggarkan — backup yang belum pernah di-restore bukan backup.
+  Tambahkan juga pemantauan sederhana: RAM, disk, dan apakah backup semalam benar-benar jadi.
   DoD: restore backup ke DB kosong berhasil dicoba sekali.
 - [ ] **T25 Uji end-to-end** — jalankan alur lengkap dengan 3 akun (buyer, seller, admin) di 3 bahasa; catat bug.
   DoD: tidak ada bug penghalang (blocker) di alur utama.

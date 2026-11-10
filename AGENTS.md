@@ -166,7 +166,16 @@ working tree clean, 21 of 29 tasks done (T01–T17, T13b, T16b, T16c and T17b).
   The throwaway script is not in the repo; `pnpm db:seed` does not create them.
 - R2: one bucket (`eksportir-testing`) serves as both public and private for now. **Splitting off a private bucket is part of T17** (decided 2026-11-08): payment proofs show account numbers and full names, and the current bucket is public, so a URL is the only thing between a proof and anyone holding it. Presigned GET exists since T08, so the change is one bucket plus one env variable; QC files (T18) need it too.
 - Deploy plan: CI automatic on GitHub (T22), CD manual over SSH; **PostgreSQL is installed natively on the Ubuntu VPS, not in Docker**; only web
-  and api run as containers (`docs/ARCHITECTURE.md` §8). `NEXT_PUBLIC_API_URL` is baked into the web image at build time.
+  and api run as containers (`docs/ARCHITECTURE.md` §8). `NEXT_PUBLIC_API_URL` is baked into the web image at build time, so a testing image cannot
+  be reused for production — T23 decides between one image per environment and serving the API at `/api` on the same domain.
+- **Settled 2026-11-10 (do not reopen without the owner):** one VPS in Singapore holds everything, database included — Supabase and Neon were
+  considered and deferred until real money flows, and Vercel was ruled out. The reasoning, the move-later trigger and the managed-Postgres traps
+  (Prisma prepared statements vs the transaction pooler, `DIRECT_URL` for migrations, IPv6, sleeping free tiers) are in `ARCHITECTURE.md` §8 and
+  `docs/DECISIONS.md`. Two things that follow: 2 GB of swap from day one, and T24's backup restore test is not optional, because `pg_dump` to R2 is
+  the only safety net while the database shares a box with the app.
+- Many Indonesian home ISPs block outbound port 5432, which is why connecting to a remote Postgres from the owner's home fails (Telkomsel mobile
+  works). It never blocks real work: develop against Docker Postgres locally, run production migrations **from the VPS**, and read production data
+  over `ssh` + `psql`.
 - Footer still links to pages that do not exist (they show the 404 page): `/request`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`,
   `/seller-guidelines`. `/how-it-works` exists since T16b (with the `#payment` and `#shipping` anchors the footer uses). The navbar links to
   nothing that is missing: it has no text links at all.
