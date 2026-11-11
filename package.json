@@ -15,9 +15,13 @@
     "test": "pnpm codegen && pnpm -r test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "setup": "pnpm codegen && node scripts/db-check.mjs",
+    "db:tunnel": "bash scripts/db-tunnel.sh",
+    "db:check": "node scripts/db-check.mjs",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
     "db:migrate": "pnpm --filter @balitrade/api db:migrate",
+    "db:deploy": "pnpm --filter @balitrade/api db:deploy",
     "db:seed": "pnpm --filter @balitrade/api db:seed",
     "db:studio": "pnpm --filter @balitrade/api db:studio",
     "docs:api": "python3 scripts/gen-api-docs.py"
