@@ -7,11 +7,12 @@
     "node": ">=22.12"
   },
   "scripts": {
+    "codegen": "pnpm --filter @balitrade/shared build && pnpm --filter @balitrade/api db:generate",
     "dev": "pnpm --filter @balitrade/shared build && pnpm --parallel --filter @balitrade/shared --filter @balitrade/api --filter @balitrade/web dev",
-    "build": "pnpm --filter @balitrade/shared build && pnpm --filter @balitrade/api build && pnpm --filter @balitrade/web build",
+    "build": "pnpm codegen && pnpm --filter @balitrade/api build && pnpm --filter @balitrade/web build",
     "lint": "pnpm -r lint",
-    "typecheck": "pnpm --filter @balitrade/shared build && pnpm -r typecheck",
-    "test": "pnpm --filter @balitrade/shared build && pnpm -r test",
+    "typecheck": "pnpm codegen && pnpm -r typecheck",
+    "test": "pnpm codegen && pnpm -r test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:up": "docker compose up -d postgres",

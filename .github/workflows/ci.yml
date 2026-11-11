@@ -55,11 +55,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # apps/api and apps/web import @balitrade/shared through its package exports, which point at dist/.
-      # A clean checkout has no dist, so this has to happen before anything type-checks or runs. The root
-      # scripts do it too; this step keeps the workflow correct whatever order the steps are in.
-      - name: Build the shared package
-        run: pnpm --filter @balitrade/shared build
+      # Two artefacts are generated and never committed: packages/shared/dist (the apps import it through
+      # package exports) and the Prisma client in apps/api/src/generated. `pnpm install` produces neither,
+      # so a clean checkout has neither. The root scripts run this too; the step keeps the workflow correct
+      # whatever order its steps are in, and makes a failure here obvious instead of buried in a test run.
+      - name: Generate the shared package and the Prisma client
+        run: pnpm codegen
 
       - name: Message files have the same keys in all three languages
         run: python3 scripts/check-messages.py
