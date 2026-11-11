@@ -30,16 +30,13 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
+      # Test values only. R2 is deliberately NOT here: the unit tests must run with the same environment a
+      # developer has locally, and one of them asserts what happens when R2 is unconfigured. NestJS's
+      # ConfigService falls back to process.env, so setting R2 for the whole job made that case untestable.
+      # The steps that genuinely need R2 declare it themselves, below.
       DATABASE_URL: postgresql://balitrade:balitrade@localhost:5432/balitrade
-      # Test values only. Presigned R2 URLs are computed offline, so the tests never reach Cloudflare.
       JWT_SECRET: ci-only-secret-at-least-32-characters-long
       WEB_ORIGIN: http://localhost:3000
-      R2_ACCOUNT_ID: ci
-      R2_ACCESS_KEY_ID: ci
-      R2_SECRET_ACCESS_KEY: ci
-      R2_PUBLIC_BUCKET: ci-public
-      R2_PUBLIC_BASE_URL: https://example.invalid
-      R2_PRIVATE_BUCKET: ci-private
       ADMIN_EMAIL: admin@balitrade.local
       ADMIN_PASSWORD: ci-only-password-123
       ADMIN_NAME: BaliTrade Admin
@@ -74,7 +71,15 @@ jobs:
       - name: Prepare the database for the e2e tests
         run: pnpm --filter @balitrade/api db:deploy && pnpm db:seed
 
+      # Presigned R2 URLs are computed offline, so these fake values never reach Cloudflare.
       - run: pnpm --filter @balitrade/api test:e2e
+        env:
+          R2_ACCOUNT_ID: ci
+          R2_ACCESS_KEY_ID: ci
+          R2_SECRET_ACCESS_KEY: ci
+          R2_PUBLIC_BUCKET: ci-public
+          R2_PUBLIC_BASE_URL: https://example.invalid
+          R2_PRIVATE_BUCKET: ci-private
 
   images:
     name: Build and push images

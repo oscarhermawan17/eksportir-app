@@ -21,7 +21,9 @@ const admin: AuthUser = { ...seller, id: 'user3', roles: ['ADMIN_OPS'] };
 
 function makeService(options: { configured?: boolean; sellerStatus?: string | null } = {}) {
   const { configured = true, sellerStatus = 'APPROVED' } = options;
-  const config = new ConfigService<Env, true>(configured ? FAKE_R2 : {});
+  // A stub rather than a real ConfigService: that one falls back to process.env, so the "not configured"
+  // case would quietly pass or fail depending on whatever R2 variables happen to be set in the shell.
+  const config = { get: (key: keyof Env) => (configured ? FAKE_R2[key] : undefined) } as unknown as ConfigService<Env, true>;
   const prisma = {
     sellerProfile: {
       findUnique: async () => (sellerStatus ? { status: sellerStatus } : null),
