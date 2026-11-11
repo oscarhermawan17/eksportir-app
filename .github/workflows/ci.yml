@@ -55,6 +55,12 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # apps/api and apps/web import @balitrade/shared through its package exports, which point at dist/.
+      # A clean checkout has no dist, so this has to happen before anything type-checks or runs. The root
+      # scripts do it too; this step keeps the workflow correct whatever order the steps are in.
+      - name: Build the shared package
+        run: pnpm --filter @balitrade/shared build
+
       - name: Message files have the same keys in all three languages
         run: python3 scripts/check-messages.py
 
