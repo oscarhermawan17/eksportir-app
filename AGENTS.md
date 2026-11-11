@@ -59,6 +59,7 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 | `docs/CONVENTIONS.md` | Index of the convention guides (`.claude/skills/*`) | Before writing code |
 | `docs/API.md` | Every API route with its access rule | Before adding or calling an endpoint |
 | `docs/SECURITY.md` | What is protected, open security items, checklist before deploy | Before auth, upload, money or deploy work |
+| `docs/DEPLOY.md` | The live testing environment: SSH, server layout, deploying, certificates, database, secrets, GitHub | **Before touching the VPS or CI** |
 
 ## Conventions (summary — details in `.claude/skills/*/SKILL.md`, indexed in `docs/CONVENTIONS.md`)
 
@@ -101,8 +102,8 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 ## Current status
 
-Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-10**,
-working tree clean, 21 of 29 tasks done (T01–T17, T13b, T16b, T16c and T17b).
+Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-11**,
+working tree clean, 23 of 29 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22 and T23).
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
@@ -131,14 +132,24 @@ working tree clean, 21 of 29 tasks done (T01–T17, T13b, T16b, T16c and T17b).
   claims QC began before the goods are in hand. Buyer screen `/orders/[id]/pay`, admin screen `/admin/payments` (FINANCE + OWNER). Account details come
   from `PAY_*` in `.env`; a method whose fields are empty is not offered, and `PAY_MOCK=true` puts a warning on the payment page. Proof files go to the
   private bucket under `private/<uploaderId>/`, so only the buyer and admins can open them, and the API refuses a key that is not the buyer's own.
+- T22 **CI** and T23 **deploy**: GitHub Actions runs lint, typecheck, 53 unit and 153 e2e tests on every push to
+  `main`, then builds `balitrade-api` and `balitrade-web` and pushes them to GHCR; deploying stays manual.
+  The testing environment runs at https://projectbali.my.id — see `docs/DEPLOY.md`.
+  **Three CI failures taught the same lesson:** a clean checkout has no `packages/shared/dist`, no Prisma client
+  and no `.next`, and `pnpm install` produces none of them. `pnpm codegen` now makes the first two, and `build`,
+  `typecheck` and `test` all call it. Before pushing anything that touches the build, delete those artefacts and
+  run the chain locally — otherwise a laptop full of months-old build output proves nothing about CI.
 - Quality: lint and typecheck clean, 53 unit + 153 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
+0. **T24 backup** is now the most valuable unfinished task, not the next one in number order: the database shares
+   a box with the app, so `pg_dump` to R2 **with a restore actually tried once** is the only thing standing between
+   a dead disk and losing every order record. It also owns the rest of `docs/DEPLOY.md`'s open checklist.
 1. **T18 QC.** Starts from `IN_QC`, which T17 already reaches. ADMIN_OPS uploads the report (photos/video, checklist, comment) → `QC_READY`;
    the buyer approves or reports a problem. Its admin page is a new entry in `ADMIN_NAV` (`src/components/admin/admin-nav.ts`), roles OPS + OWNER,
    and QC files belong in the **private** bucket, like payment proofs.
 2. Then T19 shipping + tracking (it reuses the payment screens through `PaymentPurpose.SHIPPING`, already in the schema), T20 completion + payout,
-   T21 password reset, T22–T25 CI + deploy + backup + end-to-end test.
+   T21 password reset (nothing resets a forgotten password today — the owner edits the database), T25 end-to-end test.
    Each adds its own `ADMIN_NAV` entry and, where it makes sense, a tile on the admin Overview.
 
 **Small things left open (not blocking anything)**
@@ -161,10 +172,23 @@ working tree clean, 21 of 29 tasks done (T01–T17, T13b, T16b, T16c and T17b).
 - Dev database has only 2 accounts: `admin@balitrade.local` (seed; password = `ADMIN_PASSWORD` in `apps/api/.env`, still the public placeholder) and
   `oscar.hermawan90@gmail.com` (SELLER, approved; no BUYER role, so it cannot order). There is no buyer account: register one at `/en/register`.
   The database may be reset freely at this stage.
+- **The VPS database is almost empty by design** (2026-11-11): the admin plus the 9 QC zones that `pnpm db:seed`
+  creates, and the rate the owner entered (Rp 18,150 / USD). The seller and sample products exist only in the
+  local dev database — they came from a throwaway script that was deliberately never committed. The owner is
+  filling the testing site by hand through the UI, which also exercises R2 uploads over real HTTPS, cookies on a
+  real domain and the chat WebSocket through nginx — none of which localhost tests.
+- The admin on the VPS is `admin@balitrade.local`; its password is in `/home/ubuntu/balitrade/.env`. It was the
+  public `.env.example` placeholder until 2026-11-11 (the seed read the laptop's `.env`), which on a public repo
+  meant anyone could sign in as admin. **Never seed a reachable environment with placeholder credentials.**
 - Sample data (2026-11-06, dev only): 12 approved products on the "Oscar Testing" seller across 7 categories, $2.49–$132.60, plus the Rp 18,100
   rate. Their photos are **generated placeholders** labelled "BaliTrade sample", not real product photos, and their id/ru texts are AI-written.
   The throwaway script is not in the repo; `pnpm db:seed` does not create them.
 - R2: one bucket (`eksportir-testing`) serves as both public and private for now. **Splitting off a private bucket is part of T17** (decided 2026-11-08): payment proofs show account numbers and full names, and the current bucket is public, so a URL is the only thing between a proof and anyone holding it. Presigned GET exists since T08, so the change is one bucket plus one env variable; QC files (T18) need it too.
+- **The testing environment is live: https://projectbali.my.id (2026-11-11).** `docs/DEPLOY.md` is the operations
+  manual — how to reach the server, what runs where, how to deploy, certificates, the database, secrets, GitHub.
+  **Read it before touching the VPS.** In short: `ssh ubuntu@43.133.155.17` works with the owner's own key, no
+  password anywhere; CI builds images and **the owner deploys by hand** (`docker compose pull && up` in
+  `/home/ubuntu/balitrade`); nothing reaches the VPS automatically.
 - **The VPS is real and reachable (2026-11-11):** `ubuntu@43.133.155.17` (Singapore, Ubuntu 24.04, 4 GB, 2 vCPU, swap already on), key-based SSH.
   Layout: `/home/ubuntu/infra` shared nginx owning 80/443 with one file per project in `conf.d/` · `/home/ubuntu/project` the owner's other
   API · `/home/ubuntu/balitrade` this app. All on a shared Docker network `edge`. PostgreSQL 16 native on the host (dev uses 18; nothing in

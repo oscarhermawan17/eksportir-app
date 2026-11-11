@@ -9,7 +9,7 @@ Cara pakai:
 - Prioritas: alur order end-to-end (sampai pembayaran, QC, ongkir, pencairan) > yang lain.
 - **Aturan:** selesai satu task → centang → commit (kode lalu dokumen, tanpa `Co-authored-by`) sebelum task berikutnya.
 
-**Status singkat (2026-11-10):** 21 dari 29 task selesai (T01–T17, T13b, T16b, T16c dan T17b). Berikutnya: **T18** QC, lalu T19–T25. Rincian dan keadaan lingkungan dev ada di `AGENTS.md` bagian "Current status".
+**Status singkat (2026-11-11):** 23 dari 29 task selesai (T01–T17, T13b, T16b, T16c, T17b, T22, T23). Environment testing **live** di https://projectbali.my.id (lihat `docs/DEPLOY.md`). Berikutnya: **T24 backup** (paling berharga — database sekotak dengan aplikasi), lalu T18 QC, T19–T21, T25. Rincian dan keadaan lingkungan dev ada di `AGENTS.md` bagian "Current status".
 
 Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
@@ -91,10 +91,15 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 
 ## Fase 5 — Rilis (31 Okt)
 
-- [ ] **T22 CI + image** (diputuskan 2026-10-31: **CI otomatis, CD manual**) — GitHub Actions: lint + typecheck + test (+ e2e dengan service Postgres) + build → build image Docker web & api → push ke GHCR. Image web dibangun dengan `NEXT_PUBLIC_API_URL` alamat API produksi (nilai itu ditanam saat build). **Deploy dilakukan manual** lewat SSH: `docker compose pull` (menarik image dari GHCR) lalu `docker compose up -d`.
+- [x] **T22 CI + image** (diputuskan 2026-10-31: **CI otomatis, CD manual**) — GitHub Actions: lint + typecheck + test (+ e2e dengan service Postgres) + build → build image Docker web & api → push ke GHCR. Image web dibangun dengan `NEXT_PUBLIC_API_URL` alamat API produksi (nilai itu ditanam saat build). **Deploy dilakukan manual** lewat SSH: `docker compose pull` (menarik image dari GHCR) lalu `docker compose up -d`.
   **DoD diperbarui 2026-11-11** agar cocok dengan keputusan "CI otomatis, CD manual" (DoD lama menyebut deploy otomatis, yang bertentangan):
   push ke `main` menjalankan lint/typecheck/test/e2e dan mendorong image web & api ke GHCR; deploy tetap dijalankan pemilik lewat SSH.
-  🔄 2026-11-11 **kode selesai, menunggu push pertama untuk diverifikasi**: `apps/api/Dockerfile`, `apps/web/Dockerfile`, `.github/workflows/ci.yml`,
+  ✅ 2026-11-11 (run #4 hijau seluruhnya; kedua image terdorong ke GHCR dan berhasil ditarik serta dijalankan di VPS).
+  **Tiga run pertama gagal, semuanya karena hal yang sama:** checkout bersih tidak punya `packages/shared/dist`, klien Prisma, maupun `.next`,
+  dan `pnpm install` tidak membuat satu pun. Sekarang ada `pnpm codegen`, dan `build`/`typecheck`/`test` memanggilnya. Run ketiga gagal karena
+  `R2_*` dipasang di level job sehingga merusak unit test yang justru menguji kondisi "R2 belum dikonfigurasi" — variabel itu kini hanya ada di
+  langkah e2e, dan test-nya memakai stub alih-alih `ConfigService` asli yang jatuh ke `process.env`.
+  Rinciannya: `apps/api/Dockerfile`, `apps/web/Dockerfile`, `.github/workflows/ci.yml`,
   `.dockerignore`, `output: 'standalone'` di `next.config.ts`, dan `scripts/check-messages.py` (pemeriksa paritas kunci terjemahan yang selama ini
   ad-hoc). Kedua image **dibangun dan dijalankan lokal sampai terbukti**: API menjawab `/api/health` `{"status":"ok","database":"up"}`, web
   menyajikan `/id`, `/en/how-it-works`, `/id/admin`, dan container web berhasil mengambil 14 produk dari container API. Ukuran image 440 MB (api)
@@ -102,7 +107,7 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   Belum terverifikasi: jalannya workflow di GitHub Actions dan push ke GHCR. **Sebelum push pertama**, set repository variable `NEXT_PUBLIC_API_URL`
   (Settings → Secrets and variables → Actions → Variables); tanpa itu job image sengaja gagal dengan pesan yang jelas, karena alamat API ditanam
   ke dalam bundel saat build.
-- [ ] **T23 Deploy VPS** — VPS Ubuntu 22.04/24.04; `docker-compose.prod.yml` (web, api, Caddy + HTTPS) dan **PostgreSQL dipasang manual di VPS (bukan kontainer)**: kontainer API menyambung ke Postgres host (`host.docker.internal` / gateway Docker), Postgres hanya mendengarkan localhost dan jaringan Docker, tidak terbuka ke internet. Web dan API di subdomain satu domain (mis. `app.` dan `api.`, wajib agar cookie dan chat jalan), domain `.my.id`, migrasi `prisma migrate deploy` dijalankan manual saat deploy. Backup dan administrasi database lewat `psql` / `pg_dump` langsung di host.
+- [x] **T23 Deploy VPS** — VPS Ubuntu 22.04/24.04; `docker-compose.prod.yml` (web, api, Caddy + HTTPS) dan **PostgreSQL dipasang manual di VPS (bukan kontainer)**: kontainer API menyambung ke Postgres host (`host.docker.internal` / gateway Docker), Postgres hanya mendengarkan localhost dan jaringan Docker, tidak terbuka ke internet. Web dan API di subdomain satu domain (mis. `app.` dan `api.`, wajib agar cookie dan chat jalan), domain `.my.id`, migrasi `prisma migrate deploy` dijalankan manual saat deploy. Backup dan administrasi database lewat `psql` / `pg_dump` langsung di host.
   Ditegaskan 2026-11-10 (alasan lengkap di `docs/DECISIONS.md` dan `ARCHITECTURE.md` §8): **satu VPS untuk semuanya, database ikut di dalamnya**;
   Supabase/Neon ditunda sampai ada uang sungguhan. **VPS di Singapura**, **tanpa Vercel** (web ikut di VPS). **Swap 2 GB dibuat sejak awal.**
   **Migrasi dijalankan dari VPS, bukan dari laptop** — banyak ISP rumah di Indonesia memblokir port keluar 5432; untuk melihat data produksi pakai
@@ -112,6 +117,11 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   satu image jalan di mana saja dan cookie menjadi same-origin (konsekuensinya rencana `app.`+`api.` berubah).
   Sudah tertulis duluan saat T22 (belum pernah dijalankan di VPS sungguhan): `docker-compose.prod.yml`, `Caddyfile`, `.env.prod.example`.
   DoD: app bisa diakses via HTTPS di domain; swap aktif; `docker image prune` tercatat di `DEPLOY.md` sebagai perawatan rutin.
+  ✅ 2026-11-11 — **https://projectbali.my.id** (web, 3 bahasa 200) dan **https://api.projectbali.my.id/api/health** (`database: up`).
+  Berbeda dari rencana: **nginx, bukan Caddy** (VPS sudah menjalankan nginx untuk proyek lain di port 80/443), nginx dipindah ke
+  `/home/ubuntu/infra` sebagai infrastruktur bersama dengan jaringan `edge`, dan PostgreSQL 16 host dijangkau lewat gateway Docker
+  (`listen_addresses` + `pg_hba` + aturan ufw — tanpa yang terakhir koneksi **timeout**, bukan ditolak). Swap sudah aktif dari awal.
+  Seluruh cara kerjanya ada di **`docs/DEPLOY.md`**. Sisa: bucket R2 privat belum dipisah, dan `pg_dump` terjadwal masuk T24.
 - [ ] **T24 Backup & dokumentasi** — `pg_dump` harian ke R2; `docs/DEPLOY.md` (setup VPS, env, deploy, pindah domain, restore backup); README.
   **Prioritasnya naik sejak keputusan 2026-11-10**: selama database tinggal di VPS yang sama dengan aplikasi, ini **satu-satunya** jaring pengaman
   terhadap kehilangan catatan pesanan dan bukti pembayaran. DoD-nya tidak boleh dilonggarkan — backup yang belum pernah di-restore bukan backup.
