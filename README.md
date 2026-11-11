@@ -63,15 +63,33 @@ nvm use                       # Node 22
 pnpm install                  # also generates the Prisma client
 cp .env.example .env
 cp apps/api/.env.example apps/api/.env
+```
 
-pnpm db:up                    # start PostgreSQL in Docker
-pnpm db:migrate               # apply migrations
-pnpm db:seed                  # create the first admin (ADMIN_* in apps/api/.env)
+Then pick a database. **Default: the VPS testing database over SSH**, so a fresh clone has real data with
+nothing to seed (fill in `DATABASE_URL` as `apps/api/.env.example` describes):
 
+```bash
+pnpm db:tunnel                # leave running: localhost:5433 → VPS PostgreSQL
+pnpm setup                    # Prisma client + shared package, then checks both database URLs
 pnpm dev                      # web :3000 + api :4000 (+ shared in watch mode)
 ```
 
+Or fully offline, against Docker — also what you need before changing `schema.prisma`:
+
+```bash
+pnpm db:up                    # start PostgreSQL in Docker
+pnpm db:migrate               # apply migrations
+pnpm db:seed                  # create the first admin (ADMIN_* in apps/api/.env)
+pnpm dev
+```
+
 Check: open http://localhost:3000 and http://localhost:4000/api/health (`"database":"up"`).
+`pnpm db:check` says which database each URL points at when that fails.
+
+> `pnpm db:migrate`, `pnpm db:seed` and the e2e suite always run against `LOCAL_DATABASE_URL` (Docker) and
+> refuse to touch the VPS — they can reset or delete data, and the VPS holds the only copy of the testing
+> orders. Apply a committed migration to the VPS with `pnpm db:deploy` through the tunnel. Details in
+> [`docs/DEPLOY.md`](docs/DEPLOY.md).
 
 ## Scripts (root)
 
@@ -82,6 +100,10 @@ Check: open http://localhost:3000 and http://localhost:4000/api/health (`"databa
 | `pnpm lint` / `pnpm typecheck` | Lint / type-check all packages |
 | `pnpm test` | Unit tests · `pnpm --filter @balitrade/api test:e2e` for API e2e (needs DB) |
 | `pnpm format` | Prettier |
-| `pnpm db:up` / `db:down` | Start / stop PostgreSQL |
-| `pnpm db:migrate` | Create & apply a migration after editing `schema.prisma` |
-| `pnpm db:seed` / `db:studio` | Seed data / open Prisma Studio |
+| `pnpm setup` | Generate the Prisma client + shared package, then report both database URLs |
+| `pnpm db:tunnel` | Open the SSH tunnel to the VPS database on `localhost:5433` (keep it running) |
+| `pnpm db:check` | Which database each URL points at, and whether it answers (no passwords) |
+| `pnpm db:up` / `db:down` | Start / stop the local Docker PostgreSQL |
+| `pnpm db:migrate` | Create & apply a migration after editing `schema.prisma` (local Docker only) |
+| `pnpm db:deploy` | Apply committed migrations to the database `DATABASE_URL` points at |
+| `pnpm db:seed` / `db:studio` | Seed data (local Docker only) / open Prisma Studio |
