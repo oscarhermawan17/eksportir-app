@@ -1,57 +1,43 @@
-# Production stack for the VPS. PostgreSQL is NOT here: it runs natively on the host (ARCHITECTURE §8),
-# listening on localhost only, so one `docker compose down -v` can never take the data with it.
+# BaliTrade on the VPS. A copy of this lives at /home/ubuntu/balitrade/docker-compose.yml; keep them in step.
 #
-# Deploy (manual, by hand — CI builds, you deploy):
-#   docker compose -f docker-compose.prod.yml pull
-#   docker compose -f docker-compose.prod.yml up -d
+# What is NOT here, on purpose:
+#   - PostgreSQL: installed natively on the host (ARCHITECTURE §8), so no `compose down -v` can take the data.
+#   - nginx: shared by every project on the box and defined in /home/ubuntu/infra, so bringing this stack
+#     down never takes the other sites offline. It terminates HTTPS and forwards here by container name.
+#   - published ports: nginx reaches these containers over the shared network, so nothing faces the internet.
 #
-# Needs a .env file next to this one; see .env.prod.example.
+# Deploy (manual — CI builds, you deploy):
+#   docker compose pull && docker compose up -d
+#
+# The shared network is created once, by hand:  docker network create edge
 
 name: balitrade
 
 services:
   api:
-    image: ghcr.io/${GITHUB_OWNER}/balitrade-api:${IMAGE_TAG:-latest}
+    image: ghcr.io/oscarhermawan17/balitrade-api:${IMAGE_TAG:-latest}
+    container_name: balitrade-api
     restart: unless-stopped
     env_file: .env
-    # The API container reaches the host's PostgreSQL through the Docker gateway. Put that same name in
-    # DATABASE_URL, e.g. postgresql://balitrade:...@host.docker.internal:5432/balitrade
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
     expose:
       - '4000'
-    networks: [edge]
+    networks:
+      - edge
 
   web:
-    image: ghcr.io/${GITHUB_OWNER}/balitrade-web:${IMAGE_TAG:-latest}
+    image: ghcr.io/oscarhermawan17/balitrade-web:${IMAGE_TAG:-latest}
+    container_name: balitrade-web
     restart: unless-stopped
-    # NEXT_PUBLIC_API_URL is baked in at build time, not read here.
+    # NEXT_PUBLIC_API_URL is baked into the image at build time, not read here.
     environment:
       NODE_ENV: production
     expose:
       - '3000'
-    depends_on: [api]
-    networks: [edge]
-
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    # The only two ports open to the internet. 80 is needed for the certificate challenge and redirects to 443.
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      # Certificates live here. Losing this volume means re-issuing them, so do not prune it casually.
-      - caddy_data:/data
-      - caddy_config:/config
-    env_file: .env
-    depends_on: [web, api]
-    networks: [edge]
-
-volumes:
-  caddy_data:
-  caddy_config:
+    depends_on:
+      - api
+    networks:
+      - edge
 
 networks:
   edge:
+    external: true

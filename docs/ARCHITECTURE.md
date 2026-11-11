@@ -150,8 +150,20 @@ Setiap perubahan status → notifikasi in-app ke pihak terkait + pesan sistem di
 - Syarat agar sesi login dan chat (WebSocket) berjalan di produksi: HTTPS; web dan API satu *site* (subdomain dari domain yang sama, mis. `app.` dan `api.`); `WEB_ORIGIN` di API = alamat web; `NEXT_PUBLIC_API_URL` ditanam saat build image web
   (**konsekuensi:** image web testing tidak bisa dipakai ulang untuk produksi — perlu satu image per environment. Alternatif yang
   dipertimbangkan untuk T23: Caddy mem-proxy API di domain yang sama pada path `/api` sehingga URL-nya relatif, satu image jalan di
-  mana saja dan cookie menjadi same-origin; konsekuensinya rencana `app.`+`api.` berubah — **belum diputuskan**); reverse proxy (Caddy) meneruskan WebSocket ke API.
-- Prod: `docker-compose.prod.yml` (web, api, caddy) di VPS ±$10, dengan PostgreSQL native di host; domain sementara `.my.id`.
+  mana saja dan cookie menjadi same-origin; konsekuensinya rencana `app.`+`api.` berubah — **belum diputuskan**); reverse proxy (**nginx**) meneruskan WebSocket ke API (`Upgrade`/`Connection` + `proxy_read_timeout 3600s`).
+- **Reverse proxy: nginx, bukan Caddy (diubah 2026-11-11).** Rencana awal memakai Caddy karena sertifikatnya otomatis, tetapi VPS sudah
+  menjalankan nginx dalam container yang memegang port 80/443 untuk proyek lain; dua reverse proxy tidak bisa berbagi port itu. Sertifikat
+  memakai certbot mode `standalone` di host, dengan hook `docker stop nginx` / `docker start nginx` — artinya **semua situs di VPS mati
+  ±30 detik tiap perpanjangan**. Mode `webroot` bisa nol downtime; belum dikerjakan agar tidak mengubah setup yang sudah bekerja.
+- **Susunan di VPS (2026-11-11), satu folder per tanggung jawab, satu jaringan Docker bersama bernama `edge`** (`docker network create edge`):
+  `/home/ubuntu/infra` nginx global + `conf.d/` satu berkas per proyek · `/home/ubuntu/project` API toko online milik pemilik ·
+  `/home/ubuntu/balitrade` web + api BaliTrade. Pemisahan ini penting: sebelumnya nginx ikut di compose proyek lain, sehingga
+  `docker compose down` di sana akan menjatuhkan seluruh situs di mesin itu. Container BaliTrade **tidak membuka port ke host** sama
+  sekali; nginx menjangkaunya lewat nama container di jaringan `edge`. Salinan berkasnya ada di `deploy/` di repo ini.
+- **Container menjangkau PostgreSQL host** lewat gateway jaringan Docker (`172.19.0.1`), bukan `host.docker.internal`. Tiga setelan yang
+  membuatnya jalan, dan ketiganya perlu ada: `listen_addresses` memuat alamat bridge Docker (tidak pernah alamat publik), satu baris
+  `pg_hba.conf` `host balitrade balitrade 172.16.0.0/12 scram-sha-256`, dan aturan ufw `allow from 172.16.0.0/12 to any port 5432`.
+  Tanpa aturan ufw koneksi **timeout**, bukan ditolak — gejala yang mudah disalahartikan sebagai Postgres mati.
 - Swap **2 GB wajib** dibuat sejak hari pertama: melindungi dari OOM kill saat lonjakan sesaat.
 - Backup: `pg_dump` harian ke R2. **Ini satu-satunya jaring pengaman data** selama database tinggal di VPS yang sama dengan aplikasi,
   jadi restore-nya wajib pernah dicoba (DoD T24) — backup yang belum pernah di-restore bukan backup.

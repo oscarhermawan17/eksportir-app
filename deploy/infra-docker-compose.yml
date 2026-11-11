@@ -1,0 +1,28 @@
+# Shared entry point for every project on this VPS. It owns ports 80 and 443 and nothing else, so a
+# `docker compose down` in an application folder can never take the whole machine offline.
+#
+# One file per project in conf.d/. The `edge` network is created once by hand:
+#   docker network create edge
+#
+# Certificates: certbot on the host, standalone mode. The renewal hooks in
+# /etc/letsencrypt/renewal/*.conf stop and start THIS container by name, so renaming it means editing them.
+
+name: infra
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true

@@ -165,6 +165,12 @@ working tree clean, 21 of 29 tasks done (T01–T17, T13b, T16b, T16c and T17b).
   rate. Their photos are **generated placeholders** labelled "BaliTrade sample", not real product photos, and their id/ru texts are AI-written.
   The throwaway script is not in the repo; `pnpm db:seed` does not create them.
 - R2: one bucket (`eksportir-testing`) serves as both public and private for now. **Splitting off a private bucket is part of T17** (decided 2026-11-08): payment proofs show account numbers and full names, and the current bucket is public, so a URL is the only thing between a proof and anyone holding it. Presigned GET exists since T08, so the change is one bucket plus one env variable; QC files (T18) need it too.
+- **The VPS is real and reachable (2026-11-11):** `ubuntu@43.133.155.17` (Singapore, Ubuntu 24.04, 4 GB, 2 vCPU, swap already on), key-based SSH.
+  Layout: `/home/ubuntu/infra` shared nginx owning 80/443 with one file per project in `conf.d/` · `/home/ubuntu/project` the owner's other
+  API · `/home/ubuntu/balitrade` this app. All on a shared Docker network `edge`. PostgreSQL 16 native on the host (dev uses 18; nothing in
+  the schema depends on the difference), database `balitrade` already migrated through T17 and seeded. Testing domains: `projectbali.my.id`
+  (web), `api.projectbali.my.id` (API), `www.` redirects. **This is a testing environment, not production.** Copies of the server files are
+  in `deploy/`; the full picture is `docs/ARCHITECTURE.md` §8.
 - Deploy plan: CI automatic on GitHub (T22), CD manual over SSH; **PostgreSQL is installed natively on the Ubuntu VPS, not in Docker**; only web
   and api run as containers (`docs/ARCHITECTURE.md` §8). `NEXT_PUBLIC_API_URL` is baked into the web image at build time, so a testing image cannot
   be reused for production — T23 decides between one image per environment and serving the API at `/api` on the same domain.
