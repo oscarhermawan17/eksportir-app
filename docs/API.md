@@ -8,7 +8,6 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 |---|---|---|---|---|
 | GET | `/api/admin/categories` | ADMIN_OWNER | `list` | admin-categories |
 | POST | `/api/admin/categories` | ADMIN_OWNER | `create` | admin-categories |
-| DELETE | `/api/admin/categories/:id` | ADMIN_OWNER | `remove` | admin-categories |
 | PATCH | `/api/admin/categories/:id` | ADMIN_OWNER | `update` | admin-categories |
 | GET | `/api/admin/exchange-rates` | ADMIN_OWNER | `history` | admin-exchange-rates |
 | POST | `/api/admin/exchange-rates` | ADMIN_OWNER | `set` | admin-exchange-rates |

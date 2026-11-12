@@ -140,14 +140,17 @@ working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22,
   `typecheck` and `test` all call it. Before pushing anything that touches the build, delete those artefacts and
   run the chain locally — otherwise a laptop full of months-old build output proves nothing about CI.
 - T26 **product categories are data the owner manages**, not `PRODUCT_CATEGORIES` in `packages/shared`: table `ProductCategory`,
-  OWNER-only page `/admin/categories` (create, edit the en/id/ru labels, reorder, tick `active`, archive, delete only at zero products).
+  OWNER-only page `/admin/categories` (create, edit the en/id/ru labels, reorder, tick `active`, archive). **No delete anywhere** — the owner
+  dropped it on 2026-11-12 after seeing the screen: off and archived cover every real case and both are reversible, so the page has no
+  irreversible button and there is no `DELETE` route.
   Unticking a category takes its listings out of the catalog, the filters and `/products/:id` (which answers "not available") **without
   touching their `ProductStatus`**, so ticking it back restores everything; the seller still sees them with a "category switched off" badge.
   One constant does that work — `visibleToBuyers` in `apps/api/src/products/catalog.service.ts`, shared by list, detail and seller page.
-  Delete is safe twice over: `onDelete: Restrict` in the schema, and the UI only offers it when `productCount == 0` (archive otherwise).
+  `onDelete: Restrict` stays in the schema as a net, not a feature. A seller moving a listing to another category does restore it, but through
+  review again: editing an `APPROVED` product sends it back to `PENDING_REVIEW` (the T09 rule, unchanged).
   The migration moved **no data** — the FK is on `slug` and the column kept the name `category`. An unknown slug in `?category=` answers
   200 + empty, not 400, so a bookmarked filter URL survives a category going away.
-- Quality: lint and typecheck clean, `pnpm build` clean, 56 unit + 170 e2e tests green (run `pnpm --filter @balitrade/api test:e2e`).
+- Quality: lint and typecheck clean, `pnpm build` clean, 56 unit + 169 e2e tests green (run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
 0. **T24 backup** is now the most valuable unfinished task, not the next one in number order: the database shares

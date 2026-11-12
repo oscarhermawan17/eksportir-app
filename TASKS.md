@@ -135,9 +135,11 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   `active`**, dan hapus. Uncheck dipakai saat regulasi melarang sebuah kategori: produknya **hilang dari katalog, filter, dan
   `/products/[id]` jadi 404**, dan tidak bisa dipesan — tapi penjual serta admin tetap melihatnya dengan badge "kategori dinonaktifkan
   admin", supaya penjual tidak merasa produknya dihapus diam-diam. Status produk (`APPROVED` dll) **tidak** diubah: visibility dihitung
-  dari kategorinya, jadi mencentang ulang memulihkan semuanya tanpa menyentuh baris produk. Hapus = **soft delete** (`archivedAt`),
-  efeknya sama dengan uncheck tapi hilang juga dari daftar admin; relasi `Product.categoryId` memakai `onDelete: Restrict` sehingga
-  hard delete mustahil selama masih ada produk yang memakainya, dan tombol "hapus permanen" hanya muncul kalau jumlah produknya 0.
+  dari kategorinya, jadi mencentang ulang memulihkan semuanya tanpa menyentuh baris produk. **Arsipkan** (`archivedAt`) memberi efek
+  sama dengan uncheck plus menghilangkan kategorinya dari daftar admin — untuk kategori yang sudah dipensiunkan sementara produknya masih
+  mengacu ke situ. **Tidak ada hapus** (diputuskan pemilik 2026-11-12): uncheck dan arsipkan menutup semua kasus nyata dan keduanya bisa
+  dibatalkan, jadi halaman ini tidak punya tombol yang tak bisa dibatalkan sama sekali. FK `onDelete: Restrict` tetap ada sebagai jaring,
+  bukan sebagai fitur.
   Order yang sudah berjalan tidak terpengaruh — `OrderItem` menyimpan snapshot dan `productId`-nya nullable.
   Label pindah ke DB (`nameEn/nameId/nameRu`), di-seed dari teks `Products.categories` yang ada sekarang, lalu kunci lamanya dibuang
   supaya tidak ada dua sumber kebenaran. Entri `ADMIN_NAV` baru, peran **OWNER saja** (sejenis `/admin/exchange-rate`: kategori
@@ -154,6 +156,14 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   sengaja tidak digabung ke sini.
   Penyederhanaan yang disengaja: layar review admin menampilkan label kategori dalam bahasa Inggris (slug-nya ada di sebelahnya), karena
   meneruskan `?locale=` ke lima endpoint admin hanya untuk satu chip tidak sebanding.
+  **Diubah 2026-11-12 setelah pemilik melihat layarnya:** tombol Delete dibuang seluruhnya, endpoint `DELETE /api/admin/categories/:id` ikut
+  hilang. Pemicunya pertanyaan "kenapa 'Other' bisa dihapus dan yang lain tidak" — jawabannya "karena nol produk", dan aturan yang hanya
+  terbaca dari tombol yang muncul-hilang itu memang buruk. Yang lebih menentukan: uncheck dan arsipkan sudah menutup semua kasus nyata, jadi
+  Delete cuma konsep ketiga yang harus dijelaskan plus satu-satunya tombol yang tak bisa dibatalkan. E2e jadi 169 (dari 170): dua test hapus
+  diganti satu test yang memastikan endpoint-nya memang tidak ada. Teks `intro` halaman sekarang juga menjelaskan bedanya Arsipkan dengan
+  uncheck, karena itu pertanyaan pertama yang muncul.
+  Catatan: penjual yang mengganti kategori produknya memang memulihkan produk itu, **tapi lewat review admin lagi** — mengedit produk
+  `APPROVED` mengembalikannya ke `PENDING_REVIEW` (aturan T09, sengaja tidak diubah).
 
 ---
 
