@@ -6,7 +6,7 @@ import { Film, Loader2, Lock, Upload, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRef, useState, type ChangeEvent } from 'react';
 import { ApiError, errorKey } from '@/lib/api';
-import { getPrivateFileUrl, uploadMedia, validateMediaFile, type UploadedMedia } from '@/lib/media';
+import { getPrivateFileUrl, uploadMedia, UPLOAD_REFUSED, validateMediaFile, type UploadedMedia } from '@/lib/media';
 
 interface Item {
   id: number;
@@ -54,6 +54,15 @@ export function MediaUploader({
     setItems((current) => current.map((item) => (item.id === id ? { ...item, ...patch } : item)));
 
   function explain(error: unknown): string {
+    if (error instanceof ApiError && error.status === 400) {
+      const [reason] = error.messages;
+      if (reason === UPLOAD_REFUSED.content) return t('contentMismatch');
+      if (reason === UPLOAD_REFUSED.imageTooLarge) return t('imageTooLarge');
+      if (reason === UPLOAD_REFUSED.type) return t('typeNotAllowedShort');
+    }
+    if (error instanceof ApiError && error.status === 429) {
+      return t('tooMany');
+    }
     if (error instanceof ApiError && error.status === 403 && purpose === 'PRODUCT_MEDIA') {
       return t('forbiddenProduct');
     }

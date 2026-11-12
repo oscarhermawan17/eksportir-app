@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { Role } from '@balitrade/shared';
+import { MAX_IMAGE_BYTES, MAX_VIDEO_BYTES, Role } from '@balitrade/shared';
 import request from 'supertest';
 import { hashPassword } from '../src/common/password.js';
 import type { PrismaService } from '../src/prisma/prisma.service.js';
@@ -107,11 +107,29 @@ describe('Media (e2e)', () => {
     await post({ ...photo, contentType: 'application/pdf' }).expect(400);
     await post({ ...photo, contentType: 'image/svg+xml' }).expect(400);
     await post({ ...photo, size: 0 }).expect(400);
-    await post({ ...photo, size: 11 * 1024 * 1024 }).expect(400); // photo > 10 MB
-    await post({ ...photo, contentType: 'video/mp4', size: 51 * 1024 * 1024 }).expect(400); // video > 50 MB
+    // Limits since 2026-11-12: a photo is 200 KB (the browser compresses before asking), a video 100 MB.
+    await post({ ...photo, size: MAX_IMAGE_BYTES + 1 }).expect(400);
+    await post({ ...photo, contentType: 'video/mp4', size: MAX_VIDEO_BYTES + 1 }).expect(400);
     await post({ ...photo, purpose: 'ADMIN_ONLY' }).expect(400);
     await post({ ...photo, extra: 'x' }).expect(400);
-    await post({ ...photo, contentType: 'video/mp4', size: 40 * 1024 * 1024 }).expect(201);
+    await post({ ...photo, size: MAX_IMAGE_BYTES }).expect(201);
+    await post({ ...photo, contentType: 'video/mp4', size: 80 * 1024 * 1024 }).expect(201);
+  });
+
+  it('rate-limits presigning per user, so one account cannot fill the bucket (429)', async () => {
+    // The API never sees the bytes, so nothing but this stands between one signed-in account and an
+    // unbounded number of objects in R2. The limit is 40/minute; the earlier tests in this file have
+    // already spent a few, so the loop below only needs to run past whatever is left.
+    const seller = await agentFor(emails.seller);
+    let sawTooMany = false;
+    for (let attempt = 0; attempt < 60 && !sawTooMany; attempt += 1) {
+      const res = await seller.post('/api/media/presign-upload').send(photo);
+      if (res.status === 429) sawTooMany = true;
+    }
+    expect(sawTooMany).toBe(true);
+
+    // The limit is per user, not per IP: a different account on the same connection is unaffected.
+    await (await agentFor(emails.pending)).post('/api/media/presign-upload').send(photo).expect(403);
   });
 
   it('private files: only the uploader (or an admin) gets a download URL', async () => {

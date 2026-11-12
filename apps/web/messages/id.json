@@ -302,7 +302,7 @@
   },
   "Media": {
     "choose": "Pilih foto atau video",
-    "hint": "Foto JPG, PNG atau WebP maks. 10 MB; video MP4, WebM atau MOV maks. 50 MB.",
+    "hint": "Foto JPG, PNG atau WebP; video MP4, WebM atau MOV maksimal 100 MB. Foto diperkecil otomatis.",
     "uploading": "Mengunggah…",
     "done": "Terunggah",
     "failed": "Unggah gagal",
@@ -313,7 +313,11 @@
     "unavailable": "Penyimpanan media belum tersedia. Silakan coba lagi nanti.",
     "storageRejected": "Penyimpanan menolak file. Silakan coba lagi.",
     "openFile": "Buka file",
-    "previewAlt": "Pratinjau foto yang diunggah"
+    "previewAlt": "Pratinjau foto yang diunggah",
+    "contentMismatch": "{name}: berkas ini bukan foto atau video sungguhan.",
+    "imageTooLarge": "{name}: foto ini tidak bisa diperkecil sampai cukup. Coba foto lain.",
+    "typeNotAllowedShort": "{name}: jenis berkas ini tidak didukung.",
+    "tooMany": "Terlalu banyak unggahan dalam waktu singkat. Tunggu semenit lalu coba lagi."
   },
   "Dev": {
     "uploadTitle": "Uji unggah (khusus development)",

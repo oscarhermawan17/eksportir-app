@@ -10,8 +10,13 @@ import { RolesGuard } from './roles.guard.js';
 
 @Module({
   imports: [
-    // Limits are set per route with @Throttle; the guard is only applied to register/login.
-    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 60 }]),
+    // Limits are set per route with @Throttle, and the guard is applied per controller (auth, media).
+    // Two named throttlers so a route can have both a burst limit and a daily ceiling; `daily` is only
+    // meant for uploads, so the auth routes skip it explicitly.
+    ThrottlerModule.forRoot([
+      { name: 'default', ttl: 60_000, limit: 60 },
+      { name: 'daily', ttl: 24 * 60 * 60_000, limit: 100_000 },
+    ]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService<Env, true>) => ({
@@ -22,6 +27,6 @@ import { RolesGuard } from './roles.guard.js';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtAuthGuard, RolesGuard],
-  exports: [AuthService, JwtAuthGuard, RolesGuard],
+  exports: [AuthService, JwtAuthGuard, RolesGuard, ThrottlerModule],
 })
 export class AuthModule {}

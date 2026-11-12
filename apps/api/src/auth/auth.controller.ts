@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, Patch, Post, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { SkipThrottle, Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import type { AuthUser } from '@balitrade/shared';
 import type { CookieOptions, Response } from 'express';
 import type { Env } from '../config/env.js';
@@ -23,6 +23,7 @@ export class AuthController {
 
   @Post('register')
   @UseGuards(ThrottlerGuard)
+  @SkipThrottle({ daily: true })
   @Throttle({ default: { limit: 10, ttl: ONE_MINUTE_MS } })
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response): Promise<AuthUser> {
     const { user, token } = await this.auth.register(dto);
@@ -33,6 +34,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   @UseGuards(ThrottlerGuard)
+  @SkipThrottle({ daily: true })
   @Throttle({ default: { limit: 5, ttl: ONE_MINUTE_MS } })
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response): Promise<AuthUser> {
     const { user, token } = await this.auth.login(dto);

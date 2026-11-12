@@ -34,6 +34,11 @@ const EXTENSIONS: Record<MediaContentType, string> = {
 
 const PRIVATE_KEY_PATTERN = /^private\/([A-Za-z0-9]+)\/[0-9a-f-]{36}\.[a-z0-9]{2,4}$/;
 
+/** "100 MB" or "200 KB" — the image limit is well under a megabyte, so always using MB read as "0.195 MB". */
+function describeLimit(bytes: number): string {
+  return bytes >= 1024 * 1024 ? `${bytes / (1024 * 1024)} MB` : `${bytes / 1024} KB`;
+}
+
 interface R2Settings {
   client: S3Client;
   publicBucket: string;
@@ -82,8 +87,9 @@ export class MediaService {
     const r2 = this.requireR2();
 
     if (dto.size > maxBytesFor(dto.contentType)) {
-      const limitMb = maxBytesFor(dto.contentType) / (1024 * 1024);
-      throw new BadRequestException(`${mediaKindOf(dto.contentType).toLowerCase()} files can be at most ${limitMb} MB`);
+      throw new BadRequestException(
+        `${mediaKindOf(dto.contentType).toLowerCase()} files can be at most ${describeLimit(maxBytesFor(dto.contentType))}`,
+      );
     }
 
     const isPublic = dto.purpose === 'PRODUCT_MEDIA';

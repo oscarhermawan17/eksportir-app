@@ -302,7 +302,7 @@
   },
   "Media": {
     "choose": "Choose photo or video",
-    "hint": "JPG, PNG or WebP photos up to 10 MB; MP4, WebM or MOV videos up to 50 MB.",
+    "hint": "JPG, PNG or WebP photos; MP4, WebM or MOV videos up to 100 MB. Photos are resized automatically.",
     "uploading": "Uploading…",
     "done": "Uploaded",
     "failed": "Upload failed",
@@ -313,7 +313,11 @@
     "unavailable": "Media storage is not available yet. Please try again later.",
     "storageRejected": "The storage rejected the file. Please try again.",
     "openFile": "Open file",
-    "previewAlt": "Uploaded photo preview"
+    "previewAlt": "Uploaded photo preview",
+    "contentMismatch": "{name}: this file is not really a photo or video.",
+    "imageTooLarge": "{name}: this photo could not be made small enough. Try a different one.",
+    "typeNotAllowedShort": "{name}: this file type is not supported.",
+    "tooMany": "Too many uploads in a short time. Wait a minute and try again."
   },
   "Dev": {
     "uploadTitle": "Upload test (development only)",

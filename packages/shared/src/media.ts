@@ -9,9 +9,60 @@ export type MediaContentType = (typeof MEDIA_CONTENT_TYPES)[number];
 
 export type MediaKind = 'IMAGE' | 'VIDEO';
 
-/** Size limits (ARCHITECTURE §Media): photo ≤ 10 MB, video ≤ 50 MB. */
-export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
-export const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
+/**
+ * Size limits (ARCHITECTURE §Media), tightened for images on 2026-11-12 at the owner's request.
+ *
+ * 200 KB is far below what a phone camera produces (2–5 MB), so it is only workable because the browser
+ * resizes and re-encodes before uploading — see IMAGE_COMPRESSION. Without that, nearly every real photo
+ * would be rejected. The API and the presigned URL check the final size, not the original.
+ */
+export const MAX_IMAGE_BYTES = 200 * 1024;
+export const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
+
+/**
+ * What the browser does to a photo before asking for an upload URL. Longest side first, then quality,
+ * each step re-encoded to WebP and measured; the first result under MAX_IMAGE_BYTES wins.
+ */
+export const IMAGE_COMPRESSION = {
+  /** Still plenty for a product gallery; 1600px on the long side at WebP q0.8 is usually ~120–180 KB. */
+  maxDimensions: [1600, 1280, 1024] as const,
+  qualities: [0.82, 0.7, 0.6] as const,
+  outputType: 'image/webp' as const,
+} as const;
+
+/**
+ * First bytes of each accepted format. The Content-Type is already pinned into the upload signature, so
+ * this is a second layer: it stops a file that merely claims to be an image (a renamed .exe, an HTML
+ * page) from reaching the bucket at all. WebP and MP4 are container formats, so their marker sits at a
+ * fixed offset rather than at byte 0.
+ */
+export const MEDIA_MAGIC_BYTES: { type: MediaContentType; offset: number; bytes: number[] }[] = [
+  { type: 'image/jpeg', offset: 0, bytes: [0xff, 0xd8, 0xff] },
+  { type: 'image/png', offset: 0, bytes: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] },
+  // "RIFF" .... "WEBP"
+  { type: 'image/webp', offset: 0, bytes: [0x52, 0x49, 0x46, 0x46] },
+  { type: 'image/webp', offset: 8, bytes: [0x57, 0x45, 0x42, 0x50] },
+  // "ftyp" at offset 4 covers MP4 and QuickTime alike; the brand that follows differs per encoder.
+  { type: 'video/mp4', offset: 4, bytes: [0x66, 0x74, 0x79, 0x70] },
+  { type: 'video/quicktime', offset: 4, bytes: [0x66, 0x74, 0x79, 0x70] },
+  // EBML header, shared by WebM and Matroska.
+  { type: 'video/webm', offset: 0, bytes: [0x1a, 0x45, 0xdf, 0xa3] },
+];
+
+/**
+ * True when `head` (the first bytes of a file) really is the format it claims to be. Every signature
+ * registered for that type must match, which is what makes the two-part WebP check meaningful.
+ */
+export function looksLikeContentType(head: Uint8Array, type: MediaContentType): boolean {
+  const signatures = MEDIA_MAGIC_BYTES.filter((entry) => entry.type === type);
+  if (signatures.length === 0) return false;
+  return signatures.every(({ offset, bytes }) =>
+    bytes.every((byte, index) => head[offset + index] === byte),
+  );
+}
+
+/** How many bytes of a file need reading for looksLikeContentType. */
+export const MAGIC_BYTES_HEAD = 16;
 
 export function isMediaContentType(value: string): value is MediaContentType {
   return (MEDIA_CONTENT_TYPES as readonly string[]).includes(value);

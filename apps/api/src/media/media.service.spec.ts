@@ -64,14 +64,14 @@ describe('MediaService', () => {
     expect(new URL(result.uploadUrl).hostname).toContain('bt-private');
   });
 
-  it('enforces 10 MB for photos and 50 MB for videos', async () => {
+  it('enforces 200 KB for photos and 100 MB for videos', async () => {
     const service = makeService();
     const upload = (contentType: 'image/webp' | 'video/mp4', size: number) =>
       service.createUploadUrl(seller, { purpose: 'PRODUCT_MEDIA', contentType, size });
 
-    await expect(upload('image/webp', MAX_IMAGE_BYTES + 1)).rejects.toThrow(/at most 10 MB/);
+    await expect(upload('image/webp', MAX_IMAGE_BYTES + 1)).rejects.toThrow(/at most 200 KB/);
     await expect(upload('image/webp', MAX_IMAGE_BYTES)).resolves.toBeDefined();
-    await expect(upload('video/mp4', MAX_VIDEO_BYTES + 1)).rejects.toThrow(/at most 50 MB/);
+    await expect(upload('video/mp4', MAX_VIDEO_BYTES + 1)).rejects.toThrow(/at most 100 MB/);
     await expect(upload('video/mp4', MAX_VIDEO_BYTES)).resolves.toBeDefined();
   });
 
