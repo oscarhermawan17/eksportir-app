@@ -50,7 +50,7 @@ function ReviewList() {
   }, [filter, attempt]);
 
   return (
-    <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:py-14">
+    <div>
       <h1 className="text-2xl font-bold text-text">{t('title')}</h1>
 
       <div role="tablist" aria-label={t('title')} className="mt-5 flex flex-wrap gap-2">

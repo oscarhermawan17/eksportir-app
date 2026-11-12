@@ -145,7 +145,17 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="flex flex-1 flex-col bg-background">{children}</main>
+        {/*
+          The one content container for the whole admin area. It used to be absent, so every page invented
+          its own and no two agreed: three different widths (3xl/4xl/5xl), three vertical paddings, and the
+          categories page had no padding at all. It is left-aligned on purpose — not `mx-auto` — because the
+          top bar above is full width with the same `px-4 sm:px-6`, so this keeps a page's left edge in line
+          with the page title instead of drifting towards the middle on a wide screen. A page renders its
+          content directly and sets no container of its own; a narrow form limits its own card instead.
+        */}
+        <main className="flex flex-1 flex-col bg-background">
+          <div className="w-full max-w-[1120px] flex-1 px-4 py-8 sm:px-6 sm:py-10">{children}</div>
+        </main>
       </div>
     </div>
   );

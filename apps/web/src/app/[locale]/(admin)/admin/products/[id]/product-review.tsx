@@ -39,13 +39,13 @@ function Loader({ id }: { id: string }) {
 
   if (error) {
     return (
-      <p role="alert" className="mx-auto w-full max-w-4xl px-4 py-12 text-error">
+      <p role="alert" className="text-error">
         {error}
       </p>
     );
   }
   if (!product) {
-    return <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-12" aria-busy="true" />;
+    return <div className="h-24" aria-busy="true" />;
   }
   return <Review product={product} onChange={setProduct} />;
 }
@@ -135,7 +135,7 @@ function Review({ product, onChange }: { product: AdminProductView; onChange: (p
   };
 
   return (
-    <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:py-14">
+    <div>
       <Link href="/admin/products" className="text-sm font-semibold text-primary hover:underline">
         ← {t('back')}
       </Link>

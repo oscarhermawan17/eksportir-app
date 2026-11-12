@@ -52,7 +52,7 @@ function Detail({ id, basePath }: { id: string; basePath: string }) {
   const current = state?.id === id ? state : null;
 
   return (
-    <div className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:py-10">
+    <div>
       <nav className="mb-5 text-sm text-muted">
         <Link href={basePath} className="hover:text-primary hover:underline">
           ← {t('back')}

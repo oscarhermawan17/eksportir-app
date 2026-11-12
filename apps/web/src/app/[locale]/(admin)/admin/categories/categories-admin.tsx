@@ -73,7 +73,7 @@ function Page() {
   }
 
   return (
-    <div className="w-full max-w-4xl">
+    <div>
       <p className="text-sm text-muted">{t('intro')}</p>
 
       <FormErrors messages={errors} />

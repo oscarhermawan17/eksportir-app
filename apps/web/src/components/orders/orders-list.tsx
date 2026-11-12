@@ -46,7 +46,7 @@ function Orders({ basePath }: { basePath: string }) {
   const money = (usd: string) => format.number(Number(usd), { style: 'currency', currency: 'USD' });
 
   return (
-    <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:py-10">
+    <div>
       <h1 className="text-2xl font-bold text-text">{t('title')}</h1>
       {failed ? (
         <div role="alert" className="mt-6 flex flex-col items-start gap-3">
