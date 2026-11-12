@@ -43,8 +43,7 @@ pnpm monorepo, Node 22 (`.nvmrc`), TypeScript 6 strict everywhere.
 | Storage | Cloudflare R2 (S3 API) via presigned URLs |
 
 Commands (repo root): `pnpm dev` (web :3000 + api :4000), `pnpm lint`, `pnpm typecheck`, `pnpm build`, `pnpm test`,
-`pnpm --filter @balitrade/api test:e2e` (needs `pnpm db:up` + `pnpm db:seed`), `pnpm db:migrate`, `pnpm db:seed`,
-`pnpm db:tunnel` / `pnpm setup` / `pnpm db:check` (see the database note under "Environment facts").
+`pnpm --filter @balitrade/api test:e2e` (needs `pnpm db:up` + `pnpm db:seed`), `pnpm db:migrate`, `pnpm db:seed`.
 Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from the `.env.example` files).
 
 ## Where to read more
@@ -204,15 +203,9 @@ working tree clean, 23 of 29 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22 
   (Prisma prepared statements vs the transaction pooler, `DIRECT_URL` for migrations, IPv6, sleeping free tiers) are in `ARCHITECTURE.md` §8 and
   `docs/DECISIONS.md`. Two things that follow: 2 GB of swap from day one, and T24's backup restore test is not optional, because `pg_dump` to R2 is
   the only safety net while the database shares a box with the app.
-- **Local dev reads the VPS database through an SSH tunnel, by default (2026-11-12).** `pnpm db:tunnel` (leave it running) →
-  `pnpm setup` → `pnpm dev`, and a clone on any machine has the real testing data with nothing to seed. Many Indonesian home ISPs
-  block outbound 5432 and the VPS firewall opens only 22/80/443, which is why it goes over SSH.
-  **`apps/api/.env` has two URLs and the split is a safety mechanism:** `DATABASE_URL` (VPS, `localhost:5433`) for the app, and
-  `LOCAL_DATABASE_URL` (Docker, `localhost:5432`) which is the only one `pnpm db:migrate`, `pnpm db:seed` and `test:e2e` may use —
-  `scripts/db-local.mjs` wraps them and **refuses** anything that is not loopback on 5432. Those three destroy data (`migrate dev`
-  can offer to reset a drifted database; the e2e suite deletes users). So schema work is: `pnpm db:migrate` on Docker → commit →
-  `pnpm db:deploy` through the tunnel (`migrate deploy` never drops data). `pnpm db:check` says what points where, without passwords.
-  Never "just switch `LOCAL_DATABASE_URL` to 5433 to save a step" — that is the one move that loses the testing orders.
+- Many Indonesian home ISPs block outbound port 5432, which is why connecting to a remote Postgres from the owner's home fails (Telkomsel mobile
+  works). It never blocks real work: develop against Docker Postgres locally, run production migrations **from the VPS**, and read production data
+  over `ssh` + `psql`.
 - Footer still links to pages that do not exist (they show the 404 page): `/request`, `/faq`, `/contact`, `/terms`, `/privacy`, `/about`,
   `/seller-guidelines`. `/how-it-works` exists since T16b (with the `#payment` and `#shipping` anchors the footer uses). The navbar links to
   nothing that is missing: it has no text links at all.

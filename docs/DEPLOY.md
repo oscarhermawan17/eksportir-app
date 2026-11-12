@@ -23,54 +23,20 @@ working from the owner's machine can use the same key — it needs nothing else 
 | User | `ubuntu` (passwordless `sudo`) |
 | Open to the internet | 22, 80, 443 only (ufw) |
 
-### Working from the laptop against the VPS database (decided 2026-11-12)
+**Home ISPs in Indonesia block outbound port 5432**, so the owner's laptop cannot reach a remote PostgreSQL
+directly. This never blocks real work:
 
-**Home ISPs in Indonesia block outbound port 5432**, and the VPS firewall only opens 22, 80 and 443, so the
-database is reached **over SSH** — nothing about PostgreSQL is exposed to the internet. Since 2026-11-12 that
-tunnel is the owner's normal way of working: clone the repo anywhere, open the tunnel, run web + api, and the
-app reads the real testing data without seeding anything.
-
-```bash
-pnpm db:tunnel   # leave this terminal running: localhost:5433 → VPS PostgreSQL, reconnects by itself
-pnpm setup       # Prisma client + shared package, then reports which database each URL points at
-pnpm dev
-```
-
-`apps/api/.env` holds **two** connection strings, and the split is the safety mechanism:
-
-| Variable | Points at | Used by |
-|---|---|---|
-| `DATABASE_URL` | VPS through the tunnel, `localhost:5433` | the app, `pnpm dev`, `pnpm db:studio` |
-| `LOCAL_DATABASE_URL` | local Docker, `localhost:5432` | `pnpm db:migrate`, `pnpm db:seed`, `test:e2e` |
-
-`scripts/db-local.mjs` wraps those last three and **refuses to run against anything but a loopback host on
-port 5432**. They each destroy data: `prisma migrate dev` can decide the database has drifted and offer to
-reset it, the seed rewrites the admin account, and the e2e suite creates and deletes users in parallel. The
-VPS database holds the only copy of the testing orders and payment proofs, so pointing any of them at it once
-is enough to lose everything.
-
-Schema changes therefore take the long way round, and that is deliberate:
+- develop against the local Docker PostgreSQL (`pnpm db:up`),
+- run production migrations **from the VPS**, or through a tunnel (below),
+- read production data over `ssh` + `psql`.
 
 ```bash
-pnpm db:migrate   # against local Docker (pnpm db:up first) — writes the migration file
-# commit the migration, then with the tunnel open:
-pnpm db:deploy    # prisma migrate deploy against the VPS: applies migrations, never drops data
+# only if you really need the VPS database from the laptop; 5433 avoids clashing with the local one
+ssh -N -L 5433:localhost:5432 ubuntu@43.133.155.17
 ```
 
-`pnpm db:check` prints which database each URL points at and whether it answers — run it first whenever the
-app throws connection errors. It prints hosts and ports only, never passwords.
-
-The password for `DATABASE_URL` is the one in `/home/ubuntu/balitrade/.env` on the VPS. To copy it into the
-laptop's `apps/api/.env` without putting it on screen:
-
-```bash
-ssh ubuntu@43.133.155.17 'grep -m1 ^DATABASE_URL= /home/ubuntu/balitrade/.env' | sed 's#@[^/]*/#@localhost:5433/#' >> apps/api/.env
-```
-
-Then delete the older `DATABASE_URL=` line above it, so only one remains.
-
-To work fully offline (on a plane, or when the VPS is down), point `DATABASE_URL` at the Docker database too:
-`pnpm db:up && pnpm db:migrate && pnpm db:seed`.
+While that tunnel is open, point `DATABASE_URL` in `apps/api/.env` at `localhost:5433` — **and put it back
+afterwards**, or every local command and test fails with a confusing connection error.
 
 ## 2. What runs where
 

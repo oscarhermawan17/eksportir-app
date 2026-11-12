@@ -14,12 +14,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "node ../../scripts/db-local.mjs vitest run --config ./vitest.config.e2e.ts",
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
-    "db:migrate": "node ../../scripts/db-local.mjs prisma migrate dev",
+    "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "node ../../scripts/db-local.mjs prisma db seed",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
   },
   "dependencies": {
