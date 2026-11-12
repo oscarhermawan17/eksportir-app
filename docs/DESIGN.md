@@ -93,6 +93,12 @@ Area `/admin` tampil **terpisah dari toko**, supaya jelas sedang di mana dan mua
 - **Tanpa pencarian produk di area admin.** Pencarian toko hanya mengembalikan produk APPROVED dari penjual APPROVED — kebalikan dari yang dikerjakan admin. Tiap daftar admin punya filternya sendiri; pencarian admin lintas data ditambahkan nanti kalau memang dibutuhkan.
 - **Halaman Overview** (menu pertama): angka pekerjaan yang menunggu — penjual belum disetujui, listing belum ditinjau, order perlu tindakan — masing-masing bisa diklik ke daftar yang sudah terfilter, plus kurs yang berlaku. Tanpa halaman kelola pembeli: pembeli tidak disetujui atau dimoderasi.
 - **Menu mengikuti peran** dan hanya memuat halaman yang sudah ada: `ADMIN_OPS` melihat penjual, listing (nanti QC dan tracking); `ADMIN_FINANCE` melihat pembayaran; `ADMIN_OWNER` melihat semuanya plus kurs dan pencairan.
+- **Satu wadah konten untuk seluruh area admin** (dirapikan 2026-11-12): `admin-shell.tsx` memberi `max-w-[1120px]` dengan
+  `px-4 py-8 sm:px-6 sm:py-10`, dan **halaman tidak boleh memasang wadahnya sendiri lagi**. Rata kiri, bukan `mx-auto`, karena top bar
+  di atasnya full-width dengan gutter yang sama — jadi tepi kiri isi sejajar dengan judul halaman, tidak melayang ke tengah di layar lebar.
+  Sebelumnya tiap halaman mengarang sendiri: tiga lebar berbeda (3xl/4xl/5xl), tiga padding vertikal, dan halaman Kategori tanpa padding
+  sama sekali — itulah yang membuatnya terasa tidak seragam. Formulir sempit membatasi **kartunya sendiri** (mis. `max-w-3xl` di halaman
+  kurs), bukan halamannya. Komponen order dipakai bersama toko, jadi wadahnya ada di call site: halaman toko membungkus, halaman admin tidak.
 - **Layar kecil:** sidebar menjadi laci yang dibuka dari tombol menu; fokus keyboard terlihat; menu aktif diberi `aria-current`.
 - Rencana teknis: pisahkan chrome toko dan admin lewat route group atau pembungkus yang menyembunyikan navbar/footer di `/admin`; pilih yang paling kecil risikonya saat mengerjakan.
 - Wireframe (▓ = teal gelap, ▌ = penanda gold menu aktif):
