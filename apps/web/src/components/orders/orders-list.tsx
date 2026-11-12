@@ -46,10 +46,9 @@ function Orders({ basePath }: { basePath: string }) {
   const money = (usd: string) => format.number(Number(usd), { style: 'currency', currency: 'USD' });
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-text">{t('title')}</h1>
+    <div className="space-y-6">
       {failed ? (
-        <div role="alert" className="mt-6 flex flex-col items-start gap-3">
+        <div role="alert" className="flex flex-col items-start gap-3">
           <p className="text-error">{t('loadError')}</p>
           <Button
             variant="secondary"
@@ -63,13 +62,13 @@ function Orders({ basePath }: { basePath: string }) {
           </Button>
         </div>
       ) : orders === null ? (
-        <p className="mt-6 text-muted" aria-busy="true">
+        <p className="text-muted" aria-busy="true">
           {t('loading')}
         </p>
       ) : orders.length === 0 ? (
-        <p className="mt-6 rounded-card border border-border bg-card px-5 py-10 text-center text-muted">{t('emptyBuyer')}</p>
+        <p className="rounded-card border border-border bg-card px-5 py-10 text-center text-muted">{t('emptyBuyer')}</p>
       ) : (
-        <ul className="mt-6 space-y-3">
+        <ul className="space-y-3">
           {orders.map((order) => (
             <li key={order.id}>
               <Link

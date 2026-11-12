@@ -84,8 +84,7 @@ function RatePage() {
 
   return (
     <div className="max-w-3xl">
-      <h1 className="text-2xl font-bold text-text">{t('title')}</h1>
-      <p className="mt-2 text-sm text-muted">{t('intro')}</p>
+      <p className="text-sm text-muted">{t('intro')}</p>
 
       {loadFailed ? (
         <div role="alert" className="mt-6 flex flex-col items-start gap-3">

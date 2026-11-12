@@ -81,8 +81,7 @@ function Overview() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-text">{t('overview.title')}</h2>
-      <p className="mt-1 text-sm text-muted">{t('overview.intro')}</p>
+      <p className="text-sm text-muted">{t('overview.intro')}</p>
 
       {failed ? (
         <div role="alert" className="mt-6 flex flex-col items-start gap-3">

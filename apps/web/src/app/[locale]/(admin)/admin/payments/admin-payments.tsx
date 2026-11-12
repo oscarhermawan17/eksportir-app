@@ -69,8 +69,7 @@ function Payments() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-text">{t('adminTitle')}</h2>
-      <p className="mt-1 text-sm text-muted">{t('adminIntro')}</p>
+      <p className="text-sm text-muted">{t('adminIntro')}</p>
 
       <ul className="mt-5 flex flex-wrap gap-2">
         {FILTERS.map((option) => (

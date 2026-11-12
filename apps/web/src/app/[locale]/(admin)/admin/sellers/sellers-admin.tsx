@@ -67,9 +67,8 @@ function SellerList() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-text">{t('sellersTitle')}</h1>
 
-      <div role="tablist" aria-label={t('sellersTitle')} className="mt-5 flex flex-wrap gap-2">
+      <div role="tablist" aria-label={t('sellersTitle')} className="flex flex-wrap gap-2">
         {FILTERS.map((option) => (
           <button
             key={option}

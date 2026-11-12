@@ -142,7 +142,7 @@ function Review({ product, onChange }: { product: AdminProductView; onChange: (p
 
       <section className="mt-4 rounded-card border border-border bg-card p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-xl font-bold text-text">{product.translations[product.sourceLocale]?.title}</h1>
+          <h2 className="text-xl font-bold text-text">{product.translations[product.sourceLocale]?.title}</h2>
           <span className="rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold text-muted">
             {tProducts(`status.${product.status}`)}
           </span>
