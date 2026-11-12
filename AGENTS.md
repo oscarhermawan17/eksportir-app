@@ -185,8 +185,14 @@ working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22,
 - Dev database has only 2 accounts: `admin@balitrade.local` (seed; password = `ADMIN_PASSWORD` in `apps/api/.env`, still the public placeholder) and
   `oscar.hermawan90@gmail.com` (SELLER, approved; no BUYER role, so it cannot order). There is no buyer account: register one at `/en/register`.
   The database may be reset freely at this stage.
+- **T26 is live on the VPS (2026-11-12):** migration applied, image deployed, `/api/categories` answers from the
+  database. **The VPS categories are deliberately NOT the seeded nine** — the owner replaced them with four:
+  `PERSONAL_GOODS`, `GARMENTS_FASHION`, `LEATHER_PRODUCTS`, `HANDICRAFT_SOUVENIR` (labels in en/id/ru in the row).
+  The nine were deleted outright, which was safe only because `products = 0` there. **`pnpm db:seed` would put the
+  nine back** (`SEED_PRODUCT_CATEGORIES` in `packages/shared`), so do not run the seed against the VPS.
 - **The VPS database is almost empty by design** (2026-11-11): the admin plus the 9 QC zones that `pnpm db:seed`
-  creates, and the rate the owner entered (Rp 18,150 / USD). The seller and sample products exist only in the
+  creates, and the rate the owner entered (Rp 18,150 / USD). Measured 2026-11-12: `users=1, products=0, orders=0,
+  payments=0, messages=0` — the hand-filling described below has not started yet. The seller and sample products exist only in the
   local dev database — they came from a throwaway script that was deliberately never committed. The owner is
   filling the testing site by hand through the UI, which also exercises R2 uploads over real HTTPS, cookies on a
   real domain and the chat WebSocket through nginx — none of which localhost tests.

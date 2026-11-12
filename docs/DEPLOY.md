@@ -84,12 +84,37 @@ To roll back, pin the previous image in `.env` and bring it up again:
 IMAGE_TAG=sha-<full commit sha>
 ```
 
-**After a migration is added**, apply it as well. The runtime image is lean and has no Prisma CLI, so run it
-from the laptop through the tunnel from section 1:
+**After a migration is added, apply it BEFORE pulling the new image** — a migration that only adds tables and
+columns leaves the running version working, so there is no downtime that way round.
+
+The runtime image is lean and has no Prisma CLI, and Prisma 7 refuses a `url` in the schema file, so the
+migration runs in a throwaway Node container **on the VPS**. The database password is read from the server's
+own `.env` inside the command, so it never reaches a laptop or a terminal (proven 2026-11-12, T26):
 
 ```bash
-pnpm --filter @balitrade/api db:deploy
+# 1. on the laptop: a schema without the client generator, plus a config that needs no dotenv
+mkdir -p /tmp/mig && cp apps/api/prisma/schema.prisma /tmp/mig/ && cp -R apps/api/prisma/migrations /tmp/mig/
+#    delete the `generator client { ... }` block from /tmp/mig/schema.prisma, then write /tmp/mig/prisma.config.ts:
+#      import { defineConfig, env } from 'prisma/config';
+#      export default defineConfig({ schema: 'schema.prisma', migrations: { path: 'migrations' },
+#                                    datasource: { url: env('DATABASE_URL') } });
+scp -r /tmp/mig/. ubuntu@43.133.155.17:/home/ubuntu/migrate-tmp/
+
+# 2. on the VPS
+DB=$(grep -m1 "^DATABASE_URL=" /home/ubuntu/balitrade/.env | cut -d= -f2-)
+docker run --rm --network edge -v /home/ubuntu/migrate-tmp:/w -w /w -e DATABASE_URL="$DB" \
+  node:22-alpine sh -c "npm init -y && npm i prisma@7.10.1 && ./node_modules/.bin/prisma migrate deploy"
+
+# 3. clean up — npm ran as root inside the container, so plain rm is denied
+sudo rm -rf /home/ubuntu/migrate-tmp
 ```
+
+Three traps, all hit once:
+- `npx prisma` installs into a temp cache, so `prisma.config.ts` cannot resolve `prisma/config`. Install prisma
+  **into the work directory** instead, as above.
+- Prisma 7 rejects `url = env("DATABASE_URL")` inside `datasource` (error P1012). It belongs in the config file.
+- `docker compose pull && up -d` over SSH may finish the work and then hang without returning. Check with
+  `docker ps` (uptime) and `docker inspect -f '{{.Image}}'` against `docker images` rather than assuming it failed.
 
 Housekeeping, now and then: `docker image prune -a`.
 
