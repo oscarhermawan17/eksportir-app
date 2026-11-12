@@ -5,9 +5,16 @@ import re,glob,subprocess
 rows=[]
 for f in sorted(glob.glob('apps/api/src/*/*.controller.ts')):
     lines=open(f).read().split('\n')
-    prefix=''; cls_dec=[]; buf=[]; in_class=False
+    prefix=''; cls_dec=[]; buf=[]; in_class=False; pending=''
     for l in lines:
         s=l.strip()
+        # A decorator may span several lines (e.g. @Throttle({ ... }) with one limit per line). Collect
+        # them into one string first; otherwise the continuation lines look like code and clear `buf`,
+        # which silently drops the route that follows. The assert at the end catches it, loudly.
+        if pending or (s.startswith('@') and s.count('(')>s.count(')')):
+            pending+=s
+            if pending.count('(')>pending.count(')'): continue
+            s=pending; pending=''
         m=re.match(r"@Controller\((?:'([^']*)')?\)",s)
         if m: prefix=m.group(1) or ''; buf.append(s); continue
         if s.startswith('export class'):
@@ -34,7 +41,7 @@ for f in sorted(glob.glob('apps/api/src/*/*.controller.ts')):
                     access='any admin' if 'ADMIN_ROLES' in roles else ', '.join(x.strip().strip("'") for x in roles.split(','))
                 else: access='logged in'
                 if 'ApprovedSellerGuard' in guards: access+=' (approved seller)'
-            if 'ThrottlerGuard' in guards: access+=' · rate-limited'
+            if re.search(r'Throttle\w*Guard',guards): access+=' · rate-limited'  # ThrottlerGuard, UploadThrottleGuard, ...
             rows.append((path,verb,access,sig.group(1),f.split('/')[-1].replace('.controller.ts','')))
         else: buf=[]
 total=int(subprocess.check_output("grep -hE '^\\s*@(Get|Post|Put|Patch|Delete)\\(' apps/api/src/*/*.controller.ts | wc -l",shell=True).decode().strip())

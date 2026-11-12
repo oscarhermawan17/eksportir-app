@@ -38,8 +38,8 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/conversations/:id/messages` | logged in | `send` | chat |
 | GET | `/api/fx/current` | public | `current` | fx |
 | GET | `/api/health` | public | `check` | health |
-| GET | `/api/media/download-url` | logged in | `downloadUrl` | media |
-| POST | `/api/media/presign-upload` | logged in | `presignUpload` | media |
+| GET | `/api/media/download-url` | logged in · rate-limited | `downloadUrl` | media |
+| POST | `/api/media/presign-upload` | logged in · rate-limited | `presignUpload` | media |
 | GET | `/api/notifications` | logged in | `list` | notifications |
 | POST | `/api/notifications/:id/read` | logged in | `read` | notifications |
 | POST | `/api/notifications/conversations/:conversationId/read` | logged in | `readConversation` | notifications |
