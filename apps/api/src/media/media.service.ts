@@ -34,7 +34,7 @@ const EXTENSIONS: Record<MediaContentType, string> = {
 
 const PRIVATE_KEY_PATTERN = /^private\/([A-Za-z0-9]+)\/[0-9a-f-]{36}\.[a-z0-9]{2,4}$/;
 
-/** "100 MB" or "200 KB" — the image limit is well under a megabyte, so always using MB read as "0.195 MB". */
+/** "100 MB" or "500 KB" — the image limit is under a megabyte, so always using MB read as "0.488 MB". */
 function describeLimit(bytes: number): string {
   return bytes >= 1024 * 1024 ? `${bytes / (1024 * 1024)} MB` : `${bytes / 1024} KB`;
 }

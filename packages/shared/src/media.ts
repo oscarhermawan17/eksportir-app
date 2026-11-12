@@ -12,11 +12,19 @@ export type MediaKind = 'IMAGE' | 'VIDEO';
 /**
  * Size limits (ARCHITECTURE §Media), tightened for images on 2026-11-12 at the owner's request.
  *
- * 200 KB is far below what a phone camera produces (2–5 MB), so it is only workable because the browser
+ * 500 KB is far below what a phone camera produces (2–5 MB), so it is only workable because the browser
  * resizes and re-encodes before uploading — see IMAGE_COMPRESSION. Without that, nearly every real photo
  * would be rejected. The API and the presigned URL check the final size, not the original.
+ *
+ * Why 500 KB and not 1 MB (owner's question, 2026-11-12): at 2000 px a heavily textured photo — woven
+ * rattan, batik, leather grain — lands at 300–450 KB, so 500 KB is already enough that such a photo is
+ * never degraded. The ceiling that actually matters is the catalog page: the web app uses plain <img>
+ * with no thumbnails and no srcset, so one file serves both the grid card and the detail view, and a
+ * grid of twelve products downloads twelve full-size files. 500 KB makes that ~6 MB; 1 MB would make it
+ * ~12 MB, which is painful on the mobile connections both sides of this marketplace actually use.
+ * Raising it further only makes sense together with stored thumbnails.
  */
-export const MAX_IMAGE_BYTES = 200 * 1024;
+export const MAX_IMAGE_BYTES = 500 * 1024;
 export const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
 
 /**
@@ -24,9 +32,12 @@ export const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
  * each step re-encoded to WebP and measured; the first result under MAX_IMAGE_BYTES wins.
  */
 export const IMAGE_COMPRESSION = {
-  /** Still plenty for a product gallery; 1600px on the long side at WebP q0.8 is usually ~120–180 KB. */
-  maxDimensions: [1600, 1280, 1024] as const,
-  qualities: [0.82, 0.7, 0.6] as const,
+  /**
+   * The first entry is also the cap every photo is normalised to, whatever its file size: a buyer
+   * judging the weave of a basket wants pixels, and 2000 px is a useful amount of them.
+   */
+  maxDimensions: [2000, 1600, 1280] as const,
+  qualities: [0.85, 0.78, 0.7] as const,
   outputType: 'image/webp' as const,
 } as const;
 

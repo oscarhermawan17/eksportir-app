@@ -1,7 +1,7 @@
 import { IMAGE_COMPRESSION, MAX_IMAGE_BYTES } from '@balitrade/shared';
 
 /**
- * Shrinks a photo in the browser until it fits MAX_IMAGE_BYTES (200 KB).
+ * Shrinks a photo in the browser until it fits MAX_IMAGE_BYTES (500 KB) and the 2000 px dimension cap.
  *
  * This is what makes that limit usable at all: a phone camera produces 2–5 MB, so without this step a
  * seller would be told "too big" for almost every photo they own, with no way to fix it on a phone. The
@@ -11,11 +11,17 @@ import { IMAGE_COMPRESSION, MAX_IMAGE_BYTES } from '@balitrade/shared';
  * Tries each dimension at each quality, largest and best first, and takes the first result that fits.
  */
 export async function compressImage(file: File): Promise<File> {
-  // Already small enough: leave it exactly as it is rather than re-encoding and losing quality for nothing.
-  if (file.size <= MAX_IMAGE_BYTES) return file;
-
   const bitmap = await createImageBitmap(file);
   try {
+    // Size alone is not enough to skip the work. A 4000x3000 photo that happens to compress to 450 KB
+    // would pass straight through, and the catalog — plain <img>, no thumbnails — would then send those
+    // 4000 pixels to a 300 px card. Dimensions are normalised whatever the file weighs; only a photo
+    // that is already small in BOTH senses is left untouched, so it is never re-encoded for nothing.
+    const [cap] = IMAGE_COMPRESSION.maxDimensions;
+    if (file.size <= MAX_IMAGE_BYTES && Math.max(bitmap.width, bitmap.height) <= cap) {
+      return file;
+    }
+
     for (const maxDimension of IMAGE_COMPRESSION.maxDimensions) {
       const { width, height } = fit(bitmap.width, bitmap.height, maxDimension);
       const canvas = document.createElement('canvas');

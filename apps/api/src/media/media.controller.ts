@@ -27,8 +27,8 @@ export class MediaController {
   /**
    * A listing takes at most 10 files, so 40 a minute covers re-tries and a fast connection while still
    * refusing a script. 400 a day is far above a working day of real listing and far below a bill worth
-   * noticing: at the 100 MB video ceiling it caps one account at ~40 GB, and at the 200 KB image limit
-   * at ~80 MB.
+   * noticing: at the 100 MB video ceiling it caps one account at ~40 GB, and at the 500 KB image limit
+   * at ~200 MB.
    */
   @Post('presign-upload')
   @Throttle({
