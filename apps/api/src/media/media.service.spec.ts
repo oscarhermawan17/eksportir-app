@@ -19,11 +19,20 @@ const seller: AuthUser = { id: 'user1', email: 's@x.com', name: 'S', phone: null
 const buyer: AuthUser = { ...seller, id: 'user2', roles: ['BUYER'] };
 const admin: AuthUser = { ...seller, id: 'user3', roles: ['ADMIN_OPS'] };
 
-function makeService(options: { configured?: boolean; sellerStatus?: string | null } = {}) {
-  const { configured = true, sellerStatus = 'APPROVED' } = options;
+/** Separate credentials for the private bucket, as a real deployment should have. */
+const FAKE_PRIVATE_KEY: Partial<Env> = {
+  R2_PRIVATE_ACCESS_KEY_ID: 'AKIAPRIVATE',
+  R2_PRIVATE_SECRET_ACCESS_KEY: 'private-secret',
+};
+
+function makeService(
+  options: { configured?: boolean; sellerStatus?: string | null; separateKeys?: boolean } = {},
+) {
+  const { configured = true, sellerStatus = 'APPROVED', separateKeys = false } = options;
+  const env: Partial<Env> = separateKeys ? { ...FAKE_R2, ...FAKE_PRIVATE_KEY } : FAKE_R2;
   // A stub rather than a real ConfigService: that one falls back to process.env, so the "not configured"
   // case would quietly pass or fail depending on whatever R2 variables happen to be set in the shell.
-  const config = { get: (key: keyof Env) => (configured ? FAKE_R2[key] : undefined) } as unknown as ConfigService<Env, true>;
+  const config = { get: (key: keyof Env) => (configured ? env[key] : undefined) } as unknown as ConfigService<Env, true>;
   const prisma = {
     sellerProfile: {
       findUnique: async () => (sellerStatus ? { status: sellerStatus } : null),
@@ -33,6 +42,42 @@ function makeService(options: { configured?: boolean; sellerStatus?: string | nu
 }
 
 describe('MediaService', () => {
+  describe('separate credentials for the private bucket', () => {
+    const keyIdIn = (url: string) => new URL(url).searchParams.get('X-Amz-Credential')?.split('/')[0];
+
+    it('signs private uploads with the private key and public ones with the public key', async () => {
+      const service = makeService({ separateKeys: true });
+      const photo = await service.createUploadUrl(seller, {
+        purpose: 'PRODUCT_MEDIA',
+        contentType: 'image/jpeg',
+        size: 1234,
+      });
+      const proof = await service.createUploadUrl(seller, {
+        purpose: 'PRIVATE_FILE',
+        contentType: 'image/png',
+        size: 1234,
+      });
+      expect(keyIdIn(photo.uploadUrl)).toBe('AKIAFAKE');
+      expect(keyIdIn(proof.uploadUrl)).toBe('AKIAPRIVATE');
+    });
+
+    it('signs a private download with the private key too', async () => {
+      const service = makeService({ separateKeys: true });
+      const { url } = await service.createDownloadUrl(seller, `private/${seller.id}/${'0'.repeat(8)}-0000-0000-0000-000000000000.png`);
+      expect(keyIdIn(url)).toBe('AKIAPRIVATE');
+    });
+
+    it('falls back to the public key when no private key is configured', async () => {
+      const service = makeService();
+      const proof = await service.createUploadUrl(seller, {
+        purpose: 'PRIVATE_FILE',
+        contentType: 'image/png',
+        size: 1234,
+      });
+      expect(keyIdIn(proof.uploadUrl)).toBe('AKIAFAKE');
+    });
+  });
+
   it('signs a product photo upload into the public bucket', async () => {
     const result = await makeService().createUploadUrl(seller, {
       purpose: 'PRODUCT_MEDIA',

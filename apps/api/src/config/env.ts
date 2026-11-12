@@ -10,8 +10,17 @@ export interface Env {
   JWT_EXPIRES_IN_SECONDS: number;
   /** Cloudflare R2. Optional in development (media endpoints answer 503 until set); required in production. */
   R2_ACCOUNT_ID?: string;
+  /** Credentials for the PUBLIC bucket (product photos and videos). */
   R2_ACCESS_KEY_ID?: string;
   R2_SECRET_ACCESS_KEY?: string;
+  /**
+   * Credentials for the PRIVATE bucket (payment proofs, QC files), so a leaked public key cannot read
+   * them. Optional, and both or neither: when they are absent the private bucket falls back to the
+   * public credentials, which is fine while both names point at one development bucket but must not be
+   * how production runs — MediaService warns at startup when the buckets differ and the keys do not.
+   */
+  R2_PRIVATE_ACCESS_KEY_ID?: string;
+  R2_PRIVATE_SECRET_ACCESS_KEY?: string;
   /** Bucket with public read access (product photos/videos). */
   R2_PUBLIC_BUCKET?: string;
   /** Base URL that serves R2_PUBLIC_BUCKET, e.g. https://pub-xxxx.r2.dev or https://media.example.com */
@@ -60,6 +69,8 @@ const PAY_KEYS = [
 
 export function validateEnv(config: Record<string, unknown>): Env {
   const errors: string[] = [];
+  const str = (value: unknown): string | undefined =>
+    typeof value === 'string' && value.trim() !== '' ? value.trim() : undefined;
 
   const nodeEnv = String(config.NODE_ENV ?? 'development');
   if (!['development', 'production', 'test'].includes(nodeEnv)) {
@@ -93,6 +104,14 @@ export function validateEnv(config: Record<string, unknown>): Env {
       r2[key] = value.trim();
     }
   }
+  // Deliberately NOT part of R2_KEYS: adding them there would make them mandatory in production, which
+  // would break a running deployment the moment this version ships. The rule here is only both-or-neither.
+  const privateKeyId = str(config.R2_PRIVATE_ACCESS_KEY_ID);
+  const privateSecret = str(config.R2_PRIVATE_SECRET_ACCESS_KEY);
+  if ((privateKeyId === undefined) !== (privateSecret === undefined)) {
+    errors.push('R2_PRIVATE_ACCESS_KEY_ID and R2_PRIVATE_SECRET_ACCESS_KEY must be set together');
+  }
+
   const r2Missing = R2_KEYS.filter((key) => r2[key] === undefined);
   if (nodeEnv === 'production' && r2Missing.length > 0) {
     errors.push(`Missing R2 settings: ${r2Missing.join(', ')}`);
@@ -126,6 +145,9 @@ export function validateEnv(config: Record<string, unknown>): Env {
     JWT_SECRET: jwtSecret as string,
     JWT_EXPIRES_IN_SECONDS: jwtExpiresIn,
     ...r2,
+    ...(privateKeyId && privateSecret
+      ? { R2_PRIVATE_ACCESS_KEY_ID: privateKeyId, R2_PRIVATE_SECRET_ACCESS_KEY: privateSecret }
+      : {}),
     ...pay,
   };
 }

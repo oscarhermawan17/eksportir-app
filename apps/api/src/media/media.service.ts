@@ -4,6 +4,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -40,7 +41,10 @@ function describeLimit(bytes: number): string {
 }
 
 interface R2Settings {
-  client: S3Client;
+  /** Credentials scoped to the public bucket. */
+  publicClient: S3Client;
+  /** Scoped to the private bucket when R2_PRIVATE_* is set; the same client as above otherwise. */
+  privateClient: S3Client;
   publicBucket: string;
   privateBucket: string;
   publicBaseUrl: string;
@@ -48,6 +52,7 @@ interface R2Settings {
 
 @Injectable()
 export class MediaService {
+  private readonly logger = new Logger(MediaService.name);
   private readonly r2: R2Settings | null;
 
   constructor(
@@ -60,23 +65,46 @@ export class MediaService {
     const publicBucket = config.get('R2_PUBLIC_BUCKET', { infer: true });
     const privateBucket = config.get('R2_PRIVATE_BUCKET', { infer: true });
     const publicBaseUrl = config.get('R2_PUBLIC_BASE_URL', { infer: true });
+    const privateKeyId = config.get('R2_PRIVATE_ACCESS_KEY_ID', { infer: true });
+    const privateSecret = config.get('R2_PRIVATE_SECRET_ACCESS_KEY', { infer: true });
 
-    this.r2 =
-      accountId && accessKeyId && secretAccessKey && publicBucket && privateBucket && publicBaseUrl
-        ? {
-            client: new S3Client({
-              region: 'auto',
-              endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-              credentials: { accessKeyId, secretAccessKey },
-              // R2 rejects the extra checksum headers the SDK adds by default to presigned PUTs.
-              requestChecksumCalculation: 'WHEN_REQUIRED',
-              responseChecksumValidation: 'WHEN_REQUIRED',
-            }),
-            publicBucket,
-            privateBucket,
-            publicBaseUrl: publicBaseUrl.replace(/\/+$/, ''),
-          }
-        : null;
+    if (!(accountId && accessKeyId && secretAccessKey && publicBucket && privateBucket && publicBaseUrl)) {
+      this.r2 = null;
+      return;
+    }
+
+    const endpoint = `https://${accountId}.r2.cloudflarestorage.com`;
+    const makeClient = (keyId: string, secret: string): S3Client =>
+      new S3Client({
+        region: 'auto',
+        endpoint,
+        credentials: { accessKeyId: keyId, secretAccessKey: secret },
+        // R2 rejects the extra checksum headers the SDK adds by default to presigned PUTs.
+        requestChecksumCalculation: 'WHEN_REQUIRED',
+        responseChecksumValidation: 'WHEN_REQUIRED',
+      });
+
+    const publicClient = makeClient(accessKeyId, secretAccessKey);
+    const hasOwnPrivateKey = Boolean(privateKeyId && privateSecret);
+
+    this.r2 = {
+      publicClient,
+      // Two credentials so a leaked public key — the one that signs every product photo upload — cannot
+      // also read payment proofs and QC files.
+      privateClient: hasOwnPrivateKey ? makeClient(privateKeyId!, privateSecret!) : publicClient,
+      publicBucket,
+      privateBucket,
+      publicBaseUrl: publicBaseUrl.replace(/\/+$/, ''),
+    };
+
+    if (!hasOwnPrivateKey && privateBucket !== publicBucket) {
+      // One key for two separate buckets is the worst of both worlds: the files are split, the blast
+      // radius of a leak is not. Fine while a developer is mid-setup, never right for a real deployment.
+      this.logger.warn(
+        `R2_PRIVATE_BUCKET (${privateBucket}) uses the public bucket's credentials. ` +
+          'Set R2_PRIVATE_ACCESS_KEY_ID and R2_PRIVATE_SECRET_ACCESS_KEY to a token scoped to that bucket alone.',
+      );
+    }
   }
 
   /**
@@ -101,7 +129,7 @@ export class MediaService {
     const key = `${folder}/${user.id}/${randomUUID()}.${EXTENSIONS[dto.contentType]}`;
 
     const uploadUrl = await getSignedUrl(
-      r2.client,
+      isPublic ? r2.publicClient : r2.privateClient,
       new PutObjectCommand({
         Bucket: isPublic ? r2.publicBucket : r2.privateBucket,
         Key: key,
@@ -135,7 +163,7 @@ export class MediaService {
       throw new ForbiddenException('You cannot open this file');
     }
 
-    const url = await getSignedUrl(r2.client, new GetObjectCommand({ Bucket: r2.privateBucket, Key: key }), {
+    const url = await getSignedUrl(r2.privateClient, new GetObjectCommand({ Bucket: r2.privateBucket, Key: key }), {
       expiresIn: DOWNLOAD_URL_TTL_SECONDS,
     });
     return { url, expiresInSeconds: DOWNLOAD_URL_TTL_SECONDS };
