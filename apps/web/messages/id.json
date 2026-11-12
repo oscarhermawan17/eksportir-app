@@ -470,7 +470,7 @@
   },
   "AdminCategories": {
     "title": "Kategori produk",
-    "intro": "Kategori menentukan apa yang boleh dijual. Menonaktifkan satu kategori langsung menarik semua produk di dalamnya dari toko — pembeli tidak lagi melihatnya dan halamannya menjawab \"tidak ditemukan\" — tanpa mengubah produknya, jadi mengaktifkannya kembali memulihkan semuanya.",
+    "intro": "Kategori menentukan apa yang boleh dijual. Menonaktifkan satu kategori langsung menarik semua produk di dalamnya dari toko — pembeli tidak lagi melihatnya dan halamannya menjawab \"tidak ditemukan\" — tanpa mengubah produknya, jadi mengaktifkannya kembali memulihkan semuanya. Mengarsipkan memberi efek yang sama ke toko dan sekaligus mengeluarkan kategorinya dari daftar ini — gunakan untuk kategori yang sudah dipensiunkan, sementara produknya masih mengacu ke situ.",
     "addButton": "Tambah kategori",
     "addTitle": "Kategori baru",
     "slug": "Kunci",
@@ -491,12 +491,10 @@
     "inShop": "Tampil di toko",
     "archive": "Arsipkan",
     "restore": "Pulihkan",
-    "delete": "Hapus",
     "badgeOff": "Dinonaktifkan",
     "badgeArchived": "Diarsipkan",
     "productCount": "{count, plural, =0 {tanpa produk} other {# produk}}",
-    "hiddenWarning": "{count, plural, other {# produk}} disembunyikan dari toko selama kategori ini nonaktif. Statusnya tidak berubah dan akan kembali begitu diaktifkan.",
-    "confirmDelete": "Hapus {slug} secara permanen? Tidak ada yang memakainya, jadi tidak ada produk yang terpengaruh — tapi ini juga tidak bisa dibatalkan."
+    "hiddenWarning": "{count, plural, other {# produk}} disembunyikan dari toko selama kategori ini nonaktif. Statusnya tidak berubah dan akan kembali begitu diaktifkan."
   },
   "Catalog": {
     "title": "Produk",

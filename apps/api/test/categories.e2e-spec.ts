@@ -230,7 +230,7 @@ describe('Product categories managed by the owner (e2e)', () => {
     });
   });
 
-  describe('archiving and deleting', () => {
+  describe('archiving', () => {
     it('archiving hides the category from the default admin list and from the shop', async () => {
       const owner = await agentFor(emails.owner);
       await owner.patch(`/api/admin/categories/${usedCategoryId}`).send({ archived: true }).expect(200);
@@ -248,17 +248,10 @@ describe('Product categories managed by the owner (e2e)', () => {
       await anon().get(`/api/products/${productId}`).expect(404);
     });
 
-    it('refuses to delete a category that still has products, with 409', async () => {
+    it('offers no delete at all: there is no such endpoint (decided by the owner 2026-11-12)', async () => {
       const owner = await agentFor(emails.owner);
-      await owner.delete(`/api/admin/categories/${usedCategoryId}`).expect(409);
-    });
-
-    it('deletes a category nothing uses', async () => {
-      const owner = await agentFor(emails.owner);
-      const list = await owner.get('/api/admin/categories').expect(200);
-      const fresh = (list.body as { id: string; slug: string }[]).find((row) => row.slug === slugs.fresh);
-      await owner.delete(`/api/admin/categories/${fresh!.id}`).expect(204);
-      await owner.delete(`/api/admin/categories/${fresh!.id}`).expect(404);
+      // Off + archived cover every real case and both are reversible, so nothing here is irreversible.
+      await owner.delete(`/api/admin/categories/${usedCategoryId}`).expect(404);
     });
 
     it('says to restore rather than re-create when the slug is archived', async () => {

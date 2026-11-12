@@ -17,6 +17,9 @@ import { ApiError, apiFetch, errorKey } from '@/lib/api';
  * What may be sold at all. Switching a category off takes every listing in it out of the shop at once —
  * the listings keep their status, so switching it back on restores them — which is why this is the
  * owner's page and not an OPS one (T26).
+ *
+ * Nothing here deletes anything (owner's decision 2026-11-12): off and archived cover every real case and
+ * both are reversible, so the page has no irreversible button at all.
  */
 export function CategoriesAdmin() {
   return <LoginGate allow={(user) => user.roles.includes('ADMIN_OWNER')}>{() => <Page />}</LoginGate>;
@@ -61,20 +64,6 @@ function Page() {
     setErrors([]);
     try {
       await apiFetch<AdminProductCategoryView>(`/admin/categories/${id}`, { method: 'PATCH', body });
-      reload();
-    } catch (error) {
-      setErrors([message(error, tErrors)]);
-    } finally {
-      setBusyId(null);
-    }
-  }
-
-  async function remove(row: AdminProductCategoryView): Promise<void> {
-    if (!window.confirm(t('confirmDelete', { slug: row.slug }))) return;
-    setBusyId(row.id);
-    setErrors([]);
-    try {
-      await apiFetch<void>(`/admin/categories/${row.id}`, { method: 'DELETE' });
       reload();
     } catch (error) {
       setErrors([message(error, tErrors)]);
@@ -131,7 +120,6 @@ function Page() {
               row={row}
               busy={busyId === row.id}
               onUpdate={(body) => void run(row.id, body)}
-              onDelete={() => void remove(row)}
             />
           ))}
         </ul>
@@ -144,12 +132,10 @@ function Row({
   row,
   busy,
   onUpdate,
-  onDelete,
 }: {
   row: AdminProductCategoryView;
   busy: boolean;
   onUpdate: (body: ProductCategoryUpdateInput) => void;
-  onDelete: () => void;
 }) {
   const t = useTranslations('AdminCategories');
   const archived = row.archivedAt !== null;
@@ -202,13 +188,6 @@ function Row({
               </Button>
             </>
           )}
-          {/* A category with listings cannot be deleted — the database refuses it — so the button is
-              only offered when nothing references it, and archiving is the answer otherwise. */}
-          {row.productCount === 0 ? (
-            <Button variant="ghost" className="h-9 text-error" disabled={busy} onClick={onDelete}>
-              {t('delete')}
-            </Button>
-          ) : null}
         </div>
       </div>
 
@@ -356,8 +335,8 @@ function CreateForm({
 }
 
 /**
- * The API's 409s carry the useful part (which slug clashes, how many listings block a delete), so they
- * are shown as they come instead of being flattened into a generic message.
+ * The API's 409s carry the useful part (which slug already exists, and whether it is archived rather than
+ * live), so they are shown as they come instead of being flattened into a generic message.
  */
 function message(error: unknown, tErrors: (key: string) => string): string {
   if (error instanceof ApiError && error.status === 409 && typeof error.message === 'string' && error.message) {

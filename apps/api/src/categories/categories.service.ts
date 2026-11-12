@@ -85,22 +85,6 @@ export class CategoriesService {
   }
 
   /**
-   * Permanent delete, offered only for a category no product has ever used. The foreign key is
-   * ON DELETE RESTRICT, so Postgres would refuse anyway; this check turns that into a clear message.
-   */
-  async remove(id: string): Promise<void> {
-    const row = await this.mustExist(id);
-    const products = await this.prisma.product.count({ where: { categorySlug: row.slug } });
-    if (products > 0) {
-      throw new ConflictException(
-        `${products} product(s) still use ${row.slug}. Archive the category instead — its products then ` +
-          `disappear from the shop and come back if you restore it.`,
-      );
-    }
-    await this.prisma.productCategory.delete({ where: { id } });
-  }
-
-  /**
    * Called before a seller stores a category on a product. Categories are data now, so this is the only
    * place that decides whether a slug is allowed — there is no constant left to validate against.
    */
@@ -118,10 +102,9 @@ export class CategoriesService {
     return view;
   }
 
-  private async mustExist(id: string): Promise<{ slug: string }> {
-    const row = await this.prisma.productCategory.findUnique({ where: { id }, select: { slug: true } });
+  private async mustExist(id: string): Promise<void> {
+    const row = await this.prisma.productCategory.findUnique({ where: { id }, select: { id: true } });
     if (!row) throw new NotFoundException('Category not found');
-    return row;
   }
 
   /** New categories land at the end of the list rather than jumbled in with sortOrder 0. */

@@ -470,7 +470,7 @@
   },
   "AdminCategories": {
     "title": "Product categories",
-    "intro": "Categories decide what may be sold. Switching one off takes every listing in it out of the shop at once — buyers stop seeing it and its page answers \"not found\" — without changing the listings themselves, so switching it back on brings them all back.",
+    "intro": "Categories decide what may be sold. Switching one off takes every listing in it out of the shop at once — buyers stop seeing it and its page answers \"not found\" — without changing the listings themselves, so switching it back on brings them all back. Archiving does the same to the shop and also takes the category out of this list — use it for a category you have retired, while its listings still point at it.",
     "addButton": "Add a category",
     "addTitle": "New category",
     "slug": "Key",
@@ -491,12 +491,10 @@
     "inShop": "In the shop",
     "archive": "Archive",
     "restore": "Restore",
-    "delete": "Delete",
     "badgeOff": "Switched off",
     "badgeArchived": "Archived",
     "productCount": "{count, plural, =0 {no listings} one {# listing} other {# listings}}",
-    "hiddenWarning": "{count, plural, one {# listing is} other {# listings are}} hidden from the shop while this is off. They keep their status and come back when you switch it on.",
-    "confirmDelete": "Delete {slug} for good? Nothing uses it, so this cannot affect any listing — but it cannot be undone either."
+    "hiddenWarning": "{count, plural, one {# listing is} other {# listings are}} hidden from the shop while this is off. They keep their status and come back when you switch it on."
   },
   "Catalog": {
     "title": "Products",

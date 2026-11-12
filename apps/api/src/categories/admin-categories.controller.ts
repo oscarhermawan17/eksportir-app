@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import type { AdminProductCategoryView } from '@balitrade/shared';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
@@ -9,6 +9,11 @@ import { AdminCategoryQueryDto, CreateCategoryDto, UpdateCategoryDto } from './d
 /**
  * Categories decide what may be sold at all — switching one off hides every product in it — so this is
  * the owner's call, like the exchange rate (T26, ARCHITECTURE §4).
+ *
+ * There is **no delete**, by the owner's decision (2026-11-12): switching a category off and archiving it
+ * already cover every real case, and both are reversible. A category that products reference could not be
+ * deleted anyway — the foreign key is ON DELETE RESTRICT — so the only thing a delete endpoint added was a
+ * third concept to explain and one irreversible button.
  */
 @Controller('admin/categories')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,12 +34,5 @@ export class AdminCategoriesController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateCategoryDto): Promise<AdminProductCategoryView> {
     return this.categories.update(id, dto);
-  }
-
-  /** Only possible while no product uses the category; otherwise archive it (PATCH archived: true). */
-  @Delete(':id')
-  @HttpCode(204)
-  remove(@Param('id') id: string): Promise<void> {
-    return this.categories.remove(id);
   }
 }
