@@ -102,8 +102,8 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 ## Current status
 
-Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-11**,
-working tree clean, 23 of 29 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22 and T23).
+Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-12**,
+working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23 and T26).
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
@@ -139,7 +139,15 @@ working tree clean, 23 of 29 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22 
   and no `.next`, and `pnpm install` produces none of them. `pnpm codegen` now makes the first two, and `build`,
   `typecheck` and `test` all call it. Before pushing anything that touches the build, delete those artefacts and
   run the chain locally — otherwise a laptop full of months-old build output proves nothing about CI.
-- Quality: lint and typecheck clean, 53 unit + 153 e2e tests green (e2e was repeated several times; run `pnpm --filter @balitrade/api test:e2e`).
+- T26 **product categories are data the owner manages**, not `PRODUCT_CATEGORIES` in `packages/shared`: table `ProductCategory`,
+  OWNER-only page `/admin/categories` (create, edit the en/id/ru labels, reorder, tick `active`, archive, delete only at zero products).
+  Unticking a category takes its listings out of the catalog, the filters and `/products/:id` (which answers "not available") **without
+  touching their `ProductStatus`**, so ticking it back restores everything; the seller still sees them with a "category switched off" badge.
+  One constant does that work — `visibleToBuyers` in `apps/api/src/products/catalog.service.ts`, shared by list, detail and seller page.
+  Delete is safe twice over: `onDelete: Restrict` in the schema, and the UI only offers it when `productCount == 0` (archive otherwise).
+  The migration moved **no data** — the FK is on `slug` and the column kept the name `category`. An unknown slug in `?category=` answers
+  200 + empty, not 400, so a bookmarked filter URL survives a category going away.
+- Quality: lint and typecheck clean, `pnpm build` clean, 56 unit + 170 e2e tests green (run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
 0. **T24 backup** is now the most valuable unfinished task, not the next one in number order: the database shares
@@ -160,6 +168,8 @@ working tree clean, 23 of 29 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22 
 - `/admin/orders` and `/orders` show the same heading twice on an admin screen (top bar title and the page's own h1).
 
 **Waiting on the owner**
+- **Look at `/admin/categories` once (T26, 2026-11-12).** The behaviour was verified end to end from the API and the public catalog, but
+  the owner's own screen was never opened in a browser by the assistant — the admin password was deliberately not typed into a tool call.
 - **Before any real money moves (T17 is otherwise finished):** the **USDT network** (still TBA — a wrong network loses the buyer's funds) and the real
   Binance wallet address, the real BCA account details, and the partner exchange's contact and instructions. Put them in `apps/api/.env` under the
   `PAY_*` names in `.env.example` and set `PAY_MOCK=false`; no code changes. Also **split off a private R2 bucket**: create one with public access off
@@ -221,6 +231,7 @@ working tree clean, 23 of 29 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22 
 
 ## Open questions (owner decisions still needed)
 
-QC fee per zone (seed values are placeholders) · final product category list and forbidden-goods list · sourcing fee / deposit /
+QC fee per zone (seed values are placeholders) · forbidden-goods list (**the category list itself is no longer a code question since T26** —
+the owner edits it at `/admin/categories`) · sourcing fee / deposit /
 refund rules · payment details for T17 (see "Waiting on the owner") · seller response deadline and stock reservation ·
 exchange-rate buffer. Full list: `docs/BRAINSTORMING.md` section 15 and `docs/DECISIONS.md`.

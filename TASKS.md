@@ -129,6 +129,31 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   DoD: restore backup ke DB kosong berhasil dicoba sekali.
 - [ ] **T25 Uji end-to-end** — jalankan alur lengkap dengan 3 akun (buyer, seller, admin) di 3 bahasa; catat bug.
   DoD: tidak ada bug penghalang (blocker) di alur utama.
+- [x] **T26 Kategori produk dikelola admin** (ditambahkan 2026-11-12 atas permintaan pemilik) — kategori sekarang konstanta
+  `PRODUCT_CATEGORIES` di `packages/shared` dengan label di `messages/*.json`, jadi menambah atau melarang satu kategori butuh deploy.
+  Pindah ke tabel `ProductCategory` yang dikelola OWNER di `/admin/categories`: buat, ubah nama (en/id/ru), urutkan, **centang/uncheck
+  `active`**, dan hapus. Uncheck dipakai saat regulasi melarang sebuah kategori: produknya **hilang dari katalog, filter, dan
+  `/products/[id]` jadi 404**, dan tidak bisa dipesan — tapi penjual serta admin tetap melihatnya dengan badge "kategori dinonaktifkan
+  admin", supaya penjual tidak merasa produknya dihapus diam-diam. Status produk (`APPROVED` dll) **tidak** diubah: visibility dihitung
+  dari kategorinya, jadi mencentang ulang memulihkan semuanya tanpa menyentuh baris produk. Hapus = **soft delete** (`archivedAt`),
+  efeknya sama dengan uncheck tapi hilang juga dari daftar admin; relasi `Product.categoryId` memakai `onDelete: Restrict` sehingga
+  hard delete mustahil selama masih ada produk yang memakainya, dan tombol "hapus permanen" hanya muncul kalau jumlah produknya 0.
+  Order yang sudah berjalan tidak terpengaruh — `OrderItem` menyimpan snapshot dan `productId`-nya nullable.
+  Label pindah ke DB (`nameEn/nameId/nameRu`), di-seed dari teks `Products.categories` yang ada sekarang, lalu kunci lamanya dibuang
+  supaya tidak ada dua sumber kebenaran. Entri `ADMIN_NAV` baru, peran **OWNER saja** (sejenis `/admin/exchange-rate`: kategori
+  menentukan apa yang boleh dijual). Menutup sebagian "daftar kategori final" di `docs/BRAINSTORMING.md` §15 — daftarnya jadi data, bukan kode.
+  DoD: OWNER bisa membuat, menonaktifkan, dan mengarsipkan kategori; produk pada kategori nonaktif hilang dari katalog dan `/products/[id]`
+  menjawab 404; penjual tidak bisa memilih kategori nonaktif di form produk; order yang sudah ada tetap bisa dibuka; e2e spec baru hijau.
+  ✅ 2026-11-12. Diperiksa dengan tangan di `localhost` pada data dev (14 produk): mematikan `COFFEE_TEA` → katalog 14→12, filter kategori itu
+  2→0, `GET /api/products/:id` 200→404, chip di katalog 9→8 (dan labelnya memang dari database — dalam bahasa Indonesia "Kopi & teh" hilang dari
+  barisnya); mengaktifkan kembali memulihkan semuanya **tanpa menyentuh satu baris produk pun**. 16 test di `test/categories.e2e-spec.ts`
+  (total e2e 153→170, unit 53→56). Migrasi tidak memindahkan data: FK ada di `slug` dan kolomnya tetap bernama `category`.
+  **Satu hal yang tidak ikut berubah dan bukan regresi:** halaman web `/products/[id]` menjawab HTTP **200** dengan tulisan "This product is not
+  available.", bukan status 404 — itu perilaku sejak T12 dan sama untuk id yang tidak pernah ada; yang 404 adalah API-nya. Membuat halaman itu
+  mengembalikan status 404 sungguhan berarti mengubah cara halaman mengambil data (server-side) dan berlaku untuk semua produk hilang, jadi
+  sengaja tidak digabung ke sini.
+  Penyederhanaan yang disengaja: layar review admin menampilkan label kategori dalam bahasa Inggris (slug-nya ada di sebelahnya), karena
+  meneruskan `?locale=` ke lima endpoint admin hanya untuk satu chip tidak sebanding.
 
 ---
 
