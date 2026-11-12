@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { TRANSLATION_LOCALES } from '@balitrade/shared';
 import type { AdminProductView, ProductStatus, TranslationLocale } from '@balitrade/shared';
+import { categoryLabel } from '../categories/category-label.js';
 import { Prisma } from '../generated/prisma/client.js';
 import { MediaService } from '../media/media.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -11,6 +12,7 @@ const reviewInclude = {
   translations: true,
   media: { orderBy: { sort: 'asc' } },
   seller: { include: { user: true } },
+  category: true,
 } satisfies Prisma.ProductInclude;
 type ReviewProduct = Prisma.ProductGetPayload<{ include: typeof reviewInclude }>;
 
@@ -124,7 +126,12 @@ export class AdminProductsService {
     return {
       id: product.id,
       type: product.type,
-      category: product.category as AdminProductView['category'],
+      category: product.categorySlug,
+      // English, not the admin's language: the review screen already shows the listing in all three
+      // languages next to each other, and the slug is right beside this label. Threading a locale through
+      // five admin endpoints to translate one chip was not worth it.
+      categoryName: categoryLabel(product.category, 'en'),
+      categoryActive: product.category.active && product.category.archivedAt === null,
       unit: product.unit as AdminProductView['unit'],
       priceIdr: product.priceIdr,
       moq: product.moq,

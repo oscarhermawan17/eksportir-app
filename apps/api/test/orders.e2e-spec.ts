@@ -38,7 +38,7 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
       data: {
         sellerId: sellerProfileId,
         type,
-        category: 'HANDICRAFTS',
+        categorySlug: 'HANDICRAFTS',
         unit: 'PCS',
         priceIdr: data.priceIdr,
         moq: data.moq,

@@ -70,7 +70,7 @@ describe('Exchange rate (e2e)', () => {
       data: {
         sellerId: seller.sellerProfile!.id,
         type: 'READY_STOCK',
-        category: 'HANDICRAFTS',
+        categorySlug: 'HANDICRAFTS',
         unit: 'PCS',
         priceIdr: 160000,
         moq: 1,

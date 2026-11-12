@@ -254,7 +254,8 @@
       "listings": "Listing",
       "orders": "Pesanan",
       "rates": "Kurs",
-      "payments": "Pembayaran"
+      "payments": "Pembayaran",
+      "categories": "Kategori"
     },
     "overview": {
       "title": "Yang perlu Anda kerjakan",
@@ -342,17 +343,6 @@
       "READY_STOCK": "Stok tersedia",
       "MADE_TO_ORDER": "Dibuat sesuai pesanan"
     },
-    "categories": {
-      "COFFEE_TEA": "Kopi & teh",
-      "FOOD_SPICES": "Makanan & rempah",
-      "HANDICRAFTS": "Kerajinan tangan",
-      "HOME_DECOR": "Dekorasi rumah",
-      "FASHION_APPAREL": "Fashion & pakaian",
-      "BAGS_ACCESSORIES": "Tas & aksesori",
-      "BEAUTY_WELLNESS": "Kecantikan & kesehatan",
-      "FURNITURE": "Furnitur",
-      "OTHER": "Lainnya"
-    },
     "units": {
       "PCS": "buah",
       "KG": "kg",
@@ -389,7 +379,8 @@
       "submitting": "Mengajukan…",
       "saved": "Tersimpan.",
       "submitted": "Diajukan untuk ditinjau.",
-      "needPhoto": "Tambahkan minimal satu foto sebelum mengajukan."
+      "needPhoto": "Tambahkan minimal satu foto sebelum mengajukan.",
+      "categoryWithdrawn": "Admin menonaktifkan kategori produk ini ({category}), jadi produk tidak tampil di toko. Pilih kategori lain untuk menampilkannya kembali."
     },
     "actions": {
       "edit": "Ubah",
@@ -403,7 +394,8 @@
     "leadTimeLabel": "Waktu produksi",
     "days": "hari",
     "stockLabel": "Stok",
-    "rejectionReason": "Alasan:"
+    "rejectionReason": "Alasan:",
+    "categoryDisabled": "Kategori dinonaktifkan"
   },
   "AdminProducts": {
     "title": "Peninjauan produk",
@@ -475,6 +467,36 @@
     "colDate": "Tanggal",
     "loading": "Memuat…",
     "loadError": "Tidak dapat memuat kurs."
+  },
+  "AdminCategories": {
+    "title": "Kategori produk",
+    "intro": "Kategori menentukan apa yang boleh dijual. Menonaktifkan satu kategori langsung menarik semua produk di dalamnya dari toko — pembeli tidak lagi melihatnya dan halamannya menjawab \"tidak ditemukan\" — tanpa mengubah produknya, jadi mengaktifkannya kembali memulihkan semuanya.",
+    "addButton": "Tambah kategori",
+    "addTitle": "Kategori baru",
+    "slug": "Kunci",
+    "slugHelper": "Tetap selamanya begitu ada produk yang memakainya, jadi pilih dengan cermat. Huruf besar dan garis bawah, mis. {example}.",
+    "nameEn": "Nama (Inggris)",
+    "nameId": "Nama (Indonesia)",
+    "nameRu": "Nama (Rusia)",
+    "sortOrder": "Urutan",
+    "sortOrderHelper": "Angka lebih kecil tampil lebih dulu di katalog dan di formulir penjual.",
+    "create": "Buat",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "listTitle": "Kategori",
+    "showArchived": "Tampilkan yang diarsipkan",
+    "empty": "Belum ada kategori.",
+    "loadError": "Tidak bisa memuat kategori.",
+    "editLabels": "Ubah nama dan urutan",
+    "inShop": "Tampil di toko",
+    "archive": "Arsipkan",
+    "restore": "Pulihkan",
+    "delete": "Hapus",
+    "badgeOff": "Dinonaktifkan",
+    "badgeArchived": "Diarsipkan",
+    "productCount": "{count, plural, =0 {tanpa produk} other {# produk}}",
+    "hiddenWarning": "{count, plural, other {# produk}} disembunyikan dari toko selama kategori ini nonaktif. Statusnya tidak berubah dan akan kembali begitu diaktifkan.",
+    "confirmDelete": "Hapus {slug} secara permanen? Tidak ada yang memakainya, jadi tidak ada produk yang terpengaruh — tapi ini juga tidak bisa dibatalkan."
   },
   "Catalog": {
     "title": "Produk",

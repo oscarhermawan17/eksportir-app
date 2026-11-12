@@ -1,5 +1,5 @@
 import type { AuthUser, Role } from '@balitrade/shared';
-import { Banknote, ClipboardList, Coins, LayoutDashboard, ShoppingCart, UserCheck, type LucideIcon } from 'lucide-react';
+import { Banknote, ClipboardList, Coins, LayoutDashboard, ShoppingCart, Tags, UserCheck, type LucideIcon } from 'lucide-react';
 
 export interface AdminNavItem {
   href: string;
@@ -21,6 +21,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: '/admin/products', key: 'listings', icon: ClipboardList, roles: OPS },
   { href: '/admin/orders', key: 'orders', icon: ShoppingCart, roles: EVERY_ADMIN },
   { href: '/admin/payments', key: 'payments', icon: Banknote, roles: FINANCE },
+  { href: '/admin/categories', key: 'categories', icon: Tags, roles: ['ADMIN_OWNER'] },
   { href: '/admin/exchange-rate', key: 'rates', icon: Coins, roles: ['ADMIN_OWNER'] },
 ];
 

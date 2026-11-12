@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { SEED_PRODUCT_CATEGORIES } from '@balitrade/shared';
 import { PrismaClient, Role } from '../src/generated/prisma/client.js';
 import { hashPassword } from '../src/common/password.js';
 
@@ -57,6 +58,17 @@ async function main(): Promise<void> {
       await prisma.qcZone.upsert({ where: { name: zone.name }, update: {}, create: zone });
     }
     console.log(`QC zones ready: ${QC_ZONES.length}`);
+
+    // `update: {}` on purpose: once the owner has renamed, reordered or switched off a category at
+    // /admin/categories, the seed must not put it back the way it shipped (T26).
+    for (const [index, category] of SEED_PRODUCT_CATEGORIES.entries()) {
+      await prisma.productCategory.upsert({
+        where: { slug: category.slug },
+        update: {},
+        create: { ...category, sortOrder: index * 10 },
+      });
+    }
+    console.log(`Product categories ready: ${SEED_PRODUCT_CATEGORIES.length}`);
   } finally {
     await prisma.$disconnect();
   }

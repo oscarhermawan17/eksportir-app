@@ -3,7 +3,13 @@ import { CatalogService } from './catalog.service.js';
 const row = (id: string, seller: unknown) => ({
   id,
   type: 'READY_STOCK',
-  category: 'HANDICRAFTS',
+  categorySlug: 'HANDICRAFTS',
+  category: {
+    slug: 'HANDICRAFTS',
+    nameEn: 'Handicrafts',
+    nameId: 'Kerajinan tangan',
+    nameRu: 'Ремесленные изделия',
+  },
   unit: 'PCS',
   priceIdr: 100000,
   moq: 1,

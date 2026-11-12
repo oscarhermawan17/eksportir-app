@@ -1,7 +1,7 @@
 'use client';
 
 import type { ProductStatus, ProductView } from '@balitrade/shared';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
 import { Button, buttonClasses } from '@/components/ui/button';
@@ -27,13 +27,15 @@ function Products() {
   const tErrors = useTranslations('Errors');
   const tCommon = useTranslations('Common');
   const format = useFormatter();
+  const locale = useLocale();
   const [state, setState] = useState<State>({ kind: 'loading' });
   const [attempt, setAttempt] = useState(0);
   const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    apiFetch<ProductView[]>('/seller/products')
+    // ?locale= so each listing comes back with its category's label in this language (T26).
+    apiFetch<ProductView[]>(`/seller/products?locale=${locale}`)
       .then((products) => !cancelled && setState({ kind: 'ready', products }))
       .catch((error: unknown) => {
         if (cancelled) return;
@@ -47,7 +49,7 @@ function Products() {
     return () => {
       cancelled = true;
     };
-  }, [attempt]);
+  }, [attempt, locale]);
 
   async function act(product: ProductView, action: 'submit' | 'archive' | 'restore') {
     setActionError(null);
@@ -128,9 +130,16 @@ function Products() {
                     >
                       {t(`status.${product.status}`)}
                     </span>
+                    {/* An admin switched this category off: the listing is out of the shop even though
+                        its status still says APPROVED. Saying so beats letting the seller wonder. */}
+                    {!product.categoryActive ? (
+                      <span className="rounded-full border border-warning/40 bg-warning/15 px-2 py-0.5 text-xs font-semibold text-[#8a5a00]">
+                        {t('categoryDisabled')}
+                      </span>
+                    ) : null}
                   </div>
                   <p className="mt-1 text-sm text-muted">
-                    {t(`types.${product.type}`)} · {t(`categories.${product.category}`)} · {t('price')}{' '}
+                    {t(`types.${product.type}`)} · {product.categoryName} · {t('price')}{' '}
                     {format.number(product.priceIdr)} / {t(`units.${product.unit}`)} · {t('moqLabel')} {product.moq}
                     {product.stockQty !== null ? ` · ${t('stockLabel')} ${product.stockQty}` : ''}
                     {product.leadTimeDays !== null ? ` · ${t('leadTimeLabel')} ${product.leadTimeDays} ${t('days')}` : ''}

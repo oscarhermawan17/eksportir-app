@@ -1,12 +1,13 @@
 import {
-  PRODUCT_CATEGORIES,
+  CATEGORY_LIMITS,
+  CATEGORY_SLUG_PATTERN,
   PRODUCT_LIMITS,
   PRODUCT_TYPES,
   PRODUCT_UNITS,
   SOURCE_LOCALES,
 } from '@balitrade/shared';
 import type {
-  ProductCategory,
+  ProductCategorySlug,
   ProductType,
   ProductUnit,
   SourceLocale,
@@ -18,6 +19,7 @@ import {
   IsIn,
   IsInt,
   IsString,
+  Matches,
   Max,
   MaxLength,
   Min,
@@ -39,8 +41,14 @@ export class ProductDto {
   @IsIn(PRODUCT_TYPES)
   type: ProductType;
 
-  @IsIn(PRODUCT_CATEGORIES)
-  category: ProductCategory;
+  /**
+   * A category slug. Only the shape is checked here: since T26 categories are rows, so whether this one
+   * exists and is switched on is decided against the database in ProductsService.
+   */
+  @IsString()
+  @MaxLength(CATEGORY_LIMITS.slugMax)
+  @Matches(CATEGORY_SLUG_PATTERN)
+  category: ProductCategorySlug;
 
   @IsIn(PRODUCT_UNITS)
   unit: ProductUnit;

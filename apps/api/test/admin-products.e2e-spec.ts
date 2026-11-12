@@ -39,7 +39,7 @@ describe('Admin product review + public catalog (e2e)', () => {
       data: {
         sellerId: sellerProfileId,
         type: 'READY_STOCK',
-        category: 'HANDICRAFTS',
+        categorySlug: 'HANDICRAFTS',
         unit: 'PCS',
         priceIdr: 100000,
         moq: 5,

@@ -1,27 +1,29 @@
 'use client';
 
 import {
-  PRODUCT_CATEGORIES,
   PRODUCT_LIMITS,
   PRODUCT_UNITS,
+  type ProductCategoryView,
   type ProductInput,
   type ProductType,
   type ProductView,
   type SourceLocale,
 } from '@balitrade/shared';
-import { useTranslations } from 'next-intl';
-import { useRef, useState, type FormEvent } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { MediaUploader } from '@/components/media/media-uploader';
 import { Button } from '@/components/ui/button';
 import { Field, FormErrors, SelectField, TextareaField } from '@/components/ui/field';
 import { useRouter } from '@/i18n/navigation';
 import { ApiError, apiFetch, errorKey } from '@/lib/api';
+import { fetchCategories } from '@/lib/categories';
 import type { UploadedMedia } from '@/lib/media';
 
 /** Create (product = null) or edit a listing. "Save" keeps it as is; "Submit" also sends it for review. */
 export function ProductForm({ product }: { product: ProductView | null }) {
   const t = useTranslations('Products');
   const tErrors = useTranslations('Errors');
+  const locale = useLocale();
   const router = useRouter();
   const [type, setType] = useState<ProductType>(product?.type ?? 'READY_STOCK');
   const [sourceLocale, setSourceLocale] = useState<SourceLocale>(product?.sourceLocale ?? 'en');
@@ -29,6 +31,29 @@ export function ProductForm({ product }: { product: ProductView | null }) {
   const mediaKeys = useRef<string[]>(product?.media.map((item) => item.key) ?? []);
   const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
+
+  // Categories come from the API (T26), so a category the owner adds appears here without a deploy and
+  // one they switched off is simply not offered.
+  const [categories, setCategories] = useState<ProductCategoryView[] | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchCategories(locale)
+      .then((rows) => !cancelled && setCategories(rows))
+      .catch((error: unknown) => {
+        console.error('Could not load categories', error);
+        if (!cancelled) setCategories([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [locale]);
+
+  /**
+   * An admin switched this listing's category off after it was created. The API refuses to save it
+   * again under that category, so the seller has to pick another one — say so instead of letting them
+   * press Save and read a validation error.
+   */
+  const categoryWithdrawn = product !== null && !product.categoryActive;
 
   const initialMedia: UploadedMedia[] =
     product?.media.map((item) => ({ key: item.key, kind: item.type, publicUrl: item.url })) ?? [];
@@ -144,15 +169,25 @@ export function ProductForm({ product }: { product: ProductView | null }) {
       </fieldset>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <SelectField
-          id="category"
-          name="category"
-          label={t('form.category')}
-          placeholder={t('form.categoryPlaceholder')}
-          required
-          options={PRODUCT_CATEGORIES.map((value) => ({ value, label: t(`categories.${value}`) }))}
-          defaultValue={product?.category ?? ''}
-        />
+        <div>
+          <SelectField
+            // Remounted when the options arrive so defaultValue is applied to a populated list.
+            key={categories === null ? 'category-loading' : 'category-ready'}
+            id="category"
+            name="category"
+            label={t('form.category')}
+            placeholder={t('form.categoryPlaceholder')}
+            required
+            disabled={categories === null}
+            options={(categories ?? []).map(({ slug, name }) => ({ value: slug, label: name }))}
+            defaultValue={categoryWithdrawn ? '' : (product?.category ?? '')}
+          />
+          {categoryWithdrawn ? (
+            <p role="alert" className="mt-1.5 text-sm text-warning">
+              {t('form.categoryWithdrawn', { category: product.categoryName })}
+            </p>
+          ) : null}
+        </div>
         <SelectField
           id="unit"
           name="unit"

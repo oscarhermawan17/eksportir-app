@@ -152,7 +152,7 @@ function Review({ product, onChange }: { product: AdminProductView; onChange: (p
           {t(`locales.${product.sourceLocale}`)}
         </p>
         <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
-          <Info label={t('category')} value={tProducts(`categories.${product.category}`)} />
+          <Info label={t('category')} value={product.categoryName} />
           <Info label={tProducts(`types.${product.type}`)} value={`${tProducts('moqLabel')} ${product.moq}`} />
           <Info label={t('price')} value={`${format.number(product.priceIdr)} / ${tProducts(`units.${product.unit}`)}`} />
           {product.stockQty !== null ? <Info label={t('stock')} value={String(product.stockQty)} /> : null}

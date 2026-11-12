@@ -1,7 +1,7 @@
 'use client';
 
-import { PRODUCT_CATEGORIES, PRODUCT_TYPES } from '@balitrade/shared';
-import type { CatalogProduct, ProductCategory, ProductType } from '@balitrade/shared';
+import { PRODUCT_TYPES } from '@balitrade/shared';
+import type { CatalogProduct, ProductCategorySlug, ProductCategoryView, ProductType } from '@balitrade/shared';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -9,9 +9,10 @@ import { ProductCard } from '@/components/catalog/product-card';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { useRouter } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
+import { fetchCategories } from '@/lib/categories';
 
 type Result = { key: string; products: CatalogProduct[] | null };
-type Search = { q: string; category: ProductCategory | ''; type: ProductType | '' };
+type Search = { q: string; category: ProductCategorySlug | ''; type: ProductType | '' };
 
 const CHIP = 'inline-flex h-9 items-center rounded-button border px-3.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 const CHIP_ON = `${CHIP} border-primary bg-primary text-white`;
@@ -30,7 +31,9 @@ export function CatalogView() {
   const q = params.get('q')?.trim() ?? '';
   const categoryParam = params.get('category');
   const typeParam = params.get('type');
-  const category = PRODUCT_CATEGORIES.find((value) => value === categoryParam) ?? '';
+  // Not checked against a list: categories are rows now (T26), and the API answers an unknown slug with
+  // an empty result rather than an error, so a bookmarked filter keeps working after a category goes.
+  const category = categoryParam?.trim() ?? '';
   const type = PRODUCT_TYPES.find((value) => value === typeParam) ?? '';
   const filtered = q !== '' || category !== '' || type !== '';
 
@@ -39,6 +42,18 @@ export function CatalogView() {
   if (category) query.set('category', category);
   if (type) query.set('type', type);
   const key = query.toString();
+
+  // The chips come from the API so a category the owner adds or switches off needs no deploy.
+  const [categories, setCategories] = useState<ProductCategoryView[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetchCategories(locale)
+      .then((rows) => !cancelled && setCategories(rows))
+      .catch((error: unknown) => console.error('Could not load categories', error));
+    return () => {
+      cancelled = true;
+    };
+  }, [locale]);
 
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<Result | null>(null);
@@ -85,15 +100,15 @@ export function CatalogView() {
               {t('allCategories')}
             </button>
           </li>
-          {PRODUCT_CATEGORIES.map((value) => (
-            <li key={value}>
+          {categories.map(({ slug, name }) => (
+            <li key={slug}>
               <button
                 type="button"
-                aria-current={category === value ? 'true' : undefined}
-                onClick={() => search({ q, category: value, type })}
-                className={category === value ? CHIP_ON : CHIP_OFF}
+                aria-current={category === slug ? 'true' : undefined}
+                onClick={() => search({ q, category: slug, type })}
+                className={category === slug ? CHIP_ON : CHIP_OFF}
               >
-                {tProducts(`categories.${value}`)}
+                {name}
               </button>
             </li>
           ))}

@@ -88,7 +88,7 @@ describe('Payments: three methods, FINANCE verification (e2e)', () => {
       data: {
         sellerId: ids['sellerProfile']!,
         type: 'READY_STOCK',
-        category: 'HANDICRAFTS',
+        categorySlug: 'HANDICRAFTS',
         unit: 'PCS',
         priceIdr: 160_000,
         moq: 5,

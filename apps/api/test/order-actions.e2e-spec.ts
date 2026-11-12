@@ -81,7 +81,7 @@ describe('Order actions: accept, decline, propose a change, cancel (e2e)', () =>
       data: {
         sellerId: ids['sellerProfile']!,
         type: 'READY_STOCK',
-        category: 'HANDICRAFTS',
+        categorySlug: 'HANDICRAFTS',
         unit: 'PCS',
         priceIdr: 160000,
         moq: 5,

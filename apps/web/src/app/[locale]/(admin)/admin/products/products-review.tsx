@@ -107,7 +107,7 @@ function ReviewList() {
                   </div>
                   <p className="mt-1 text-sm text-muted">
                     {t('seller')}: {product.seller.displayName} · {tProducts(`types.${product.type}`)} ·{' '}
-                    {tProducts(`categories.${product.category}`)} · IDR {format.number(product.priceIdr)} ·{' '}
+                    {product.categoryName} · IDR {format.number(product.priceIdr)} ·{' '}
                     {t('updated')} {format.dateTime(new Date(product.updatedAt), { dateStyle: 'medium' })}
                   </p>
                   <Link href={`/admin/products/${product.id}`} className={buttonClasses('secondary', 'mt-3 h-9')}>

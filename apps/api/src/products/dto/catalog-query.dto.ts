@@ -1,7 +1,13 @@
-import { CATALOG_LIMITS, PRODUCT_CATEGORIES, PRODUCT_TYPES, TRANSLATION_LOCALES } from '@balitrade/shared';
-import type { ProductCategory, ProductType, TranslationLocale } from '@balitrade/shared';
+import {
+  CATALOG_LIMITS,
+  CATEGORY_LIMITS,
+  CATEGORY_SLUG_PATTERN,
+  PRODUCT_TYPES,
+  TRANSLATION_LOCALES,
+} from '@balitrade/shared';
+import type { ProductCategorySlug, ProductType, TranslationLocale } from '@balitrade/shared';
 import { Transform } from 'class-transformer';
-import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsIn, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 
 const trim = ({ value }: { value: unknown }): unknown => (typeof value === 'string' ? value.trim() : value);
 
@@ -18,9 +24,15 @@ export class CatalogQueryDto {
   @MaxLength(CATALOG_LIMITS.searchMax)
   q?: string;
 
+  /**
+   * Filter by category slug. An unknown or switched-off slug is not an error here — it simply matches
+   * nothing, because `visibleToBuyers` already excludes products in categories that are off.
+   */
   @IsOptional()
-  @IsIn(PRODUCT_CATEGORIES)
-  category?: ProductCategory;
+  @IsString()
+  @MaxLength(CATEGORY_LIMITS.slugMax)
+  @Matches(CATEGORY_SLUG_PATTERN)
+  category?: ProductCategorySlug;
 
   @IsOptional()
   @IsIn(PRODUCT_TYPES)

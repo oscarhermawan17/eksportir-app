@@ -1,7 +1,7 @@
 'use client';
 
 import type { ProductView } from '@balitrade/shared';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState, type ReactNode } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
 import { ProductForm } from '@/components/seller/product-form';
@@ -57,11 +57,12 @@ type State = { kind: 'loading' } | { kind: 'forbidden' } | { kind: 'missing' } |
 
 function EditLoader({ id }: { id: string }) {
   const t = useTranslations('Products');
+  const locale = useLocale();
   const [state, setState] = useState<State>({ kind: 'loading' });
 
   useEffect(() => {
     let cancelled = false;
-    apiFetch<ProductView>(`/seller/products/${encodeURIComponent(id)}`)
+    apiFetch<ProductView>(`/seller/products/${encodeURIComponent(id)}?locale=${locale}`)
       .then((product) => !cancelled && setState({ kind: 'ready', product }))
       .catch((error: unknown) => {
         if (cancelled) return;
@@ -70,7 +71,7 @@ function EditLoader({ id }: { id: string }) {
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, locale]);
 
   if (state.kind === 'loading') {
     return <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-12" aria-busy="true" />;

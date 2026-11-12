@@ -126,8 +126,10 @@ model Product {
   sellerId        String        @map("seller_id")
   seller          SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   type            ProductType
-  /// One of PRODUCT_CATEGORIES in packages/shared (validated in the API).
-  category        String
+  /// Key of a ProductCategory row (T26). The column is still called `category`, so no product row moved
+  /// when categories became data; the foreign key is on the slug, with ON DELETE RESTRICT.
+  categorySlug    String        @map("category")
+  category        ProductCategory @relation(fields: [categorySlug], references: [slug], onDelete: Restrict, onUpdate: Cascade)
   /// One of PRODUCT_UNITS in packages/shared (validated in the API).
   unit            String
   /// Price per unit in whole rupiah. USD is derived from the daily rate (T11), never stored here.
@@ -156,7 +158,36 @@ model Product {
 
   @@index([sellerId, status])
   @@index([status, createdAt])
+  @@index([categorySlug])
   @@map("products")
+}
+
+/// Product categories, managed by the OWNER at /admin/categories (T26). They used to be the
+/// PRODUCT_CATEGORIES constant in packages/shared, which meant forbidding a category needed a deploy.
+model ProductCategory {
+  id         String    @id @default(cuid())
+  /// Stable key in SCREAMING_SNAKE_CASE, e.g. COFFEE_TEA. Products reference it, so it is never edited
+  /// once a product uses it; the label is what admins change.
+  slug       String    @unique
+  nameEn     String    @map("name_en")
+  nameId     String    @map("name_id")
+  nameRu     String    @map("name_ru")
+  /// Unchecked by an admin (regulation, a forbidden good): the products keep the category but disappear
+  /// from the catalog, the filters and /products/[id], which answers 404. Their ProductStatus is left
+  /// alone, so checking the box again restores everything without touching a product row.
+  active     Boolean   @default(true)
+  /// Soft delete: same effect as active = false, and hidden from the admin list as well. Deleting for
+  /// real is only offered when no product references the category — the FK above refuses it otherwise.
+  archivedAt DateTime? @map("archived_at")
+  /// Order of the chips on the catalog and of the options in the seller's form.
+  sortOrder  Int       @default(0) @map("sort_order")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  products Product[]
+
+  @@index([active, archivedAt, sortOrder])
+  @@map("product_categories")
 }
 
 model ProductTranslation {

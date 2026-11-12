@@ -41,7 +41,7 @@ describe('Public catalog: search, filters, detail, seller page (e2e)', () => {
       data: {
         sellerId,
         type: data.type,
-        category: data.category,
+        categorySlug: data.category,
         unit: 'PCS',
         priceIdr: 160000,
         moq: 2,
@@ -152,12 +152,19 @@ describe('Public catalog: search, filters, detail, seller page (e2e)', () => {
       expect(await list(`q=${encodeURIComponent(`_____ ${tag}`)}`)).toHaveLength(0);
     });
 
-    it('rejects unknown categories/types/locales and over-long search with 400', async () => {
-      await get('/products?category=WEAPONS').expect(400);
+    it('rejects malformed categories/types/locales and over-long search with 400', async () => {
+      await get('/products?category=not+a+slug').expect(400);
       await get('/products?type=BULK').expect(400);
       await get('/products?locale=fr').expect(400);
       await get(`/products?q=${'a'.repeat(101)}`).expect(400);
       await get('/products?status=DRAFT').expect(400); // unknown params are not accepted
+    });
+
+    it('matches nothing for a category that does not exist, rather than failing', async () => {
+      // Categories are rows since T26, so a slug the API does not know is not a client error: a filter
+      // URL someone bookmarked must keep working after the owner switches that category off.
+      const res = await get('/products?category=WEAPONS').expect(200);
+      expect(res.body).toEqual([]);
     });
   });
 

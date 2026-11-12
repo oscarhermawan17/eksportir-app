@@ -4,7 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { ProductStatus, ProductView } from '@balitrade/shared';
+import type { ProductStatus, ProductView, TranslationLocale } from '@balitrade/shared';
+import { categoryLabel } from '../categories/category-label.js';
+import { CategoriesService } from '../categories/categories.service.js';
 import { Prisma } from '../generated/prisma/client.js';
 import { MediaService } from '../media/media.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -14,6 +16,7 @@ import { nextStatus, type SellerProductAction } from './product-status.js';
 const productInclude = {
   translations: true,
   media: { orderBy: { sort: 'asc' } },
+  category: true,
 } satisfies Prisma.ProductInclude;
 type ProductWithRelations = Prisma.ProductGetPayload<{ include: typeof productInclude }>;
 
@@ -31,9 +34,10 @@ export class ProductsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
+    private readonly categories: CategoriesService,
   ) {}
 
-  async list(userId: string): Promise<ProductView[]> {
+  async list(userId: string, locale: TranslationLocale = 'en'): Promise<ProductView[]> {
     const sellerId = await this.sellerIdOf(userId);
     const products = await this.prisma.product.findMany({
       where: { sellerId },
@@ -41,15 +45,18 @@ export class ProductsService {
       orderBy: { updatedAt: 'desc' },
       take: 200,
     });
-    return products.map((product) => this.toView(product));
+    return products.map((product) => this.toView(product, locale));
   }
 
-  async get(userId: string, productId: string): Promise<ProductView> {
-    return this.toView(await this.findOwned(userId, productId));
+  async get(userId: string, productId: string, locale: TranslationLocale = 'en'): Promise<ProductView> {
+    return this.toView(await this.findOwned(userId, productId), locale);
   }
 
-  async create(userId: string, dto: ProductDto): Promise<ProductView> {
+  async create(userId: string, dto: ProductDto, locale: TranslationLocale = 'en'): Promise<ProductView> {
     const sellerId = await this.sellerIdOf(userId);
+    // Categories are data since T26, so the DTO only checked the shape of the slug: this is what refuses
+    // a category that does not exist or that an admin has switched off.
+    await this.categories.assertSelectable(dto.category);
     const media = this.parseMedia(userId, dto);
     try {
       const product = await this.prisma.product.create({
@@ -61,15 +68,23 @@ export class ProductsService {
         },
         include: productInclude,
       });
-      return this.toView(product);
+      return this.toView(product, locale);
     } catch (error) {
       throw this.mapMediaConflict(error);
     }
   }
 
-  async update(userId: string, productId: string, dto: ProductDto): Promise<ProductView> {
+  async update(
+    userId: string,
+    productId: string,
+    dto: ProductDto,
+    locale: TranslationLocale = 'en',
+  ): Promise<ProductView> {
     const current = await this.findOwned(userId, productId);
     const status = this.transition(current.status, 'edit');
+    // Editing a listing whose category an admin has since switched off means picking a different one;
+    // leaving it unchecked here would let a seller quietly keep selling in a forbidden category.
+    await this.categories.assertSelectable(dto.category);
     const media = this.parseMedia(userId, dto);
 
     try {
@@ -94,29 +109,37 @@ export class ProductsService {
           include: productInclude,
         });
       });
-      return this.toView(updated);
+      return this.toView(updated, locale);
     } catch (error) {
       throw this.mapMediaConflict(error);
     }
   }
 
-  async submit(userId: string, productId: string): Promise<ProductView> {
+  async submit(userId: string, productId: string, locale: TranslationLocale = 'en'): Promise<ProductView> {
     const current = await this.findOwned(userId, productId);
     const status = this.transition(current.status, 'submit');
     if (!current.media.some((item) => item.type === 'IMAGE')) {
       throw new BadRequestException('Add at least one photo before submitting for review');
     }
-    return this.setStatus(productId, status, { rejectionReason: null });
+    return this.setStatus(productId, status, locale, { rejectionReason: null });
   }
 
-  async archive(userId: string, productId: string): Promise<ProductView> {
+  async archive(
+    userId: string,
+    productId: string,
+    locale: TranslationLocale = 'en',
+  ): Promise<ProductView> {
     const current = await this.findOwned(userId, productId);
-    return this.setStatus(productId, this.transition(current.status, 'archive'));
+    return this.setStatus(productId, this.transition(current.status, 'archive'), locale);
   }
 
-  async restore(userId: string, productId: string): Promise<ProductView> {
+  async restore(
+    userId: string,
+    productId: string,
+    locale: TranslationLocale = 'en',
+  ): Promise<ProductView> {
     const current = await this.findOwned(userId, productId);
-    return this.setStatus(productId, this.transition(current.status, 'restore'));
+    return this.setStatus(productId, this.transition(current.status, 'restore'), locale);
   }
 
   private transition(current: ProductStatus, action: SellerProductAction): ProductStatus {
@@ -130,6 +153,7 @@ export class ProductsService {
   private async setStatus(
     productId: string,
     status: ProductStatus,
+    locale: TranslationLocale,
     extra: { rejectionReason?: string | null } = {},
   ): Promise<ProductView> {
     const product = await this.prisma.product.update({
@@ -137,13 +161,13 @@ export class ProductsService {
       data: { status, ...extra },
       include: productInclude,
     });
-    return this.toView(product);
+    return this.toView(product, locale);
   }
 
   private coreFields(dto: ProductDto) {
     return {
       type: dto.type,
-      category: dto.category,
+      categorySlug: dto.category,
       unit: dto.unit,
       priceIdr: dto.priceIdr,
       moq: dto.moq,
@@ -196,12 +220,16 @@ export class ProductsService {
     return product;
   }
 
-  private toView(product: ProductWithRelations): ProductView {
+  private toView(product: ProductWithRelations, locale: TranslationLocale): ProductView {
     const source = product.translations.find((t) => t.locale === product.sourceLocale);
     return {
       id: product.id,
       type: product.type,
-      category: product.category as ProductView['category'],
+      category: product.categorySlug,
+      categoryName: categoryLabel(product.category, locale),
+      // Shown as a badge in the seller's list: an admin switched the category off, so the listing is not
+      // in the shop any more even though its status still says APPROVED.
+      categoryActive: product.category.active && product.category.archivedAt === null,
       unit: product.unit as ProductView['unit'],
       priceIdr: product.priceIdr,
       moq: product.moq,

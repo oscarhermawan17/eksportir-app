@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CATALOG_LIMITS } from '@balitrade/shared';
 import type { CatalogProduct, PublicSellerProfile, TranslationLocale } from '@balitrade/shared';
+import { toCategoryView } from '../categories/category-label.js';
+import { SELECTABLE_CATEGORY } from '../categories/categories.service.js';
 import { idrToUsd } from '../fx/fx-math.js';
 import { FxService } from '../fx/fx.service.js';
 import { Prisma } from '../generated/prisma/client.js';
@@ -12,6 +14,7 @@ const catalogInclude = {
   translations: true,
   media: { orderBy: { sort: 'asc' } },
   seller: { include: { qcZone: true } },
+  category: true,
 } satisfies Prisma.ProductInclude;
 
 type CatalogRow = Prisma.ProductGetPayload<{ include: typeof catalogInclude }>;
@@ -25,8 +28,17 @@ const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
  */
 const hasSeller = (product: CatalogRow): boolean => (product.seller as CatalogRow['seller'] | null) !== null;
 
-/** Buyers only ever see APPROVED products from APPROVED sellers. */
-const visibleToBuyers: Prisma.ProductWhereInput = { status: 'APPROVED', seller: { status: 'APPROVED' } };
+/**
+ * Buyers only ever see APPROVED products from APPROVED sellers in a category that is switched on (T26).
+ * The category clause is what makes unchecking a category hide its listings everywhere at once — this
+ * constant is used by the list, the detail (so /products/[id] answers 404) and the seller page — without
+ * changing a single ProductStatus, so checking the box again brings them all back.
+ */
+const visibleToBuyers: Prisma.ProductWhereInput = {
+  status: 'APPROVED',
+  seller: { status: 'APPROVED' },
+  category: SELECTABLE_CATEGORY,
+};
 
 /** Public read side: list with search and filters, product detail, seller page. */
 @Injectable()
@@ -39,7 +51,7 @@ export class CatalogService {
 
   async list(locale: TranslationLocale, query: Omit<CatalogQueryDto, 'locale'> = {}): Promise<CatalogProduct[]> {
     const where: Prisma.ProductWhereInput = { ...visibleToBuyers };
-    if (query.category) where.category = query.category;
+    if (query.category) where.categorySlug = query.category;
     if (query.type) where.type = query.type;
     if (query.q) {
       // Words must all appear (in the title or description, in any language), so "rattan bag" narrows the result.
@@ -110,7 +122,8 @@ export class CatalogService {
       return {
         id: product.id,
         type: product.type,
-        category: product.category as CatalogProduct['category'],
+        category: product.categorySlug,
+        categoryName: toCategoryView(product.category, locale).name,
         unit: product.unit as CatalogProduct['unit'],
         priceIdr: product.priceIdr,
         priceUsd: rate ? idrToUsd(product.priceIdr, rate.rate) : null,

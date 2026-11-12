@@ -85,7 +85,7 @@ describe('Notifications (e2e)', () => {
       data: {
         sellerId: ids['sellerProfile']!,
         type: 'READY_STOCK',
-        category: 'HANDICRAFTS',
+        categorySlug: 'HANDICRAFTS',
         unit: 'PCS',
         priceIdr: 100000,
         moq: 1,
