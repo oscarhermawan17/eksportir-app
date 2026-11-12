@@ -203,6 +203,13 @@ working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22,
   rate. Their photos are **generated placeholders** labelled "BaliTrade sample", not real product photos, and their id/ru texts are AI-written.
   The throwaway script is not in the repo; `pnpm db:seed` does not create them.
 - R2: one bucket (`eksportir-testing`) serves as both public and private for now. **Splitting off a private bucket is part of T17** (decided 2026-11-08): payment proofs show account numbers and full names, and the current bucket is public, so a URL is the only thing between a proof and anyone holding it. Presigned GET exists since T08, so the change is one bucket plus one env variable; QC files (T18) need it too.
+- **https://projectbali.my.id is a DEVELOPMENT environment, not production (restated by the owner 2026-11-12).**
+  The production domain has not been chosen yet. What makes it different from a laptop is only that **the whole
+  team can see it** — so it holds no real customer data, its data may be wiped, and a rough edge there is not an
+  outage. Two things follow: do not treat its database as precious *yet* (T24 is still what makes it precious),
+  and do not put anything there that would embarrass the team if a stranger found the URL. When the real domain
+  is chosen, this box becomes staging and a separate production environment is set up — at which point the
+  shared R2 bucket and the shared database both have to be split.
 - **The testing environment is live: https://projectbali.my.id (2026-11-11).** `docs/DEPLOY.md` is the operations
   manual — how to reach the server, what runs where, how to deploy, certificates, the database, secrets, GitHub.
   **Read it before touching the VPS.** In short: `ssh ubuntu@43.133.155.17` works with the owner's own key, no
