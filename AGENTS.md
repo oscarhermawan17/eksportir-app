@@ -168,7 +168,7 @@ working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22,
   orders got (a second route plus a `basePath`-style prop); the inbox also carries its own `?c=` parameter.
 - Separate ADMIN_OPS and ADMIN_FINANCE accounts **were** exercised on 2026-11-10 (throwaway fixtures, deleted afterwards): each sidebar showed only
   its own pages and the cross-role buttons are gone. Two bugs that only appear with a non-OWNER admin were found and fixed then — see `docs/DECISIONS.md`.
-- `/admin/orders` and `/orders` show the same heading twice on an admin screen (top bar title and the page's own h1).
+- ~~`/admin/orders` and `/orders` show the same heading twice~~ — fixed 2026-11-12: the admin top bar is the only page title.
 
 **Waiting on the owner**
 - **Look at `/admin/categories` once (T26, 2026-11-12).** The behaviour was verified end to end from the API and the public catalog, but

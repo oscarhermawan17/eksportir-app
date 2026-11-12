@@ -99,6 +99,12 @@ Area `/admin` tampil **terpisah dari toko**, supaya jelas sedang di mana dan mua
   Sebelumnya tiap halaman mengarang sendiri: tiga lebar berbeda (3xl/4xl/5xl), tiga padding vertikal, dan halaman Kategori tanpa padding
   sama sekali — itulah yang membuatnya terasa tidak seragam. Formulir sempit membatasi **kartunya sendiri** (mis. `max-w-3xl` di halaman
   kurs), bukan halamannya. Komponen order dipakai bersama toko, jadi wadahnya ada di call site: halaman toko membungkus, halaman admin tidak.
+- **Judul halaman hanya ada di top bar** (dirapikan 2026-11-12), dan itu satu-satunya `<h1>` di area admin. Body halaman **tidak
+  mengulangnya**; ia langsung mulai dari paragraf penjelas atau dari isinya. Sebelumnya campur aduk: `h1` di Penjual/Listing/Kurs/Pesanan,
+  `h2` dengan ukuran sama di Ringkasan/Pembayaran, dan Kategori tanpa judul sama sekali — tiga tag untuk satu peran visual, plus "Orders"
+  tertulis dua kali di `/admin/orders` (wart lama yang ini menutupnya). Halaman **detail** boleh punya judul sendiri karena menyebut sesuatu
+  yang lebih spesifik dari nama seksi (nama produk, kode order), dan itu `<h2>`. Elemen pertama di body tidak boleh membawa `mt-*` sisa judul,
+  atau tiap halaman mulai di ketinggian berbeda. Komponen order dipakai bersama toko, jadi judulnya ada di halaman toko, bukan di komponennya.
 - **Layar kecil:** sidebar menjadi laci yang dibuka dari tombol menu; fokus keyboard terlihat; menu aktif diberi `aria-current`.
 - Rencana teknis: pisahkan chrome toko dan admin lewat route group atau pembungkus yang menyembunyikan navbar/footer di `/admin`; pilih yang paling kecil risikonya saat mengerjakan.
 - Wireframe (▓ = teal gelap, ▌ = penanda gold menu aktif):
