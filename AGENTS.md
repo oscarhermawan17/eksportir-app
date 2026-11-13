@@ -168,6 +168,11 @@ sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`)
 - Quality: lint and typecheck clean, `pnpm build` clean, 56 unit + 169 e2e tests green (run `pnpm --filter @balitrade/api test:e2e`).
 
 **Next (in this order, unless the owner says otherwise)**
+
+> **Right now the owner is working on the UI** (polish, making it attractive) — 2026-11-14. Finish or hand back UI work before
+> starting a task from this list. **T21 password reset is marked URGENT** in `TASKS.md` (nothing resets a forgotten password today
+> and sessions expire after 7 days), but the owner has deliberately put it **after** the UI work.
+
 0. **T24 backup** is now the most valuable unfinished task, not the next one in number order: the database shares
    a box with the app, so `pg_dump` to R2 **with a restore actually tried once** is the only thing standing between
    a dead disk and losing every order record. It also owns the rest of `docs/DEPLOY.md`'s open checklist.

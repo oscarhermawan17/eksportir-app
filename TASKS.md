@@ -87,6 +87,12 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 - [ ] **T20 Selesai & pencairan** — pembeli "Confirm received" → COMPLETED; admin OWNER catat Payout ke penjual (+ audit log).
   DoD: satu order bisa dijalankan dari REQUESTED sampai COMPLETED.
 - [ ] **T21 Lupa password** — Resend (noreply), token sekali pakai berkedaluwarsa.
+  **URGENT (dinaikkan pemilik 2026-11-14)** — bukan karena nomor urutnya, tapi karena hari ini **tidak ada jalan keluar sama sekali**
+  bagi orang yang lupa password: pemilik harus mengedit database. Sesi mati sendiri setelah 7 hari, jadi setiap user pasti akan
+  bertemu layar login lagi — dan siapa pun yang lupa passwordnya saat itu terkunci di luar. Semakin banyak penjual dan pembeli nyata
+  masuk, semakin mahal ongkosnya. Dikerjakan **setelah pekerjaan UI yang sedang berjalan** (keputusan pemilik 2026-11-14).
+  Catatan terkait: umur sesi (7 hari, tanpa perpanjangan otomatis dan tanpa pencabutan) sengaja **belum** diubah. Memperpanjangnya
+  hanya menunda masalah yang sama selama T21 belum ada; lihat `docs/DECISIONS.md`.
   DoD: reset password berhasil via email.
 
 ## Fase 5 — Rilis (31 Okt)
