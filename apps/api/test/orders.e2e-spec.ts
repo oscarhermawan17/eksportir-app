@@ -296,6 +296,79 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
     });
   });
 
+  describe('the admin table: paging, search and date range (T27)', () => {
+    interface Page {
+      items: OrderView[];
+      total: number;
+      page: number;
+      size: number;
+    }
+    const adminPage = async (who: Who, query = '') =>
+      (await http(who, 'get', `/api/admin/orders?${query}`).expect(200)).body as Page;
+
+    it('is admin-only, and open to every admin role', async () => {
+      await request(app.getHttpServer()).get('/api/admin/orders').expect(401);
+      for (const who of ['buyer', 'seller', 'outsider'] as const) {
+        await http(who, 'get', '/api/admin/orders').expect(403);
+      }
+      // Finance needs payments and ops needs QC, so both see every order.
+      for (const who of ['ops', 'finance'] as const) await http(who, 'get', '/api/admin/orders').expect(200);
+    });
+
+    it('defaults to page 1 of 25, newest first, and counts beyond the page', async () => {
+      const first = await adminPage('ops');
+      expect(first).toMatchObject({ page: 1, size: 25 });
+      expect(first.items.length).toBeLessThanOrEqual(25);
+      expect(first.total).toBeGreaterThanOrEqual(first.items.length);
+      const dates = first.items.map((row) => row.createdAt);
+      expect([...dates].sort().reverse()).toEqual(dates);
+    });
+
+    it('pages without losing or repeating an order', async () => {
+      const a = await adminPage('ops', 'size=25&page=1');
+      if (a.total <= 25) return;
+      const b = await adminPage('ops', 'size=25&page=2');
+      expect(b.total).toBe(a.total);
+      expect(a.items.filter((row) => b.items.some((other) => other.id === row.id))).toEqual([]);
+    });
+
+    it('finds an order by the code an admin reads off the screen', async () => {
+      const any = (await adminPage('ops')).items[0]!;
+      for (const typed of [any.code, any.code.replace('OR-', ''), any.code.toLowerCase()]) {
+        const found = await adminPage('ops', `q=${encodeURIComponent(typed)}&size=100`);
+        expect(found.items.map((row) => row.id)).toContain(any.id);
+      }
+    });
+
+    it('finds orders by buyer or seller name, and nothing for a name nobody has', async () => {
+      const byBuyer = await adminPage('ops', 'q=Anna&size=100');
+      const bySeller = await adminPage('ops', `q=${encodeURIComponent('Order Shop')}&size=100`);
+      expect(byBuyer.total + bySeller.total).toBeGreaterThan(0);
+
+      const none = await adminPage('ops', 'q=nobody-called-this');
+      expect(none.items).toEqual([]);
+      expect(none.total).toBe(0);
+    });
+
+    it('filters by status and by an inclusive request-date range', async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const requested = await adminPage('ops', 'status=REQUESTED&size=100');
+      expect(requested.items.every((row) => row.status === 'REQUESTED')).toBe(true);
+
+      const todayRows = await adminPage('ops', `from=${today}&to=${today}&size=100`);
+      expect(todayRows.total).toBeGreaterThan(0);
+      const longAgo = await adminPage('ops', 'from=2020-01-01&to=2020-01-02');
+      expect(longAgo.total).toBe(0);
+    });
+
+    it('rejects a page size the UI does not offer, a bad status and a malformed date', async () => {
+      await http('ops', 'get', '/api/admin/orders?size=37').expect(400);
+      await http('ops', 'get', '/api/admin/orders?page=0').expect(400);
+      await http('ops', 'get', '/api/admin/orders?status=NOPE').expect(400);
+      await http('ops', 'get', '/api/admin/orders?from=not-a-date').expect(400);
+    });
+  });
+
   it('limits one buyer to 20 order requests per hour (429)', async () => {
     const statuses: number[] = [];
     for (let i = 0; i < 21; i++) statuses.push((await place('outsider', 'made', 10)).status);

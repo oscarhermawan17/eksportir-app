@@ -16,5 +16,7 @@ import { OrdersService } from './orders.service.js';
     // A separate limiter instance for order requests (per hour), distinct from the chat message limiter.
     { provide: MessageRateLimiter, useFactory: () => new MessageRateLimiter(ORDER_LIMITS.requestsPerHour, Date.now, 3_600_000, 'Too many order requests. Please try again later.') },
   ],
+  // AdminModule's orders table uses it; without this Nest fails at startup, not at compile time.
+  exports: [OrdersService],
 })
 export class OrdersModule {}

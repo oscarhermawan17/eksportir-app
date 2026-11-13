@@ -779,6 +779,18 @@
     },
     "proposedQty": "Предложенное количество"
   },
+  "AdminOrders": {
+    "columnCode": "Заказ",
+    "columnDate": "Создан",
+    "columnBuyer": "Покупатель",
+    "columnSeller": "Продавец",
+    "columnItems": "Кол-во",
+    "columnTotal": "Итого",
+    "columnStatus": "Статус",
+    "open": "Открыть",
+    "allStatuses": "Все статусы",
+    "searchPlaceholder": "Код заказа, покупатель или продавец…"
+  },
   "Payments": {
     "pageTitle": "Оплата заказа",
     "title": "Оплата заказа {code}",

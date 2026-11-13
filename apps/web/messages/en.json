@@ -779,6 +779,18 @@
     },
     "proposedQty": "Proposed quantity"
   },
+  "AdminOrders": {
+    "columnCode": "Order",
+    "columnDate": "Requested",
+    "columnBuyer": "Buyer",
+    "columnSeller": "Seller",
+    "columnItems": "Qty",
+    "columnTotal": "Total",
+    "columnStatus": "Status",
+    "open": "Open",
+    "allStatuses": "All statuses",
+    "searchPlaceholder": "Order code, buyer or seller…"
+  },
   "Payments": {
     "pageTitle": "Pay for your order",
     "title": "Pay for order {code}",

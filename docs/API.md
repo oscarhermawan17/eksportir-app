@@ -11,6 +11,7 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | PATCH | `/api/admin/categories/:id` | ADMIN_OWNER | `update` | admin-categories |
 | GET | `/api/admin/exchange-rates` | ADMIN_OWNER | `history` | admin-exchange-rates |
 | POST | `/api/admin/exchange-rates` | ADMIN_OWNER | `set` | admin-exchange-rates |
+| GET | `/api/admin/orders` | ADMIN_OPS, ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-orders |
 | POST | `/api/admin/orders/:id/confirm-paid` | ADMIN_FINANCE, ADMIN_OWNER | `confirmPaid` | admin-order-payments |
 | POST | `/api/admin/orders/:id/start-qc` | ADMIN_OPS, ADMIN_OWNER | `startQc` | admin-order-payments |
 | GET | `/api/admin/payments` | ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-payments |

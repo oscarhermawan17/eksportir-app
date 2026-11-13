@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { OrdersList } from '@/components/orders/orders-list';
+import { AdminOrdersTable } from './orders-table';
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/admin/orders'>): Promise<Metadata> {
   const { locale } = await params;
@@ -8,7 +8,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/admin/or
   return { title: `${t('title')} — BaliTrade` };
 }
 
-// The same list the buyer and seller see; the API already scopes it (admins see every order).
+// A dense table, not the storefront's card list: an admin scans every order, a buyer reads their own few.
 export default function AdminOrdersPage() {
-  return <OrdersList basePath="/admin/orders" />;
+  return <AdminOrdersTable />;
 }

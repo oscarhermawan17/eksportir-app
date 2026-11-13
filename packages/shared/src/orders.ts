@@ -70,6 +70,30 @@ export interface CreateOrderInput {
 export const orderCode = (number: number): string => `OR-${1000 + number}`;
 
 /**
+ * The inverse, for searching: an admin types what they see ("OR-1043", "or 1043", or just "1043").
+ * Returns the stored `number`, or null when the text is not a code at all — in which case the caller
+ * falls back to matching names. Codes start at OR-1001, so anything at or below 1000 is not one.
+ */
+export function orderNumberFromCode(text: string): number | null {
+  const digits = /(\d{4,})/.exec(text.replace(/\s+/g, ''));
+  if (!digits) return null;
+  const value = Number(digits[1]);
+  return value > 1000 ? value - 1000 : null;
+}
+
+/** Query of GET /api/admin/orders (T27). Everything optional; the API applies the defaults. */
+export interface AdminOrderQuery {
+  status?: OrderStatus;
+  /** An order code, or part of a buyer's or seller's name. */
+  q?: string;
+  /** ISO date (YYYY-MM-DD), inclusive, on the date the order was requested. */
+  from?: string;
+  to?: string;
+  page?: number;
+  size?: number;
+}
+
+/**
  * What a person can do to an order. The seller answers a request; the buyer decides about a proposed change,
  * cancels, or sends a payment; the admin side verifies the money and starts quality control (T17).
  */

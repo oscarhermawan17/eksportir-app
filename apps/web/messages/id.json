@@ -779,6 +779,18 @@
     },
     "proposedQty": "Jumlah usulan"
   },
+  "AdminOrders": {
+    "columnCode": "Pesanan",
+    "columnDate": "Diminta",
+    "columnBuyer": "Pembeli",
+    "columnSeller": "Penjual",
+    "columnItems": "Jml",
+    "columnTotal": "Total",
+    "columnStatus": "Status",
+    "open": "Buka",
+    "allStatuses": "Semua status",
+    "searchPlaceholder": "Kode pesanan, pembeli atau penjual…"
+  },
   "Payments": {
     "pageTitle": "Bayar pesanan Anda",
     "title": "Bayar pesanan {code}",

@@ -1,7 +1,24 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { actionActor, isAdmin, nextOrderStatus, orderActionsFor, orderCode } from '@balitrade/shared';
-import type { AuthUser, DeliveryAddress, OrderAction, OrderView, OrderViewer } from '@balitrade/shared';
+import {
+  actionActor,
+  DEFAULT_PAGE_SIZE,
+  isAdmin,
+  nextOrderStatus,
+  orderActionsFor,
+  orderCode,
+  orderNumberFromCode,
+} from '@balitrade/shared';
+import type {
+  AuthUser,
+  DeliveryAddress,
+  OrderAction,
+  OrderView,
+  OrderViewer,
+  PageResult,
+  PageSize,
+} from '@balitrade/shared';
 import { ChatService } from '../chat/chat.service.js';
+import type { AdminOrderQueryDto } from './dto/admin-order-query.dto.js';
 import { MessageRateLimiter } from '../chat/message-rate-limiter.js';
 import { idrToUsd } from '../fx/fx-math.js';
 import { FxService } from '../fx/fx.service.js';
@@ -20,6 +37,13 @@ const orderInclude = {
 } satisfies Prisma.OrderInclude;
 
 type OrderRow = Prisma.OrderGetPayload<{ include: typeof orderInclude }>;
+
+/** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them. */
+const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
+
+/** A date filter is a plain day, so it has to cover the whole day in both directions. */
+const startOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T00:00:00.000`) : undefined);
+const endOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T23:59:59.999`) : undefined);
 
 /** Order requests (T15). Money is copied into the order at the moment of the request; nothing is recomputed later. */
 @Injectable()
@@ -126,6 +150,50 @@ export class OrdersService {
     const where: Prisma.OrderWhereInput = isAdmin(user.roles) ? {} : { OR: [{ buyerId: user.id }, { seller: { userId: user.id } }] };
     const rows = await this.prisma.order.findMany({ where, include: orderInclude, orderBy: { createdAt: 'desc' }, take: LIST_LIMIT });
     return rows.map((row) => this.toView(row, user));
+  }
+
+  /**
+   * The admin orders table (T27). A separate method from `list` on purpose: the storefront list is a
+   * handful of a person's own orders and needs none of this, while mixing paging, search and a date
+   * range into the shared path would complicate the buyer's request for no gain.
+   */
+  async listForAdmin(user: AuthUser, query: AdminOrderQueryDto = {}): Promise<PageResult<OrderView>> {
+    const size: PageSize = query.size ?? DEFAULT_PAGE_SIZE;
+    const page = query.page ?? 1;
+    const where: Prisma.OrderWhereInput = {};
+
+    if (query.status) where.status = query.status;
+
+    if (query.q) {
+      const text = escapeLike(query.q);
+      // An admin types what they see on screen, so a code is matched exactly and anything else is
+      // treated as a name. Both go in one OR so a single box covers all three the owner asked for.
+      const number = orderNumberFromCode(query.q);
+      where.OR = [
+        ...(number === null ? [] : [{ number }]),
+        { buyer: { name: { contains: text, mode: 'insensitive' as const } } },
+        { seller: { displayName: { contains: text, mode: 'insensitive' as const } } },
+      ];
+    }
+
+    const from = startOfDay(query.from);
+    const to = endOfDay(query.to);
+    if (from || to) {
+      where.createdAt = { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) };
+    }
+
+    const [total, rows] = await this.prisma.$transaction([
+      this.prisma.order.count({ where }),
+      this.prisma.order.findMany({
+        where,
+        include: orderInclude,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * size,
+        take: size,
+      }),
+    ]);
+
+    return { items: rows.map((row) => this.toView(row, user)), total, page, size };
   }
 
   async get(user: AuthUser, orderId: string): Promise<OrderView> {
