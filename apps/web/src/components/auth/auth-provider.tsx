@@ -1,6 +1,7 @@
 'use client';
 
 import type { AuthUser, Locale, SelfRegisterRole } from '@balitrade/shared';
+import { useLocale } from 'next-intl';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { ApiError, apiFetch } from '@/lib/api';
 
@@ -27,6 +28,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const locale = useLocale();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [status, setStatus] = useState<AuthContextValue['status']>('loading');
 
@@ -75,7 +77,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await apiFetch<void>('/auth/logout', { method: 'POST' });
     setUser(null);
     setStatus('anonymous');
-  }, []);
+    // Land on the login page of the language in use, for every role — logging out of the admin area used
+    // to leave you standing on /admin with nothing to do there.
+    //
+    // A full page load, not a router navigation: Next.js keeps every page visited in this tab mounted
+    // (hidden), so the admin tables, order pages and chats of whoever just logged out would stay alive in
+    // the tab, one Back away from the screen. Reloading throws all of it away, which is what logging out
+    // is supposed to mean. Verified: pressing Back after logging out of the admin area shows "Please log
+    // in to continue", not the tables that were on screen a moment ago.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- the reload is the point
+    window.location.assign(`/${locale}/login`);
+  }, [locale]);
 
   const value = useMemo(
     () => ({ user, status, login, register, logout }),
