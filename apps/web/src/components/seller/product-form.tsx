@@ -31,6 +31,8 @@ export function ProductForm({ product }: { product: ProductView | null }) {
   const mediaKeys = useRef<string[]>(product?.media.map((item) => item.key) ?? []);
   const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
+  // Bumped to remount the uploader, which keeps its own list of files.
+  const [mediaVersion, setMediaVersion] = useState(0);
 
   // Categories come from the API (T26), so a category the owner adds appears here without a deploy and
   // one they switched off is simply not offered.
@@ -88,9 +90,25 @@ export function ProductForm({ product }: { product: ProductView | null }) {
       if (submitAfter) {
         await apiFetch<ProductView>(`/seller/products/${saved.id}/submit`, { method: 'POST' });
       }
+      // The listing exists now, so nothing of it may stay in the form. Next.js keeps the page we are
+      // leaving mounted (hidden) so that coming back is instant, which means this is the very same form
+      // the seller meets when they add their next product: without emptying it they would find the
+      // previous product's text, and its photos would still be attached — and a photo belongs to one
+      // listing only, so saving again would fail. Only the create form is emptied; the edit form keeps
+      // what was just saved, which is what that page is supposed to show.
+      if (!product) {
+        formElement.reset();
+        setType('READY_STOCK');
+        setSourceLocale('en');
+        mediaKeys.current = [];
+        setMediaVersion((version) => version + 1);
+      }
       router.push('/seller/products');
     } catch (error) {
       setErrors([error instanceof ApiError && error.status === 400 ? tErrors('invalidInput') : tErrors(errorKey(error))]);
+    } finally {
+      // On success too: the page stays mounted while hidden, so a button left reading "Saving…" would
+      // still be disabled when the seller returns to it.
       setBusy(false);
     }
   }
@@ -258,6 +276,7 @@ export function ProductForm({ product }: { product: ProductView | null }) {
         <h2 className="text-xs font-bold uppercase tracking-wider text-text">{t('form.media')}</h2>
         <p className="text-xs text-muted">{t('form.mediaHelper')}</p>
         <MediaUploader
+          key={mediaVersion}
           purpose="PRODUCT_MEDIA"
           initialMedia={initialMedia}
           onUploaded={(media) => mediaKeys.current.push(media.key)}
