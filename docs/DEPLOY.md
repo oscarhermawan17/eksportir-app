@@ -118,6 +118,47 @@ Three traps, all hit once:
 
 Housekeeping, now and then: `docker image prune -a`.
 
+## 3b. R2: CORS, and why uploads worked locally but not on the server
+
+The browser PUTs straight to R2, so **every bucket needs a CORS policy naming each origin the web app is
+served from**. This is bucket configuration, not code, and the API tokens are scoped to objects only, so it
+can only be changed in the Cloudflare dashboard (R2 → bucket → Settings → CORS Policy).
+
+Learned 2026-11-12, after a seller on the live site got a bare `403 Forbidden` on upload: the policy on
+`eksportir-testing` listed `http://localhost:3000` and nothing else, from early development. Uploads had
+therefore never worked from any deployed site — the path simply had not been exercised in a browser before.
+`eksportir-private` had no policy at all, so payment proofs and QC files would have failed everywhere.
+
+```json
+[
+  {
+    "AllowedOrigins": ["https://projectbali.my.id", "http://localhost:3000"],
+    "AllowedMethods": ["PUT", "GET"],
+    "AllowedHeaders": ["Content-Type"],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
+
+> **When the production domain is chosen, add it to BOTH buckets.** Forgetting looks exactly like this
+> incident: a 403 with no useful message, and only on the deployed site.
+
+`MaxAgeSeconds` is worth having — without it the browser sends a preflight before *every* PUT, so ten
+photos cost ten extra round trips. `GET` is not needed by today's code (`<img>` tags and `window.open`
+do not go through CORS) but costs nothing: CORS governs what browser JavaScript may read, never whether a
+file is public.
+
+To check a policy without dashboard access, send a real preflight — no credentials needed:
+
+```bash
+curl -s -o /dev/null -D- -X OPTIONS \
+  -H 'Origin: https://projectbali.my.id' \
+  -H 'Access-Control-Request-Method: PUT' \
+  "https://<account>.r2.cloudflarestorage.com/<bucket>/x"
+```
+
+`204` with an `access-control-allow-origin` header means it is configured; `403` means it is not.
+
 ## 4. Certificates
 
 certbot on the host, **standalone** mode. One certificate covers `projectbali.my.id`, `www.` and `api.`;
