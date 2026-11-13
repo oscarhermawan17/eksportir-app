@@ -112,8 +112,13 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 ## Current status
 
-Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-12**,
-working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23 and T26).
+Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-13**,
+working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23 and T26); **T27 is half built** (Listing and Orders
+done, Payments left).
+
+**Deployed 2026-11-13:** commit `f61e198` is live on the VPS — the four forms that did not reset themselves (seller product, login,
+sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`). No migration was involved. The behaviour itself was
+**not** re-checked on the live site: that needs an account there, and the admin password was deliberately not typed into a tool call.
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
