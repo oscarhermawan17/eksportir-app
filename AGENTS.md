@@ -84,9 +84,12 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
   `display: none` so going back is instant). It is not unmounted, so **nothing resets by itself**: uncontrolled inputs keep their typed
   values, `useRef` keeps its contents, and a `busy` flag left `true` leaves buttons disabled forever. A form that creates something must
   therefore empty itself after a successful save (`form.reset()`, the controlled bits back to their defaults, refs cleared, child
-  components that own state remounted through a `key`), and every `setBusy(false)` belongs in a `finally`. Found 2026-11-13 on the seller
-  product form; the same trap waits in any other create form (order dialog, admin forms). `pnpm dev` hot-reloads the fix, but the stale
-  hidden page survives it — reload the tab before judging.
+  components that own state remounted through a `key`), and every `setBusy(false)` belongs in a `finally`. An **open `<dialog>` stays open**
+  too, and its mount effect runs **again** when the page is shown, so a dialog the user leaves through one of its own links must close itself
+  and call its page's `onClose` **directly** — the `close` event never reaches a page that is already hidden. All of this was found and fixed
+  on 2026-11-13 in the seller product form, the login and sign-up forms (logging out left nobody able to log in again) and the order dialog;
+  the admin screens were checked and were already safe. `pnpm dev` hot-reloads the fix, but the stale hidden page survives it — reload the
+  tab before judging.
 - **Never run `pnpm build` while `pnpm dev` is running.** `next dev` and `next build` share `apps/web/.next`, and the build overwrites
   manifests the dev server is holding open. The symptom is every page answering 500 with
   `SyntaxError: Unexpected non-whitespace character after JSON` from the dev log — the message files are fine, a `.next` manifest is not.
