@@ -10,6 +10,28 @@
     "language": "Язык",
     "retry": "Повторить"
   },
+  "Table": {
+    "showing": "{from}–{to} из {total}",
+    "perPage": "На странице",
+    "pageOf": "Страница {page} из {pages}",
+    "first": "Первая страница",
+    "prev": "Предыдущая страница",
+    "next": "Следующая страница",
+    "last": "Последняя страница",
+    "paginationLabel": "Постраничная навигация",
+    "empty": "Здесь пока ничего нет.",
+    "noMatch": "Ничего не найдено по этим фильтрам.",
+    "loadError": "Не удалось загрузить список.",
+    "search": "Поиск",
+    "searchLabel": "Поиск",
+    "clearSearch": "Очистить поиск",
+    "dateFieldLabel": "Дата",
+    "from": "С",
+    "to": "По",
+    "clearDates": "Очистить даты",
+    "dateCreated": "Создано",
+    "dateReviewed": "Проверено"
+  },
   "Navbar": {
     "searchLabel": "Поиск товаров",
     "searchPlaceholder": "Кофе, сумки, изделия ручной работы…",
@@ -449,7 +471,13 @@
     "approveError": "Не удалось одобрить этот товар.",
     "readOnly": "Этот товар не ожидает проверки.",
     "rejectedWithReason": "Отклонён:",
-    "unsavedWarning": "Сначала сохраните переводы."
+    "unsavedWarning": "Сначала сохраните переводы.",
+    "columnListing": "Товар",
+    "columnCategory": "Категория",
+    "columnPrice": "Цена",
+    "columnStatus": "Статус",
+    "columnReviewed": "Проверено",
+    "searchPlaceholder": "Название или продавец…"
   },
   "AdminRate": {
     "title": "Курс валюты",

@@ -168,8 +168,28 @@ export interface ProductTranslationView {
 /** A listing in the admin review screens: everything the seller sent plus all translations. */
 export interface AdminProductView extends Omit<ProductView, 'title' | 'description'> {
   seller: { id: string; displayName: string; email: string };
+  /** When an admin approved or rejected it; null while it is still waiting (T27 shows this as a column). */
+  reviewedAt: string | null;
   /** Missing key = not translated yet. */
   translations: Partial<Record<TranslationLocale, ProductTranslationView>>;
+}
+
+/** Which date an admin list filters on. Products in review have no `reviewedAt` yet, so filtering on it
+ * alone would hide exactly the rows an admin looks for most — hence the choice, defaulting to creation. */
+export const ADMIN_PRODUCT_DATE_FIELDS = ['createdAt', 'reviewedAt'] as const;
+export type AdminProductDateField = (typeof ADMIN_PRODUCT_DATE_FIELDS)[number];
+
+/** Query of GET /api/admin/products. Everything optional; the API applies the defaults. */
+export interface AdminProductQuery {
+  status?: ProductStatus;
+  /** Matches the listing title in any language, or the seller's shop name. */
+  q?: string;
+  dateField?: AdminProductDateField;
+  /** ISO date (YYYY-MM-DD), inclusive on both ends in the server's time zone. */
+  from?: string;
+  to?: string;
+  page?: number;
+  size?: number;
 }
 
 /** Body of PUT /api/admin/products/:id/translations. Only the sent languages are changed. */

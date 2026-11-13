@@ -127,6 +127,28 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   terhadap kehilangan catatan pesanan dan bukti pembayaran. DoD-nya tidak boleh dilonggarkan — backup yang belum pernah di-restore bukan backup.
   Tambahkan juga pemantauan sederhana: RAM, disk, dan apakah backup semalam benar-benar jadi.
   DoD: restore backup ke DB kosong berhasil dicoba sekali.
+- [ ] **T27 Tabel, filter dan pagination untuk daftar admin** (ditambahkan 2026-11-13 atas permintaan pemilik) — tiga daftar inti
+  (**Listing**, **Pesanan**, **Pembayaran**) sekarang `take: N` tanpa `skip` dan tanpa hitungan total: 200 untuk listing, `LIST_LIMIT`
+  untuk pesanan, `ADMIN_LIST_LIMIT` untuk pembayaran. **Itu cacat, bukan sekadar ketidaknyamanan** — begitu baris melewati batas, yang
+  tertua hilang tanpa tanda apa pun dan admin tidak akan tahu ada yang tidak terlihat. Dikerjakan sekarang selagi VPS masih kosong.
+  Filter dan pencarian **harus server-side**: menyaring di browser berarti menyaring 200 baris yang kebetulan terambil, sehingga
+  pencarian diam-diam melewatkan baris yang ada. Pagination pakai **offset + `COUNT(*)`**, bukan cursor, karena tombol "Last" yang
+  diminta pemilik mustahil tanpa tahu jumlah totalnya. Keadaan filter disimpan **di URL** (`?page=&size=&q=&from=&to=`) supaya bisa
+  di-bookmark, bertahan saat refresh/Back, dan bisa dikirim ke rekan — pola yang sama dengan katalog toko.
+  Satu komponen `DataTable` dipakai bertiga (halaman admin sudah dua kali menyimpang sendiri-sendiri: wadah dan judul).
+  Di bawah `lg` tabel berubah jadi **kartu**, bukan tabel yang digeser ke samping — menggeser untuk melihat status membuat kode
+  pesanannya keluar layar, padahal membaca satu baris menyamping itu inti dari tabel. Di HP admin memilah, bukan membandingkan.
+  Ukuran halaman 25/50/100, default **25**. Rentang tanggal untuk Listing memakai **tanggal dibuat** (default) atau tanggal ditinjau —
+  bukan hanya `reviewedAt`, karena produk yang masih menunggu tinjauan belum punya tanggal itu dan justru paling sering dicari.
+  **`/admin/orders` TIDAK boleh memakai ulang komponen daftar toko** untuk ini: tabel padat benar untuk admin, salah untuk pembeli.
+  Pembayaran memakai **baris yang bisa dibuka**, bukan halaman detail — verifikasi itu tugas membandingkan bukti dengan nominal, dan
+  halaman terpisah membuang konteks daftarnya; buktinya ditampilkan langsung di baris yang dibuka (presigned URL diambil saat dibuka).
+  Ditunda sampai diminta: urut per kolom, ekspor CSV, filter tersimpan.
+  Dikerjakan **satu daftar sampai tuntas lalu berikutnya**, mulai dari Listing — satu-satunya yang punya data nyata untuk diuji hari ini.
+  DoD: ketiga daftar punya pagination server-side dengan total yang benar, tombol first/prev/next/last yang nonaktif di ujungnya,
+  pemilihan 25/50/100, pencarian dan rentang tanggal yang mencari ke seluruh data (bukan hanya halaman yang tampil), keadaan tersimpan
+  di URL, dan tampilan kartu yang terbaca di 375px.
+
 - [ ] **T25 Uji end-to-end** — jalankan alur lengkap dengan 3 akun (buyer, seller, admin) di 3 bahasa; catat bug.
   DoD: tidak ada bug penghalang (blocker) di alur utama.
 - [x] **T26 Kategori produk dikelola admin** (ditambahkan 2026-11-12 atas permintaan pemilik) — kategori sekarang konstanta

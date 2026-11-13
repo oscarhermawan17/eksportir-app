@@ -1,10 +1,11 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { TRANSLATION_LOCALES } from '@balitrade/shared';
-import type { AdminProductView, ProductStatus, TranslationLocale } from '@balitrade/shared';
+import { DEFAULT_PAGE_SIZE, TRANSLATION_LOCALES } from '@balitrade/shared';
+import type { AdminProductView, PageResult, PageSize, ProductStatus, TranslationLocale } from '@balitrade/shared';
 import { categoryLabel } from '../categories/category-label.js';
 import { Prisma } from '../generated/prisma/client.js';
 import { MediaService } from '../media/media.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { AdminProductQueryDto } from './dto/admin-product-query.dto.js';
 import type { ProductTranslationsDto } from './dto/admin-product.dto.js';
 import { nextStatus } from './product-status.js';
 
@@ -16,6 +17,13 @@ const reviewInclude = {
 } satisfies Prisma.ProductInclude;
 type ReviewProduct = Prisma.ProductGetPayload<{ include: typeof reviewInclude }>;
 
+/** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them. */
+const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
+
+/** A date filter is a plain day, so it has to cover the whole day in both directions. */
+const startOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T00:00:00.000`) : undefined);
+const endOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T23:59:59.999`) : undefined);
+
 @Injectable()
 export class AdminProductsService {
   constructor(
@@ -23,18 +31,62 @@ export class AdminProductsService {
     private readonly media: MediaService,
   ) {}
 
-  async list(status?: ProductStatus): Promise<AdminProductView[]> {
-    const products = await this.prisma.product.findMany({
-      // Drafts are the seller's private work and never appear in the admin queue.
-      where: status ? { status } : { status: { not: 'DRAFT' } },
-      include: reviewInclude,
-      orderBy: { updatedAt: 'asc' },
-      take: 200,
-    });
-    // A seller or user deleted between the reads leaves a relation null; skip such a row instead of failing the whole list.
-    return products
-      .filter((product) => (product.seller?.user as ReviewProduct['seller']['user'] | null | undefined) != null)
-      .map((product) => this.toView(product));
+  /**
+   * The admin listing table (T27). Filtering and paging happen in SQL on purpose: doing them in the
+   * browser would only ever search the rows that happened to be fetched, so a search for an older
+   * listing would quietly come back empty while the listing existed all along.
+   */
+  async list(query: AdminProductQueryDto = {}): Promise<PageResult<AdminProductView>> {
+    const size: PageSize = query.size ?? DEFAULT_PAGE_SIZE;
+    const page = query.page ?? 1;
+    const where = this.buildWhere(query);
+
+    // One round trip: the page itself and the count behind it, which is what "last page" needs.
+    const [total, products] = await this.prisma.$transaction([
+      this.prisma.product.count({ where }),
+      this.prisma.product.findMany({
+        where,
+        include: reviewInclude,
+        orderBy: { updatedAt: 'desc' },
+        skip: (page - 1) * size,
+        take: size,
+      }),
+    ]);
+
+    return {
+      // A seller or user deleted between the reads leaves a relation null; skip such a row instead of
+      // failing the whole list. The count may then exceed the rows shown by one or two, which is the
+      // honest answer: those rows match the filter, they just cannot be rendered.
+      items: products
+        .filter((product) => (product.seller?.user as ReviewProduct['seller']['user'] | null | undefined) != null)
+        .map((product) => this.toView(product)),
+      total,
+      page,
+      size,
+    };
+  }
+
+  private buildWhere(query: AdminProductQueryDto): Prisma.ProductWhereInput {
+    // Drafts are the seller's private work and never appear in the admin queue.
+    const where: Prisma.ProductWhereInput = query.status ? { status: query.status } : { status: { not: 'DRAFT' } };
+
+    if (query.q) {
+      const text = escapeLike(query.q);
+      where.OR = [
+        { translations: { some: { title: { contains: text, mode: 'insensitive' } } } },
+        { seller: { displayName: { contains: text, mode: 'insensitive' } } },
+      ];
+    }
+
+    const from = startOfDay(query.from);
+    const to = endOfDay(query.to);
+    if (from || to) {
+      // `reviewedAt` is null until an admin decides, so a range on it deliberately excludes the queue.
+      const field = query.dateField ?? 'createdAt';
+      where[field] = { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) };
+    }
+
+    return where;
   }
 
   async get(productId: string): Promise<AdminProductView> {
@@ -132,6 +184,7 @@ export class AdminProductsService {
       // five admin endpoints to translate one chip was not worth it.
       categoryName: categoryLabel(product.category, 'en'),
       categoryActive: product.category.active && product.category.archivedAt === null,
+      reviewedAt: product.reviewedAt?.toISOString() ?? null,
       unit: product.unit as AdminProductView['unit'],
       priceIdr: product.priceIdr,
       moq: product.moq,

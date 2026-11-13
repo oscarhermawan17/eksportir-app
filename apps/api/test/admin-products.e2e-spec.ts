@@ -10,6 +10,13 @@ import { PrismaService } from '../src/prisma/prisma.service.js';
 
 // Test users use the prefix "adminprod-e2e-" so other spec files' cleanup (running in parallel) leaves them alone.
 // Requires the database from docker-compose.yml (`pnpm db:up`), `pnpm db:seed` (QC zones) and apps/api/.env.
+interface Page {
+  items: { id: string; status: string; seller: { displayName: string } }[];
+  total: number;
+  page: number;
+  size: number;
+}
+
 describe('Admin product review + public catalog (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
@@ -108,6 +115,66 @@ describe('Admin product review + public catalog (e2e)', () => {
     return res.body as { id: string; title: string; isAuto: boolean; textLocale: string; seller: { displayName: string; location: string | null } }[];
   };
 
+  describe('paging, search and date range (T27)', () => {
+    const page = async (query: string) => {
+      const ops = await agentFor(emails.ops);
+      return (await ops.get(`/api/admin/products?${query}`).expect(200)).body as Page;
+    };
+
+    it('defaults to page 1 of 25, newest first', async () => {
+      const first = await page('');
+      expect(first).toMatchObject({ page: 1, size: 25 });
+      expect(first.items.length).toBeLessThanOrEqual(25);
+    });
+
+    it('pages without losing or repeating rows', async () => {
+      // Two pages of one must be two different rows out of the same total.
+      const one = await page('size=25&page=1');
+      if (one.total < 2) return;
+      const a = await page('size=25&page=1');
+      const b = await page('size=25&page=2');
+      expect(b.total).toBe(a.total);
+      const overlap = a.items.filter((row) => b.items.some((other) => other.id === row.id));
+      expect(overlap).toEqual([]);
+    });
+
+    it('searches the whole table, not just the page that happens to be loaded', async () => {
+      const found = await page('q=Review%20Shop&size=100');
+      expect(found.items.length).toBeGreaterThan(0);
+      expect(found.items.every((row) => row.seller.displayName.includes('Review Shop'))).toBe(true);
+
+      const missing = await page('q=definitely-not-a-listing-name');
+      expect(missing.items).toEqual([]);
+      expect(missing.total).toBe(0);
+    });
+
+    it('filters on the creation date by default, and the range is inclusive', async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      const todayRows = await page(`from=${today}&to=${today}&size=100`);
+      expect(todayRows.items.length).toBeGreaterThan(0);
+
+      const longAgo = await page('from=2020-01-01&to=2020-01-02');
+      expect(longAgo.total).toBe(0);
+    });
+
+    it('can filter on the review date instead, which excludes the queue', async () => {
+      // Nothing in this spec has been reviewed at the time it runs, so a review-date range finds nothing
+      // even though the same range on the creation date finds everything.
+      const today = new Date().toISOString().slice(0, 10);
+      const reviewed = await page(`dateField=reviewedAt&from=${today}&to=${today}&size=100`);
+      const created = await page(`dateField=createdAt&from=${today}&to=${today}&size=100`);
+      expect(created.total).toBeGreaterThan(reviewed.total);
+    });
+
+    it('rejects a page size the UI does not offer, and a malformed date', async () => {
+      const ops = await agentFor(emails.ops);
+      await ops.get('/api/admin/products?size=37').expect(400);
+      await ops.get('/api/admin/products?page=0').expect(400);
+      await ops.get('/api/admin/products?from=not-a-date').expect(400);
+      await ops.get('/api/admin/products?dateField=madeUp').expect(400);
+    });
+  });
+
   it('is limited to OPS/OWNER admins (401/403)', async () => {
     await request(app.getHttpServer()).get('/api/admin/products').expect(401);
     await (await agentFor(emails.buyer)).get('/api/admin/products').expect(403);
@@ -126,13 +193,16 @@ describe('Admin product review + public catalog (e2e)', () => {
 
   it('lists the review queue without drafts and filters by status', async () => {
     const ops = await agentFor(emails.ops);
-    const all = (await ops.get('/api/admin/products').expect(200)).body as { id: string; status: string }[];
-    const ids = all.map((p) => p.id);
+    // Paginated since T27: the body is a page, not a bare array.
+    const all = (await ops.get('/api/admin/products?size=100').expect(200)).body as Page;
+    expect(all).toMatchObject({ page: 1, size: 100 });
+    expect(all.total).toBeGreaterThanOrEqual(all.items.length);
+    const ids = all.items.map((p) => p.id);
     expect(ids).toContain(productIds['ToApprove']);
     expect(ids).not.toContain(productIds['Drafty']);
 
-    const pending = (await ops.get('/api/admin/products?status=PENDING_REVIEW').expect(200)).body as { status: string }[];
-    expect(pending.every((p) => p.status === 'PENDING_REVIEW')).toBe(true);
+    const pending = (await ops.get('/api/admin/products?status=PENDING_REVIEW&size=100').expect(200)).body as Page;
+    expect(pending.items.every((p) => p.status === 'PENDING_REVIEW')).toBe(true);
     await ops.get('/api/admin/products?status=BOGUS').expect(400);
 
     const detail = await ops.get(`/api/admin/products/${productIds['ToApprove']}`).expect(200);

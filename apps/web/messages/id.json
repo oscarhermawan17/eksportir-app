@@ -10,6 +10,28 @@
     "language": "Bahasa",
     "retry": "Coba lagi"
   },
+  "Table": {
+    "showing": "{from}–{to} dari {total}",
+    "perPage": "Per halaman",
+    "pageOf": "Halaman {page} dari {pages}",
+    "first": "Halaman pertama",
+    "prev": "Halaman sebelumnya",
+    "next": "Halaman berikutnya",
+    "last": "Halaman terakhir",
+    "paginationLabel": "Navigasi halaman",
+    "empty": "Belum ada apa-apa di sini.",
+    "noMatch": "Tidak ada yang cocok dengan filter ini.",
+    "loadError": "Tidak bisa memuat daftar.",
+    "search": "Cari",
+    "searchLabel": "Cari",
+    "clearSearch": "Hapus pencarian",
+    "dateFieldLabel": "Tanggal",
+    "from": "Dari",
+    "to": "Sampai",
+    "clearDates": "Hapus tanggal",
+    "dateCreated": "Dibuat",
+    "dateReviewed": "Ditinjau"
+  },
   "Navbar": {
     "searchLabel": "Cari produk",
     "searchPlaceholder": "Cari kopi, tas, kerajinan…",
@@ -449,7 +471,13 @@
     "approveError": "Produk ini tidak dapat disetujui.",
     "readOnly": "Produk ini tidak sedang menunggu peninjauan.",
     "rejectedWithReason": "Ditolak:",
-    "unsavedWarning": "Simpan terjemahan terlebih dahulu."
+    "unsavedWarning": "Simpan terjemahan terlebih dahulu.",
+    "columnListing": "Produk",
+    "columnCategory": "Kategori",
+    "columnPrice": "Harga",
+    "columnStatus": "Status",
+    "columnReviewed": "Ditinjau",
+    "searchPlaceholder": "Judul atau penjual…"
   },
   "AdminRate": {
     "title": "Kurs",

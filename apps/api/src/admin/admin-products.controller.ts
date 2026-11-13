@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Param, ParseEnumPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ProductStatus } from '@balitrade/shared';
-import type { AdminProductView, AuthUser } from '@balitrade/shared';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import type { AdminProductView, AuthUser, PageResult } from '@balitrade/shared';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { AdminProductsService } from '../products/admin-products.service.js';
+import { AdminProductQueryDto } from '../products/dto/admin-product-query.dto.js';
 import { ProductTranslationsDto, RejectProductDto } from '../products/dto/admin-product.dto.js';
 
 /** Listing review is an ADMIN_OPS task (ARCHITECTURE §4); the owner can do everything. */
@@ -16,10 +16,8 @@ export class AdminProductsController {
   constructor(private readonly products: AdminProductsService) {}
 
   @Get()
-  list(
-    @Query('status', new ParseEnumPipe(ProductStatus, { optional: true })) status?: ProductStatus,
-  ): Promise<AdminProductView[]> {
-    return this.products.list(status);
+  list(@Query() query: AdminProductQueryDto): Promise<PageResult<AdminProductView>> {
+    return this.products.list(query);
   }
 
   @Get(':id')

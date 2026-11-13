@@ -9,6 +9,7 @@ export * from './chat.js';
 export * from './notifications.js';
 export * from './orders.js';
 export * from './payments.js';
+export * from './pagination.js';
 
 /** Response shape of GET /api/health. */
 export interface HealthResponse {

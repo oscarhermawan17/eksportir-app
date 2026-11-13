@@ -10,6 +10,28 @@
     "language": "Language",
     "retry": "Try again"
   },
+  "Table": {
+    "showing": "{from}–{to} of {total}",
+    "perPage": "Per page",
+    "pageOf": "Page {page} of {pages}",
+    "first": "First page",
+    "prev": "Previous page",
+    "next": "Next page",
+    "last": "Last page",
+    "paginationLabel": "Pagination",
+    "empty": "Nothing here yet.",
+    "noMatch": "Nothing matches these filters.",
+    "loadError": "Could not load the list.",
+    "search": "Search",
+    "searchLabel": "Search",
+    "clearSearch": "Clear search",
+    "dateFieldLabel": "Date",
+    "from": "From",
+    "to": "To",
+    "clearDates": "Clear dates",
+    "dateCreated": "Created",
+    "dateReviewed": "Reviewed"
+  },
   "Navbar": {
     "searchLabel": "Search products",
     "searchPlaceholder": "Search coffee, bags, handicrafts…",
@@ -449,7 +471,13 @@
     "approveError": "Could not approve this product.",
     "readOnly": "This product is not waiting for review.",
     "rejectedWithReason": "Rejected:",
-    "unsavedWarning": "Save the translations first."
+    "unsavedWarning": "Save the translations first.",
+    "columnListing": "Listing",
+    "columnCategory": "Category",
+    "columnPrice": "Price",
+    "columnStatus": "Status",
+    "columnReviewed": "Reviewed",
+    "searchPlaceholder": "Title or seller…"
   },
   "AdminRate": {
     "title": "Exchange rate",
