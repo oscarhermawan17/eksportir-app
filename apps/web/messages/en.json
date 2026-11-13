@@ -498,7 +498,20 @@
     "badgeOff": "Switched off",
     "badgeArchived": "Archived",
     "productCount": "{count, plural, =0 {no listings} one {# listing} other {# listings}}",
-    "hiddenWarning": "{count, plural, one {# listing is} other {# listings are}} hidden from the shop while this is off. They keep their status and come back when you switch it on."
+    "hiddenWarning": "{count, plural, one {# listing is} other {# listings are}} hidden from the shop while this is off. They keep their status and come back when you switch it on.",
+    "unsaved": "{count, plural, one {# unsaved change} other {# unsaved changes}}",
+    "saveChanges": "Save changes",
+    "saving": "Saving…",
+    "discard": "Discard",
+    "pendingOn": "will be shown",
+    "pendingOff": "will be hidden",
+    "sectionActive": "Active ({count})",
+    "sectionArchived": "Archive ({count})",
+    "archivedEmpty": "Nothing archived.",
+    "confirmArchiveTitle": "Archive {name}?",
+    "confirmArchiveBody": "It leaves this list and its listings leave the shop. You can restore it at any time from the archive.",
+    "confirmArchiveYes": "Yes, archive",
+    "confirmArchiveNo": "Cancel"
   },
   "Catalog": {
     "title": "Products",

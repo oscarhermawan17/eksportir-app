@@ -498,7 +498,20 @@
     "badgeOff": "Выключена",
     "badgeArchived": "В архиве",
     "productCount": "{count, plural, =0 {нет товаров} one {# товар} few {# товара} other {# товаров}}",
-    "hiddenWarning": "{count, plural, one {# товар скрыт} few {# товара скрыты} other {# товаров скрыты}} из магазина, пока категория выключена. Их статус не меняется, и они вернутся после включения."
+    "hiddenWarning": "{count, plural, one {# товар скрыт} few {# товара скрыты} other {# товаров скрыты}} из магазина, пока категория выключена. Их статус не меняется, и они вернутся после включения.",
+    "unsaved": "{count, plural, one {# несохранённое изменение} few {# несохранённых изменения} other {# несохранённых изменений}}",
+    "saveChanges": "Сохранить изменения",
+    "saving": "Сохранение…",
+    "discard": "Отменить",
+    "pendingOn": "будет показана",
+    "pendingOff": "будет скрыта",
+    "sectionActive": "Активные ({count})",
+    "sectionArchived": "Архив ({count})",
+    "archivedEmpty": "В архиве пусто.",
+    "confirmArchiveTitle": "Архивировать «{name}»?",
+    "confirmArchiveBody": "Категория уйдёт из этого списка, а её товары — из магазина. Восстановить можно в любой момент из архива.",
+    "confirmArchiveYes": "Да, архивировать",
+    "confirmArchiveNo": "Отмена"
   },
   "Catalog": {
     "title": "Товары",

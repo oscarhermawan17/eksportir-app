@@ -498,7 +498,20 @@
     "badgeOff": "Dinonaktifkan",
     "badgeArchived": "Diarsipkan",
     "productCount": "{count, plural, =0 {tanpa produk} other {# produk}}",
-    "hiddenWarning": "{count, plural, other {# produk}} disembunyikan dari toko selama kategori ini nonaktif. Statusnya tidak berubah dan akan kembali begitu diaktifkan."
+    "hiddenWarning": "{count, plural, other {# produk}} disembunyikan dari toko selama kategori ini nonaktif. Statusnya tidak berubah dan akan kembali begitu diaktifkan.",
+    "unsaved": "{count, plural, other {# perubahan belum disimpan}}",
+    "saveChanges": "Simpan perubahan",
+    "saving": "Menyimpan…",
+    "discard": "Batalkan",
+    "pendingOn": "akan ditampilkan",
+    "pendingOff": "akan disembunyikan",
+    "sectionActive": "Aktif ({count})",
+    "sectionArchived": "Arsip ({count})",
+    "archivedEmpty": "Tidak ada kategori di arsip.",
+    "confirmArchiveTitle": "Arsipkan {name}?",
+    "confirmArchiveBody": "Kategori keluar dari daftar ini dan produknya keluar dari toko. Anda bisa memulihkannya kapan saja dari arsip.",
+    "confirmArchiveYes": "Ya, arsipkan",
+    "confirmArchiveNo": "Batalkan"
   },
   "Catalog": {
     "title": "Produk",

@@ -99,6 +99,13 @@ Area `/admin` tampil **terpisah dari toko**, supaya jelas sedang di mana dan mua
   Sebelumnya tiap halaman mengarang sendiri: tiga lebar berbeda (3xl/4xl/5xl), tiga padding vertikal, dan halaman Kategori tanpa padding
   sama sekali — itulah yang membuatnya terasa tidak seragam. Formulir sempit membatasi **kartunya sendiri** (mis. `max-w-3xl` di halaman
   kurs), bukan halamannya. Komponen order dipakai bersama toko, jadi wadahnya ada di call site: halaman toko membungkus, halaman admin tidak.
+- **Aksi berisiko di halaman admin: dua pengaman berbeda, sesuai sifat aksinya** (diputuskan pemilik 2026-11-13, di
+  `/admin/categories`). Centang "Tampil di toko" itu klik yang sering dan mudah salah, jadi **ditunda**: tampilan berubah,
+  tapi tidak ada yang dikirim ke API sampai tombol **Simpan perubahan** ditekan, lengkap dengan badge "akan disembunyikan"
+  per baris dan tombol Batalkan. Mengarsipkan itu jarang dan memindahkan baris keluar dari daftar, jadi sebaliknya:
+  **tanya dulu lewat dialog, lalu simpan seketika** — menundanya berarti ada baris menunggu di bagian yang salah karena
+  Simpan tidak ditekan. Daftarnya dipisah jadi **Aktif** dan **Arsip** supaya admin langsung tahu mana yang tampil di toko.
+  Pola ini layak dipakai ulang di halaman admin berikutnya: tunda yang sering dan ringan, konfirmasi yang jarang dan besar.
 - **Judul halaman hanya ada di top bar** (dirapikan 2026-11-12), dan itu satu-satunya `<h1>` di area admin. Body halaman **tidak
   mengulangnya**; ia langsung mulai dari paragraf penjelas atau dari isinya. Sebelumnya campur aduk: `h1` di Penjual/Listing/Kurs/Pesanan,
   `h2` dengan ukuran sama di Ringkasan/Pembayaran, dan Kategori tanpa judul sama sekali — tiga tag untuk satu peran visual, plus "Orders"

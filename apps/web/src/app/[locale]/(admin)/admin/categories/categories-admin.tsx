@@ -20,6 +20,12 @@ import { ApiError, apiFetch, errorKey } from '@/lib/api';
  *
  * Nothing here deletes anything (owner's decision 2026-11-12): off and archived cover every real case and
  * both are reversible, so the page has no irreversible button at all.
+ *
+ * Two different safeguards, because the two actions are not alike (owner's decision 2026-11-13):
+ * - "In the shop" is a frequent, easily mistaken click, so it is **staged**: the tick changes on screen,
+ *   nothing reaches the API until Save. An accidental click costs nothing.
+ * - Archiving is rare and moves the category out of the list, so it asks first and then saves at once.
+ *   Staging it would mean a row sitting in the wrong section waiting for a Save nobody pressed.
  */
 export function CategoriesAdmin() {
   return <LoginGate allow={(user) => user.roles.includes('ADMIN_OWNER')}>{() => <Page />}</LoginGate>;
@@ -35,10 +41,12 @@ function Page() {
   const [showArchived, setShowArchived] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  /** Staged "In the shop" ticks, by category id. Only Save sends them. */
+  const [staged, setStaged] = useState<Record<string, boolean>>({});
+  const [toArchive, setToArchive] = useState<AdminProductCategoryView | null>(null);
 
-  // Resetting here rather than inside the effect: setState in an effect body is a lint error, and the
-  // two callers that cause a reload are the only places that should blank the table.
   const reload = () => {
     setRows(null);
     setLoadFailed(false);
@@ -58,8 +66,15 @@ function Page() {
     };
   }, [attempt, showArchived]);
 
-  /** Every change goes through here so one failed request cannot leave the table showing a lie. */
-  async function run(id: string, body: ProductCategoryUpdateInput): Promise<void> {
+  /**
+   * A staged tick only counts while it still differs from what the server holds. Comparing on every
+   * render rather than pruning the map means a reload cannot leave a stale entry behind, and the Save
+   * bar disappears by itself once the change has landed.
+   */
+  const changed = (rows ?? []).filter((row) => staged[row.id] !== undefined && staged[row.id] !== row.active);
+
+  /** Immediate PATCH, for the things that are not staged: labels, position, restore. */
+  async function patch(id: string, body: ProductCategoryUpdateInput): Promise<void> {
     setBusyId(id);
     setErrors([]);
     try {
@@ -72,17 +87,69 @@ function Page() {
     }
   }
 
+  async function saveStaged(): Promise<void> {
+    setSaving(true);
+    setErrors([]);
+    const failed: string[] = [];
+    for (const row of changed) {
+      try {
+        await apiFetch<AdminProductCategoryView>(`/admin/categories/${row.id}`, {
+          method: 'PATCH',
+          body: { active: staged[row.id] } satisfies ProductCategoryUpdateInput,
+        });
+      } catch (error) {
+        // One failure must not hide the others, and must not look like a success.
+        failed.push(`${row.nameEn}: ${message(error, tErrors)}`);
+      }
+    }
+    setSaving(false);
+    setStaged({});
+    if (failed.length > 0) setErrors(failed);
+    reload();
+  }
+
+  async function confirmArchive(): Promise<void> {
+    const row = toArchive;
+    if (!row) return;
+    setToArchive(null);
+    // Staged ticks for other rows survive: they are keyed by id and re-checked against the reloaded data.
+    await patch(row.id, { archived: true });
+  }
+
+  const visible = rows ?? [];
+  const activeRows = visible.filter((row) => row.archivedAt === null);
+  const archivedRows = visible.filter((row) => row.archivedAt !== null);
+
+  const list = (section: AdminProductCategoryView[], emptyText: string) =>
+    section.length === 0 ? (
+      <p className="mt-3 rounded-card border border-border bg-card px-5 py-6 text-center text-sm text-muted">
+        {emptyText}
+      </p>
+    ) : (
+      <ul className="mt-3 space-y-3">
+        {section.map((row) => (
+          <Row
+            key={row.id}
+            row={row}
+            busy={busyId === row.id || saving}
+            inShop={staged[row.id] ?? row.active}
+            dirty={staged[row.id] !== undefined && staged[row.id] !== row.active}
+            onToggleInShop={(next) => setStaged((current) => ({ ...current, [row.id]: next }))}
+            onArchive={() => setToArchive(row)}
+            onRestore={() => void patch(row.id, { archived: false })}
+            onSaveLabels={(body) => void patch(row.id, body)}
+          />
+        ))}
+      </ul>
+    );
+
   return (
     <div>
       <p className="text-sm text-muted">{t('intro')}</p>
 
       <FormErrors messages={errors} />
 
-      <CreateForm
-        onCreated={reload}
-        onError={(text) => setErrors([text])}
-        existing={rows ?? []}
-      />
+      <CreateForm onCreated={reload} onError={(text) => setErrors([text])} existing={visible} />
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
         <h2 className="text-lg font-bold text-text">{t('listTitle')}</h2>
@@ -101,6 +168,20 @@ function Page() {
         </label>
       </div>
 
+      {changed.length > 0 ? (
+        <div className="sticky top-16 z-20 mt-3 flex flex-wrap items-center gap-3 rounded-card border border-warning/40 bg-warning/10 px-4 py-3">
+          <p className="text-sm font-semibold text-text">{t('unsaved', { count: changed.length })}</p>
+          <div className="ml-auto flex gap-2">
+            <Button className="h-9" disabled={saving} onClick={() => void saveStaged()}>
+              {saving ? t('saving') : t('saveChanges')}
+            </Button>
+            <Button variant="ghost" className="h-9" disabled={saving} onClick={() => setStaged({})}>
+              {t('discard')}
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
       {loadFailed ? (
         <div className="mt-4 rounded-card border border-error/30 bg-error/5 px-4 py-3 text-sm text-error">
           <p role="alert">{t('loadError')}</p>
@@ -110,20 +191,76 @@ function Page() {
         </div>
       ) : rows === null ? (
         <div className="mt-4 h-24" aria-busy="true" />
-      ) : rows.length === 0 ? (
-        <p className="mt-4 rounded-card border border-border bg-card px-5 py-8 text-center text-muted">{t('empty')}</p>
       ) : (
-        <ul className="mt-4 space-y-3">
-          {rows.map((row) => (
-            <Row
-              key={row.id}
-              row={row}
-              busy={busyId === row.id}
-              onUpdate={(body) => void run(row.id, body)}
-            />
-          ))}
-        </ul>
+        <>
+          <section aria-labelledby="cat-active" className="mt-5">
+            <h3 id="cat-active" className="text-sm font-bold uppercase tracking-wider text-muted">
+              {t('sectionActive', { count: activeRows.length })}
+            </h3>
+            {list(activeRows, t('empty'))}
+          </section>
+
+          {showArchived ? (
+            <section aria-labelledby="cat-archived" className="mt-8">
+              <h3 id="cat-archived" className="text-sm font-bold uppercase tracking-wider text-muted">
+                {t('sectionArchived', { count: archivedRows.length })}
+              </h3>
+              {list(archivedRows, t('archivedEmpty'))}
+            </section>
+          ) : null}
+        </>
       )}
+
+      {toArchive ? (
+        <ConfirmArchive
+          name={toArchive.nameEn}
+          productCount={toArchive.productCount}
+          onConfirm={() => void confirmArchive()}
+          onCancel={() => setToArchive(null)}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+/** Asked before archiving, because archiving takes a category out of the list and its listings out of the shop. */
+function ConfirmArchive({
+  name,
+  productCount,
+  onConfirm,
+  onCancel,
+}: {
+  name: string;
+  productCount: number;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  const t = useTranslations('AdminCategories');
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <button type="button" aria-label={t('confirmArchiveNo')} onClick={onCancel} className="absolute inset-0 bg-black/40" />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="archive-title"
+        className="relative w-full max-w-md rounded-card border border-border bg-card p-6 shadow-lg"
+      >
+        <h2 id="archive-title" className="text-lg font-bold text-text">
+          {t('confirmArchiveTitle', { name })}
+        </h2>
+        <p className="mt-2 text-sm text-muted">{t('confirmArchiveBody')}</p>
+        {productCount > 0 ? (
+          <p className="mt-2 text-sm text-warning">{t('hiddenWarning', { count: productCount })}</p>
+        ) : null}
+        <div className="mt-5 flex justify-end gap-2">
+          <Button variant="ghost" className="h-10" onClick={onCancel}>
+            {t('confirmArchiveNo')}
+          </Button>
+          <Button className="h-10" onClick={onConfirm}>
+            {t('confirmArchiveYes')}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -131,44 +268,59 @@ function Page() {
 function Row({
   row,
   busy,
-  onUpdate,
+  inShop,
+  dirty,
+  onToggleInShop,
+  onArchive,
+  onRestore,
+  onSaveLabels,
 }: {
   row: AdminProductCategoryView;
   busy: boolean;
-  onUpdate: (body: ProductCategoryUpdateInput) => void;
+  /** What the tick shows: the staged value when there is one, otherwise what the server holds. */
+  inShop: boolean;
+  dirty: boolean;
+  onToggleInShop: (next: boolean) => void;
+  onArchive: () => void;
+  onRestore: () => void;
+  onSaveLabels: (body: ProductCategoryUpdateInput) => void;
 }) {
   const t = useTranslations('AdminCategories');
   const archived = row.archivedAt !== null;
-  const inShop = row.active && !archived;
 
   return (
-    <li className={`rounded-card border bg-card p-4 shadow-sm ${archived ? 'border-border opacity-70' : 'border-border'}`}>
+    <li
+      className={`rounded-card border bg-card p-4 shadow-sm ${
+        dirty ? 'border-warning/60' : archived ? 'border-border opacity-70' : 'border-border'
+      }`}
+    >
       <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-base font-semibold text-text">{row.nameEn}</h3>
+            <h4 className="text-base font-semibold text-text">{row.nameEn}</h4>
             <code className="rounded bg-background px-1.5 py-0.5 text-xs text-muted">{row.slug}</code>
-            {archived ? (
-              <span className="rounded-full border border-muted/30 bg-muted/10 px-2 py-0.5 text-xs font-semibold text-muted">
-                {t('badgeArchived')}
-              </span>
-            ) : !row.active ? (
+            {archived ? null : !row.active ? (
               <span className="rounded-full border border-warning/40 bg-warning/15 px-2 py-0.5 text-xs font-semibold text-[#8a5a00]">
                 {t('badgeOff')}
+              </span>
+            ) : null}
+            {dirty ? (
+              <span className="rounded-full border border-warning/60 bg-warning/20 px-2 py-0.5 text-xs font-semibold text-[#8a5a00]">
+                {inShop ? t('pendingOn') : t('pendingOff')}
               </span>
             ) : null}
           </div>
           <p className="mt-1 text-sm text-muted">
             {row.nameId} · {row.nameRu} · {t('productCount', { count: row.productCount })}
           </p>
-          {!inShop && row.productCount > 0 ? (
+          {!archived && !row.active && row.productCount > 0 ? (
             <p className="mt-1.5 text-sm text-warning">{t('hiddenWarning', { count: row.productCount })}</p>
           ) : null}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {archived ? (
-            <Button variant="secondary" className="h-9" disabled={busy} onClick={() => onUpdate({ archived: false })}>
+            <Button variant="secondary" className="h-9" disabled={busy} onClick={onRestore}>
               {t('restore')}
             </Button>
           ) : (
@@ -176,14 +328,14 @@ function Row({
               <label className="flex items-center gap-2 text-sm font-semibold text-text">
                 <input
                   type="checkbox"
-                  checked={row.active}
+                  checked={inShop}
                   disabled={busy}
-                  onChange={(event) => onUpdate({ active: event.target.checked })}
+                  onChange={(event) => onToggleInShop(event.target.checked)}
                   className="h-4 w-4 accent-primary"
                 />
                 {t('inShop')}
               </label>
-              <Button variant="secondary" className="h-9" disabled={busy} onClick={() => onUpdate({ archived: true })}>
+              <Button variant="secondary" className="h-9" disabled={busy} onClick={onArchive}>
                 {t('archive')}
               </Button>
             </>
@@ -191,7 +343,7 @@ function Row({
         </div>
       </div>
 
-      <EditLabels row={row} busy={busy} onUpdate={onUpdate} />
+      <EditLabels row={row} busy={busy} onSave={onSaveLabels} />
     </li>
   );
 }
@@ -199,11 +351,11 @@ function Row({
 function EditLabels({
   row,
   busy,
-  onUpdate,
+  onSave,
 }: {
   row: AdminProductCategoryView;
   busy: boolean;
-  onUpdate: (body: ProductCategoryUpdateInput) => void;
+  onSave: (body: ProductCategoryUpdateInput) => void;
 }) {
   const t = useTranslations('AdminCategories');
   const [open, setOpen] = useState(false);
@@ -226,7 +378,7 @@ function EditLabels({
       onSubmit={(event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = new FormData(event.currentTarget);
-        onUpdate({
+        onSave({
           nameEn: String(form.get('nameEn')).trim(),
           nameId: String(form.get('nameId')).trim(),
           nameRu: String(form.get('nameRu')).trim(),
