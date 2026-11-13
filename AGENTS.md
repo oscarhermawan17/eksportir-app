@@ -80,6 +80,13 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
   `usePathname()/useSearchParams()` on a route with dynamic segments needs a `<Suspense>` boundary (Navbar/Footer are wrapped in
   `[locale]/layout.tsx`); dynamic route params are read inside `<Suspense>`. Docs are in `apps/web/node_modules/next/dist/docs/`.
 - Unknown URLs: `[locale]/[...rest]/page.tsx` + `not-found.tsx` + `app/global-not-found.tsx` (experimental flag) avoid a reload loop.
+- **A page you navigate away from stays mounted, only hidden** (Next.js 16 / React Activity — the old page sits in the DOM under
+  `display: none` so going back is instant). It is not unmounted, so **nothing resets by itself**: uncontrolled inputs keep their typed
+  values, `useRef` keeps its contents, and a `busy` flag left `true` leaves buttons disabled forever. A form that creates something must
+  therefore empty itself after a successful save (`form.reset()`, the controlled bits back to their defaults, refs cleared, child
+  components that own state remounted through a `key`), and every `setBusy(false)` belongs in a `finally`. Found 2026-11-13 on the seller
+  product form; the same trap waits in any other create form (order dialog, admin forms). `pnpm dev` hot-reloads the fix, but the stale
+  hidden page survives it — reload the tab before judging.
 - **Never run `pnpm build` while `pnpm dev` is running.** `next dev` and `next build` share `apps/web/.next`, and the build overwrites
   manifests the dev server is holding open. The symptom is every page answering 500 with
   `SyntaxError: Unexpected non-whitespace character after JSON` from the dev log — the message files are fine, a `.next` manifest is not.
