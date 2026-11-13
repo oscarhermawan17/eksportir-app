@@ -202,7 +202,13 @@ working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22,
 - Sample data (2026-11-06, dev only): 12 approved products on the "Oscar Testing" seller across 7 categories, $2.49–$132.60, plus the Rp 18,100
   rate. Their photos are **generated placeholders** labelled "BaliTrade sample", not real product photos, and their id/ru texts are AI-written.
   The throwaway script is not in the repo; `pnpm db:seed` does not create them.
-- R2: one bucket (`eksportir-testing`) serves as both public and private for now. **Splitting off a private bucket is part of T17** (decided 2026-11-08): payment proofs show account numbers and full names, and the current bucket is public, so a URL is the only thing between a proof and anyone holding it. Presigned GET exists since T08, so the change is one bucket plus one env variable; QC files (T18) need it too.
+- **R2: two buckets, two tokens, and a CORS policy per origin (done 2026-11-12).** `eksportir-testing` is public
+  (product photos, served from `pub-…r2.dev`); `eksportir-private` has no public URL and holds payment proofs and
+  QC files. Each has its own API token scoped to it alone, so the key that signs every photo upload cannot read a
+  payment proof — proven with a 403. **Uploads go browser → R2 directly, so every bucket needs a CORS policy naming
+  each origin the site is served from**; the exact policies in force are in `docs/DEPLOY.md` §3b. A missing origin
+  shows up as a bare 403 on upload, only on the deployed site — that cost an afternoon on 2026-11-12.
+  **Adding the production domain later means updating CORS on both buckets.**
 - **https://projectbali.my.id is a DEVELOPMENT environment, not production (restated by the owner 2026-11-12).**
   The production domain has not been chosen yet. What makes it different from a laptop is only that **the whole
   team can see it** — so it holds no real customer data, its data may be wiped, and a rough edge there is not an

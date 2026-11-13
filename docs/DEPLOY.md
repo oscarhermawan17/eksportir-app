@@ -129,11 +129,29 @@ Learned 2026-11-12, after a seller on the live site got a bare `403 Forbidden` o
 therefore never worked from any deployed site — the path simply had not been exercised in a browser before.
 `eksportir-private` had no policy at all, so payment proofs and QC files would have failed everywhere.
 
+**The policy actually in force since 2026-11-12** (copy this when adding a domain or a bucket).
+
+`eksportir-testing` (public — product photos):
+
 ```json
 [
   {
     "AllowedOrigins": ["https://projectbali.my.id", "http://localhost:3000"],
-    "AllowedMethods": ["PUT", "GET"],
+    "AllowedMethods": ["GET", "PUT", "HEAD"],
+    "AllowedHeaders": ["Content-Type"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
+
+`eksportir-private` (private — payment proofs, QC files):
+
+```json
+[
+  {
+    "AllowedOrigins": ["https://projectbali.my.id", "http://localhost:3000"],
+    "AllowedMethods": ["GET", "PUT"],
     "AllowedHeaders": ["Content-Type"],
     "MaxAgeSeconds": 3600
   }
