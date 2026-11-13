@@ -19,15 +19,22 @@ export function LoginForm() {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     setSubmitting(true);
     setErrors([]);
     try {
       const user = await login(String(form.get('email')), String(form.get('password')));
+      // Next.js keeps this page mounted (hidden) after we navigate away, so the fields would still hold
+      // the e-mail and the password when the next person opens the login page — after a logout, say.
+      formElement.reset();
       // Continue in the language saved on the account.
       router.push(homePathFor(user), { locale: user.locale });
     } catch (error) {
       setErrors([t(`errors.${authErrorKey(error)}`)]);
+    } finally {
+      // On success too: the hidden page is never unmounted, so a button left on "Logging in…" stays
+      // disabled and nobody can log in again without reloading the tab.
       setSubmitting(false);
     }
   }

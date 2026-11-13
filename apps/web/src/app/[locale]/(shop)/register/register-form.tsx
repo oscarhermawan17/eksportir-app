@@ -33,7 +33,8 @@ export function RegisterForm() {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const phone = String(form.get('phone') ?? '').trim();
     setSubmitting(true);
     setErrors([]);
@@ -47,9 +48,15 @@ export function RegisterForm() {
         locale,
         acceptAdminInChat: form.get('consent') === 'on',
       });
+      // Same reason as on the login page: this page stays mounted (hidden) once we navigate away, so the
+      // name, e-mail and password would still be in the fields when the page is opened again.
+      formElement.reset();
+      setRole(initialRole);
       router.push(role === 'SELLER' ? '/seller' : '/');
     } catch (error) {
       setErrors([t(`errors.${authErrorKey(error)}`)]);
+    } finally {
+      // On success too, or the button stays disabled on "Creating account…" for whoever opens it next.
       setSubmitting(false);
     }
   }

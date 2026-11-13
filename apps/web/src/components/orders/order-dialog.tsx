@@ -28,6 +28,15 @@ export function OrderDialog({ product, onClose }: { product: CatalogProduct; onC
   const text = useCatalogText();
   const { user } = useAuth();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  /**
+   * Closes the dialog and tells the page about it in the same breath. The `close` event alone is not
+   * enough when the buyer leaves through a link in the dialog: the page is kept mounted (hidden) from
+   * then on, and the event never reaches the page, so it would still believe the dialog is open.
+   */
+  const closeAndTell = () => {
+    dialogRef.current?.close();
+    onClose();
+  };
   const [qty, setQty] = useState(String(product.moq));
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -103,11 +112,17 @@ export function OrderDialog({ product, onClose }: { product: CatalogProduct; onC
         <div className="space-y-4 px-5 py-6">
           <p className="text-sm text-text">{t('sentText', { code: placed.code })}</p>
           <div className="flex flex-wrap gap-2">
-            <Link href={`/orders/${placed.id}`} className={buttonClasses('primary')}>
+            {/*
+              Both links close the dialog on the way out. The product page is kept mounted (hidden) once
+              we leave it, so a dialog left open stays open: coming back to the product would show this
+              confirmation again instead of the product, and ordering it a second time would need the
+              dialog closed by hand first.
+            */}
+            <Link href={`/orders/${placed.id}`} onClick={closeAndTell} className={buttonClasses('primary')}>
               {t('viewOrder')}
             </Link>
             {placed.conversationId ? (
-              <Link href={`/messages?c=${placed.conversationId}`} className={buttonClasses('secondary')}>
+              <Link href={`/messages?c=${placed.conversationId}`} onClick={closeAndTell} className={buttonClasses('secondary')}>
                 {t('openChat')}
               </Link>
             ) : null}
