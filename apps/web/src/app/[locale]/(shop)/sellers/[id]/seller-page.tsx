@@ -38,7 +38,7 @@ export function SellerPage({ id }: { id: string }) {
   const current = state?.key === `${key}#${attempt}` ? state : null;
 
   return (
-    <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
+    <div className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-8 sm:px-6 sm:py-12">
       <nav className="mb-5 text-sm text-muted">
         <Link href="/" className="hover:text-primary hover:underline">
           ← {t('back')}
@@ -92,7 +92,7 @@ function Seller({ seller }: { seller: PublicSellerProfile }) {
         {seller.products.length === 0 ? (
           <p className="mt-3 rounded-card border border-border bg-card px-5 py-8 text-center text-muted">{t('noSellerProducts')}</p>
         ) : (
-          <ul className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <ul className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {seller.products.map((product) => (
               <li key={product.id} className="flex">
                 <ProductCard product={product} />

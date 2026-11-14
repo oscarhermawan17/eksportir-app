@@ -14,7 +14,6 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
   const cover = product.media.find((item) => item.type === 'IMAGE' && item.url);
   const price = text.price(product);
   const availability = text.availability(product);
-  const location = text.location(product.seller.location);
 
   return (
     <article className="flex w-full flex-col overflow-hidden rounded-card border border-border bg-card shadow-sm transition hover:shadow-md">
@@ -36,25 +35,30 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           </span>
         )}
       </Link>
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-1.5 p-3 sm:p-4">
         <div>
           <TypeBadge type={product.type} label={tProducts(`types.${product.type}`)} />
         </div>
-        <h3 className="line-clamp-2 text-base font-semibold text-text">
+        {/* Two lines at most, then an ellipsis: cards sit in a grid, so a long title must not make one
+            of them taller than the rest of its row. */}
+        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-text sm:text-base">
           <Link href={`/products/${product.id}`} className="hover:text-primary focus-visible:outline-2 focus-visible:outline-primary">
             {product.title}
           </Link>
         </h3>
-        <p className="text-sm text-muted">
+        <p className="mt-auto pt-1.5 text-base font-bold tabular-nums text-text sm:text-lg">
+          {price ?? <span className="text-sm font-medium text-muted">{t('noPrice')}</span>}
+        </p>
+        <p className="text-xs text-muted sm:text-sm">{text.moq(product)}</p>
+        {availability ? <p className="text-xs text-muted sm:text-sm">{availability}</p> : null}
+        {/* The shop closes the card rather than sitting under the title: what a buyer scans for is the
+            product and its price. The regency is left out entirely — BaliTrade ships from Bali either
+            way, so it told a buyer nothing and cost a line on a narrow card. */}
+        <p className="truncate border-t border-border pt-2 text-xs text-muted">
           <Link href={`/sellers/${product.seller.id}`} className="hover:text-primary hover:underline">
-            {location
-              ? t('sellerLine', { seller: product.seller.displayName, location })
-              : product.seller.displayName}
+            {product.seller.displayName}
           </Link>
         </p>
-        <p className="mt-auto pt-2 text-lg font-bold tabular-nums text-text">{price ?? <span className="text-sm font-medium text-muted">{t('noPrice')}</span>}</p>
-        <p className="text-sm text-muted">{text.moq(product)}</p>
-        {availability ? <p className="text-sm text-muted">{availability}</p> : null}
       </div>
     </article>
   );

@@ -614,7 +614,6 @@
     "moq": "MOQ {qty} {unit}",
     "available": "Available: {qty} {unit}",
     "leadTime": "Lead time: {days} days",
-    "sellerLine": "{seller} · {location}",
     "home": "Home",
     "back": "Back to products",
     "autoTranslated": "Auto-translated",

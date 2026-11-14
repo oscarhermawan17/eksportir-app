@@ -164,7 +164,7 @@ function Products() {
       </div>
 
       {/* A chip per status with its count, scrollable sideways on a phone rather than wrapping to three rows. */}
-      <div className="-mx-4 mt-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+      <div className="no-scrollbar -mx-4 mt-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
         <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
           <Chip active={status === ''} onClick={() => query.set({ status: '' })}>
             {t('filter.all')} ({state.products.length})

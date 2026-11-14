@@ -614,7 +614,6 @@
     "moq": "MOQ {qty} {unit}",
     "available": "Tersedia: {qty} {unit}",
     "leadTime": "Waktu produksi: {days} hari",
-    "sellerLine": "{seller} · {location}",
     "home": "Beranda",
     "back": "Kembali ke produk",
     "autoTranslated": "Diterjemahkan otomatis",

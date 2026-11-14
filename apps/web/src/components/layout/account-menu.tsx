@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 import { buttonClasses } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { isAdmin, ordersBasePathFor } from '@/lib/home-path';
 
 /** First letter of the first and last word, e.g. "Oscar Hermawan" -> "OH". */
@@ -124,17 +124,44 @@ export function AccountMenu({ user }: { user: AuthUser }) {
   );
 }
 
-/** Log in / Sign up for visitors who are not signed in. */
-export function AuthButtons() {
+/**
+ * Log in / Sign up for visitors who are not signed in. `whitespace-nowrap` because the buttons have a
+ * fixed height: a label that wraps does not make them taller, it spills out of them.
+ *
+ * Two rules decide what is shown. Never offer the page the visitor is already on — on /login the bar
+ * points to signing up, on /register to logging in. And `single` keeps it to one button where there is
+ * no room for two: on a phone, both of them beside the search field left that field 65 px wide in
+ * Russian, where "Регистрация" alone is 126 px.
+ *
+ * Together they always leave exactly one way onwards on a phone: "Log in" from anywhere in the shop,
+ * "Sign up" while on the login page, "Log in" while on the sign-up page.
+ */
+export function AuthButtons({ single = false }: { single?: boolean }) {
   const t = useTranslations('Navbar');
+  const pathname = usePathname();
+  const onLogin = pathname === '/login';
+
+  const showLogin = !onLogin;
+  // With room for one button, signing up is offered exactly where logging in is not: on /login.
+  const showSignup = single ? onLogin : pathname !== '/register';
+  // Whichever one is left over on its own carries the weight, so it gets the solid treatment.
+  const soleButton = showLogin !== showSignup;
+
   return (
     <>
-      <Link href="/login" className={buttonClasses('ghost', 'px-3 sm:px-5')}>
-        {t('login')}
-      </Link>
-      <Link href="/register" className={buttonClasses('primary', 'px-3 sm:px-5')}>
-        {t('signup')}
-      </Link>
+      {showLogin ? (
+        <Link
+          href="/login"
+          className={buttonClasses(soleButton ? 'primary' : 'ghost', 'whitespace-nowrap px-3 sm:px-5')}
+        >
+          {t('login')}
+        </Link>
+      ) : null}
+      {showSignup ? (
+        <Link href="/register" className={buttonClasses('primary', 'whitespace-nowrap px-3 sm:px-5')}>
+          {t('signup')}
+        </Link>
+      ) : null}
     </>
   );
 }

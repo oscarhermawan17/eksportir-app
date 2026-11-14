@@ -30,3 +30,16 @@ body {
   background: var(--color-background);
   color: var(--color-text);
 }
+
+/*
+ * A row that scrolls sideways without showing a scrollbar for it — the chip rows (catalog categories,
+ * seller listing filters). The bar is drawn permanently on some systems, where it reads as a stray line
+ * under the chips rather than as something to drag. Scrolling itself is untouched: swipe, trackpad,
+ * shift+wheel and keyboard all still work.
+ */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

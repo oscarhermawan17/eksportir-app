@@ -614,7 +614,6 @@
     "moq": "Мин. заказ {qty} {unit}",
     "available": "В наличии: {qty} {unit}",
     "leadTime": "Срок изготовления: {days} дн.",
-    "sellerLine": "{seller} · {location}",
     "home": "Главная",
     "back": "Назад к товарам",
     "autoTranslated": "Переведено автоматически",
