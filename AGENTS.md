@@ -116,6 +116,8 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 working tree clean, 25 of 32 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left).
 
+**Deployed 2026-11-15:** commit `7c78ad3` is live on the VPS — the mobile navbar (two rows, one auth button), the catalog grid (2/3/4/5 columns, container 1280px) and the compact product cards. CI run #16 green, no migration. Image digests web `05b36319` → `bcf5cacb`, api `3a348de0` → `f6ae48dc`. Checked from outside at 1440px and 375px: 5 and 2 columns, no horizontal overflow, cards 253px tall on a phone, badges on the photos, no MOQ and no seller regency on a card. **Note the SSH trap in `docs/DEPLOY.md` is real:** `docker compose up -d` finished and recreated both containers, then the SSH session hung without returning — check `docker ps` rather than assuming it failed.
+
 **Deployed 2026-11-14:** commit `1638f95` (T28, the seller area) is live on the VPS. CI run #14 green, `docker compose pull && up -d`,
 **no migration** — T28 changed no schema. Verified from outside: `/id/seller`, `/id/seller/orders`, `/id/seller/products` and
 `/id/seller/account` all answer 200 (an unknown URL still 404s, and `/id/seller/orders` serves its own title "Pesanan — BaliTrade", so the
