@@ -114,11 +114,17 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-14**,
 working tree clean, 25 of 32 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
-and Orders done, Payments left). T28 is committed but **not deployed** — the VPS still runs the 2026-11-13 image.
+and Orders done, Payments left).
 
-**Deployed 2026-11-13:** commit `f61e198` is live on the VPS — the four forms that did not reset themselves (seller product, login,
-sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`). No migration was involved. The behaviour itself was
-**not** re-checked on the live site: that needs an account there, and the admin password was deliberately not typed into a tool call.
+**Deployed 2026-11-14:** commit `1638f95` (T28, the seller area) is live on the VPS. CI run #14 green, `docker compose pull && up -d`,
+**no migration** — T28 changed no schema. Verified from outside: `/id/seller`, `/id/seller/orders`, `/id/seller/products` and
+`/id/seller/account` all answer 200 (an unknown URL still 404s, and `/id/seller/orders` serves its own title "Pesanan — BaliTrade", so the
+new build really is the one being served), the catalog still returns its 7 products with USD prices, and the API reports `database: up`.
+Image digests before → after: web `206bba4e` → `05b36319`, api `6ce3519d` → `3a348de0` (for a rollback, pin `IMAGE_TAG` in the server's
+`.env`). **The seller area itself was not exercised while logged in on the live site** — that needs an account there, and no password was
+typed into a tool call.
+Previously deployed 2026-11-13: commit `f61e198`, the four forms that did not reset themselves (seller product, login, sign-up, order
+dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`).
 
 **Done**
 - Foundation and accounts: T01 monorepo · T02 database · T03 auth · T04 RBAC · T05 layout · T06 i18n (en/id/ru) · T07 seller onboarding.
@@ -220,9 +226,12 @@ sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`)
   `PERSONAL_GOODS`, `GARMENTS_FASHION`, `LEATHER_PRODUCTS`, `HANDICRAFT_SOUVENIR` (labels in en/id/ru in the row).
   The nine were deleted outright, which was safe only because `products = 0` there. **`pnpm db:seed` would put the
   nine back** (`SEED_PRODUCT_CATEGORIES` in `packages/shared`), so do not run the seed against the VPS.
-- **The VPS database is almost empty by design** (2026-11-11): the admin plus the 9 QC zones that `pnpm db:seed`
-  creates, and the rate the owner entered (Rp 18,150 / USD). Measured 2026-11-12: `users=1, products=0, orders=0,
-  payments=0, messages=0` — the hand-filling described below has not started yet. The seller and sample products exist only in the
+- **The VPS database is small but no longer empty.** Measured 2026-11-14: `users=4, sellers=3 (all APPROVED:
+  Test Seller/Tabanan, Seller 1 Denpasar, Crafted Karangasem), products=7 (all APPROVED), orders=0, categories=4`.
+  The owner has been filling it by hand since 2026-11-11, when it held only the admin, the 9 QC zones from
+  `pnpm db:seed` and the rate (Rp 18,150 / USD). **Orders are still 0**, so anything that counts order work —
+  the T28 seller dashboard's "needs your attention" row, for one — reads 0 there until somebody places one.
+  The 12 sample products and "Oscar Testing" seller exist only in the
   local dev database — they came from a throwaway script that was deliberately never committed. The owner is
   filling the testing site by hand through the UI, which also exercises R2 uploads over real HTTPS, cookies on a
   real domain and the chat WebSocket through nginx — none of which localhost tests.
