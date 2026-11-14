@@ -611,7 +611,6 @@
     "noPhoto": "Нет фото",
     "noPrice": "Цена скоро появится",
     "perUnit": "{price} / {unit}",
-    "moq": "Мин. заказ {qty} {unit}",
     "available": "В наличии: {qty} {unit}",
     "leadTime": "Срок изготовления: {days} дн.",
     "home": "Главная",

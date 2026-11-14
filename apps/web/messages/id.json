@@ -611,7 +611,6 @@
     "noPhoto": "Tanpa foto",
     "noPrice": "Harga segera tersedia",
     "perUnit": "{price} / {unit}",
-    "moq": "MOQ {qty} {unit}",
     "available": "Tersedia: {qty} {unit}",
     "leadTime": "Waktu produksi: {days} hari",
     "home": "Beranda",

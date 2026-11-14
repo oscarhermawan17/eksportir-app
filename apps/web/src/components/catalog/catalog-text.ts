@@ -3,7 +3,7 @@
 import type { CatalogProduct } from '@balitrade/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 
-/** Texts for a catalog product that cards and the detail page share (price, MOQ, stock, lead time, location). */
+/** Texts for a catalog product that cards and the detail page share (price, stock, lead time, location). */
 export function useCatalogText() {
   const t = useTranslations('Catalog');
   const tProducts = useTranslations('Products');
@@ -18,8 +18,6 @@ export function useCatalogText() {
             price: format.number(Number(product.priceUsd), { style: 'currency', currency: 'USD' }),
             unit: tProducts(`units.${product.unit}`),
           }),
-    moq: (product: CatalogProduct): string =>
-      t('moq', { qty: format.number(product.moq), unit: tProducts(`units.${product.unit}`) }),
     /** Ready stock shows the stock left, made to order shows the lead time. */
     availability: (product: CatalogProduct): string | null =>
       product.type === 'READY_STOCK' && product.stockQty !== null

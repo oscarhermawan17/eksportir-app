@@ -611,7 +611,6 @@
     "noPhoto": "No photo",
     "noPrice": "Price coming soon",
     "perUnit": "{price} / {unit}",
-    "moq": "MOQ {qty} {unit}",
     "available": "Available: {qty} {unit}",
     "leadTime": "Lead time: {days} days",
     "home": "Home",
