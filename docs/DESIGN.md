@@ -38,10 +38,15 @@ Hal yang sengaja tidak direvisi di Stitch dan harus dibereskan saat implementasi
   dan **cukup satu kalau dua tidak muat**. Keduanya berdampingan menyisakan kolom cari 120px (Rusia, 375px) dan 65px (Rusia, 320px) — ikon
   saja. Jadi di ponsel: "Masuk" di toko, "Daftar" saat di halaman masuk, "Masuk" saat di halaman daftar. Desktop tetap dua tombol, dikurangi
   halaman yang sedang dibuka. Tombol yang tinggal sendirian digambar solid, karena ia satu-satunya aksi di sana.
-- **Kartu produk (2026-11-14):** urutannya badge → judul → harga → MOQ → ketersediaan → **nama toko di dasar kartu**, dipisah garis. Lokasi
-  penjual ("Tabanan, Bali") **dibuang**: BaliTrade mengirim dari Bali bagaimanapun, jadi itu tidak memberi tahu pembeli apa pun sambil
-  memakan satu baris di kartu sempit. Judul dipotong dua baris dengan elipsis supaya satu nama panjang tidak membuat kartunya lebih tinggi
-  dari kartu lain sebarisnya, dan badge tipe tidak pernah membungkus — pil yang patah dua baris berhenti terlihat seperti pil.
+- **Kartu produk (2026-11-14):** badge tipe duduk di **sudut kanan atas foto** (pil putih bertulisan teal/terakota + bayangan tipis — latar
+  bertinta tertelan oleh gambar), lalu badan kartu berisi **judul → harga → ketersediaan → nama toko**, nama toko di dasar dan dipisah garis.
+  Badge sengaja **di luar** tautan gambar: tautan itu `aria-hidden` dan dilewati Tab, jadi badge di dalamnya tidak akan pernah dibacakan.
+  Harga **seukuran judul tapi bold** — keduanya yang dipindai pembeli. Dua hal dikeluarkan dari kartu: **lokasi penjual** ("Tabanan, Bali"),
+  karena BaliTrade mengirim dari Bali bagaimanapun sehingga itu tidak memberi tahu apa pun sambil memakan satu baris; dan **MOQ**, yang cukup
+  di halaman detail ("Pesanan minimum") daripada jadi baris huruf kecil di bawah setiap listing. Hasilnya kartu di ponsel turun dari 310–330px
+  ke 253–272px. Judul dipotong **dua baris** dengan elipsis supaya satu nama panjang tidak membuat kartunya lebih tinggi dari kartu lain
+  sebarisnya — elipsis hanya muncul kalau judulnya memang butuh baris ketiga. Badge tipe tidak pernah membungkus: pil yang patah dua baris
+  berhenti terlihat seperti pil.
 - **Baris chip menyembunyikan scrollbar-nya** (utilitas `no-scrollbar` di `globals.css`; dipakai chip kategori katalog dan filter listing
   penjual). Di sistem yang menggambar scrollbar permanen, ia terbaca sebagai garis nyasar di bawah chip, bukan sesuatu yang bisa diseret.
   Scroll-nya sendiri tidak diubah.
