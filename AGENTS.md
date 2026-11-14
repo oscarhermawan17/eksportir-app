@@ -113,9 +113,8 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 ## Current status
 
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-14**,
-25 of 32 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing and Orders done,
-Payments left). **T28 is finished but not committed** — the session that built it could not run `git commit` (the permission was
-denied), so the work sits in the working tree: check `git status` before starting anything.
+working tree clean, 25 of 32 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
+and Orders done, Payments left). T28 is committed but **not deployed** — the VPS still runs the 2026-11-13 image.
 
 **Deployed 2026-11-13:** commit `f61e198` is live on the VPS — the four forms that did not reset themselves (seller product, login,
 sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`). No migration was involved. The behaviour itself was
