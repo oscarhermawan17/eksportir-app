@@ -7,6 +7,13 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 
 | Decision | Why / detail |
 |---|---|
+| **Seller area gets its own chrome (T28, 2026-11-14)**: route group `(seller)`, light sidebar on `lg`+, **bottom tab bar** below it, top bar with the page title | URLs unchanged. Light, not the admin's dark teal, so a seller never feels put inside the staff panel; a tab bar rather than a drawer because sellers work on phones and no drawer means one less piece of state |
+| Seller dashboard shows work, not a menu (T28) | The old one already fetched every product and order and used only `.length`. Counting rules now live as pure functions in `apps/web/src/lib/seller-stats.ts` |
+| "Live in the catalog" = `APPROVED && categoryActive` (T28 fix) | Counting `APPROVED` alone told a seller their listings were on sale while a switched-off category (T26) had taken them out of the shop |
+| **No "total earnings" or "items sold" on the seller dashboard** until T20 (2026-11-14) | There is no data: no commission anywhere, `Payout` arrives in T20, the commission rule is still an open business question, and an order's `totals.totalUsd` is not the seller's money (it carries the QC fee, later shipping, and no commission has been taken off). A wrong money figure is the most expensive thing to show on a trust-first marketplace |
+| Direct seller↔admin chat is listed but disabled (T28), built in T29 | `Conversation` requires a `buyerId`; a chat without a buyer needs a schema change, migration, access rules, socket rooms and the admin inbox |
+| Sellers may change their own phone number (T28); it is stored on `User`, never shown to buyers | It belongs to the account, not the shop, so it is already in the right place for one-time codes. See `docs/SECURITY.md` item 14 for what must come with it before T21 |
+| `NotificationsResponse` carries `unreadByType` (T28), grouped in the database | `GET /api/notifications` returns only the newest 30, so counting one type from that list understates it silently once someone has more |
 | Password hashing: Node built-in **scrypt** (not argon2/bcrypt) | No native dependency; see `apps/api/src/common/password.ts` |
 | Session: JWT in httpOnly cookie `bt_session`, payload `sub` only; user/roles re-read from DB each request | Role changes apply immediately; logout = delete cookie (no revocation) |
 | Login 5/min, register 10/min per IP via `@nestjs/throttler` (in-memory) | Needs Redis if the API ever runs more than one instance |

@@ -112,9 +112,10 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 ## Current status
 
-Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-13**,
-working tree clean, 24 of 30 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23 and T26); **T27 is half built** (Listing and Orders
-done, Payments left).
+Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-14**,
+25 of 32 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing and Orders done,
+Payments left). **T28 is finished but not committed** — the session that built it could not run `git commit` (the permission was
+denied), so the work sits in the working tree: check `git status` before starting anything.
 
 **Deployed 2026-11-13:** commit `f61e198` is live on the VPS — the four forms that did not reset themselves (seller product, login,
 sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`). No migration was involved. The behaviour itself was
@@ -129,6 +130,16 @@ sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`)
 - Orders: T15 request (dialog on the product page, `/orders` list and detail, order chat, seller notification) · T16 responses (seller accepts /
   declines / proposes a *lower* quantity; buyer accepts the change or cancels; each step = system message in the order chat + notification).
   All transitions live in `nextOrderStatus()` in `packages/shared/src/orders.ts`.
+- T28 **the seller area has its own chrome** (2026-11-14): route group `(seller)` beside `(admin)` and `(shop)`, so the URLs are unchanged.
+  A **light** sidebar on `lg`+ (deliberately not the admin's dark teal) and a **bottom tab bar** below it instead of a drawer, because sellers
+  work on phones; menu in `SELLER_NAV` (`src/components/seller/seller-nav.ts`): Dashboard · Orders · Products · Chat with BaliTrade (disabled,
+  "soon" — that is T29) · Shop profile. The top bar is the only page title, so pages here write no `h1`. `/seller/orders` reuses `OrdersList`
+  and `OrderDetail` through `basePath`, and `ordersBasePathFor()` sends every order link to the right area; `/orders` still works for everyone.
+  The dashboard was rewritten around work waiting: two rows of tiles, the orders that need an answer, the latest listings, and a card for an
+  unfinished profile. Counting rules are pure functions in `src/lib/seller-stats.ts` — including the fix that **"live in the catalog" is
+  `APPROVED && categoryActive`**, not `APPROVED` alone. **No earnings or "items sold" tile**: there is no commission and no `Payout` before T20,
+  and an order total is not the seller's money. The products page got search and status chips (URL state via `useTableQuery`) and rows that
+  reflow to cards below `md`. Sellers can now set their own phone (`PATCH /api/auth/me`, stored on `User`, never public).
 - UI: T16b simplified navbar (logo + search + language + bell + round avatar menu; no permanent text links, so it never wraps) ·
   `/` is the catalog (category chips, listing-type filter, thin trust band) · `/products` removed · new `/how-it-works` holds the six steps,
   trust cards, payment methods, shipping, FAQ and the seller invitation.
@@ -170,7 +181,7 @@ sign-up, order dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`)
 **Next (in this order, unless the owner says otherwise)**
 
 > **Right now the owner is working on the UI** (polish, making it attractive) — 2026-11-14. Finish or hand back UI work before
-> starting a task from this list. **T21 password reset is marked URGENT** in `TASKS.md` (nothing resets a forgotten password today
+> starting a task from this list. T28 (seller area) is done; **T29 seller↔admin chat** is the follow-up it created and is not started. **T21 password reset is marked URGENT** in `TASKS.md` (nothing resets a forgotten password today
 > and sessions expire after 7 days), but the owner has deliberately put it **after** the UI work.
 
 0. **T24 backup** is now the most valuable unfinished task, not the next one in number order: the database shares

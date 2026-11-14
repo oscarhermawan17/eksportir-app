@@ -45,6 +45,12 @@ Ordered by importance. **Items 1 to 3 must be done before anything runs on a sha
 11. **Consent for admin in chats.** Done in T13b: sign-up requires `acceptAdminInChat: true` (enforced by the API) and stores when and which wording was accepted. Accounts created before that, and admin accounts from the seed, have no consent record; the chat does not check it yet.
 12. **Chat limits and attachments.** (Notifications are private to their owner: every route filters by the logged-in user, other users' ids answer 404, and pushes only go to the owner's own socket room.) Messages are limited to 20 per user per minute (in memory, one API instance like the login throttle) and 2000 characters. Sockets cannot write, and refuse a foreign `Origin`. Open: a user whose role is removed keeps the rooms they already joined until their socket reconnects; attachments (T13) must be validated like other private uploads.
 13. **Backups** are not set up yet (T24): daily `pg_dump` to R2, encrypted, with one tested restore.
+14. **Changing the phone number must get harder the moment it can receive codes.** Since T28 a person can set their own phone on
+    `PATCH /api/auth/me` with nothing but their session — fine today, because the number is only a way for the team to reach them
+    and is never shown to buyers (it is not part of `PublicSellerProfile`). As soon as it can receive a one-time code or a password
+    reset (T21 and anything after it), that same ease becomes the cheapest account takeover there is: change the number, receive
+    the code, keep the account. Before that ships, a change must require the current password **and** a check of the new number,
+    and the old number should be told. Deliberately not built in advance: there is nothing to verify against yet.
 
 ## Routine checks
 

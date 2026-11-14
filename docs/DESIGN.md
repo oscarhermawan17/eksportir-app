@@ -21,7 +21,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 | 7b | Pembayaran & upload bukti | Final | Stitch: `design-ui/google-stitch/07-b.html`; lihat catatan bagian 7b |
 | 8 | Detail order (approval QC, tagihan ongkir, tracking, terima barang) | Final | Stitch: `design-ui/google-stitch/08.html`; lihat catatan bagian 8. **Tahap desain Stitch selesai.** |
 | 9 | Ruang chat | Dilewati (dibuat saat implementasi) | Komponen sudah ada di chat drawer halaman 4 |
-| 10 | Dashboard penjual | **Dibuat 2026-11-06 (T16c)** | `/seller` = dasbor: nama toko + status, 3 kartu angka (pesanan menunggu jawaban · produk tayang · produk menunggu ditinjau/menunggu penjual), tombol tambah & kelola produk. Formulir akun penjual pindah ke `/seller/account`. Tanpa sidebar: penjual hanya punya 3 halaman, navbar biasa sudah cukup |
+| 10 | Dashboard penjual | **Ditulis ulang 2026-11-14 (T28)** | Area `/seller` punya chrome sendiri: **sidebar terang** 240px di `lg` ke atas, **bottom tab bar** di bawahnya, top bar (judul halaman · pencarian listing sendiri · bahasa · lonceng · avatar). Menu: Dasbor · Pesanan · Produk · Chat BaliTrade (nonaktif, T29) · Profil Toko. Dasbor = header toko + kartu kelengkapan profil + 4 tile "perlu tindakan Anda" + 4 tile "toko Anda" + panel pesanan menunggu jawaban + panel listing terbaru. Sebelumnya (T16c) hanya 3 kartu angka tanpa sidebar |
 | 11 | Dashboard admin | **Dibuat 2026-11-06 (T17b)** | Layout `/admin` sendiri: sidebar teal gelap 240px + top bar polos, tanpa navbar/footer toko dan tanpa pencarian produk. Menu: Ringkasan · Penjual · Listing · Pesanan · Kurs (mengikuti peran). Pembayaran, QC, pengiriman, pencairan menyusul di T17–T20 sebagai entri baru di `ADMIN_NAV` |
 | 12 | How It Works (halaman penjelasan lengkap: alur, QC, pembayaran, FAQ lengkap) | **Dibuat 2026-11-06 (T16b)** | `/how-it-works`: cara kerja 6 langkah, 4 kartu kepercayaan, metode bayar (3 kartu, tanpa detail rekening), pengiriman & pelacakan, FAQ 5 butir, ajakan jadi penjual. Jangkar `#payment` dan `#shipping` dipakai footer |
 
@@ -32,6 +32,20 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 Hal yang sengaja tidak direvisi di Stitch dan harus dibereskan saat implementasi. Detail per halaman ada di bagian "Catatan implementasi" masing-masing.
 
 - **Sumber kebenaran visual = design system `01-v4.html`** (token warna, font, radius 12px, ikon Lucide, badge, kartu, chat bubble). Halaman lain hanya acuan alur/struktur.
+- **Area penjual punya chrome sendiri sejak T28 (2026-11-14), dan sengaja tidak mirip area admin.** Sidebar penjual **terang**
+  (`bg-card` + border, item aktif `bg-primary/5` dengan garis `border-gold` di kiri), bukan teal gelap seperti admin: penjual bukan staf dan
+  tidak boleh merasa berada di panel admin. Badge "SELLER" memakai **`text-gold-text`**, bukan `text-gold` — gold #c9a24a di atas putih tidak
+  lolos kontras 4,5:1, dan token itu memang ada untuk kasus ini.
+- **Di bawah `lg` penjual mendapat bottom tab bar, bukan drawer** (T28). Admin bekerja di laptop, penjual di ponsel: navigasi utama di balik
+  hamburger salah untuk mereka. Karena itu area penjual **tidak punya drawer sama sekali** — satu state lebih sedikit. Konten dapat `pb-24` dan
+  bar-nya `pb-[env(safe-area-inset-bottom)]` supaya baris terakhir tidak tertutup di iPhone. Label bottom bar memakai kunci `navShort` yang
+  terpisah: "Pengaturan Profil Toko" tidak muat di tab selebar 75px.
+- **Item menu yang fiturnya belum ada dirender sebagai teks, bukan tautan** (`soon` di `SELLER_NAV`): tidak bisa diklik, dilewati Tab, dan
+  diberi pill "Segera". Tempatnya terlihat tanpa jadi jalan buntu.
+- **Top bar adalah satu-satunya judul halaman di area penjual**, sama seperti area admin sejak 2026-11-12. Halaman di dalamnya tidak menulis
+  `h1` dan tidak membuat container sendiri. Dua pengecualian yang sengaja: `/seller` dan `/seller/account` **menulis `h1` saat pengunjungnya
+  belum punya peran SELLER**, karena `/seller` juga pintu pendaftaran penjual — orang itu masih pembeli, jadi shell menampilkan chrome toko
+  yang memang tidak punya judul halaman.
 - **Arti "halaman depan" berbeda per peran (T16c, 2026-11-06):** pembeli → `/` katalog, penjual → `/seller` dasbor, admin → area admin. Login dan logo mengikuti satu aturan di `homePathFor()` (`apps/web/src/lib/home-path.ts`); penjual dan admin punya "Lihat toko" di menu avatar. **Akun admin khusus admin** — menunya tanpa "Pesanan saya" dan "Jual di BaliTrade".
 - **Navbar & footer = 1 komponen standar** untuk semua halaman. **Navbar diubah 2026-11-06 (T16b)** dan tidak lagi mengikuti design system di titik ini: isinya hanya logo, kolom pencarian, language switcher, lonceng notifikasi, dan avatar bulat (tanpa satu pun tautan teks permanen — halaman pribadi dan admin ada di menu avatar). Alasannya tercatat di `docs/DECISIONS.md`. Footer tetap: About, For Buyers, For Sellers, Support (FAQ, Contact, Terms of Service, Privacy Policy); abaikan variasi link karangan di tiap halaman Stitch.
 - **Jangan pakai kata "escrow"** di UI → "Payment protection" / "Payment held by BaliTrade until delivery".

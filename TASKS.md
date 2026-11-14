@@ -193,6 +193,46 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   Catatan: penjual yang mengganti kategori produknya memang memulihkan produk itu, **tapi lewat review admin lagi** — mengedit produk
   `APPROVED` mengembalikannya ke `PENDING_REVIEW` (aturan T09, sengaja tidak diubah).
 
+- [x] **T28 Area penjual dengan layout sendiri** (ditambahkan 2026-11-14 atas permintaan pemilik) — penjual bekerja di dalam chrome toko
+  tanpa navigasi tetap: tiga halaman yang saling terhubung lewat tombol, dan pesanannya berbagi `/orders` dengan pembeli. Sekarang `(seller)`
+  jadi route group sendiri seperti `(admin)` sejak T17b, jadi **URL tidak berubah** tapi chrome-nya berubah: sidebar **terang** (sengaja bukan
+  teal gelap milik admin — penjual bukan staf), **bottom tab bar di bawah `lg`** menggantikan drawer (target penggunanya ponsel; navigasi utama
+  tidak boleh disembunyikan di balik hamburger, dan tanpa drawer berarti satu state lebih sedikit), dan top bar berisi judul halaman, pencarian
+  **atas listing penjual sendiri**, language switcher, lonceng notifikasi dan avatar. Menu: Dasbor · Pesanan · Produk · Chat BaliTrade · Profil
+  Toko; Logout tetap di menu avatar, **sengaja tidak di bottom bar** (risiko kesenggol).
+  **Dasbor ditulis ulang jadi tempat kerja, bukan menu.** Komponen lama sudah mengambil seluruh produk dan pesanan lalu hanya memakai
+  `.length`-nya; sekarang data yang sama mengisi dua baris angka (empat "perlu tindakan Anda", empat "toko Anda"), panel pesanan yang menunggu
+  jawaban, panel listing terbaru, dan kartu kelengkapan profil. Semua aturan hitungan pindah ke `apps/web/src/lib/seller-stats.ts` sebagai
+  fungsi murni dengan definisinya tertulis. **Satu angka lama memang salah:** "produk tayang" dihitung `APPROVED` saja, padahal listing yang
+  kategorinya dimatikan admin (T26) keluar dari katalog tanpa berubah status — sekarang `APPROVED && categoryActive`.
+  **Pendapatan dan "produk terjual" sengaja dilewati**: tidak ada data untuk keduanya. Komisi dan tabel `Payout` baru lahir di T20, aturan
+  komisinya belum diputuskan, dan `totals.totalUsd` sebuah order **bukan** pendapatan penjual (ada biaya QC di dalamnya, nanti ongkir, dan belum
+  dipotong komisi). Menampilkannya sekarang berarti penjual menagih angka yang salah.
+  **Chat langsung ke admin hanya dibuat item menunya** (nonaktif, pill "Segera"): model `Conversation` mewajibkan `buyerId`, jadi fitur
+  sebenarnya adalah T29.
+  Halaman Produk dapat kotak cari + chip filter per status dengan hitungannya (state di URL lewat `useTableQuery`, helper yang sama dipakai
+  tabel admin), dan barisnya **reflow**: kolom sejajar dari `md` ke atas, kartu dua baris di bawahnya — tabel 7 kolom selalu kalah di 375px.
+  Penyaringan dilakukan di browser karena `/seller/products` memang mengembalikan seluruh listing satu penjual tanpa pagination.
+  **Nomor HP bisa diubah sendiri** (`PATCH /api/auth/me` dulu hanya menerima `locale`): tersimpan di `User`, bukan `SellerProfile` — ia milik
+  akun, bukan toko — dan **tidak pernah tampil ke pembeli**. Lihat `docs/SECURITY.md` untuk syarat yang harus menyertainya begitu nomor ini
+  dipakai OTP atau reset password.
+  DoD: tiap halaman penjual tampil di shell baru dengan penanda menu aktif yang ikut berpindah; bottom bar muncul di bawah `lg`; pembeli yang
+  belum jadi penjual tetap mendapat formulir pendaftaran dalam chrome toko; angka dasbor cocok dengan database; lint/typecheck/build/test lulus.
+  ✅ 2026-11-14. Diuji di browser dengan **akun penjual dan pembeli sekali pakai** (dibuat lewat API, dihapus lagi setelahnya — `users` kembali
+  2, `products` 14, `orders` 0): 1 pesanan menunggu jawaban · 1 listing dikembalikan · 1 stok habis · 0 tersembunyi · 2 tayang · 1 ditinjau,
+  semuanya cocok dengan data yang dibuat. Diperiksa di 1280px dan 375px (tanpa luberan horizontal, baris terakhir tidak tertutup bottom bar) dan
+  dalam 3 bahasa; pencarian `?q=` dan chip `?status=` bekerja dari URL; nomor HP tersimpan, ikut terbaca di `/auth/me`, dan **tidak ada** di
+  respons `/api/public/sellers/:id`. 64 unit + 184 e2e test hijau.
+  Tambahan kecil di API: `NotificationsResponse` dapat `unreadByType`, dihitung dengan `groupBy` di database. Tanpa itu tile "pesan belum
+  dibaca" harus menghitung dari 30 item terbaru dan akan **salah diam-diam** begitu notifikasi lebih dari 30.
+
+- [ ] **T29 Chat penjual ↔ admin** (ditambahkan 2026-11-14) — penjual belum punya jalur langsung ke tim BaliTrade; yang ada hanya percakapan
+  produk dan pesanan yang selalu melibatkan seorang pembeli. Ini **bukan pekerjaan UI**: `Conversation` mewajibkan `buyerId` (satu pembeli +
+  satu penjual, admin ikut lewat perannya), jadi perlu nilai baru di enum `ConversationType`, `buyerId` jadi nullable, migrasi, penyesuaian
+  unique `[buyerId, productId]`, aturan akses di service, room socket, notifikasi, dan kotak masuk admin yang bisa menampilkannya.
+  Item menunya sudah ada sejak T28 (`/seller/support`, nonaktif dengan pill "Segera") — tinggal diaktifkan.
+  DoD: penjual bisa memulai percakapan dengan BaliTrade tanpa pembeli; admin melihatnya di kotak masuk; notifikasi sampai ke kedua pihak; e2e hijau.
+
 ---
 
 ## MVP 1.1 (setelah 31 Okt)
