@@ -13,7 +13,7 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 |---|---|---|---|
 | 1 | Design system | Final | Stitch: `design-ui/google-stitch/01-v4.html` (acuan); draf lama 01, 01-v2, 01-v3 dan 02 dihapus 2026-10-30, masih ada di riwayat git; hasil AI Studio (pembanding) sudah dihapus dari repo |
 | 2 | Landing page | **Dibubarkan 2026-11-06 (T16b)** | Halaman depan `/` sekarang **adalah katalog** (lihat baris 3). Yang dulu ada di sini pindah ke `/how-it-works` (baris 12): 4 kartu kepercayaan, cara kerja 6 langkah, FAQ, ajakan jadi penjual. Hero, kolase foto, dan kisi kategori dihapus. Sisa di halaman depan: satu baris tipis berisi 3 butir kepercayaan + tautan "How it works" dan "Sell on BaliTrade". Spesifikasi lama ada di riwayat git |
-| 3 | Katalog / pencarian produk | Final (jadi halaman depan 2026-11-06) | Stitch: `design-ui/google-stitch/03.html` (acuan alur); ada pergeseran tema visual, lihat catatan bagian 3. Sejak T16b katalog berada di `/` (bukan `/products`), kolom pencarian pindah ke navbar, dan filter kategori jadi baris chip |
+| 3 | Katalog / pencarian produk | Final (jadi halaman depan 2026-11-06; kisi dirapatkan 2026-11-14) | Stitch: `design-ui/google-stitch/03.html` (acuan alur); ada pergeseran tema visual, lihat catatan bagian 3. Sejak T16b katalog berada di `/` (bukan `/products`), kolom pencarian pindah ke navbar, dan filter kategori jadi baris chip. **2026-11-14:** kisi **2 / 3 / 4 / 5 kolom** (ponsel → layar lebar), container 1280px, kartu tanpa lokasi penjual |
 | 4 | Detail produk (+ chat bertiga) | Final | Stitch: `design-ui/google-stitch/04.html`; lihat catatan bagian 4. Keputusan cart & varian sudah diambil (BRAINSTORMING 5a) |
 | 5 | Profil penjual | Final | Stitch: `design-ui/google-stitch/05.html` (acuan alur); lihat catatan bagian 5 |
 | 6 | Form Request (sourcing) | Final | Stitch: `design-ui/google-stitch/06.html` (acuan alur); lihat catatan bagian 6 |
@@ -32,6 +32,19 @@ Status: `Belum` · `Prompt siap` · `Sudah di-generate` · `Direvisi` · `Final`
 Hal yang sengaja tidak direvisi di Stitch dan harus dibereskan saat implementasi. Detail per halaman ada di bagian "Catatan implementasi" masing-masing.
 
 - **Sumber kebenaran visual = design system `01-v4.html`** (token warna, font, radius 12px, ikon Lucide, badge, kartu, chat bubble). Halaman lain hanya acuan alur/struktur.
+- **Navbar di bawah `md` adalah dua baris (2026-11-14):** brand + language switcher di atas, kolom pencarian + **satu** tombol auth di
+  bawah. Sebelumnya semuanya satu baris, dan di 375px "Log in" pecah dua baris di dalam tombol yang tingginya dikunci sementara "Sign up"
+  keluar **29px** dari tepi halaman. Dua aturan menentukan tombol mana yang tampil: **jangan pernah tawarkan halaman yang sedang dibuka**,
+  dan **cukup satu kalau dua tidak muat**. Keduanya berdampingan menyisakan kolom cari 120px (Rusia, 375px) dan 65px (Rusia, 320px) — ikon
+  saja. Jadi di ponsel: "Masuk" di toko, "Daftar" saat di halaman masuk, "Masuk" saat di halaman daftar. Desktop tetap dua tombol, dikurangi
+  halaman yang sedang dibuka. Tombol yang tinggal sendirian digambar solid, karena ia satu-satunya aksi di sana.
+- **Kartu produk (2026-11-14):** urutannya badge → judul → harga → MOQ → ketersediaan → **nama toko di dasar kartu**, dipisah garis. Lokasi
+  penjual ("Tabanan, Bali") **dibuang**: BaliTrade mengirim dari Bali bagaimanapun, jadi itu tidak memberi tahu pembeli apa pun sambil
+  memakan satu baris di kartu sempit. Judul dipotong dua baris dengan elipsis supaya satu nama panjang tidak membuat kartunya lebih tinggi
+  dari kartu lain sebarisnya, dan badge tipe tidak pernah membungkus — pil yang patah dua baris berhenti terlihat seperti pil.
+- **Baris chip menyembunyikan scrollbar-nya** (utilitas `no-scrollbar` di `globals.css`; dipakai chip kategori katalog dan filter listing
+  penjual). Di sistem yang menggambar scrollbar permanen, ia terbaca sebagai garis nyasar di bawah chip, bukan sesuatu yang bisa diseret.
+  Scroll-nya sendiri tidak diubah.
 - **Area penjual punya chrome sendiri sejak T28 (2026-11-14), dan sengaja tidak mirip area admin.** Sidebar penjual **terang**
   (`bg-card` + border, item aktif `bg-primary/5` dengan garis `border-gold` di kiri), bukan teal gelap seperti admin: penjual bukan staf dan
   tidak boleh merasa berada di panel admin. Badge "SELLER" memakai **`text-gold-text`**, bukan `text-gold` — gold #c9a24a di atas putih tidak

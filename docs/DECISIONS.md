@@ -7,6 +7,9 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 
 | Decision | Why / detail |
 |---|---|
+| **Navbar is two rows below `md` (2026-11-14)**: brand + language, then search + one auth button | One line pushed "Sign up" 29px off the page at 375px. The single button is whichever is not the current page, so there is always one way onwards; both of them left the search field 65px wide in Russian at 320px |
+| Product cards drop the seller's regency; the shop name moves to the bottom (2026-11-14) | BaliTrade ships from Bali either way, so the location told a buyer nothing and cost a line. Buyers scan for the product and its price |
+| Catalog grid 2 / 3 / 4 / 5 columns, container 1280px (2026-11-14) | One card per row made phone cards enormous. 1280px matches the navbar, so content and bar line up; cards settle at ~230px, so a wider screen adds cards instead of stretching them |
 | **Seller area gets its own chrome (T28, 2026-11-14)**: route group `(seller)`, light sidebar on `lg`+, **bottom tab bar** below it, top bar with the page title | URLs unchanged. Light, not the admin's dark teal, so a seller never feels put inside the staff panel; a tab bar rather than a drawer because sellers work on phones and no drawer means one less piece of state |
 | Seller dashboard shows work, not a menu (T28) | The old one already fetched every product and order and used only `.length`. Counting rules now live as pure functions in `apps/web/src/lib/seller-stats.ts` |
 | "Live in the catalog" = `APPROVED && categoryActive` (T28 fix) | Counting `APPROVED` alone told a seller their listings were on sale while a switched-off category (T26) had taken them out of the shop |
