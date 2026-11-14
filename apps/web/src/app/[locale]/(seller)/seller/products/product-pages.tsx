@@ -11,8 +11,10 @@ import { ApiError, apiFetch } from '@/lib/api';
 
 function Shell({ title, children }: { title: string; children: ReactNode }) {
   const t = useTranslations('Products');
+  // The seller shell supplies the page padding; the form keeps its own narrow width. The heading stays
+  // because this is a sub-page of Products, which is what the shell's top bar is already called.
   return (
-    <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:py-14">
+    <div className="w-full max-w-2xl flex-1">
       <Link href="/seller/products" className="text-sm font-semibold text-primary hover:underline">
         ← {t('back')}
       </Link>
@@ -74,7 +76,7 @@ function EditLoader({ id }: { id: string }) {
   }, [id, locale]);
 
   if (state.kind === 'loading') {
-    return <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-12" aria-busy="true" />;
+    return <div className="w-full max-w-2xl flex-1" aria-busy="true" />;
   }
   if (state.kind === 'forbidden') {
     return <NotApproved />;

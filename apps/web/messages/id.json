@@ -223,22 +223,70 @@
     "noAccess": "Anda tidak memiliki akses ke halaman ini."
   },
   "Seller": {
+    "nav": {
+      "dashboard": "Dasbor",
+      "orders": "Pesanan",
+      "products": "Produk",
+      "support": "Chat BaliTrade",
+      "account": "Profil Toko"
+    },
+    "navShort": {
+      "dashboard": "Beranda",
+      "orders": "Pesanan",
+      "products": "Produk",
+      "support": "Chat",
+      "account": "Toko"
+    },
+    "shell": {
+      "sellerBadge": "Penjual",
+      "sidebarLabel": "Menu penjual",
+      "bottomBarLabel": "Menu penjual",
+      "viewShop": "Lihat toko",
+      "soon": "Segera",
+      "searchLabel": "Cari produk saya",
+      "searchPlaceholder": "Cari produk saya…"
+    },
     "home": {
       "title": "Dasbor penjual",
-      "toAnswer": "Pesanan menunggu jawaban Anda",
-      "live": "Produk tayang di katalog",
-      "waiting": "Produk menunggu ditinjau atau menunggu Anda",
       "addProduct": "Tambah produk",
-      "allProducts": "Semua produk saya",
       "accountLink": "Akun penjual",
       "noProducts": "Anda belum punya produk. Tambahkan yang pertama, nanti tim kami meninjaunya sebelum tayang di katalog.",
-      "notAppliedText": "Anda belum punya akun penjual. Ajukan dulu, nanti tim kami meninjaunya."
+      "notAppliedText": "Anda belum punya akun penjual. Ajukan dulu, nanti tim kami meninjaunya.",
+      "publicPage": "Lihat halaman toko saya",
+      "noLocation": "Lokasi belum diisi",
+      "actionSection": "Perlu tindakan Anda",
+      "shopSection": "Toko Anda",
+      "answerPanel": "Menunggu jawaban Anda",
+      "answerEmpty": "Tidak ada yang menunggu jawaban Anda saat ini.",
+      "seeAllOrders": "Lihat semua pesanan",
+      "recentProducts": "Listing terbaru Anda",
+      "manageProducts": "Kelola semua listing",
+      "firstProductTitle": "Tambahkan produk pertama Anda",
+      "profileGapsTitle": "Lengkapi profil toko Anda",
+      "profileGapsText": "Pembeli lebih percaya pada toko yang lengkap, dan tim kami membutuhkan data ini."
+    },
+    "stats": {
+      "toAnswer": "Pesanan menunggu jawaban Anda",
+      "needsFix": "Listing dikembalikan ke Anda",
+      "outOfStock": "Listing tayang tapi stok habis",
+      "hiddenByCategory": "Tersembunyi: kategori dimatikan",
+      "live": "Tayang di katalog",
+      "inReview": "Menunggu ditinjau",
+      "inProgress": "Pesanan sedang berjalan",
+      "unreadMessages": "Pesan belum dibaca"
+    },
+    "gaps": {
+      "about": "Deskripsi singkat tentang usaha Anda",
+      "location": "Lokasi Anda di Bali",
+      "phone": "Nomor HP yang bisa dihubungi tim BaliTrade"
     },
     "title": "Akun penjual",
     "applyTitle": "Menjadi penjual",
     "applyIntro": "Ceritakan tentang usaha Anda. BaliTrade meninjau setiap penjual sebelum bisa memasang produk.",
     "displayName": "Nama usaha / toko",
     "displayNameHelper": "Ditampilkan kepada pembeli pada produk Anda.",
+    "phone": "Nomor HP",
+    "phoneHelper": "Hanya tim BaliTrade yang melihatnya. Tidak pernah ditampilkan ke pembeli; kami pakai saat perlu menghubungi Anda soal pesanan.",
     "about": "Tentang usaha Anda (opsional)",
     "location": "Lokasi di Bali",
     "locationPlaceholder": "Pilih kabupaten / kota",
@@ -353,6 +401,12 @@
     "editTitle": "Ubah produk",
     "newTitle": "Produk baru",
     "empty": "Anda belum memiliki produk.",
+    "noMatches": "Tidak ada listing yang cocok dengan filter ini.",
+    "searchLabel": "Cari listing saya",
+    "searchPlaceholder": "Cari listing saya…",
+    "filter": {
+      "all": "Semua"
+    },
     "loadError": "Tidak dapat memuat produk Anda.",
     "notApproved": "Akun penjual Anda harus disetujui dulu sebelum bisa memasang produk.",
     "goToSeller": "Ke akun penjual saya",

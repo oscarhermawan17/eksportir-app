@@ -223,22 +223,70 @@
     "noAccess": "You do not have access to this page."
   },
   "Seller": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "products": "Products",
+      "support": "Chat with BaliTrade",
+      "account": "Shop profile"
+    },
+    "navShort": {
+      "dashboard": "Home",
+      "orders": "Orders",
+      "products": "Products",
+      "support": "Chat",
+      "account": "Shop"
+    },
+    "shell": {
+      "sellerBadge": "Seller",
+      "sidebarLabel": "Seller menu",
+      "bottomBarLabel": "Seller menu",
+      "viewShop": "View the shop",
+      "soon": "Soon",
+      "searchLabel": "Search my products",
+      "searchPlaceholder": "Search my products…"
+    },
     "home": {
       "title": "Seller dashboard",
-      "toAnswer": "Orders waiting for your answer",
-      "live": "Products live in the catalog",
-      "waiting": "Products waiting on review or on you",
       "addProduct": "Add a product",
-      "allProducts": "All my products",
       "accountLink": "Seller account",
       "noProducts": "You have no products yet. Add your first one and our team will review it before it appears in the catalog.",
-      "notAppliedText": "You do not have a seller account yet. Apply and our team will review it."
+      "notAppliedText": "You do not have a seller account yet. Apply and our team will review it.",
+      "publicPage": "View my public page",
+      "noLocation": "Location not set yet",
+      "actionSection": "Needs your attention",
+      "shopSection": "Your shop",
+      "answerPanel": "Waiting for your answer",
+      "answerEmpty": "Nothing is waiting for your answer right now.",
+      "seeAllOrders": "See all orders",
+      "recentProducts": "Your latest listings",
+      "manageProducts": "Manage all listings",
+      "firstProductTitle": "Add your first product",
+      "profileGapsTitle": "Finish your shop profile",
+      "profileGapsText": "Buyers trust a complete shop, and our team needs this to work with you."
+    },
+    "stats": {
+      "toAnswer": "Orders waiting for your answer",
+      "needsFix": "Listings sent back to you",
+      "outOfStock": "Live listings out of stock",
+      "hiddenByCategory": "Hidden: category switched off",
+      "live": "Live in the catalog",
+      "inReview": "Waiting for review",
+      "inProgress": "Orders in progress",
+      "unreadMessages": "Unread messages"
+    },
+    "gaps": {
+      "about": "A short description of your business",
+      "location": "Your location in Bali",
+      "phone": "A phone number BaliTrade can reach you on"
     },
     "title": "Seller account",
     "applyTitle": "Become a seller",
     "applyIntro": "Tell us about your business. BaliTrade reviews every seller before they can list products.",
     "displayName": "Business / shop name",
     "displayNameHelper": "Shown to buyers on your products.",
+    "phone": "Phone number",
+    "phoneHelper": "Only the BaliTrade team sees this. It is never shown to buyers; we use it when we need to reach you about an order.",
     "about": "About your business (optional)",
     "location": "Location in Bali",
     "locationPlaceholder": "Choose regency / city",
@@ -353,6 +401,12 @@
     "editTitle": "Edit product",
     "newTitle": "New product",
     "empty": "You have no products yet.",
+    "noMatches": "No listing matches this filter.",
+    "searchLabel": "Search my listings",
+    "searchPlaceholder": "Search my listings…",
+    "filter": {
+      "all": "All"
+    },
     "loadError": "Could not load your products.",
     "notApproved": "Your seller account must be approved before you can list products.",
     "goToSeller": "Go to my seller account",

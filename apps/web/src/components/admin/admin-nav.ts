@@ -1,5 +1,6 @@
 import type { AuthUser, Role } from '@balitrade/shared';
 import { Banknote, ClipboardList, Coins, LayoutDashboard, ShoppingCart, Tags, UserCheck, type LucideIcon } from 'lucide-react';
+import { deepestMatch } from '@/lib/nav';
 
 export interface AdminNavItem {
   href: string;
@@ -31,6 +32,5 @@ export function navItemsFor(user: AuthUser): AdminNavItem[] {
 
 /** The deepest menu entry matching the current path; used for the active marker and the top-bar title. */
 export function activeNavItem(pathname: string): AdminNavItem | null {
-  const matches = ADMIN_NAV.filter((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
-  return matches.reduce<AdminNavItem | null>((best, item) => (best === null || item.href.length > best.href.length ? item : best), null);
+  return deepestMatch(ADMIN_NAV, pathname);
 }

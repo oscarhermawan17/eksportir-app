@@ -23,6 +23,8 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<AuthUser>;
   register: (input: RegisterInput) => Promise<AuthUser>;
   logout: () => Promise<void>;
+  /** Replaces the cached user, e.g. after the account form saved a new phone number. */
+  applyUser: (user: AuthUser) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -90,8 +92,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [locale]);
 
   const value = useMemo(
-    () => ({ user, status, login, register, logout }),
-    [user, status, login, register, logout],
+    () => ({ user, status, login, register, logout, applyUser: startSession }),
+    [user, status, login, register, logout, startSession],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

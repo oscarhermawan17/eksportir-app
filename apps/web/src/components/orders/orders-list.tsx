@@ -1,12 +1,11 @@
 'use client';
 
 import type { OrderView } from '@balitrade/shared';
-import { useFormatter, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
-import { OrderStatusBadge } from '@/components/orders/order-status-badge';
+import { OrderRow } from '@/components/orders/order-row';
 import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
 
 /** `basePath` decides which area the rows link into: the shop (default) or the admin layout. */
@@ -17,7 +16,6 @@ export function OrdersList({ basePath = '/orders' }: { basePath?: string }) {
 function Orders({ basePath }: { basePath: string }) {
   const t = useTranslations('Orders');
   const tCommon = useTranslations('Common');
-  const format = useFormatter();
   const [orders, setOrders] = useState<OrderView[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -42,8 +40,6 @@ function Orders({ basePath }: { basePath: string }) {
       document.removeEventListener('visibilitychange', refresh);
     };
   }, [attempt]);
-
-  const money = (usd: string) => format.number(Number(usd), { style: 'currency', currency: 'USD' });
 
   return (
     <div className="space-y-6">
@@ -71,31 +67,7 @@ function Orders({ basePath }: { basePath: string }) {
         <ul className="space-y-3">
           {orders.map((order) => (
             <li key={order.id}>
-              <Link
-                href={`${basePath}/${order.id}`}
-                className="block rounded-card border border-border bg-card p-4 shadow-sm transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
-              >
-                <span className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="flex items-center gap-2">
-                    <span className="text-base font-semibold text-text">{order.code}</span>
-                    <OrderStatusBadge status={order.status} label={t(`status.${order.status}`)} />
-                  </span>
-                  <span className="text-xs text-muted">{format.dateTime(new Date(order.createdAt), { dateStyle: 'medium' })}</span>
-                </span>
-                <span className="mt-2 block text-sm text-text">{t('listLine', { qty: format.number(order.item.qty), title: order.item.title })}</span>
-                <span className="mt-1 flex flex-wrap items-center justify-between gap-2 text-sm text-muted">
-                  <span>
-                    {order.viewer === 'BUYER'
-                      ? t('sellerLine', { name: order.seller.displayName })
-                      : order.viewer === 'SELLER'
-                        ? t('buyerLine', { name: order.buyer.name })
-                        : `${t('buyerLine', { name: order.buyer.name })} · ${t('sellerLine', { name: order.seller.displayName })}`}
-                  </span>
-                  <span className="font-semibold tabular-nums text-text">
-                    {t('total')}: {money(order.totals.totalUsd)}
-                  </span>
-                </span>
-              </Link>
+              <OrderRow order={order} basePath={basePath} />
             </li>
           ))}
         </ul>

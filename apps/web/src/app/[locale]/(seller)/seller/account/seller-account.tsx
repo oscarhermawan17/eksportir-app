@@ -16,10 +16,10 @@ type State =
   | { kind: 'ready'; profile: SellerProfileView | null; zones: QcZoneOption[] };
 
 export function SellerAccountPage() {
-  return <LoginGate>{(user) => <SellerAccount defaultName={user.name} />}</LoginGate>;
+  return <LoginGate>{(user) => <SellerAccount defaultName={user.name} phone={user.phone} />}</LoginGate>;
 }
 
-function SellerAccount({ defaultName }: { defaultName: string }) {
+function SellerAccount({ defaultName, phone }: { defaultName: string; phone: string | null }) {
   const t = useTranslations('Seller');
   const tCommon = useTranslations('Common');
   const tProducts = useTranslations('Products');
@@ -54,11 +54,11 @@ function SellerAccount({ defaultName }: { defaultName: string }) {
   }, [attempt]);
 
   if (state.kind === 'loading') {
-    return <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-12" aria-busy="true" />;
+    return <div className="w-full max-w-2xl flex-1" aria-busy="true" />;
   }
   if (state.kind === 'error') {
     return (
-      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-start gap-4 px-4 py-12" role="alert">
+      <div className="flex w-full max-w-2xl flex-1 flex-col items-start gap-4" role="alert">
         <p className="text-error">{t('loadError')}</p>
         <Button variant="secondary" onClick={() => setAttempt((n) => n + 1)}>
           {tCommon('retry')}
@@ -69,10 +69,15 @@ function SellerAccount({ defaultName }: { defaultName: string }) {
 
   const { profile, zones } = state;
   return (
-    <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:py-14">
+    <div className="w-full max-w-2xl flex-1">
       <div className="rounded-card border border-border bg-card p-6 shadow-sm sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold text-text">{profile ? t('title') : t('applyTitle')}</h1>
+          {/*
+            A heading only for an applicant. They have no SELLER role yet, so they see this page in the
+            storefront chrome, which has no page title; a seller sees it inside the seller shell, whose
+            top bar already names the page.
+          */}
+          {profile ? null : <h1 className="text-2xl font-bold text-text">{t('applyTitle')}</h1>}
           {profile ? <StatusBadge status={profile.status} label={t(`status.${profile.status}`)} /> : null}
         </div>
 
@@ -90,6 +95,7 @@ function SellerAccount({ defaultName }: { defaultName: string }) {
             zones={zones}
             profile={profile}
             defaultName={defaultName}
+            phone={phone}
             onSaved={(saved) => setState({ kind: 'ready', profile: saved, zones })}
           />
         </div>

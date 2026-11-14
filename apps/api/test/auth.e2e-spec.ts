@@ -62,6 +62,26 @@ describe('Auth (e2e)', () => {
     await request(app.getHttpServer()).patch('/api/auth/me').send({ locale: 'en' }).expect(401);
   });
 
+  it('saves and clears the phone number without touching the language', async () => {
+    const agent = request.agent(app.getHttpServer());
+    await agent.post('/api/auth/login').send({ email, password }).expect(200);
+    await agent.patch('/api/auth/me').send({ locale: 'ru' }).expect(200);
+
+    const saved = await agent.patch('/api/auth/me').send({ phone: ' +62 812 3456 7890 ' }).expect(200);
+    expect(saved.body.phone).toBe('+62 812 3456 7890'); // trimmed
+    // Sending only the language must not wipe the number, and vice versa: the form and the language
+    // switcher each send one field.
+    expect((await agent.patch('/api/auth/me').send({ locale: 'en' }).expect(200)).body).toMatchObject({
+      locale: 'en',
+      phone: '+62 812 3456 7890',
+    });
+
+    await agent.patch('/api/auth/me').send({ phone: 'not a number' }).expect(400);
+    expect((await agent.get('/api/auth/me').expect(200)).body.phone).toBe('+62 812 3456 7890');
+
+    expect((await agent.patch('/api/auth/me').send({ phone: '' }).expect(200)).body.phone).toBeNull();
+  });
+
   it('stores the password hashed, never in plain text', async () => {
     const user = await prisma.user.findUniqueOrThrow({ where: { email } });
     expect(user.passwordHash).not.toContain(password);

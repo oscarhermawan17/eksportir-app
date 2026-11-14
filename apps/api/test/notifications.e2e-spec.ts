@@ -109,6 +109,9 @@ describe('Notifications (e2e)', () => {
     await app.close();
   });
 
+/** Every notification type at zero: the response always carries a count per type. */
+const NO_UNREAD = { CHAT_MESSAGE: 0, ORDER_REQUESTED: 0, ORDER_STATUS: 0 };
+
   it('requires a login for every route (401)', async () => {
     const server = request(app.getHttpServer());
     await server.get('/api/notifications').expect(401);
@@ -118,7 +121,7 @@ describe('Notifications (e2e)', () => {
   });
 
   it('starts empty', async () => {
-    expect(await list('seller')).toEqual({ items: [], unreadCount: 0 });
+    expect(await list('seller')).toEqual({ items: [], unreadCount: 0, unreadByType: NO_UNREAD });
   });
 
   describe('chat messages', () => {
@@ -132,8 +135,8 @@ describe('Notifications (e2e)', () => {
         readAt: null,
         payload: { conversationId, senderName: 'Anna Buyer', preview: 'Hello, can I get 30 pieces?', count: 1, productTitle: 'Notif basket' },
       });
-      expect(await list('buyer')).toEqual({ items: [], unreadCount: 0 });
-      expect(await list('outsider')).toEqual({ items: [], unreadCount: 0 });
+      expect(await list('buyer')).toEqual({ items: [], unreadCount: 0, unreadByType: NO_UNREAD });
+      expect(await list('outsider')).toEqual({ items: [], unreadCount: 0, unreadByType: NO_UNREAD });
     });
 
     it('folds unread messages of one conversation into one notification with a counter', async () => {
@@ -164,7 +167,7 @@ describe('Notifications (e2e)', () => {
       const seller = await list('seller');
       expect(buyer.items[0]!.payload).toMatchObject({ senderName: 'Ops Admin', count: 2 });
       expect(seller.items[0]!.payload).toMatchObject({ senderName: 'Ops Admin', count: 4 });
-      expect(await list('ops')).toEqual({ items: [], unreadCount: 0 });
+      expect(await list('ops')).toEqual({ items: [], unreadCount: 0, unreadByType: NO_UNREAD });
     });
 
     it('cuts a long message to a one-line preview', async () => {
@@ -226,6 +229,9 @@ describe('Notifications (e2e)', () => {
       const outsider = await list('outsider');
       expect(outsider.items).toHaveLength(30);
       expect(outsider.unreadCount).toBe(32); // the count covers all, not just the page
+      // Same for the per-type counts: they are grouped in the database, so a reader that shows
+      // "unread messages" on its own does not undercount once there are more than one page.
+      expect(outsider.unreadByType).toEqual({ ...NO_UNREAD, CHAT_MESSAGE: 32 });
     });
   });
 

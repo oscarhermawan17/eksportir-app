@@ -55,7 +55,7 @@ export class AuthController {
     return user;
   }
 
-  /** Saves the user's chosen UI language (only `locale` can be changed here). */
+  /** Saves the user's own account fields: UI language and the phone number BaliTrade can reach them on. */
   @Patch('me')
   @UseGuards(JwtAuthGuard)
   updateMe(@CurrentUser() user: AuthUser, @Body() dto: UpdateMeDto): Promise<AuthUser> {

@@ -7,7 +7,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
 import { buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { isAdmin } from '@/lib/home-path';
+import { isAdmin, ordersBasePathFor } from '@/lib/home-path';
 
 /** First letter of the first and last word, e.g. "Oscar Hermawan" -> "OH". */
 function initials(name: string): string {
@@ -95,7 +95,8 @@ export function AccountMenu({ user }: { user: AuthUser }) {
           </div>
 
           <div className="py-1.5">
-            {admin ? null : item('/orders', <ClipboardList className="h-4 w-4 text-muted" aria-hidden="true" />, t('orders'))}
+            {/* A seller's orders live in their own area, so this entry follows them there. */}
+            {admin ? null : item(ordersBasePathFor(user), <ClipboardList className="h-4 w-4 text-muted" aria-hidden="true" />, t('orders'))}
             {item('/messages', <MessageSquare className="h-4 w-4 text-muted" aria-hidden="true" />, t('messages'))}
             {admin
               ? null

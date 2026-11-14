@@ -73,7 +73,15 @@ export class AuthService {
   }
 
   async updateMe(userId: string, dto: UpdateMeDto): Promise<AuthUser> {
-    const user = await this.prisma.user.update({ where: { id: userId }, data: { locale: dto.locale } });
+    // Only the fields that were sent are written. The language switcher sends `locale` alone and the
+    // account form `phone` alone, and neither may wipe the other; an empty phone means "remove it".
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(dto.locale === undefined ? {} : { locale: dto.locale }),
+        ...(dto.phone === undefined ? {} : { phone: dto.phone === '' ? null : dto.phone }),
+      },
+    });
     return toAuthUser(user);
   }
 

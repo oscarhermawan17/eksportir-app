@@ -1,8 +1,9 @@
 'use client';
 
-import type { QcZoneOption, SellerProfileView } from '@balitrade/shared';
+import type { AuthUser, QcZoneOption, SellerProfileView } from '@balitrade/shared';
 import { useTranslations } from 'next-intl';
 import { useState, type FormEvent } from 'react';
+import { useAuth } from '@/components/auth/auth-provider';
 import { Button } from '@/components/ui/button';
 import { Field, FormErrors, SelectField, TextareaField } from '@/components/ui/field';
 import { apiFetch, errorKey } from '@/lib/api';
@@ -12,15 +13,19 @@ export function SellerForm({
   zones,
   profile,
   defaultName,
+  phone,
   onSaved,
 }: {
   zones: QcZoneOption[];
   profile: SellerProfileView | null;
   defaultName: string;
+  /** The account's phone number: stored on the user, not on the shop, and never shown to buyers. */
+  phone: string | null;
   onSaved: (profile: SellerProfileView) => void;
 }) {
   const t = useTranslations('Seller');
   const tErrors = useTranslations('Errors');
+  const { applyUser } = useAuth();
   const [errors, setErrors] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -44,6 +49,12 @@ export function SellerForm({
       const result = profile
         ? await apiFetch<SellerProfileView>('/sellers/me', { method: 'PATCH', body })
         : await apiFetch<SellerProfileView>('/sellers/apply', { method: 'POST', body });
+      // The number belongs to the account, so it has its own endpoint; only sent when it changed, so
+      // saving the shop details does not touch it needlessly.
+      const nextPhone = String(form.get('phone') ?? '').trim();
+      if (nextPhone !== (phone ?? '')) {
+        applyUser(await apiFetch<AuthUser>('/auth/me', { method: 'PATCH', body: { phone: nextPhone } }));
+      }
       onSaved(result);
       setSaved(true);
     } catch (error) {
@@ -85,6 +96,16 @@ export function SellerForm({
         options={zones.map((zone) => ({ value: zone.id, label: zone.name }))}
         defaultValue={profile?.qcZone?.id ?? ''}
         disabled={zoneLocked}
+      />
+      <Field
+        id="phone"
+        name="phone"
+        label={t('phone')}
+        helper={t('phoneHelper')}
+        type="tel"
+        inputMode="tel"
+        maxLength={20}
+        defaultValue={phone ?? ''}
       />
       <TextareaField id="about" name="about" label={t('about')} maxLength={1000} defaultValue={profile?.about ?? ''} />
       <div className="flex items-center gap-4">

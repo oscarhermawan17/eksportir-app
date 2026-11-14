@@ -4,8 +4,10 @@ import type { NotificationsResponse, NotificationView } from '@balitrade/shared'
 import { Bell } from 'lucide-react';
 import { useFormatter, useNow, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useAuth } from '@/components/auth/auth-provider';
 import { Link } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
+import { ordersBasePathFor } from '@/lib/home-path';
 import { subscribeToNotifications } from '@/lib/chat-socket';
 
 /** Without a live socket the list is re-read this often (and when the tab becomes visible again). */
@@ -21,6 +23,7 @@ export function NotificationBell() {
   const t = useTranslations('Notifications');
   const tOrders = useTranslations('Orders');
   const format = useFormatter();
+  const { user } = useAuth();
   // An explicit "now" for relative times; it also keeps "1 minute ago" up to date while the panel is open.
   const now = useNow({ updateInterval: 30_000 });
   const panelId = useId();
@@ -99,12 +102,16 @@ export function NotificationBell() {
     };
   }, [open]);
 
+  // Order links follow the reader into their own area: a seller to /seller/orders, an admin to
+  // /admin/orders, a buyer to the storefront list.
+  const ordersBase = ordersBasePathFor(user);
+
   /** What a notification shows and where it leads, by type. */
   function describe(item: NotificationView): { href: string; title: string; subtitle: string | null; body: string; badge: string | null } {
     if (item.type === 'ORDER_REQUESTED') {
       const { orderId, code, buyerName, qty, productTitle } = item.payload;
       return {
-        href: `/orders/${orderId}`,
+        href: `${ordersBase}/${orderId}`,
         title: t('orderRequested', { code }),
         subtitle: null,
         body: t('orderRequestedBody', { buyer: buyerName, qty, product: productTitle }),
@@ -115,7 +122,7 @@ export function NotificationBell() {
       const { orderId, code, status, productTitle, qty } = item.payload;
       const key = `orderStatus.${status}`;
       return {
-        href: `/orders/${orderId}`,
+        href: `${ordersBase}/${orderId}`,
         title: t.has(key) ? t(key, { code }) : t('orderStatusFallback', { code, status: tOrders(`status.${status}`) }),
         subtitle: null,
         body: t('orderStatusBody', { qty, product: productTitle }),

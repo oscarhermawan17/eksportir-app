@@ -17,6 +17,21 @@ export function homePathFor(user: AuthUser | null): string {
   return '/';
 }
 
+/**
+ * Which area's order pages this person belongs in. Every link to an order — the account menu, a
+ * notification — goes through here, so a seller is not thrown into the storefront chrome and an admin
+ * not out of theirs. The storefront `/orders` keeps working for all three, so older links stay alive.
+ */
+export function ordersBasePathFor(user: AuthUser | null): string {
+  if (user === null) {
+    return '/orders';
+  }
+  if (isAdmin(user)) {
+    return '/admin/orders';
+  }
+  return user.roles.includes('SELLER') ? '/seller/orders' : '/orders';
+}
+
 /** True for any admin role: admin accounts neither buy nor sell (a person who does both uses a second account). */
 export function isAdmin(user: AuthUser): boolean {
   return user.roles.some((role) => role === 'ADMIN_OPS' || role === 'ADMIN_OWNER' || role === 'ADMIN_FINANCE');

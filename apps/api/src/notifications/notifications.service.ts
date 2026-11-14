@@ -52,15 +52,37 @@ export class NotificationsService implements OnModuleInit, OnModuleDestroy {
   }
 
   async list(user: AuthUser): Promise<NotificationsResponse> {
-    const [rows, unreadCount] = await Promise.all([
+    const [rows, unreadCount, unreadByType] = await Promise.all([
       this.prisma.notification.findMany({
         where: { userId: user.id },
         orderBy: { updatedAt: 'desc' },
         take: NOTIFICATION_LIMITS.listSize,
       }),
       this.unreadCount(user.id),
+      this.unreadByType(user.id),
     ]);
-    return { items: rows.map(toView), unreadCount };
+    return { items: rows.map(toView), unreadCount, unreadByType };
+  }
+
+  /**
+   * Unread notifications grouped by type, counted in the database rather than over `items`: that list
+   * stops at `listSize`, so counting there would silently undercount a busy account.
+   */
+  private async unreadByType(userId: string): Promise<Record<NotificationType, number>> {
+    const groups = await this.prisma.notification.groupBy({
+      by: ['type'],
+      where: { userId, readAt: null },
+      _count: { _all: true },
+    });
+    // Every type is present, so a caller never has to guard against a missing key.
+    const counts = Object.fromEntries(Object.values(NotificationType).map((type) => [type, 0])) as Record<
+      NotificationType,
+      number
+    >;
+    for (const group of groups) {
+      counts[group.type] = group._count._all;
+    }
+    return counts;
   }
 
   async markRead(user: AuthUser, notificationId: string): Promise<NotificationView> {

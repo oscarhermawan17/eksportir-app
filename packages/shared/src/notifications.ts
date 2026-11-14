@@ -71,6 +71,12 @@ export type NotificationView =
 export interface NotificationsResponse {
   items: NotificationView[];
   unreadCount: number;
+  /**
+   * Unread notifications per type, every type present (0 when there are none. The seller dashboard
+   * shows "unread messages" on its own, and `items` only carries the newest `listSize`, so counting
+   * them there would quietly understate the number as soon as a person has more than that.
+   */
+  unreadByType: Record<NotificationType, number>;
 }
 
 export interface NotificationPush {
