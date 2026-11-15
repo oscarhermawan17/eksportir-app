@@ -444,6 +444,8 @@ model OrderItem {
   productId      String?           @map("product_id")
   product        Product?          @relation(fields: [productId], references: [id], onDelete: SetNull)
   /// Snapshot of the product at the time of the request.
+  /// `title` is **always English** — one frozen string read by the buyer, the seller and admins alike, so it
+  /// cannot follow any one of them. `unit` is a PRODUCT_UNITS key, translated when it is displayed.
   title          String
   unit           String
   qty            Int

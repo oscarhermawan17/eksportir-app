@@ -110,6 +110,7 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
 
   describe('placing an order', () => {
     let first: OrderView;
+    let indonesianOrder: OrderView;
 
     it('creates an order request with prices, rate and QC fee copied from that moment', async () => {
       const res = await place('buyer', 'ready', 7, { note: 'Size: 3 M, 4 L' }).expect(201);
@@ -132,6 +133,59 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
     it('numbers orders one after another', async () => {
       const second = (await place('buyer2', 'ready', 5).expect(201)).body as OrderView;
       expect(Number(second.code.slice(3))).toBeGreaterThan(Number(first.code.slice(3)));
+    });
+
+    // One frozen string is read by the buyer, the seller and admins alike, so it cannot follow any one of
+    // them: a buyer reading the catalog in Russian used to freeze the Russian title into the seller's list.
+    it('snapshots the English title whatever language the buyer reads in', async () => {
+      await prisma.productTranslation.createMany({
+        data: [
+          { productId: ids['cheap']!, locale: 'id', title: 'Produk murah', description: 'Deskripsi' },
+          { productId: ids['cheap']!, locale: 'ru', title: 'Дешёвый товар', description: 'Описание' },
+        ],
+      });
+      await prisma.user.update({ where: { id: ids['buyer2']! }, data: { locale: 'ru' } });
+      try {
+        const placed = (await place('buyer2', 'cheap', 1).expect(201)).body as OrderView;
+        expect(placed.item.title).toBe('Order product cheap');
+      } finally {
+        await prisma.user.update({ where: { id: ids['buyer2']! }, data: { locale: 'en' } });
+      }
+    });
+
+    // Falls back to the seller's own words rather than to an empty title.
+    it('uses the source language when a listing has no English translation', async () => {
+      const product = await prisma.product.create({
+        data: {
+          sellerId: ids['sellerProfile']!,
+          type: 'READY_STOCK',
+          categorySlug: 'HANDICRAFTS',
+          unit: 'PCS',
+          priceIdr: 100,
+          moq: 1,
+          stockQty: 10,
+          sourceLocale: 'id',
+          status: 'APPROVED',
+          translations: { create: [{ locale: 'id', title: 'Dupa wangi', description: 'Deskripsi' }] },
+        },
+      });
+      ids['indonesianOnly'] = product.id;
+      indonesianOrder = (await place('buyer3', 'indonesianOnly', 1).expect(201)).body as OrderView;
+      expect(indonesianOrder.item.title).toBe('Dupa wangi');
+    });
+
+    // Nothing in the API deletes a product (sellers archive instead), but a row can still go — a seller
+    // account removed in the database takes their listings with it. The order must survive that intact.
+    it('survives the product row disappearing: the snapshot stays, the link goes', async () => {
+      await prisma.product.delete({ where: { id: ids['indonesianOnly']! } });
+      const after = (await http('buyer3', 'get', `/api/orders/${indonesianOrder.id}`).expect(200)).body as OrderView;
+      expect(after.item).toMatchObject({ productId: null, title: 'Dupa wangi', unit: 'PCS', qty: 1 });
+      expect(after.totals).toEqual(indonesianOrder.totals);
+      // And it is still in the lists both sides read.
+      for (const who of ['buyer3', 'seller', 'ops'] as const) {
+        const list = (await http(who, 'get', '/api/orders').expect(200)).body as OrderView[];
+        expect(list.map((row) => row.id)).toContain(indonesianOrder.id);
+      }
     });
 
     it('is not changed by later changes of the product price or the exchange rate', async () => {

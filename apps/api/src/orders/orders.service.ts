@@ -92,7 +92,12 @@ export class OrdersService {
     const qcFeeUsd = product.seller.qcZone?.feeUsd ?? new Prisma.Decimal(0);
     const titleIn = (locale: string): string =>
       (product.translations.find((t) => t.locale === locale) ?? product.translations.find((t) => t.locale === product.sourceLocale))?.title ?? '';
-    const buyerTitle = titleIn(user.locale);
+    // The snapshot is always English, whatever language the buyer was reading the catalog in. It is one
+    // frozen string shared by everyone who opens the order — buyer, seller and admins — so a title taken
+    // from the buyer's locale left a Bali seller reading Russian (found on the testing site, 2026-11-15).
+    // English is the project's common language (user-to-user chat is English only); `titleIn` falls back
+    // to the seller's own words if a listing somehow has no English translation.
+    const snapshotTitle = titleIn('en');
 
     const created = await this.prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
@@ -106,7 +111,7 @@ export class OrdersService {
           items: {
             create: {
               productId: product.id,
-              title: buyerTitle,
+              title: snapshotTitle,
               unit: product.unit,
               qty: dto.qty,
               unitPriceIdr: product.priceIdr,
@@ -124,7 +129,7 @@ export class OrdersService {
       const message = await this.chat.createSystemMessage(
         tx,
         conversation.id,
-        `Order ${code} requested: ${dto.qty} × ${buyerTitle} at $${unitPriceUsd} each (subtotal $${itemsUsd.toFixed(2)}). Waiting for the seller to respond.`,
+        `Order ${code} requested: ${dto.qty} × ${snapshotTitle} at $${unitPriceUsd} each (subtotal $${itemsUsd.toFixed(2)}). Waiting for the seller to respond.`,
       );
       return { order: { ...order, conversation: { id: conversation.id } }, message };
     });
@@ -136,6 +141,8 @@ export class OrdersService {
         orderId: created.order.id,
         code: orderCode(created.order.number),
         buyerName: user.name,
+        // Deliberately not the English snapshot: a notification is addressed to one person — the seller —
+        // so it speaks their language. The order record below is shared by everyone and stays English.
         productTitle: titleIn(product.seller.user.locale),
         qty: dto.qty,
       });
