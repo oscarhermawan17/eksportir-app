@@ -116,11 +116,21 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 working tree clean, 25 of 32 tasks done (T01–T17, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left).
 
-**Fixed 2026-11-15 (not deployed yet):** an order's `OrderItem.title` snapshot was frozen in the **buyer's** language, so a Russian buyer left
-the Bali seller reading "50 × Благовония" in `/seller/orders`. It is now always English (`titleIn('en')`, falling back to the listing's
-`sourceLocale`), and so is the system message that opens the order chat. The relation and the price snapshot were never the problem —
-`productId` and the frozen prices are unchanged. Seller notifications still speak the seller's language on purpose. The one live row
-(OR-1538) and its chat message were rewritten by hand on the VPS; the dev database had nothing to repair.
+**Deployed 2026-11-15 (second deploy of the day):** commit `c22ec5e` is live. An order's `OrderItem.title` snapshot was frozen in the
+**buyer's** language, so a Russian buyer left the Bali seller reading "50 × Благовония" in `/seller/orders`. It is now always English
+(`titleIn('en')`, falling back to the listing's `sourceLocale`), and so is the system message that opens the order chat. The relation and
+the price snapshot were never the problem — `productId` and the frozen prices are unchanged. Seller notifications still speak the seller's
+language on purpose. The one live row (OR-1538) and its chat message were rewritten by hand on the VPS; the dev database had nothing to
+repair. CI run #18 green on all three jobs, **no migration** (the schema change is a doc comment). Image digests web `bcf5cacb` →
+`12ec5c2a`, api `f6ae48dc` → `f114774b`; both containers recreated and this time the SSH session returned normally. Verified from outside:
+`database: up`, `/id`, `/id/seller` and `/id/login` all 200, the catalog still answers its 7 products, and OR-1538 now reads "Incense" in
+both the order row and the order chat.
+
+**Two environment facts learned while pushing this:** GitHub over **SSH port 22 times out from the owner's home ISP** (the same family of
+block as port 5432, already noted below) — `git push` hangs and then dies with `ssh_dispatch_run_fatal`. `ssh.github.com:443` works, so the
+push went through `git push ssh://git@ssh.github.com:443/oscarhermawan17/eksportir-app.git main`; adding that host to `~/.ssh/config` would
+make `git push origin main` work again. And **`gh` is not installed on this laptop**: read workflow runs with the unauthenticated API call in
+`docs/DEPLOY.md` §7 instead.
 
 **Deployed 2026-11-15:** commit `7c78ad3` is live on the VPS — the mobile navbar (two rows, one auth button), the catalog grid (2/3/4/5 columns, container 1280px) and the compact product cards. CI run #16 green, no migration. Image digests web `05b36319` → `bcf5cacb`, api `3a348de0` → `f6ae48dc`. Checked from outside at 1440px and 375px: 5 and 2 columns, no horizontal overflow, cards 253px tall on a phone, badges on the photos, no MOQ and no seller regency on a card. **Note the SSH trap in `docs/DEPLOY.md` is real:** `docker compose up -d` finished and recreated both containers, then the SSH session hung without returning — check `docker ps` rather than assuming it failed.
 
