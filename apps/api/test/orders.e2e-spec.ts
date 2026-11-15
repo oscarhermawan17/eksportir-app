@@ -382,7 +382,8 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
       const a = await adminPage('ops', 'size=25&page=1');
       if (a.total <= 25) return;
       const b = await adminPage('ops', 'size=25&page=2');
-      expect(b.total).toBe(a.total);
+      // Not the totals: spec files run in parallel and this table counts every order in the database (see
+      // the same note in admin-products.e2e-spec.ts). Paging must not lose or repeat a row; that is the test.
       expect(a.items.filter((row) => b.items.some((other) => other.id === row.id))).toEqual([]);
     });
 

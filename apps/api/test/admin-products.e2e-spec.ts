@@ -128,12 +128,14 @@ describe('Admin product review + public catalog (e2e)', () => {
     });
 
     it('pages without losing or repeating rows', async () => {
-      // Two pages of one must be two different rows out of the same total.
+      // Two pages of one must be two different rows.
       const one = await page('size=25&page=1');
       if (one.total < 2) return;
       const a = await page('size=25&page=1');
       const b = await page('size=25&page=2');
-      expect(b.total).toBe(a.total);
+      // The totals are deliberately NOT compared: spec files run in parallel and this table counts every
+      // product in the database, so another file creating or removing one between these two requests moves
+      // the number without anything being wrong here. What paging must guarantee is the rows themselves.
       const overlap = a.items.filter((row) => b.items.some((other) => other.id === row.id));
       expect(overlap).toEqual([]);
     });
