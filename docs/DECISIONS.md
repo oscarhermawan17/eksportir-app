@@ -7,6 +7,7 @@ quick index (newest first). Add a line whenever a decision is made or changed.
 
 | Decision | Why / detail |
 |---|---|
+| **An order's product title is a snapshot in English (2026-11-15)** | The snapshot was taken in the **buyer's** language, and it is one frozen string read by the buyer, the seller and admins alike — a Russian buyer left a Bali seller reading "50 × Благовония" on the testing site. English is the project's common language (user-to-user chat is English only); `titleIn` falls back to the seller's own words when a listing has no English translation. The relation (`OrderItem.productId`) and the frozen price stay exactly as they were. Seller **notifications** keep using the seller's language: they are addressed to one person |
 | **Navbar is two rows below `md` (2026-11-14)**: brand + language, then search + one auth button | One line pushed "Sign up" 29px off the page at 375px. The single button is whichever is not the current page, so there is always one way onwards; both of them left the search field 65px wide in Russian at 320px |
 | Product cards drop the seller's regency; the shop name moves to the bottom (2026-11-14) | BaliTrade ships from Bali either way, so the location told a buyer nothing and cost a line. Buyers scan for the product and its price |
 | Catalog grid 2 / 3 / 4 / 5 columns, container 1280px (2026-11-14) | One card per row made phone cards enormous. 1280px matches the navbar, so content and bar line up; cards settle at ~230px, so a wider screen adds cards instead of stretching them |
