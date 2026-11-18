@@ -260,7 +260,8 @@ dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`).
   rate. Their photos are **generated placeholders** labelled "BaliTrade sample", not real product photos, and their id/ru texts are AI-written.
   The throwaway script is not in the repo; `pnpm db:seed` does not create them.
 - **R2: two buckets, two tokens, and a CORS policy per origin (done 2026-11-12).** `eksportir-testing` is public
-  (product photos, served from `pub-…r2.dev`); `eksportir-private` has no public URL and holds payment proofs and
+  (product photos, served from `https://media.projectbali.my.id` since 2026-11-18, because `r2.dev` did not load on
+  Telkomsel; see `docs/DEPLOY.md` §3c); `eksportir-private` has no public URL and holds payment proofs and
   QC files. Each has its own API token scoped to it alone, so the key that signs every photo upload cannot read a
   payment proof — proven with a 403. **Uploads go browser → R2 directly, so every bucket needs a CORS policy naming
   each origin the site is served from**; the exact policies in force are in `docs/DEPLOY.md` §3b. A missing origin

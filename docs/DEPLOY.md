@@ -177,6 +177,31 @@ curl -s -o /dev/null -D- -X OPTIONS \
 
 `204` with an `access-control-allow-origin` header means it is configured; `403` means it is not.
 
+## 3c. DNS and the photo domain
+
+Since 2026-11-18 the DNS for `projectbali.my.id` is managed by **Cloudflare** (nameservers `khloe` and
+`yisroel.ns.cloudflare.com`); the domain itself is still **registered and renewed at Sumopod**. The three records
+`@`, `www` and `api` are A records to `43.133.155.17` set to **DNS only (grey cloud)**: proxying them would put
+Cloudflare in front of nginx, certbot and the chat WebSocket, and nothing here is set up for that.
+
+Product photos are served from **`https://media.projectbali.my.id`**, a custom domain on the public bucket
+`eksportir-testing` (Cloudflare creates and proxies its CNAME itself, so leave that one orange). That is the value of
+`R2_PUBLIC_BASE_URL` on the server and in local `.env` files. The old `pub-…r2.dev` URL was replaced because
+testers on Telkomsel mobile data could not load it, and Cloudflare rate-limits `r2.dev` as development-only.
+Changing the base URL needs no data change: the database stores object keys and the API builds URLs on read.
+The server's previous `.env` is kept as `/home/ubuntu/balitrade/.env.bak-2026-11-18`.
+
+Check it from any machine:
+
+```bash
+nslookup -type=NS projectbali.my.id 8.8.8.8      # expect *.ns.cloudflare.com
+curl -s -o /dev/null -w '%{http_code}\n' https://media.projectbali.my.id/<key-of-any-photo>   # expect 200
+```
+
+> The `r2.dev` URL is still switched on (2026-11-18) as a fallback; switch it off in the bucket's settings once
+> the new domain has been in use for a while. For the production `.com`, start on Cloudflare DNS and give its
+> public bucket a custom domain from day one.
+
 ## 4. Certificates
 
 certbot on the host, **standalone** mode. One certificate covers `projectbali.my.id`, `www.` and `api.`;

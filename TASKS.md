@@ -246,3 +246,18 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 - [ ] Halaman How It Works + FAQ lengkap
 - [ ] Audit log lengkap + halaman riwayat aksi admin
 - [ ] (pindahan dari MVP 1.0 jika tidak sempat)
+
+---
+
+## Tidak mendesak (dikerjakan paling akhir)
+
+- [ ] **T30 Matikan URL `r2.dev` bucket publik** (ditambahkan 2026-11-18 atas permintaan pemilik, tidak mendesak) — sejak 2026-11-18 foto
+  disajikan dari `https://media.projectbali.my.id` (custom domain bucket `eksportir-testing`, lihat `docs/DEPLOY.md` §3c), karena `r2.dev`
+  tidak terbuka lewat Telkomsel. Alamat `pub-…r2.dev` sengaja **masih menyala** sebagai cadangan. Tidak ada data di sana: itu hanya pintu
+  kedua ke bucket yang sama, jadi mematikannya tidak menghapus foto apa pun.
+  Langkah: pastikan tidak ada lagi URL `r2.dev` di respons API dan halaman live (`curl … | grep r2.dev` → 0), lalu Cloudflare → R2 →
+  `eksportir-testing` → Settings → **Public Development URL → Disable**.
+  **Wajib diangkat lagi saat membahas production (domain `.com`):** bucket production langsung pakai custom domain sejak hari pertama dan
+  `r2.dev`-nya tidak pernah dinyalakan; domain `.com` memakai DNS Cloudflare sejak awal (record web/api **DNS only**); domain baru masuk ke
+  CORS kedua bucket.
+  DoD: `r2.dev` mati, semua foto di situs live tetap tampil dari `media.`, `docs/DEPLOY.md` §3c diperbarui.
