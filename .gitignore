@@ -34,3 +34,6 @@ pnpm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# owner's personal scratch notes
+NOTE.txt
