@@ -194,7 +194,9 @@ export class OrdersService {
       this.prisma.order.findMany({
         where,
         include: orderInclude,
-        orderBy: { createdAt: 'desc' },
+        // `id` breaks ties: orders with the same timestamp would otherwise come back in any order, and offset
+        // paging then repeats one row on two pages and skips another.
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         skip: (page - 1) * size,
         take: size,
       }),

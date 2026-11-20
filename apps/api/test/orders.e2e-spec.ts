@@ -379,12 +379,32 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
     });
 
     it('pages without losing or repeating an order', async () => {
-      const a = await adminPage('ops', 'size=25&page=1');
-      if (a.total <= 25) return;
-      const b = await adminPage('ops', 'size=25&page=2');
-      // Not the totals: spec files run in parallel and this table counts every order in the database (see
-      // the same note in admin-products.e2e-spec.ts). Paging must not lose or repeat a row; that is the test.
-      expect(a.items.filter((row) => b.items.some((other) => other.id === row.id))).toEqual([]);
+      // Its own 30 orders, all with the SAME timestamp, found through a buyer name nobody else uses. Paging the
+      // whole table was flaky: other spec files insert orders in parallel, which shifts rows between the two
+      // requests. The equal timestamps make the `id` tie-breaker the thing under test.
+      const pager = await prisma.user.create({
+        data: { email: `orders-e2e-pager-${stamp}@example.com`, passwordHash: 'x', name: `Pager${stamp}`, roles: [Role.BUYER] },
+      });
+      const createdAt = new Date();
+      for (let i = 0; i < 30; i++) {
+        await prisma.order.create({
+          data: {
+            buyerId: pager.id,
+            sellerId: ids['sellerProfile']!,
+            deliveryAddress: delivery,
+            fxRate: new Prisma.Decimal('16000'),
+            itemsUsd: new Prisma.Decimal('10.00'),
+            qcFeeUsd: new Prisma.Decimal('0'),
+            createdAt,
+            items: { create: { title: 'Pager item', unit: 'PCS', qty: 1, unitPriceIdr: 160000, unitPriceUsd: new Prisma.Decimal('10.00') } },
+          },
+        });
+      }
+      const a = await adminPage('ops', `q=Pager${stamp}&size=25&page=1`);
+      const b = await adminPage('ops', `q=Pager${stamp}&size=25&page=2`);
+      expect(a.total).toBe(30);
+      expect([a.items.length, b.items.length]).toEqual([25, 5]);
+      expect(new Set([...a.items, ...b.items].map((row) => row.id)).size).toBe(30);
     });
 
     it('finds an order by the code an admin reads off the screen', async () => {

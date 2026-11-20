@@ -1,4 +1,4 @@
-import { OrderStatus, actionActor, canSubmitPayment, nextOrderStatus, orderActionsFor } from '@balitrade/shared';
+import { OrderStatus, actionActor, canSubmitPayment, nextOrderStatus, orderActionsFor, orderNumberFromCode } from '@balitrade/shared';
 import type { OrderAction } from '@balitrade/shared';
 
 describe('order transitions (docs/ARCHITECTURE.md §6)', () => {
@@ -90,5 +90,19 @@ describe('order transitions (docs/ARCHITECTURE.md §6)', () => {
     expect(orderActionsFor('SELLER', 'AWAITING_PAYMENT')).toEqual([]);
     expect(orderActionsFor('ADMIN', 'REQUESTED')).toEqual([]);
     expect(orderActionsFor('BUYER', 'CANCELLED')).toEqual([]);
+  });
+});
+
+describe('orderNumberFromCode (admin search, T27)', () => {
+  it('reads the code an admin types', () => {
+    expect(orderNumberFromCode('OR-1043')).toBe(43);
+    expect(orderNumberFromCode('or 1043')).toBe(43);
+    expect(orderNumberFromCode('Anna')).toBeNull();
+  });
+
+  it('ignores digits too long for the 32-bit column (they used to reach the database and answer 500)', () => {
+    expect(orderNumberFromCode('Pager1763600000000')).toBeNull();
+    expect(orderNumberFromCode(String(1000 + 2_147_483_647))).toBe(2_147_483_647);
+    expect(orderNumberFromCode(String(1000 + 2_147_483_648))).toBeNull();
   });
 });

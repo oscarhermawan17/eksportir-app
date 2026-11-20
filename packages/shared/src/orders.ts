@@ -69,6 +69,9 @@ export interface CreateOrderInput {
 /** "OR-1001": the human-readable number of an order. */
 export const orderCode = (number: number): string => `OR-${1000 + number}`;
 
+/** Largest value of the `orders.number` column (PostgreSQL `integer`). */
+const MAX_ORDER_NUMBER = 2_147_483_647;
+
 /**
  * The inverse, for searching: an admin types what they see ("OR-1043", "or 1043", or just "1043").
  * Returns the stored `number`, or null when the text is not a code at all — in which case the caller
@@ -78,7 +81,9 @@ export function orderNumberFromCode(text: string): number | null {
   const digits = /(\d{4,})/.exec(text.replace(/\s+/g, ''));
   if (!digits) return null;
   const value = Number(digits[1]);
-  return value > 1000 ? value - 1000 : null;
+  // `number` is a 32-bit column: a longer run of digits (a phone number, a name like "Shop2025112012") is not a
+  // code, and passing it on made the database reject the query with a 500.
+  return value > 1000 && value - 1000 <= MAX_ORDER_NUMBER ? value - 1000 : null;
 }
 
 /** Query of GET /api/admin/orders (T27). Everything optional; the API applies the defaults. */

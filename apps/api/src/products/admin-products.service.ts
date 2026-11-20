@@ -47,7 +47,9 @@ export class AdminProductsService {
       this.prisma.product.findMany({
         where,
         include: reviewInclude,
-        orderBy: { updatedAt: 'desc' },
+        // `id` breaks ties: rows with the same timestamp would otherwise come back in any order, and offset paging
+        // then repeats one row on two pages and skips another.
+        orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
         skip: (page - 1) * size,
         take: size,
       }),
