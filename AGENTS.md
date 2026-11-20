@@ -117,9 +117,17 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 working tree clean, 26 of 34 tasks done (T01–T18, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
 
-**T18 QC is built and tested locally, NOT deployed (2026-11-20).** Deploying it needs the migration `20261120104104_qc_reports`
-(two new tables, no data moved) applied on the VPS before the new API image starts — see `docs/DEPLOY.md`. The QC report lives on the
-order page for all three sides (`OrderQcPanel`); OPS's queue is `/admin/qc`. Approval stops at `QC_APPROVED`: the shipping bill is T19.
+**Deployed 2026-11-20: T18 QC (commit `3b0c5fe`) is live.** CI run #44727262395 green. The database was dumped first to
+`~/db-backups/balitrade-2026-11-20-pre-t18.dump` on the VPS (93 KB, chmod 600), then migration `20261120104104_qc_reports` (two new
+tables, no data moved) was applied **before** the new images, as `docs/DEPLOY.md` §3 says. Image digests api `f114774b` → `c2f300a7`,
+web `12ec5c2a` → `be119bb6`; this time `docker compose up -d` returned normally. Verified from outside: `database: up`, `/id`, `/id/login`,
+`/id/seller`, `/en/admin` and `/id/admin/qc` all 200, the QC routes answer 401 without a session, the catalog still answers its 7 products
+and no `r2.dev` link. **QC was not exercised while logged in on the live site** — no order there has reached `IN_QC` yet (the one live
+order is REQUESTED). The QC report lives on the order page for all three sides (`OrderQcPanel`); OPS's queue is `/admin/qc`. Approval
+stops at `QC_APPROVED`: the shipping bill is T19.
+**Trap found while deploying from Windows:** piping a script from PowerShell into `ssh … "bash -s"` prepends a byte-order mark, so the
+script's first line fails ("command not found") — and when that line was `DB=$(grep … .env …)` the error echoed the database URL,
+password included. Make the first line a comment.
 
 **Deployed 2026-11-15 (second deploy of the day):** commit `c22ec5e` is live. An order's `OrderItem.title` snapshot was frozen in the
 **buyer's** language, so a Russian buyer left the Bali seller reading "50 × Благовония" in `/seller/orders`. It is now always English
