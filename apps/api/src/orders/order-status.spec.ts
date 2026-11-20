@@ -18,6 +18,24 @@ describe('order transitions (docs/ARCHITECTURE.md §6)', () => {
     expect(nextOrderStatus('AWAITING_PAYMENT', 'START_QC')).toBeNull();
   });
 
+  it('quality control (T18): OPS reports, the buyer approves or reports a problem, OPS checks again', () => {
+    expect(nextOrderStatus('IN_QC', 'SUBMIT_QC')).toBe('QC_READY');
+    expect(nextOrderStatus('QC_READY', 'APPROVE_QC')).toBe('QC_APPROVED');
+    expect(nextOrderStatus('QC_READY', 'REPORT_ISSUE')).toBe('ISSUE');
+    expect(nextOrderStatus('ISSUE', 'REDO_QC')).toBe('IN_QC');
+    // Nothing to approve before a report exists, and a problem is never a cancellation.
+    expect(nextOrderStatus('IN_QC', 'APPROVE_QC')).toBeNull();
+    expect(nextOrderStatus('ISSUE', 'APPROVE_QC')).toBeNull();
+    expect(nextOrderStatus('ISSUE', 'CANCEL')).toBeNull();
+    expect(nextOrderStatus('QC_READY', 'SUBMIT_QC')).toBeNull();
+    expect(nextOrderStatus('QC_APPROVED', 'REPORT_ISSUE')).toBeNull();
+    expect(nextOrderStatus('PAYMENT_VERIFIED', 'SUBMIT_QC')).toBeNull();
+    expect(['SUBMIT_QC', 'REDO_QC'].map((a) => actionActor(a as OrderAction))).toEqual(['ADMIN', 'ADMIN']);
+    expect(['APPROVE_QC', 'REPORT_ISSUE'].map((a) => actionActor(a as OrderAction))).toEqual(['BUYER', 'BUYER']);
+    // The QC panel offers these, not the order page's button row.
+    expect(orderActionsFor('BUYER', 'QC_READY')).toEqual([]);
+  });
+
   it('money and QC belong to the admin side; paying is the buyer\'s', () => {
     expect(actionActor('CONFIRM_PAID')).toBe('ADMIN');
     expect(actionActor('REJECT_PAYMENT')).toBe('ADMIN');

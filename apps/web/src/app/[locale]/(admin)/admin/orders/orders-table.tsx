@@ -19,19 +19,23 @@ const OWN_FILTERS = ['status', 'q', 'from', 'to'];
  * their own handful of orders as roomy cards, which is right for them and wrong here. One component
  * wearing both faces would have to be told which one on every prop.
  */
-export function AdminOrdersTable() {
+export function AdminOrdersTable({ statuses }: { statuses?: readonly OrderStatus[] } = {}) {
   return (
     <LoginGate
       allow={(user) =>
         user.roles.includes('ADMIN_OPS') || user.roles.includes('ADMIN_FINANCE') || user.roles.includes('ADMIN_OWNER')
       }
     >
-      {() => <OrdersTable />}
+      {() => <OrdersTable statuses={statuses} />}
     </LoginGate>
   );
 }
 
-function OrdersTable() {
+/**
+ * `statuses` narrows the table to a work queue (the QC page, T18): only those statuses are offered, there is no
+ * "all statuses" choice, and the first one is the default.
+ */
+function OrdersTable({ statuses }: { statuses?: readonly OrderStatus[] }) {
   const t = useTranslations('Orders');
   const tAdmin = useTranslations('AdminOrders');
   const format = useFormatter();
@@ -40,10 +44,14 @@ function OrdersTable() {
   const [attempt, setAttempt] = useState(0);
   const [loaded, setLoaded] = useState<{ key: string; page: PageResult<OrderView> | null } | null>(null);
 
-  const query = toApiQuery(table, OWN_FILTERS);
-  const filtered = OWN_FILTERS.some((key) => table.get(key) !== '');
+  // In a work queue the status is never empty: an unknown or missing one falls back to the queue's first status.
+  const requested = table.get('status');
+  const status = statuses ? (statuses.includes(requested as OrderStatus) ? requested : statuses[0]!) : requested;
+  const params = new URLSearchParams(toApiQuery(table, OWN_FILTERS));
+  if (status) params.set('status', status);
+  const query = params.toString();
+  const filtered = OWN_FILTERS.some((key) => key !== 'status' && table.get(key) !== '') || (!statuses && requested !== '');
   const key = `${query}#${attempt}`;
-  const status = table.get('status');
 
   useEffect(() => {
     let cancelled = false;
@@ -132,8 +140,8 @@ function OrdersTable() {
           onChange={(event) => table.set({ status: event.target.value })}
           className="h-9 rounded-button border border-border bg-card px-2 text-sm font-medium text-text focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
         >
-          <option value="">{tAdmin('allStatuses')}</option>
-          {Object.values(OrderStatus).map((option) => (
+          {statuses ? null : <option value="">{tAdmin('allStatuses')}</option>}
+          {(statuses ?? Object.values(OrderStatus)).map((option) => (
             <option key={option} value={option}>
               {t(`status.${option}`)}
             </option>

@@ -111,7 +111,13 @@ export type OrderAction =
   | 'SUBMIT_PAYMENT'
   | 'REJECT_PAYMENT'
   | 'CONFIRM_PAID'
-  | 'START_QC';
+  | 'START_QC'
+  // Quality control (T18): OPS sends the report, the buyer approves it or reports a problem, and after a problem has
+  // been talked through in the order chat OPS checks the goods again.
+  | 'SUBMIT_QC'
+  | 'APPROVE_QC'
+  | 'REPORT_ISSUE'
+  | 'REDO_QC';
 
 /** Who may take each action. Which admin role may do an ADMIN action is decided per endpoint (money: FINANCE, QC: OPS). */
 const ACTION_ACTOR: Record<OrderAction, 'BUYER' | 'SELLER' | 'ADMIN'> = {
@@ -124,6 +130,10 @@ const ACTION_ACTOR: Record<OrderAction, 'BUYER' | 'SELLER' | 'ADMIN'> = {
   REJECT_PAYMENT: 'ADMIN',
   CONFIRM_PAID: 'ADMIN',
   START_QC: 'ADMIN',
+  SUBMIT_QC: 'ADMIN',
+  APPROVE_QC: 'BUYER',
+  REPORT_ISSUE: 'BUYER',
+  REDO_QC: 'ADMIN',
 };
 
 /**
@@ -142,6 +152,13 @@ const TRANSITIONS: Partial<Record<OrderStatus, Partial<Record<OrderAction, Order
   AWAITING_PAYMENT: { SUBMIT_PAYMENT: 'PAYMENT_SUBMITTED', CANCEL: 'CANCELLED' },
   PAYMENT_SUBMITTED: { SUBMIT_PAYMENT: 'PAYMENT_SUBMITTED', REJECT_PAYMENT: 'AWAITING_PAYMENT', CONFIRM_PAID: 'PAYMENT_VERIFIED' },
   PAYMENT_VERIFIED: { START_QC: 'IN_QC' },
+  // Quality control (T18). A problem is not a cancellation: B2B goods are talked through in the order chat first
+  // (replacement, the missing quantity), and OPS then checks again, which starts a new report round. Money that
+  // cannot be used for the order any more is held as buyer credit — that is T31, not a transition here.
+  // APPROVE_QC is also what the 48-hour automatic approval takes (QC_LIMITS.autoApproveHours).
+  IN_QC: { SUBMIT_QC: 'QC_READY' },
+  QC_READY: { APPROVE_QC: 'QC_APPROVED', REPORT_ISSUE: 'ISSUE' },
+  ISSUE: { REDO_QC: 'IN_QC' },
 };
 
 /** The status an action leads to, or null when the action is not possible in this status. The single source of truth for transitions. */

@@ -14,6 +14,7 @@ import { ProductsModule } from './products/products.module.js';
 import { SellersModule } from './sellers/sellers.module.js';
 import { HealthModule } from './health/health.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { QcModule } from './qc/qc.module.js';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
     NotificationsModule,
     OrdersModule,
     PaymentsModule,
+    QcModule,
     FxModule,
     CategoriesModule,
     ProductsModule,

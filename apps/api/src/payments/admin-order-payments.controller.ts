@@ -9,7 +9,7 @@ import { PaymentsService } from './payments.service.js';
 /**
  * The two steps that move an order itself. They are separate from verifying a single payment because partial
  * payments are allowed: "this money arrived" and "the order is paid" are different statements, and the second one
- * is the FINANCE admin's judgement. Starting quality control is the OPS admin's step (T18 adds the report).
+ * is the FINANCE admin's judgement. Starting quality control is the OPS admin's step (the report itself: AdminQcController, T18).
  */
 @Controller('admin/orders')
 @UseGuards(JwtAuthGuard, RolesGuard)

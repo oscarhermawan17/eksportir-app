@@ -1,8 +1,9 @@
 'use client';
 
-import type { AdminProductView, AdminSellerView, CurrentRateView, OrderView } from '@balitrade/shared';
+import type { AdminProductView, AdminSellerView, CurrentRateView, OrderView, PageResult } from '@balitrade/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/components/auth/auth-provider';
 import { LoginGate } from '@/components/auth/login-gate';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -30,6 +31,8 @@ const OPEN_ORDER_STATUSES = new Set([
 interface Counts {
   sellers: number | null;
   listings: number | null;
+  /** Orders whose goods are in hand and wait for a QC report (OPS and the owner only). */
+  qc: number | null;
   orders: number;
   rate: CurrentRateView;
 }
@@ -42,6 +45,8 @@ function Overview() {
   const t = useTranslations('Admin');
   const tCommon = useTranslations('Common');
   const format = useFormatter();
+  const { user } = useAuth();
+  const handlesQc = Boolean(user?.roles.some((role) => role === 'ADMIN_OPS' || role === 'ADMIN_OWNER'));
   const [counts, setCounts] = useState<Counts | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -52,9 +57,12 @@ function Overview() {
       try {
         // Roles differ, so a page this admin may not read answers 403; that tile is simply hidden.
         const optional = <T,>(path: string) => apiFetch<T>(path).catch(() => null);
-        const [sellers, listings, orders, rate] = await Promise.all([
+        const [sellers, listings, qc, orders, rate] = await Promise.all([
           optional<AdminSellerView[]>('/admin/sellers?status=PENDING'),
-          optional<AdminProductView[]>('/admin/products?status=PENDING_REVIEW'),
+          // Paged since T27: the count is `total`, not the length of a page (reading `.length` hid this tile).
+          optional<PageResult<AdminProductView>>('/admin/products?status=PENDING_REVIEW'),
+          // Every admin may read orders, but writing the QC report is OPS work (T18).
+          handlesQc ? optional<PageResult<OrderView>>('/admin/orders?status=IN_QC') : Promise.resolve(null),
           apiFetch<OrderView[]>('/orders'),
           // The public endpoint, not the owner-only history: every admin may see which rate is in force, and
           // reading the history would answer 403 for OPS and FINANCE — which used to look like "no rate set".
@@ -63,7 +71,8 @@ function Overview() {
         if (!cancelled) {
           setCounts({
             sellers: sellers?.length ?? null,
-            listings: listings?.length ?? null,
+            listings: listings?.total ?? null,
+            qc: qc?.total ?? null,
             orders: orders.filter((order) => OPEN_ORDER_STATUSES.has(order.status)).length,
             rate,
           });
@@ -77,7 +86,7 @@ function Overview() {
     return () => {
       cancelled = true;
     };
-  }, [attempt]);
+  }, [attempt, handlesQc]);
 
   return (
     <div>
@@ -100,13 +109,14 @@ function Overview() {
         <div className="mt-6" aria-busy="true" />
       ) : (
         <>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {counts.sellers === null ? null : (
               <Stat value={counts.sellers} label={t('overview.pendingSellers')} href="/admin/sellers?status=PENDING" />
             )}
             {counts.listings === null ? null : (
               <Stat value={counts.listings} label={t('overview.pendingListings')} href="/admin/products?status=PENDING_REVIEW" />
             )}
+            {counts.qc === null ? null : <Stat value={counts.qc} label={t('overview.waitingQc')} href="/admin/qc" />}
             <Stat value={counts.orders} label={t('overview.openOrders')} href="/admin/orders" highlight={false} />
           </ul>
 

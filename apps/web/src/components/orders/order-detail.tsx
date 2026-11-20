@@ -7,6 +7,7 @@ import { LoginGate } from '@/components/auth/login-gate';
 import { OrderActions } from '@/components/orders/order-actions';
 import { OrderStatusBadge } from '@/components/orders/order-status-badge';
 import { OrderPaymentPanel } from '@/components/payments/order-payment-panel';
+import { OrderQcPanel } from '@/components/qc/order-qc-panel';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { ApiError, apiFetch } from '@/lib/api';
@@ -117,6 +118,8 @@ function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUp
       <OrderActions order={order} onUpdated={onUpdated} onStale={onStale} />
 
       <OrderPaymentPanel order={order} onChanged={onReload} />
+
+      <OrderQcPanel order={order} onChanged={onReload} />
 
       <section aria-labelledby="order-item" className="rounded-card border border-border bg-card p-5 shadow-sm">
         <h2 id="order-item" className="text-xs font-bold uppercase tracking-wider text-muted">

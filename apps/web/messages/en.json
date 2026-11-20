@@ -325,7 +325,8 @@
       "orders": "Orders",
       "rates": "Exchange rate",
       "payments": "Payments",
-      "categories": "Categories"
+      "categories": "Categories",
+      "qc": "Quality control"
     },
     "overview": {
       "title": "What needs you",
@@ -336,7 +337,8 @@
       "rate": "Exchange rate in force: Rp {rate} per USD.",
       "rateSet": "Set {date}.",
       "noRate": "No exchange rate is set yet, so buyers cannot order and prices show \"Price coming soon\".",
-      "loadError": "We could not load the overview."
+      "loadError": "We could not load the overview.",
+      "waitingQc": "Orders waiting for a QC report"
     },
     "sellersTitle": "Seller applications",
     "filter": {
@@ -726,7 +728,11 @@
       "CHANGE_PROPOSED": "The seller proposed a different quantity. The buyer decides.",
       "AWAITING_PAYMENT": "Accepted. The next step is payment (opening soon).",
       "DECLINED": "The seller declined this order.",
-      "CANCELLED": "This order was cancelled."
+      "CANCELLED": "This order was cancelled.",
+      "IN_QC": "BaliTrade has the goods and is checking their quality.",
+      "QC_READY": "The quality control report is ready. The buyer approves it or reports a problem.",
+      "QC_APPROVED": "The buyer approved the quality control report. Next step: shipping.",
+      "ISSUE": "A problem was reported after quality control and is being discussed in the order chat."
     },
     "itemTitle": "Item",
     "quantity": "Quantity",
@@ -946,6 +952,87 @@
       "proof": "Proof of transfer",
       "proofHelper": "A photo or screenshot of the receipt. JPG, PNG or WebP, 10 MB at most. Only you and BaliTrade can open it.",
       "afterSubmit": "The seller does not see your payment details. Only BaliTrade checks them."
+    }
+  },
+  "Qc": {
+    "title": "Quality control",
+    "loading": "Loading the quality control report…",
+    "loadError": "We could not load the quality control report.",
+    "retry": "Try again",
+    "checking": "BaliTrade is checking the goods. The report with photos and videos will appear here.",
+    "checkingAgain": "BaliTrade is checking the goods again. The new report will appear here; the earlier one is kept below.",
+    "issueHint": "The buyer reported a problem. BaliTrade, the buyer and the seller talk it through in the order chat (a replacement, the missing quantity, …), and then BaliTrade checks the goods again.",
+    "roundLabel": "Check {round}",
+    "byOn": "By {name} · {date}",
+    "passedCount": "{passed} of {total} checks passed",
+    "pass": "Passed",
+    "fail": "Failed",
+    "commentLabel": "Summary",
+    "photoAlt": "QC photo {n}",
+    "videoAlt": "QC video {n}",
+    "linksExpired": "The photo links expire after a few minutes. Switch to another tab and back, or reload the page, to refresh them.",
+    "status": {
+      "READY": "Waiting for the buyer",
+      "APPROVED": "Approved",
+      "ISSUE": "Problem reported"
+    },
+    "autoApproveBuyer": "If you do not answer, this report is approved automatically on {date}.",
+    "autoApproveOthers": "Without an answer from the buyer it is approved automatically on {date}.",
+    "approve": "Approve report",
+    "approveConfirmText": "Approve the goods as shown in this report? BaliTrade then prepares shipping.",
+    "approveConfirm": "Yes, approve",
+    "reportIssue": "Report a problem",
+    "reasonLabel": "What is wrong?",
+    "reasonHelper": "BaliTrade, you and the seller will talk it through in the order chat before anything else happens. Nothing is cancelled.",
+    "reasonTooShort": "Please describe the problem in at least {min} characters.",
+    "sendIssue": "Send problem report",
+    "back": "Back",
+    "working": "Please wait…",
+    "issueReason": "Problem reported by the buyer",
+    "approvedOn": "Approved by the buyer on {date}.",
+    "autoApproved": "Approved automatically on {date}: the buyer did not answer within 48 hours.",
+    "history": "Earlier checks",
+    "redoTitle": "Check the goods again",
+    "redoHint": "Once the problem has been settled in the order chat, start a new check. The current report stays as history.",
+    "redoNote": "Note for the order chat (optional)",
+    "redoButton": "Check again",
+    "form": {
+      "title": "Write the QC report",
+      "hint": "The buyer and the seller see this report. Be specific: what you counted, what you saw.",
+      "checklistLabel": "Checklist",
+      "noteRequired": "Note (required: explain what failed)",
+      "noteOptional": "Note (optional)",
+      "commentLabel": "Summary for the buyer",
+      "commentHelper": "A few sentences: overall condition, anything the buyer should know.",
+      "mediaLabel": "Photos and videos",
+      "mediaHelper": "At least one photo; at most {max} files. A short video helps the buyer see the goods.",
+      "submit": "Send report to the buyer",
+      "errPick": "Choose Passed or Failed for every check.",
+      "errNote": "Explain every failed check in its note.",
+      "errComment": "Write a short summary for the buyer.",
+      "errPhoto": "Add at least one photo."
+    },
+    "checklist": {
+      "QUANTITY": {
+        "label": "Quantity matches the order",
+        "hint": "Count every unit or carton against the ordered quantity."
+      },
+      "MATCHES_LISTING": {
+        "label": "Matches the listing",
+        "hint": "Model, colour, size and material as in the listing photos and description."
+      },
+      "NO_DAMAGE": {
+        "label": "No damage or defects",
+        "hint": "No cracks, stains, tears, loose stitching or broken parts."
+      },
+      "WORKMANSHIP": {
+        "label": "Workmanship",
+        "hint": "Neat finishing; zips, clasps, lids and other moving parts work."
+      },
+      "NO_MOLD_PESTS": {
+        "label": "No mould, insects or damp",
+        "hint": "Important for wood, rattan, bamboo, leather and fabric before air cargo."
+      }
     }
   }
 }

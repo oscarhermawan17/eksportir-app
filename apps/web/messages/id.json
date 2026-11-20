@@ -325,7 +325,8 @@
       "orders": "Pesanan",
       "rates": "Kurs",
       "payments": "Pembayaran",
-      "categories": "Kategori"
+      "categories": "Kategori",
+      "qc": "Pemeriksaan kualitas"
     },
     "overview": {
       "title": "Yang perlu Anda kerjakan",
@@ -336,7 +337,8 @@
       "rate": "Kurs yang berlaku: Rp {rate} per USD.",
       "rateSet": "Diisi {date}.",
       "noRate": "Kurs belum diisi, jadi pembeli belum bisa memesan dan harga tampil \"Price coming soon\".",
-      "loadError": "Ringkasan tidak bisa dimuat."
+      "loadError": "Ringkasan tidak bisa dimuat.",
+      "waitingQc": "Pesanan menunggu laporan QC"
     },
     "sellersTitle": "Pengajuan penjual",
     "filter": {
@@ -726,7 +728,11 @@
       "CHANGE_PROPOSED": "Penjual mengusulkan jumlah lain. Pembeli yang memutuskan.",
       "AWAITING_PAYMENT": "Diterima. Langkah berikutnya adalah pembayaran (segera dibuka).",
       "DECLINED": "Penjual menolak pesanan ini.",
-      "CANCELLED": "Pesanan ini dibatalkan."
+      "CANCELLED": "Pesanan ini dibatalkan.",
+      "IN_QC": "Barang sudah di BaliTrade dan sedang diperiksa kualitasnya.",
+      "QC_READY": "Laporan pemeriksaan kualitas sudah siap. Pembeli menyetujuinya atau melaporkan masalah.",
+      "QC_APPROVED": "Pembeli menyetujui laporan pemeriksaan kualitas. Langkah berikutnya: pengiriman.",
+      "ISSUE": "Ada masalah yang dilaporkan setelah pemeriksaan kualitas dan sedang dibahas di chat pesanan."
     },
     "itemTitle": "Barang",
     "quantity": "Jumlah",
@@ -946,6 +952,87 @@
       "proof": "Bukti transfer",
       "proofHelper": "Foto atau tangkapan layar bukti transfer. JPG, PNG, atau WebP, maksimal 10 MB. Hanya Anda dan BaliTrade yang bisa membukanya.",
       "afterSubmit": "Penjual tidak melihat data pembayaran Anda. Hanya BaliTrade yang memeriksanya."
+    }
+  },
+  "Qc": {
+    "title": "Pemeriksaan kualitas",
+    "loading": "Memuat laporan pemeriksaan kualitas…",
+    "loadError": "Laporan pemeriksaan kualitas tidak dapat dimuat.",
+    "retry": "Coba lagi",
+    "checking": "BaliTrade sedang memeriksa barang. Laporan beserta foto dan video akan muncul di sini.",
+    "checkingAgain": "BaliTrade sedang memeriksa ulang barang. Laporan baru akan muncul di sini; laporan sebelumnya tetap tersimpan di bawah.",
+    "issueHint": "Pembeli melaporkan masalah. BaliTrade, pembeli dan penjual membicarakannya di chat pesanan (barang pengganti, kekurangan jumlah, …), lalu BaliTrade memeriksa ulang barangnya.",
+    "roundLabel": "Pemeriksaan {round}",
+    "byOn": "Oleh {name} · {date}",
+    "passedCount": "{passed} dari {total} pemeriksaan lolos",
+    "pass": "Lolos",
+    "fail": "Gagal",
+    "commentLabel": "Ringkasan",
+    "photoAlt": "Foto QC {n}",
+    "videoAlt": "Video QC {n}",
+    "linksExpired": "Tautan foto kedaluwarsa setelah beberapa menit. Pindah ke tab lain lalu kembali, atau muat ulang halaman, untuk memperbaruinya.",
+    "status": {
+      "READY": "Menunggu pembeli",
+      "APPROVED": "Disetujui",
+      "ISSUE": "Masalah dilaporkan"
+    },
+    "autoApproveBuyer": "Jika Anda tidak menjawab, laporan ini disetujui otomatis pada {date}.",
+    "autoApproveOthers": "Tanpa jawaban dari pembeli, laporan ini disetujui otomatis pada {date}.",
+    "approve": "Setujui laporan",
+    "approveConfirmText": "Setujui barang sesuai laporan ini? BaliTrade lalu menyiapkan pengiriman.",
+    "approveConfirm": "Ya, setujui",
+    "reportIssue": "Laporkan masalah",
+    "reasonLabel": "Apa masalahnya?",
+    "reasonHelper": "BaliTrade, Anda dan penjual akan membicarakannya di chat pesanan sebelum langkah lain diambil. Tidak ada yang dibatalkan.",
+    "reasonTooShort": "Jelaskan masalahnya minimal {min} karakter.",
+    "sendIssue": "Kirim laporan masalah",
+    "back": "Kembali",
+    "working": "Mohon tunggu…",
+    "issueReason": "Masalah yang dilaporkan pembeli",
+    "approvedOn": "Disetujui pembeli pada {date}.",
+    "autoApproved": "Disetujui otomatis pada {date}: pembeli tidak menjawab dalam 48 jam.",
+    "history": "Pemeriksaan sebelumnya",
+    "redoTitle": "Periksa ulang barang",
+    "redoHint": "Setelah masalahnya selesai dibicarakan di chat pesanan, mulai pemeriksaan baru. Laporan saat ini tetap tersimpan sebagai riwayat.",
+    "redoNote": "Catatan untuk chat pesanan (opsional)",
+    "redoButton": "Periksa ulang",
+    "form": {
+      "title": "Tulis laporan QC",
+      "hint": "Pembeli dan penjual melihat laporan ini. Tulis dengan jelas: apa yang dihitung, apa yang dilihat.",
+      "checklistLabel": "Daftar periksa",
+      "noteRequired": "Catatan (wajib: jelaskan apa yang gagal)",
+      "noteOptional": "Catatan (opsional)",
+      "commentLabel": "Ringkasan untuk pembeli",
+      "commentHelper": "Beberapa kalimat: kondisi umum, hal yang perlu diketahui pembeli.",
+      "mediaLabel": "Foto dan video",
+      "mediaHelper": "Minimal satu foto; maksimal {max} file. Video singkat membantu pembeli melihat barangnya.",
+      "submit": "Kirim laporan ke pembeli",
+      "errPick": "Pilih Lolos atau Gagal untuk setiap pemeriksaan.",
+      "errNote": "Jelaskan setiap pemeriksaan yang gagal di catatannya.",
+      "errComment": "Tulis ringkasan singkat untuk pembeli.",
+      "errPhoto": "Tambahkan minimal satu foto."
+    },
+    "checklist": {
+      "QUANTITY": {
+        "label": "Jumlah sesuai pesanan",
+        "hint": "Hitung setiap unit atau karton dan cocokkan dengan jumlah pesanan."
+      },
+      "MATCHES_LISTING": {
+        "label": "Sesuai listing",
+        "hint": "Model, warna, ukuran dan bahan sama dengan foto dan deskripsi listing."
+      },
+      "NO_DAMAGE": {
+        "label": "Tidak rusak atau cacat",
+        "hint": "Tidak ada retak, noda, sobek, jahitan lepas atau bagian patah."
+      },
+      "WORKMANSHIP": {
+        "label": "Kualitas pengerjaan",
+        "hint": "Finishing rapi; ritsleting, pengait, tutup dan bagian bergerak lain berfungsi."
+      },
+      "NO_MOLD_PESTS": {
+        "label": "Bebas jamur, hama dan lembap",
+        "hint": "Penting untuk kayu, rotan, bambu, kulit dan kain sebelum kargo udara."
+      }
     }
   }
 }

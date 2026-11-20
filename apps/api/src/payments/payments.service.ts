@@ -200,7 +200,7 @@ export class PaymentsService {
     );
   }
 
-  /** The goods are with BaliTrade and quality control begins (ADMIN_OPS). T18 adds the report itself. */
+  /** The goods are with BaliTrade and quality control begins (ADMIN_OPS). The report itself is QcService (T18). */
   async startQc(admin: AuthUser, orderId: string): Promise<PaymentSummary> {
     return this.advance(admin, orderId, 'START_QC', (code) => `Order ${code} is now in quality control at BaliTrade.`);
   }

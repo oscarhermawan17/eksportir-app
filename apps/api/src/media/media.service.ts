@@ -12,6 +12,7 @@ import { isAdmin, maxBytesFor, mediaKindOf } from '@balitrade/shared';
 import type {
   AuthUser,
   MediaContentType,
+  MediaKind,
   PresignedDownload,
   PresignedUpload,
 } from '@balitrade/shared';
@@ -34,6 +35,21 @@ const EXTENSIONS: Record<MediaContentType, string> = {
 };
 
 const PRIVATE_KEY_PATTERN = /^private\/([A-Za-z0-9]+)\/[0-9a-f-]{36}\.[a-z0-9]{2,4}$/;
+
+/** Media kind of a stored key, from the extension the API itself chose (never from anything the client sent). */
+const KIND_BY_EXTENSION: Record<string, MediaKind> = Object.fromEntries(
+  Object.entries(EXTENSIONS).map(([type, extension]) => [extension, mediaKindOf(type as MediaContentType)]),
+);
+
+/**
+ * Who uploaded a private file and what kind it is, or null when the key is not one this API issued
+ * (`private/<uploaderId>/<uuid>.<ext>`, with an extension from EXTENSIONS).
+ */
+export function parsePrivateKey(key: string): { uploaderId: string; kind: MediaKind } | null {
+  const match = PRIVATE_KEY_PATTERN.exec(key);
+  const kind = match ? KIND_BY_EXTENSION[key.slice(key.lastIndexOf('.') + 1)] : undefined;
+  return match && kind ? { uploaderId: match[1]!, kind } : null;
+}
 
 /** "100 MB" or "500 KB" — the image limit is under a megabyte, so always using MB read as "0.488 MB". */
 function describeLimit(bytes: number): string {
@@ -167,6 +183,21 @@ export class MediaService {
       expiresIn: DOWNLOAD_URL_TTL_SECONDS,
     });
     return { url, expiresInSeconds: DOWNLOAD_URL_TTL_SECONDS };
+  }
+
+  /**
+   * Short-lived read link for a private file WITHOUT an ownership check. Only for callers that have already decided
+   * the user may see it — QcService does, from the user's place in the order. Everyone else goes through
+   * `createDownloadUrl`, which stays limited to the uploader and admins.
+   */
+  async signPrivateRead(key: string): Promise<string> {
+    const r2 = this.requireR2();
+    if (!PRIVATE_KEY_PATTERN.test(key)) {
+      throw new BadRequestException('Not a private file key');
+    }
+    return getSignedUrl(r2.privateClient, new GetObjectCommand({ Bucket: r2.privateBucket, Key: key }), {
+      expiresIn: DOWNLOAD_URL_TTL_SECONDS,
+    });
   }
 
   /** Permanent URL of a public object, or null when media storage is not configured. */
