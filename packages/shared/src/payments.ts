@@ -126,8 +126,12 @@ export interface PaymentView {
 
 /** What the buyer sees on the payment page, and what the admin sees above the order's payments. */
 export interface PaymentSummary {
-  /** The order total for this purpose, as an exact decimal string. */
+  /** What these payments are for: the goods (T17) or the shipping bill (T19). */
+  purpose: PaymentPurpose;
+  /** The total for this purpose, as an exact decimal string (0.00 for shipping before a bill exists). */
   dueUsd: string;
+  /** IDR per USD that converts rupiah payments of this purpose: the order's rate for goods, the bill's for shipping. */
+  fxRate: string;
   /** Sum of the VERIFIED payments. Submitted ones are deliberately not counted. */
   verifiedUsd: string;
   /** `dueUsd` minus `verifiedUsd`, floored at zero. */

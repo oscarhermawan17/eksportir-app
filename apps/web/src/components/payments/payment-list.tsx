@@ -65,6 +65,8 @@ export function PaymentList({ payments, actions }: { payments: PaymentView[]; ac
               {t(`status.${payment.status}`)}
             </span>
             <span className="text-muted">{t(`method.${payment.method}`)}</span>
+            {/* Goods and shipping money share this list in the admin view (T19), so each row says which it is. */}
+            <span className="rounded-button bg-background px-2 py-0.5 text-xs font-semibold text-text">{t(`purpose.${payment.purpose}`)}</span>
           </div>
 
           <dl className="mt-2 grid gap-x-4 gap-y-1 sm:grid-cols-2">

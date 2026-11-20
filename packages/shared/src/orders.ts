@@ -117,7 +117,14 @@ export type OrderAction =
   | 'SUBMIT_QC'
   | 'APPROVE_QC'
   | 'REPORT_ISSUE'
-  | 'REDO_QC';
+  | 'REDO_QC'
+  // Shipping (T19): OPS bills shipping after packing and weighing (and may revise the bill until money arrives),
+  // FINANCE confirms it is paid, and the tracking milestones "handed to cargo" and "delivered" move the order on.
+  | 'ISSUE_SHIPPING_BILL'
+  | 'REVISE_SHIPPING_BILL'
+  | 'CONFIRM_SHIPPING_PAID'
+  | 'SHIP'
+  | 'DELIVER';
 
 /** Who may take each action. Which admin role may do an ADMIN action is decided per endpoint (money: FINANCE, QC: OPS). */
 const ACTION_ACTOR: Record<OrderAction, 'BUYER' | 'SELLER' | 'ADMIN'> = {
@@ -134,6 +141,11 @@ const ACTION_ACTOR: Record<OrderAction, 'BUYER' | 'SELLER' | 'ADMIN'> = {
   APPROVE_QC: 'BUYER',
   REPORT_ISSUE: 'BUYER',
   REDO_QC: 'ADMIN',
+  ISSUE_SHIPPING_BILL: 'ADMIN',
+  REVISE_SHIPPING_BILL: 'ADMIN',
+  CONFIRM_SHIPPING_PAID: 'ADMIN',
+  SHIP: 'ADMIN',
+  DELIVER: 'ADMIN',
 };
 
 /**
@@ -159,7 +171,30 @@ const TRANSITIONS: Partial<Record<OrderStatus, Partial<Record<OrderAction, Order
   IN_QC: { SUBMIT_QC: 'QC_READY' },
   QC_READY: { APPROVE_QC: 'QC_APPROVED', REPORT_ISSUE: 'ISSUE' },
   ISSUE: { REDO_QC: 'IN_QC' },
+  // Shipping (T19). The cargo cost is only known once the goods are packed and weighed, so it is billed separately,
+  // in a status of its own. Shipping payments follow the T17 rules (several attempts, partial amounts) but a
+  // rejected proof leaves the status alone — there is no "shipping submitted" status to step back from — and
+  // CONFIRM_SHIPPING_PAID is FINANCE's judgement, as CONFIRM_PAID is for the goods. SHIP and DELIVER are taken by
+  // the tracking milestones HANDED_TO_CARGO and DELIVERED (TRACKING_MILESTONES in shipping.ts).
+  QC_APPROVED: { ISSUE_SHIPPING_BILL: 'AWAITING_SHIPPING_PAYMENT' },
+  AWAITING_SHIPPING_PAYMENT: {
+    REVISE_SHIPPING_BILL: 'AWAITING_SHIPPING_PAYMENT',
+    SUBMIT_PAYMENT: 'AWAITING_SHIPPING_PAYMENT',
+    CONFIRM_SHIPPING_PAID: 'SHIPPING_PAID',
+  },
+  SHIPPING_PAID: { SHIP: 'SHIPPED' },
+  SHIPPED: { DELIVER: 'ARRIVED' },
 };
+
+/**
+ * What a payment made in this status pays for, or null when nothing can be paid now. The API decides the purpose
+ * from the order, never from the client, so a buyer cannot file a shipping payment against the goods or the reverse.
+ */
+export function paymentPurposeFor(status: OrderStatus): 'GOODS' | 'SHIPPING' | null {
+  if (status === 'AWAITING_PAYMENT' || status === 'PAYMENT_SUBMITTED') return 'GOODS';
+  if (status === 'AWAITING_SHIPPING_PAYMENT') return 'SHIPPING';
+  return null;
+}
 
 /** The status an action leads to, or null when the action is not possible in this status. The single source of truth for transitions. */
 export function nextOrderStatus(status: OrderStatus, action: OrderAction): OrderStatus | null {

@@ -22,6 +22,13 @@ export class AdminOrderPaymentsController {
     return this.payments.confirmPaid(admin, id);
   }
 
+  /** The shipping bill is paid (T19); OPS then hands the goods to the cargo through a tracking milestone. */
+  @Post(':id/confirm-shipping-paid')
+  @Roles('ADMIN_FINANCE', 'ADMIN_OWNER')
+  confirmShippingPaid(@CurrentUser() admin: AuthUser, @Param('id') id: string): Promise<PaymentSummary> {
+    return this.payments.confirmShippingPaid(admin, id);
+  }
+
   @Post(':id/start-qc')
   @Roles('ADMIN_OPS', 'ADMIN_OWNER')
   startQc(@CurrentUser() admin: AuthUser, @Param('id') id: string): Promise<PaymentSummary> {

@@ -33,6 +33,8 @@ interface Counts {
   listings: number | null;
   /** Orders whose goods are in hand and wait for a QC report (OPS and the owner only). */
   qc: number | null;
+  /** Orders that passed QC and wait for packing and a shipping bill (T19, OPS and the owner). */
+  toBill: number | null;
   orders: number;
   rate: CurrentRateView;
 }
@@ -57,12 +59,13 @@ function Overview() {
       try {
         // Roles differ, so a page this admin may not read answers 403; that tile is simply hidden.
         const optional = <T,>(path: string) => apiFetch<T>(path).catch(() => null);
-        const [sellers, listings, qc, orders, rate] = await Promise.all([
+        const [sellers, listings, qc, toBill, orders, rate] = await Promise.all([
           optional<AdminSellerView[]>('/admin/sellers?status=PENDING'),
           // Paged since T27: the count is `total`, not the length of a page (reading `.length` hid this tile).
           optional<PageResult<AdminProductView>>('/admin/products?status=PENDING_REVIEW'),
           // Every admin may read orders, but writing the QC report is OPS work (T18).
           handlesQc ? optional<PageResult<OrderView>>('/admin/orders?status=IN_QC') : Promise.resolve(null),
+          handlesQc ? optional<PageResult<OrderView>>('/admin/orders?status=QC_APPROVED') : Promise.resolve(null),
           apiFetch<OrderView[]>('/orders'),
           // The public endpoint, not the owner-only history: every admin may see which rate is in force, and
           // reading the history would answer 403 for OPS and FINANCE — which used to look like "no rate set".
@@ -73,6 +76,7 @@ function Overview() {
             sellers: sellers?.length ?? null,
             listings: listings?.total ?? null,
             qc: qc?.total ?? null,
+            toBill: toBill?.total ?? null,
             orders: orders.filter((order) => OPEN_ORDER_STATUSES.has(order.status)).length,
             rate,
           });
@@ -117,6 +121,7 @@ function Overview() {
               <Stat value={counts.listings} label={t('overview.pendingListings')} href="/admin/products?status=PENDING_REVIEW" />
             )}
             {counts.qc === null ? null : <Stat value={counts.qc} label={t('overview.waitingQc')} href="/admin/qc" />}
+            {counts.toBill === null ? null : <Stat value={counts.toBill} label={t('overview.waitingShippingBill')} href="/admin/shipping" />}
             <Stat value={counts.orders} label={t('overview.openOrders')} href="/admin/orders" highlight={false} />
           </ul>
 

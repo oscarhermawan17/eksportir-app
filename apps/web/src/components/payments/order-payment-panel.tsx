@@ -1,7 +1,7 @@
 'use client';
 
 import type { OrderView, PaymentSummary } from '@balitrade/shared';
-import { canSubmitPayment } from '@balitrade/shared';
+import { canSubmitPayment, paymentPurposeFor } from '@balitrade/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
@@ -30,7 +30,7 @@ export function OrderPaymentPanel({ order, onChanged }: { order: OrderView; onCh
   useEffect(() => {
     if (!relevant) return;
     let cancelled = false;
-    apiFetch<PaymentSummary>(`/orders/${order.id}/payments`)
+    apiFetch<PaymentSummary>(`/orders/${order.id}/payments?purpose=GOODS`)
       .then((loaded) => !cancelled && setSummary(loaded))
       .catch((loadError: unknown) => {
         if (!cancelled) console.error('Could not load the payments of this order', loadError);
@@ -43,7 +43,8 @@ export function OrderPaymentPanel({ order, onChanged }: { order: OrderView; onCh
   if (!relevant || summary === null) return null;
 
   const money = (usd: string) => format.number(Number(usd), { style: 'currency', currency: 'USD' });
-  const canPay = canSubmitPayment(order.viewer, order.status);
+  // Shipping money (T19) has its own panel; this one is the goods.
+  const canPay = canSubmitPayment(order.viewer, order.status) && paymentPurposeFor(order.status) === 'GOODS';
   const isAdmin = order.viewer === 'ADMIN';
   // Which admin may do what (the API enforces the same split): money is FINANCE, quality control is OPS.
   const holds = (role: string) => user?.roles.includes(role as never) ?? false;

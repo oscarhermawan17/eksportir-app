@@ -1,4 +1,12 @@
-import { OrderStatus, actionActor, canSubmitPayment, nextOrderStatus, orderActionsFor, orderNumberFromCode } from '@balitrade/shared';
+import {
+  OrderStatus,
+  actionActor,
+  canSubmitPayment,
+  nextOrderStatus,
+  orderActionsFor,
+  orderNumberFromCode,
+  paymentPurposeFor,
+} from '@balitrade/shared';
 import type { OrderAction } from '@balitrade/shared';
 
 describe('order transitions (docs/ARCHITECTURE.md §6)', () => {
@@ -34,6 +42,32 @@ describe('order transitions (docs/ARCHITECTURE.md §6)', () => {
     expect(['APPROVE_QC', 'REPORT_ISSUE'].map((a) => actionActor(a as OrderAction))).toEqual(['BUYER', 'BUYER']);
     // The QC panel offers these, not the order page's button row.
     expect(orderActionsFor('BUYER', 'QC_READY')).toEqual([]);
+  });
+
+  it('shipping (T19): bill, pay, confirm, then the tracking milestones move the order', () => {
+    expect(nextOrderStatus('QC_APPROVED', 'ISSUE_SHIPPING_BILL')).toBe('AWAITING_SHIPPING_PAYMENT');
+    expect(nextOrderStatus('AWAITING_SHIPPING_PAYMENT', 'REVISE_SHIPPING_BILL')).toBe('AWAITING_SHIPPING_PAYMENT');
+    expect(nextOrderStatus('AWAITING_SHIPPING_PAYMENT', 'SUBMIT_PAYMENT')).toBe('AWAITING_SHIPPING_PAYMENT');
+    expect(nextOrderStatus('AWAITING_SHIPPING_PAYMENT', 'CONFIRM_SHIPPING_PAID')).toBe('SHIPPING_PAID');
+    expect(nextOrderStatus('SHIPPING_PAID', 'SHIP')).toBe('SHIPPED');
+    expect(nextOrderStatus('SHIPPED', 'DELIVER')).toBe('ARRIVED');
+    // A rejected shipping proof has no status to step back to, and nothing ships before the money is confirmed.
+    expect(nextOrderStatus('AWAITING_SHIPPING_PAYMENT', 'REJECT_PAYMENT')).toBeNull();
+    expect(nextOrderStatus('AWAITING_SHIPPING_PAYMENT', 'SHIP')).toBeNull();
+    expect(nextOrderStatus('QC_READY', 'ISSUE_SHIPPING_BILL')).toBeNull();
+    expect(nextOrderStatus('SHIPPING_PAID', 'REVISE_SHIPPING_BILL')).toBeNull();
+    expect(nextOrderStatus('SHIPPED', 'CANCEL')).toBeNull();
+    expect(canSubmitPayment('BUYER', 'AWAITING_SHIPPING_PAYMENT')).toBe(true);
+    expect(canSubmitPayment('BUYER', 'SHIPPING_PAID')).toBe(false);
+  });
+
+  it('the payment purpose follows the order status, never the client', () => {
+    expect(paymentPurposeFor('AWAITING_PAYMENT')).toBe('GOODS');
+    expect(paymentPurposeFor('PAYMENT_SUBMITTED')).toBe('GOODS');
+    expect(paymentPurposeFor('AWAITING_SHIPPING_PAYMENT')).toBe('SHIPPING');
+    for (const status of ['REQUESTED', 'IN_QC', 'QC_APPROVED', 'SHIPPING_PAID', 'SHIPPED'] as const) {
+      expect(paymentPurposeFor(status)).toBeNull();
+    }
   });
 
   it('money and QC belong to the admin side; paying is the buyer\'s', () => {

@@ -326,7 +326,8 @@
       "rates": "Kurs",
       "payments": "Pembayaran",
       "categories": "Kategori",
-      "qc": "Pemeriksaan kualitas"
+      "qc": "Pemeriksaan kualitas",
+      "shipping": "Pengiriman"
     },
     "overview": {
       "title": "Yang perlu Anda kerjakan",
@@ -338,7 +339,8 @@
       "rateSet": "Diisi {date}.",
       "noRate": "Kurs belum diisi, jadi pembeli belum bisa memesan dan harga tampil \"Price coming soon\".",
       "loadError": "Ringkasan tidak bisa dimuat.",
-      "waitingQc": "Pesanan menunggu laporan QC"
+      "waitingQc": "Pesanan menunggu laporan QC",
+      "waitingShippingBill": "Pesanan siap ditagih ongkir"
     },
     "sellersTitle": "Pengajuan penjual",
     "filter": {
@@ -732,7 +734,11 @@
       "IN_QC": "Barang sudah di BaliTrade dan sedang diperiksa kualitasnya.",
       "QC_READY": "Laporan pemeriksaan kualitas sudah siap. Pembeli menyetujuinya atau melaporkan masalah.",
       "QC_APPROVED": "Pembeli menyetujui laporan pemeriksaan kualitas. Langkah berikutnya: pengiriman.",
-      "ISSUE": "Ada masalah yang dilaporkan setelah pemeriksaan kualitas dan sedang dibahas di chat pesanan."
+      "ISSUE": "Ada masalah yang dilaporkan setelah pemeriksaan kualitas dan sedang dibahas di chat pesanan.",
+      "AWAITING_SHIPPING_PAYMENT": "Barang sudah dikemas. Tagihan ongkir menunggu pembayaran.",
+      "SHIPPING_PAID": "Ongkir sudah lunas. BaliTrade berikutnya menyerahkan barang ke kargo udara.",
+      "SHIPPED": "Dalam perjalanan dengan kargo udara. Ikuti pelacakan di bawah.",
+      "ARRIVED": "Barang sudah diterima."
     },
     "itemTitle": "Barang",
     "quantity": "Jumlah",
@@ -952,6 +958,13 @@
       "proof": "Bukti transfer",
       "proofHelper": "Foto atau tangkapan layar bukti transfer. JPG, PNG, atau WebP, maksimal 10 MB. Hanya Anda dan BaliTrade yang bisa membukanya.",
       "afterSubmit": "Penjual tidak melihat data pembayaran Anda. Hanya BaliTrade yang memeriksanya."
+    },
+    "titleShipping": "Bayar ongkir pesanan {code}",
+    "dueShipping": "Total ongkir",
+    "rateUsedShipping": "Kurs untuk tagihan ongkir ini: {rate} IDR per USD.",
+    "purpose": {
+      "GOODS": "Barang",
+      "SHIPPING": "Ongkir"
     }
   },
   "Qc": {
@@ -1033,6 +1046,91 @@
         "label": "Bebas jamur, hama dan lembap",
         "hint": "Penting untuk kayu, rotan, bambu, kulit dan kain sebelum kargo udara."
       }
+    }
+  },
+  "Shipping": {
+    "title": "Pengiriman",
+    "loading": "Memuat tagihan ongkir…",
+    "loadError": "Tagihan ongkir tidak dapat dimuat.",
+    "retry": "Coba lagi",
+    "packing": "BaliTrade sedang mengemas dan menimbang barang Anda. Tagihan ongkir akan muncul di sini.",
+    "packedSummary": "Dikemas: {cartons} karton · {kg} kg",
+    "total": "Total ongkir",
+    "rupiahHint": "Bayar dalam rupiah: sekitar Rp {idr} dengan kurs {rate} IDR per USD, dikunci saat tagihan ini dibuat.",
+    "photoAlt": "Foto karton yang sudah dikemas",
+    "issued": "Dibuat {date}",
+    "issuedRevised": "Direvisi {date}",
+    "verified": "Sudah diterima",
+    "remaining": "Sisa",
+    "waitingCount": "{count} pembayaran ongkir menunggu diperiksa",
+    "pay": "Bayar ongkir",
+    "payRest": "Bayar sisa ongkir",
+    "payHint": "Barang diserahkan ke kargo udara setelah pembayaran ini diverifikasi.",
+    "reviewPayments": "Semua pembayaran",
+    "confirmPaid": "Ongkir sudah lunas",
+    "confirmPaidHint": "Tekan setelah uang ongkir yang cukup sudah masuk. Tim Ops lalu bisa menyerahkan barang ke kargo.",
+    "revise": "Revisi tagihan",
+    "working": "Mohon tunggu…",
+    "back": "Kembali",
+    "form": {
+      "title": "Buat tagihan ongkir",
+      "reviseTitle": "Revisi tagihan ongkir",
+      "hint": "Kemas dan timbang barang dulu. Pembeli melihat setiap baris; total dan kurs hari ini ditetapkan sistem.",
+      "linesLabel": "Biaya",
+      "lineLabel": "Baris {n}",
+      "linePlaceholder": "Kargo udara ke Moskow",
+      "lineAmount": "USD",
+      "removeLine": "Hapus baris {n}",
+      "addLine": "Tambah baris",
+      "preview": "Total:",
+      "weight": "Berat (kg)",
+      "cartons": "Jumlah karton",
+      "photo": "Foto karton yang sudah dikemas (opsional)",
+      "photoHelper": "Satu foto. Membantu pembeli melihat bagaimana barangnya dikirim.",
+      "note": "Catatan untuk pembeli (opsional)",
+      "submit": "Kirim tagihan ke pembeli",
+      "submitRevision": "Kirim tagihan revisi",
+      "errLabel": "Isi keterangan setiap baris biaya (minimal 2 karakter).",
+      "errAmount": "Isi nominal USD untuk setiap baris.",
+      "errWeight": "Isi berat dalam kg.",
+      "errCartons": "Isi jumlah karton."
+    }
+  },
+  "Tracking": {
+    "title": "Pelacakan",
+    "manualNote": "Diperbarui tim BaliTrade di setiap tahap.",
+    "loading": "Memuat pelacakan…",
+    "loadError": "Pelacakan tidak dapat dimuat.",
+    "retry": "Coba lagi",
+    "done": "selesai",
+    "notYet": "belum",
+    "awb": "Nomor AWB",
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "photoAlt": "Foto: {step}",
+    "working": "Mohon tunggu…",
+    "milestones": {
+      "PACKED": "Dikemas",
+      "HANDED_TO_CARGO": "Diserahkan ke kargo udara",
+      "DEPARTED_BALI": "Berangkat dari Bali",
+      "ARRIVED_DESTINATION_AIRPORT": "Tiba di bandara tujuan",
+      "CUSTOMS": "Proses bea cukai",
+      "WITH_LOCAL_PARTNER": "Diterima mitra lokal",
+      "DELIVERED": "Diterima pembeli"
+    },
+    "form": {
+      "title": "Tambah tahap pelacakan",
+      "milestone": "Tahap",
+      "when": "Waktu",
+      "awb": "Nomor AWB (air waybill)",
+      "awbHelper": "3 digit kode maskapai dan 8 digit, misalnya 618-12345675.",
+      "note": "Catatan (opsional)",
+      "photo": "Foto (opsional)",
+      "shipsHint": "Ini menandai pesanan sebagai dikirim.",
+      "deliversHint": "Ini menandai pesanan sebagai tiba.",
+      "submit": "Tambah tahap",
+      "errAwb": "Isi nomor AWB yang benar, misalnya 618-12345675.",
+      "errDate": "Tanggal tidak boleh di masa depan."
     }
   }
 }

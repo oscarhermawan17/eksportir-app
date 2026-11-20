@@ -4,7 +4,7 @@ import type { MediaPurpose } from '@balitrade/shared';
 import { maxBytesFor, MEDIA_CONTENT_TYPES, type MediaContentType } from '@balitrade/shared';
 import { Film, Loader2, Lock, Upload, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRef, useState, type ChangeEvent } from 'react';
+import { useId, useRef, useState, type ChangeEvent } from 'react';
 import { ApiError, errorKey } from '@/lib/api';
 import { getPrivateFileUrl, uploadMedia, UPLOAD_REFUSED, validateMediaFile, type UploadedMedia } from '@/lib/media';
 
@@ -38,6 +38,9 @@ export function MediaUploader({
   const t = useTranslations('Media');
   const tErrors = useTranslations('Errors');
   const inputRef = useRef<HTMLInputElement>(null);
+  // Unique per instance: an order page can hold several uploaders (QC report, shipping bill, tracking), and a shared
+  // id made every label open the first one's file picker.
+  const inputId = `media-${purpose}-${useId()}`;
   const [items, setItems] = useState<Item[]>(() =>
     initialMedia.map((media) => ({
       id: nextId++,
@@ -140,10 +143,10 @@ export function MediaUploader({
         accept={MEDIA_CONTENT_TYPES.join(',')}
         onChange={onPick}
         className="sr-only"
-        id={`media-${purpose}`}
+        id={inputId}
       />
       <label
-        htmlFor={`media-${purpose}`}
+        htmlFor={inputId}
         className="flex cursor-pointer flex-col items-center gap-1 rounded-card border-2 border-dashed border-border bg-card px-4 py-8 text-center transition focus-within:border-primary hover:border-primary"
       >
         <Upload className="h-6 w-6 text-primary" aria-hidden="true" />

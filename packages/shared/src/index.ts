@@ -10,6 +10,7 @@ export * from './notifications.js';
 export * from './orders.js';
 export * from './payments.js';
 export * from './qc.js';
+export * from './shipping.js';
 export * from './pagination.js';
 
 /** Response shape of GET /api/health. */

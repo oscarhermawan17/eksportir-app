@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseEnumPipe, Post, Query, UseGuards } from '@nestjs/common';
+import { PaymentPurpose } from '@balitrade/shared';
 import type { AuthUser, PaymentInstructions, PaymentSummary } from '@balitrade/shared';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
@@ -20,9 +21,14 @@ export class PaymentsController {
     return this.payments.instructions();
   }
 
+  /** `?purpose=GOODS|SHIPPING` picks which money to show; without it, what the order is waiting for now (T19). */
   @Get('orders/:id/payments')
-  summary(@CurrentUser() user: AuthUser, @Param('id') id: string): Promise<PaymentSummary> {
-    return this.payments.summary(user, id);
+  summary(
+    @CurrentUser() user: AuthUser,
+    @Param('id') id: string,
+    @Query('purpose', new ParseEnumPipe(PaymentPurpose, { optional: true })) purpose?: PaymentPurpose,
+  ): Promise<PaymentSummary> {
+    return this.payments.summary(user, id, purpose);
   }
 
   @Post('orders/:id/payments')

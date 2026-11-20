@@ -104,7 +104,7 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-bold text-text">{t('title', { code: order.code })}</h1>
+        <h1 className="text-2xl font-bold text-text">{t(summary.purpose === 'SHIPPING' ? 'titleShipping' : 'title', { code: order.code })}</h1>
         <p className="text-sm text-text">{t('protectionNote')}</p>
         {instructions.mock ? (
           <p role="alert" className="rounded-card border border-warning/40 bg-warning/5 px-4 py-3 text-sm font-semibold text-text">
@@ -118,7 +118,7 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
           {t('amountsTitle')}
         </h2>
         <dl className="mt-3 space-y-2 text-sm">
-          <Line label={t('due')} value={money(summary.dueUsd)} />
+          <Line label={t(summary.purpose === 'SHIPPING' ? 'dueShipping' : 'due')} value={money(summary.dueUsd)} />
           <Line label={t('verified')} value={money(summary.verifiedUsd)} />
           <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-bold text-text">
             <dt>{t('remaining')}</dt>
@@ -126,7 +126,7 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
           </div>
         </dl>
         <p className="mt-3 text-xs text-muted">
-          {t('rateUsed', { rate: format.number(Number(order.fxRate), { minimumFractionDigits: 2, maximumFractionDigits: 4 }) })}
+          {t(summary.purpose === 'SHIPPING' ? 'rateUsedShipping' : 'rateUsed', { rate: format.number(Number(summary.fxRate), { minimumFractionDigits: 2, maximumFractionDigits: 4 }) })}
         </p>
         <p className="mt-1 text-xs text-muted">{t('partialAllowed')}</p>
       </section>
@@ -137,7 +137,7 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
             {t('noMethods')}
           </p>
         ) : (
-          <PaymentForm order={order} instructions={instructions} available={available} onPaid={onPaid} onStale={onStale} />
+          <PaymentForm order={order} summary={summary} instructions={instructions} available={available} onPaid={onPaid} onStale={onStale} />
         )
       ) : (
         <p className="rounded-card border border-info/30 bg-info/5 px-4 py-3 text-sm text-info">{t('closedNotice')}</p>
@@ -155,12 +155,15 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
 
 function PaymentForm({
   order,
+  summary,
   instructions,
   available,
   onPaid,
   onStale,
 }: {
   order: OrderView;
+  /** What is being paid: the goods or the shipping bill (T19); amounts and the rupiah rate come from it. */
+  summary: PaymentSummary;
   instructions: PaymentInstructions;
   available: readonly PaymentMethod[];
   onPaid: (summary: PaymentSummary) => void;
@@ -178,11 +181,13 @@ function PaymentForm({
   const fileInput = useRef<HTMLInputElement>(null);
 
   const currency = paymentCurrency(method);
-  // The rupiah routes are checked in a rupiah account, so the buyer types rupiah; USDT is typed in USDT.
+  // The rupiah routes are checked in a rupiah account, so the buyer types rupiah; USDT is typed in USDT. The suggestion
+  // is what is still open (the whole amount until something was verified), converted with this purpose's own rate.
+  const openUsd = Number(summary.remainingUsd) > 0 ? summary.remainingUsd : summary.dueUsd;
   const suggested =
     currency === 'USD'
-      ? Number(order.totals.totalUsd).toFixed(2)
-      : String(Math.round(Number(order.totals.totalUsd) * Number(order.fxRate)));
+      ? Number(openUsd).toFixed(2)
+      : String(Math.round(Number(openUsd) * Number(summary.fxRate)));
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -288,7 +293,7 @@ function PaymentForm({
           label={t(currency === 'USD' ? 'form.amountUsdt' : 'form.amountIdr')}
           helper={
             currency === 'USD'
-              ? t('form.amountUsdtHelper', { total: order.totals.totalUsd })
+              ? t('form.amountUsdtHelper', { total: Number(openUsd).toFixed(2) })
               : t('form.amountIdrHelper', { total: format.number(Number(suggested)) })
           }
         />

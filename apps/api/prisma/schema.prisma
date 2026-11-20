@@ -1,5 +1,5 @@
 // BaliTrade database schema — grows task by task (see TASKS.md / docs/ARCHITECTURE.md §5).
-// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13), notifications (T14), orders (T15), payments (T17), QC reports (T18).
+// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13), notifications (T14), orders (T15), payments (T17), QC reports (T18), shipping bills and tracking (T19).
 
 generator client {
   provider            = "prisma-client"
@@ -48,6 +48,8 @@ model User {
   decidedPayments    Payment[]      @relation("PaymentDecidedBy")
   createdQcReports   QcReport[]     @relation("QcReportCreatedBy")
   decidedQcReports   QcReport[]     @relation("QcReportDecidedBy")
+  shippingBills      ShippingBill[]
+  trackingEvents     TrackingEvent[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -392,7 +394,9 @@ model Order {
   items        OrderItem[]
   conversation Conversation?
   payments     Payment[]
-  qcReports    QcReport[]
+  qcReports      QcReport[]
+  shippingBills  ShippingBill[]
+  trackingEvents TrackingEvent[]
 
   @@index([buyerId, createdAt])
   @@index([sellerId, createdAt])
@@ -515,4 +519,64 @@ model QcMedia {
 
   @@index([reportId, sortOrder])
   @@map("qc_media")
+}
+
+/// The air-cargo bill of an order (T19), issued by OPS once the goods are packed and weighed. Never edited: a revision
+/// (allowed only while no shipping payment exists) is a new row and the previous one gets `supersededAt`, so the buyer
+/// and FINANCE can always see what was billed when. The newest row without `supersededAt` is what is due.
+model ShippingBill {
+  id           String    @id @default(cuid())
+  orderId      String    @map("order_id")
+  order        Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  /// ShippingBillLine[] (packages/shared/src/shipping.ts): label + amountUsd as an exact decimal string.
+  lines        Json
+  /// Sum of the lines, computed by the API; never sent by a client.
+  totalUsd     Decimal   @map("total_usd") @db.Decimal(12, 2)
+  /// IDR per USD in force when the bill was issued (owner's decision 2026-11-20): rupiah payments of the bill use it.
+  fxRate       Decimal   @map("fx_rate") @db.Decimal(12, 4)
+  weightKg     Decimal   @map("weight_kg") @db.Decimal(10, 2)
+  cartons      Int
+  /// Optional photo of the packed cartons; private bucket, uploaded by the admin who issued the bill.
+  photoKey     String?   @map("photo_key")
+  note         String?
+  createdById  String?   @map("created_by_id")
+  createdBy    User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  supersededAt DateTime? @map("superseded_at")
+
+  @@index([orderId, createdAt])
+  @@map("shipping_bills")
+}
+
+/// Keep in sync with packages/shared/src/shipping.ts (TRACKING_MILESTONES).
+enum TrackingMilestone {
+  PACKED
+  HANDED_TO_CARGO
+  DEPARTED_BALI
+  ARRIVED_DESTINATION_AIRPORT
+  CUSTOMS
+  WITH_LOCAL_PARTNER
+  DELIVERED
+}
+
+/// One step of the manual shipment tracking (T19). HANDED_TO_CARGO (with the air waybill) moves the order to SHIPPED
+/// and DELIVERED to ARRIVED; the others only add to the timeline. Each milestone happens once per order.
+model TrackingEvent {
+  id          String            @id @default(cuid())
+  orderId     String            @map("order_id")
+  order       Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  milestone   TrackingMilestone
+  /// When it happened (chosen by the admin, who often records it afterwards); `createdAt` is when it was recorded.
+  occurredAt  DateTime          @map("occurred_at")
+  note        String?
+  /// Air waybill number, HANDED_TO_CARGO only.
+  awb         String?
+  /// Optional photo; private bucket, uploaded by the admin who added the event.
+  photoKey    String?           @map("photo_key")
+  createdById String?           @map("created_by_id")
+  createdBy   User?             @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime          @default(now()) @map("created_at")
+
+  @@unique([orderId, milestone])
+  @@map("tracking_events")
 }

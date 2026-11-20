@@ -326,7 +326,8 @@
       "rates": "Exchange rate",
       "payments": "Payments",
       "categories": "Categories",
-      "qc": "Quality control"
+      "qc": "Quality control",
+      "shipping": "Shipping"
     },
     "overview": {
       "title": "What needs you",
@@ -338,7 +339,8 @@
       "rateSet": "Set {date}.",
       "noRate": "No exchange rate is set yet, so buyers cannot order and prices show \"Price coming soon\".",
       "loadError": "We could not load the overview.",
-      "waitingQc": "Orders waiting for a QC report"
+      "waitingQc": "Orders waiting for a QC report",
+      "waitingShippingBill": "Orders ready for a shipping bill"
     },
     "sellersTitle": "Seller applications",
     "filter": {
@@ -732,7 +734,11 @@
       "IN_QC": "BaliTrade has the goods and is checking their quality.",
       "QC_READY": "The quality control report is ready. The buyer approves it or reports a problem.",
       "QC_APPROVED": "The buyer approved the quality control report. Next step: shipping.",
-      "ISSUE": "A problem was reported after quality control and is being discussed in the order chat."
+      "ISSUE": "A problem was reported after quality control and is being discussed in the order chat.",
+      "AWAITING_SHIPPING_PAYMENT": "The goods are packed. The shipping bill is waiting for payment.",
+      "SHIPPING_PAID": "Shipping is paid. BaliTrade hands the goods to the air cargo next.",
+      "SHIPPED": "On the way by air cargo. Follow the tracking below.",
+      "ARRIVED": "The goods have been delivered."
     },
     "itemTitle": "Item",
     "quantity": "Quantity",
@@ -952,6 +958,13 @@
       "proof": "Proof of transfer",
       "proofHelper": "A photo or screenshot of the receipt. JPG, PNG or WebP, 10 MB at most. Only you and BaliTrade can open it.",
       "afterSubmit": "The seller does not see your payment details. Only BaliTrade checks them."
+    },
+    "titleShipping": "Pay the shipping for order {code}",
+    "dueShipping": "Shipping total",
+    "rateUsedShipping": "Rate used for this shipping bill: {rate} IDR per USD.",
+    "purpose": {
+      "GOODS": "Goods",
+      "SHIPPING": "Shipping"
     }
   },
   "Qc": {
@@ -1033,6 +1046,91 @@
         "label": "No mould, insects or damp",
         "hint": "Important for wood, rattan, bamboo, leather and fabric before air cargo."
       }
+    }
+  },
+  "Shipping": {
+    "title": "Shipping",
+    "loading": "Loading the shipping bill…",
+    "loadError": "We could not load the shipping bill.",
+    "retry": "Try again",
+    "packing": "BaliTrade is packing and weighing your goods. The shipping bill will appear here.",
+    "packedSummary": "Packed: {cartons, plural, one {# carton} other {# cartons}} · {kg} kg",
+    "total": "Shipping total",
+    "rupiahHint": "Paying in rupiah: about Rp {idr} at {rate} IDR per USD, fixed when this bill was issued.",
+    "photoAlt": "Photo of the packed cartons",
+    "issued": "Issued {date}",
+    "issuedRevised": "Revised {date}",
+    "verified": "Confirmed received",
+    "remaining": "Still open",
+    "waitingCount": "{count, plural, one {# shipping payment is waiting to be checked} other {# shipping payments are waiting to be checked}}",
+    "pay": "Pay shipping",
+    "payRest": "Pay the rest of the shipping",
+    "payHint": "Your goods are handed to the air cargo once this payment is verified.",
+    "reviewPayments": "All payments",
+    "confirmPaid": "Shipping is paid",
+    "confirmPaidHint": "Use this once enough shipping money has arrived. OPS can then hand the goods to the cargo.",
+    "revise": "Revise the bill",
+    "working": "Please wait…",
+    "back": "Back",
+    "form": {
+      "title": "Bill the shipping",
+      "reviseTitle": "Revise the shipping bill",
+      "hint": "Pack and weigh the goods first. The buyer sees every line; the total and today’s exchange rate are fixed by the system.",
+      "linesLabel": "Costs",
+      "lineLabel": "Line {n}",
+      "linePlaceholder": "Air cargo to Moscow",
+      "lineAmount": "USD",
+      "removeLine": "Remove line {n}",
+      "addLine": "Add a line",
+      "preview": "Total:",
+      "weight": "Weight (kg)",
+      "cartons": "Cartons",
+      "photo": "Photo of the packed cartons (optional)",
+      "photoHelper": "One photo. It helps the buyer see how the goods travel.",
+      "note": "Note for the buyer (optional)",
+      "submit": "Send the bill to the buyer",
+      "submitRevision": "Send the revised bill",
+      "errLabel": "Describe every cost line (at least 2 characters).",
+      "errAmount": "Enter an amount in USD for every line.",
+      "errWeight": "Enter the weight in kg.",
+      "errCartons": "Enter the number of cartons."
+    }
+  },
+  "Tracking": {
+    "title": "Tracking",
+    "manualNote": "Updated by the BaliTrade team at each step.",
+    "loading": "Loading the tracking…",
+    "loadError": "We could not load the tracking.",
+    "retry": "Try again",
+    "done": "done",
+    "notYet": "not yet",
+    "awb": "Air waybill",
+    "copy": "Copy",
+    "copied": "Copied",
+    "photoAlt": "Photo: {step}",
+    "working": "Please wait…",
+    "milestones": {
+      "PACKED": "Packed",
+      "HANDED_TO_CARGO": "Handed to the air cargo",
+      "DEPARTED_BALI": "Departed from Bali",
+      "ARRIVED_DESTINATION_AIRPORT": "Arrived at the destination airport",
+      "CUSTOMS": "Customs processing",
+      "WITH_LOCAL_PARTNER": "With our local partner",
+      "DELIVERED": "Delivered to the buyer"
+    },
+    "form": {
+      "title": "Add a tracking step",
+      "milestone": "Step",
+      "when": "When",
+      "awb": "Air waybill number",
+      "awbHelper": "3-digit airline prefix and 8 digits, e.g. 618-12345675.",
+      "note": "Note (optional)",
+      "photo": "Photo (optional)",
+      "shipsHint": "This marks the order as shipped.",
+      "deliversHint": "This marks the order as arrived.",
+      "submit": "Add step",
+      "errAwb": "Enter a valid air waybill number, e.g. 618-12345675.",
+      "errDate": "The date cannot be in the future."
     }
   }
 }

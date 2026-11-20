@@ -7,12 +7,14 @@ import {
   nextOrderStatus,
   orderCode,
   paymentCurrency,
+  paymentPurposeFor,
 } from '@balitrade/shared';
 import type {
   AuthUser,
   OrderAction,
   PaymentInstructions,
   PaymentMethod,
+  PaymentPurpose,
   PaymentStatus,
   PaymentSummary,
   PaymentView,
@@ -36,8 +38,8 @@ type PaymentRow = Prisma.PaymentGetPayload<{ include: typeof paymentInclude }>;
 
 const ADMIN_LIST_LIMIT = 200;
 
-/** A buyer may only send money while the order is waiting for it. */
-const PAYABLE_STATUSES = new Set(['AWAITING_PAYMENT', 'PAYMENT_SUBMITTED']);
+/** How a payment's purpose reads in the order chat. */
+const PURPOSE_LABEL: Record<PaymentPurpose, string> = { GOODS: 'a payment', SHIPPING: 'a shipping payment' };
 
 /**
  * Manual payments (T17). There is no gateway: the buyer transfers the money themselves and uploads a proof, and a
@@ -91,15 +93,33 @@ export class PaymentsService {
     };
   }
 
-  /** The buyer's payments for an order, with what is still open. Admins see the same; the seller is not a party to the money. */
-  async summary(user: AuthUser, orderId: string): Promise<PaymentSummary> {
+  /**
+   * The buyer's payments for an order, with what is still open. Admins see the same; the seller is not a party to the
+   * money. `purpose` defaults to what the order is waiting for now (shipping once a shipping bill is out), else GOODS.
+   */
+  async summary(user: AuthUser, orderId: string, purpose?: PaymentPurpose): Promise<PaymentSummary> {
     const order = await this.findOrderForMoney(user, orderId);
+    const chosen = purpose ?? paymentPurposeFor(order.status) ?? 'GOODS';
     const rows = await this.prisma.payment.findMany({
-      where: { orderId: order.id, purpose: 'GOODS' },
+      where: { orderId: order.id, purpose: chosen },
       include: paymentInclude,
       orderBy: { submittedAt: 'desc' },
     });
-    return this.toSummary(order.itemsUsd.add(order.qcFeeUsd), rows);
+    if (chosen === 'GOODS') {
+      return this.toSummary('GOODS', order.itemsUsd.add(order.qcFeeUsd), order.fxRate, rows);
+    }
+    // Shipping is due only once a bill exists, and its rupiah rate is the bill's own (owner's decision, T19).
+    const bill = await this.activeShippingBill(order.id);
+    return this.toSummary('SHIPPING', bill?.totalUsd ?? new Prisma.Decimal(0), bill?.fxRate ?? order.fxRate, rows);
+  }
+
+  /** The shipping bill that is due: the newest one that was not revised (T19). */
+  private activeShippingBill(orderId: string) {
+    return this.prisma.shippingBill.findFirst({
+      where: { orderId, supersededAt: null },
+      orderBy: { createdAt: 'desc' },
+      select: { totalUsd: true, fxRate: true },
+    });
   }
 
   /**
@@ -114,8 +134,20 @@ export class PaymentsService {
     if (!order || order.buyerId !== user.id) {
       throw new NotFoundException('Order not found');
     }
-    if (!PAYABLE_STATUSES.has(order.status)) {
+    // What the money is for follows from the order, never from the request: goods while the order waits for its
+    // payment, shipping while a shipping bill is out (T19).
+    const purpose = paymentPurposeFor(order.status);
+    if (!purpose) {
       throw new ConflictException(`This order cannot be paid while it is ${order.status}`);
+    }
+    // Rupiah is converted with the rate the buyer was quoted: the order's for the goods, the bill's for shipping.
+    let rate = order.fxRate;
+    if (purpose === 'SHIPPING') {
+      const bill = await this.activeShippingBill(order.id);
+      if (!bill) {
+        throw new ConflictException('There is no shipping bill to pay yet');
+      }
+      rate = bill.fxRate;
     }
     // The uploader is part of the key (media.service.ts), so this also stops a buyer attaching someone else's file.
     if (!dto.proofKey.startsWith(`private/${user.id}/`)) {
@@ -126,7 +158,7 @@ export class PaymentsService {
     this.limiter.consume(user.id);
 
     const amountIdr = paymentCurrency(dto.method) === 'IDR' ? Math.round(dto.amount) : null;
-    const amountUsd = amountIdr === null ? amount.toFixed(2) : idrToUsd(amountIdr, order.fxRate);
+    const amountUsd = amountIdr === null ? amount.toFixed(2) : idrToUsd(amountIdr, rate);
 
     const next = nextOrderStatus(order.status, 'SUBMIT_PAYMENT');
     if (!next) {
@@ -134,7 +166,7 @@ export class PaymentsService {
     }
 
     const code = orderCode(order.number);
-    const message = `Buyer submitted a payment for order ${code}: ${this.amountLabel(dto.method, amountIdr, amountUsd)} via ${this.methodLabel(dto.method)}${
+    const message = `Buyer submitted ${PURPOSE_LABEL[purpose]} for order ${code}: ${this.amountLabel(dto.method, amountIdr, amountUsd)} via ${this.methodLabel(dto.method)}${
       dto.reference ? ` (reference ${dto.reference})` : ''
     }. BaliTrade is checking it.`;
 
@@ -146,7 +178,7 @@ export class PaymentsService {
       await tx.payment.create({
         data: {
           orderId: order.id,
-          purpose: 'GOODS',
+          purpose,
           method: dto.method,
           amountUsd: new Prisma.Decimal(amountUsd),
           amountIdr,
@@ -164,7 +196,7 @@ export class PaymentsService {
     });
 
     await this.announce(result.chat, null, order.id, code, next, order.items[0]);
-    return this.summary(user, order.id);
+    return this.summary(user, order.id, purpose);
   }
 
   /** A FINANCE admin found the money. The order itself does not move: see the class comment. */
@@ -205,10 +237,17 @@ export class PaymentsService {
     return this.advance(admin, orderId, 'START_QC', (code) => `Order ${code} is now in quality control at BaliTrade.`);
   }
 
+  /** The FINANCE admin confirms the shipping bill is paid (T19); the goods can then be handed to the air cargo. */
+  async confirmShippingPaid(admin: AuthUser, orderId: string): Promise<PaymentSummary> {
+    return this.advance(admin, orderId, 'CONFIRM_SHIPPING_PAID', (code) =>
+      `BaliTrade verified the shipping payment for order ${code}. Next step: handing the goods to the air cargo.`,
+    );
+  }
+
   private async advance(
     admin: AuthUser,
     orderId: string,
-    action: Extract<OrderAction, 'CONFIRM_PAID' | 'START_QC'>,
+    action: Extract<OrderAction, 'CONFIRM_PAID' | 'START_QC' | 'CONFIRM_SHIPPING_PAID'>,
     messageFor: (code: string) => string,
   ): Promise<PaymentSummary> {
     const order = await this.prisma.order.findUnique({
@@ -222,9 +261,10 @@ export class PaymentsService {
     if (!next) {
       throw new ConflictException(`This is not possible while the order is ${order.status}`);
     }
-    if (action === 'CONFIRM_PAID') {
+    if (action === 'CONFIRM_PAID' || action === 'CONFIRM_SHIPPING_PAID') {
       // A guard against a mis-click, not an amount rule: there must be at least something verified to confirm.
-      const verified = await this.prisma.payment.count({ where: { orderId: order.id, purpose: 'GOODS', status: 'VERIFIED' } });
+      const purpose = action === 'CONFIRM_PAID' ? 'GOODS' : 'SHIPPING';
+      const verified = await this.prisma.payment.count({ where: { orderId: order.id, purpose, status: 'VERIFIED' } });
       if (verified === 0) {
         throw new ConflictException('Verify at least one payment of this order first');
       }
@@ -241,7 +281,7 @@ export class PaymentsService {
     });
 
     await this.announce(result.chat, order.buyerId, order.id, code, next, order.items[0]);
-    return this.summary(admin, order.id);
+    return this.summary(admin, order.id, action === 'CONFIRM_SHIPPING_PAID' ? 'SHIPPING' : 'GOODS');
   }
 
   private async decide(admin: AuthUser, paymentId: string, status: 'VERIFIED' | 'REJECTED', reason?: string): Promise<PaymentRow> {
@@ -258,12 +298,14 @@ export class PaymentsService {
 
     const code = orderCode(row.order.number);
     const amount = this.amountLabel(row.method, row.amountIdr, row.amountUsd.toFixed(2));
-    // Rejecting returns the order to AWAITING_PAYMENT; verifying leaves the status alone (the class comment explains why).
+    // Rejecting a goods payment returns the order to AWAITING_PAYMENT; a rejected shipping payment leaves it waiting in
+    // AWAITING_SHIPPING_PAYMENT, which has no REJECT_PAYMENT transition. Verifying never moves it (see the class comment).
     const next = status === 'REJECTED' ? nextOrderStatus(row.order.status, 'REJECT_PAYMENT') : null;
+    const what = row.purpose === 'SHIPPING' ? ' (shipping)' : '';
     const message =
       status === 'VERIFIED'
-        ? `BaliTrade confirmed receiving ${amount} for order ${code}.`
-        : `BaliTrade could not confirm a payment of ${amount} for order ${code}.${reason ? ` Reason: ${reason}` : ''} You can submit another proof.`;
+        ? `BaliTrade confirmed receiving ${amount} for order ${code}${what}.`
+        : `BaliTrade could not confirm a payment of ${amount} for order ${code}${what}.${reason ? ` Reason: ${reason}` : ''} You can submit another proof.`;
 
     const result = await this.prisma.$transaction(async (tx) => {
       const updated = await tx.payment.updateMany({
@@ -318,7 +360,7 @@ export class PaymentsService {
   private async findOrderForMoney(user: AuthUser, orderId: string) {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
-      select: { id: true, buyerId: true, itemsUsd: true, qcFeeUsd: true },
+      select: { id: true, buyerId: true, status: true, itemsUsd: true, qcFeeUsd: true, fxRate: true },
     });
     if (!order || !(isAdmin(user.roles) || order.buyerId === user.id)) {
       throw new NotFoundException('Order not found');
@@ -356,13 +398,15 @@ export class PaymentsService {
     return amountIdr === null ? `$${amountUsd}` : `Rp ${amountIdr.toLocaleString('en-US')} (about $${amountUsd})`;
   }
 
-  private toSummary(dueUsd: Prisma.Decimal, rows: PaymentRow[]): PaymentSummary {
+  private toSummary(purpose: PaymentPurpose, dueUsd: Prisma.Decimal, fxRate: Prisma.Decimal, rows: PaymentRow[]): PaymentSummary {
     const verified = rows
       .filter((row) => row.status === 'VERIFIED')
       .reduce((sum, row) => sum.add(row.amountUsd), new Prisma.Decimal(0));
     const remaining = Prisma.Decimal.max(dueUsd.sub(verified), new Prisma.Decimal(0));
     return {
+      purpose,
       dueUsd: dueUsd.toFixed(2),
+      fxRate: fxRate.toFixed(4),
       verifiedUsd: verified.toFixed(2),
       remainingUsd: remaining.toFixed(2),
       submittedCount: rows.filter((row) => row.status === 'SUBMITTED').length,
