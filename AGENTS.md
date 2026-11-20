@@ -43,7 +43,8 @@ pnpm monorepo, Node 22 (`.nvmrc`), TypeScript 6 strict everywhere.
 | Storage | Cloudflare R2 (S3 API) via presigned URLs |
 
 Commands (repo root): `pnpm dev` (web :3000 + api :4000), `pnpm lint`, `pnpm typecheck`, `pnpm build`, `pnpm test`,
-`pnpm --filter @balitrade/api test:e2e` (needs `pnpm db:up` + `pnpm db:seed`), `pnpm db:migrate`, `pnpm db:seed`.
+`pnpm --filter @balitrade/api test:e2e` (needs `pnpm db:up` + `pnpm db:test:prepare`), `pnpm db:migrate`, `pnpm db:seed`,
+`pnpm db:pull` (local database ← copy of the testing server's).
 Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from the `.env.example` files).
 
 ## Where to read more
@@ -236,9 +237,13 @@ dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`).
   placeholders and show up on orders), forbidden-goods list, native-speaker review of the id/ru texts.
 
 **Environment facts (dev)**
-- Dev database has only 2 accounts: `admin@balitrade.local` (seed; password = `ADMIN_PASSWORD` in `apps/api/.env`, still the public placeholder) and
-  `oscar.hermawan90@gmail.com` (SELLER, approved; no BUYER role, so it cannot order). There is no buyer account: register one at `/en/register`.
-  The database may be reset freely at this stage.
+- **The dev database is a copy of the testing server's (since 2026-11-20).** `pnpm db:pull` replaces the local Docker
+  database with a `pg_dump` of the VPS (read only on the server), so accounts and passwords are the testing site's —
+  including the admin's, which is the VPS one, not `ADMIN_PASSWORD` from the laptop `.env`. Pull again whenever the
+  testers' latest data matters; it wipes local-only rows. Locally, `pnpm db:migrate` and `pnpm db:seed` are safe again.
+  **E2E runs only against `balitrade_test`** (`pnpm db:test:prepare`, migrated + seeded like CI): `vitest.config.e2e.ts`
+  refuses to start outside CI unless `E2E_DATABASE_URL` is a local `*_test` database. The Windows laptop also has
+  another project's Postgres on 5433, so the optional VPS tunnel (`ssh -N balitrade-db`) uses 5434.
 - **T26 is live on the VPS (2026-11-12):** migration applied, image deployed, `/api/categories` answers from the
   database. **The VPS categories are deliberately NOT the seeded nine** — the owner replaced them with four:
   `PERSONAL_GOODS`, `GARMENTS_FASHION`, `LEATHER_PRODUCTS`, `HANDICRAFT_SOUVENIR` (labels in en/id/ru in the row).

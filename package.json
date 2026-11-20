@@ -20,6 +20,8 @@
     "db:migrate": "pnpm --filter @balitrade/api db:migrate",
     "db:seed": "pnpm --filter @balitrade/api db:seed",
     "db:studio": "pnpm --filter @balitrade/api db:studio",
+    "db:pull": "node scripts/db-pull.mjs",
+    "db:test:prepare": "node scripts/db-test-prepare.mjs",
     "docs:api": "python3 scripts/gen-api-docs.py"
   },
   "devDependencies": {

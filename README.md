@@ -65,13 +65,21 @@ cp .env.example .env
 cp apps/api/.env.example apps/api/.env
 
 pnpm db:up                    # start PostgreSQL in Docker
-pnpm db:migrate               # apply migrations
-pnpm db:seed                  # create the first admin (ADMIN_* in apps/api/.env)
+pnpm db:pull                  # copy the testing server's database into it (needs SSH access to the VPS)
+#   …or, without VPS access, an empty one: pnpm db:migrate && pnpm db:seed
+pnpm db:test:prepare          # the separate e2e database "balitrade_test" (migrated + seeded)
 
 pnpm dev                      # web :3000 + api :4000 (+ shared in watch mode)
 ```
 
 Check: open http://localhost:3000 and http://localhost:4000/api/health (`"database":"up"`).
+
+**Development runs on a local copy of the testing server's data.** Testers keep using
+https://projectbali.my.id, so run `pnpm db:pull` again whenever you want their latest data: it replaces the
+local database completely (local-only rows are lost), then applies any local migration the server does not have
+yet. It only reads the server. After a pull, log in with the accounts and passwords of the testing site.
+The e2e tests never use that copy: they run only against `E2E_DATABASE_URL`, a local `*_test` database, and
+refuse to start otherwise (`apps/api/vitest.config.e2e.ts`).
 
 ## Scripts (root)
 
@@ -80,8 +88,10 @@ Check: open http://localhost:3000 and http://localhost:4000/api/health (`"databa
 | `pnpm dev` | Run shared (watch), api and web together |
 | `pnpm build` | Build shared → api → web |
 | `pnpm lint` / `pnpm typecheck` | Lint / type-check all packages |
-| `pnpm test` | Unit tests · `pnpm --filter @balitrade/api test:e2e` for API e2e (needs DB) |
+| `pnpm test` | Unit tests · `pnpm --filter @balitrade/api test:e2e` for API e2e (needs `pnpm db:test:prepare`) |
 | `pnpm format` | Prettier |
 | `pnpm db:up` / `db:down` | Start / stop PostgreSQL |
+| `pnpm db:pull` | Replace the local database with a copy of the testing server's (read-only on the server) |
+| `pnpm db:test:prepare` | Recreate the e2e database `balitrade_test` (migrated + seeded, like CI) |
 | `pnpm db:migrate` | Create & apply a migration after editing `schema.prisma` |
 | `pnpm db:seed` / `db:studio` | Seed data / open Prisma Studio |

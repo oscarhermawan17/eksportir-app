@@ -26,17 +26,20 @@ working from the owner's machine can use the same key — it needs nothing else 
 **Home ISPs in Indonesia block outbound port 5432**, so the owner's laptop cannot reach a remote PostgreSQL
 directly. This never blocks real work:
 
-- develop against the local Docker PostgreSQL (`pnpm db:up`),
+- develop against the local Docker PostgreSQL (`pnpm db:up`), filled with a copy of this server's database by
+  `pnpm db:pull` (`pg_dump` runs here over SSH, read only; see README "Getting started"),
 - run production migrations **from the VPS**, or through a tunnel (below),
 - read production data over `ssh` + `psql`.
 
 ```bash
-# only if you really need the VPS database from the laptop; 5433 avoids clashing with the local one
-ssh -N -L 5433:localhost:5432 ubuntu@43.133.155.17
+# only if you really need the VPS database from the laptop; pick a free local port (5433 and 5434 are in use
+# on the owner's Windows laptop: another project's container, and the `balitrade-db` alias in ~/.ssh/config)
+ssh -N -L 5434:localhost:5432 ubuntu@43.133.155.17
 ```
 
-While that tunnel is open, point `DATABASE_URL` in `apps/api/.env` at `localhost:5433` — **and put it back
-afterwards**, or every local command and test fails with a confusing connection error.
+While that tunnel is open, point `DATABASE_URL` in `apps/api/.env` at that port — **and put it back
+afterwards**, or every local command fails with a confusing connection error. The e2e tests cannot follow it
+there: they only run against `E2E_DATABASE_URL`, a local `*_test` database.
 
 ## 2. What runs where
 
