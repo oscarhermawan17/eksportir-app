@@ -117,8 +117,12 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 working tree clean, 27 of 34 tasks done (T01–T19, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
 
-**T19 shipping + tracking is built and tested locally, NOT deployed (2026-11-20).** Deploying it needs migration
-`20261120113922_shipping_tracking` (two new tables + one enum, no data moved) applied on the VPS **before** the new images. On the order
+**Deployed 2026-11-20 (second deploy of the day): T19 shipping + tracking (commit `dbfd343`) is live.** CI run #44741526837
+green. Dump first (`~/db-backups/balitrade-2026-11-20-pre-t19.dump`, 104 KB), then migration `20261120113922_shipping_tracking` (two
+tables + one enum, no data moved) before the new images. Digests api `c2f300a7` → `a7d34181`, web `be119bb6` → `8db0f2a5`. Verified from
+outside: `database: up`; `/id`, `/id/login`, `/id/seller`, `/en/admin`, `/id/admin/qc` and `/id/admin/shipping` all 200; the five new
+routes answer 401 without a session; the catalog still has 7 products and no `r2.dev`. Not exercised while logged in on the live site:
+no live order is past REQUESTED yet. On the order
 page: `OrderShippingPanel` (bill, shipping money, OPS bill form, FINANCE "shipping is paid"; never rendered for the seller) and
 `OrderTrackingPanel` (timeline for all three, OPS milestone form). OPS's queue is `/admin/shipping`. `pay-order.tsx` now follows
 `PaymentSummary.purpose`, so one payment page serves goods and shipping. An order ends at `ARRIVED`; `COMPLETED` and payouts are T20.
