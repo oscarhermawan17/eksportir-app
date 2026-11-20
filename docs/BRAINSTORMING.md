@@ -175,6 +175,11 @@ Praktik nyata & keputusan T17 (2026-11-08, dari pemilik) — ini yang benar-bena
 Milestone: Order dikonfirmasi → QC selesai → Dikemas → Diserahkan ke cargo (**nomor AWB**) → Berangkat dari Bali → Tiba di bandara tujuan → Proses bea cukai → Diterima mitra lokal → Diterima pembeli.
 Setiap langkah: tanggal, catatan, foto (opsional). Nomor AWB bisa ditautkan ke tracking maskapai.
 
+**Dibangun 2026-11-20 (T19):** "Order dikonfirmasi" dan "QC selesai" sudah tercatat di riwayat pesanan, jadi timeline pengiriman mulai dari
+**Dikemas**. "Diserahkan ke kargo" wajib nomor AWB dan mengubah status ke DIKIRIM; "Diterima pembeli" mengubah status ke TIBA. AWB
+ditampilkan dengan tombol salin, **tanpa link** ke situs maskapai untuk sekarang. Penjual ikut melihat timeline, tetapi tidak melihat tagihan
+ongkir.
+
 ## 13. Lain-lain yang perlu diingat
 
 - Regulasi tujuan: Rusia, Kazakhstan, Belarus, Armenia, Kirgizstan = Uni Ekonomi Eurasia (sertifikasi EAC untuk banyak produk). Kopi butuh phytosanitary (Karantina).
@@ -210,7 +215,8 @@ Setiap langkah: tanggal, catatan, foto (opsional). Nomor AWB bisa ditautkan ke t
 ## 15. Keputusan terbuka (belum final)
 
 - Input harga penjual: IDR (rekomendasi) vs USD.
-- Mekanisme ongkir: estimasi + penyesuaian vs ditagih terpisah.
+- Mekanisme ongkir — DIPUTUSKAN 2026-11-20 (T19): **ditagih terpisah** setelah barang dikemas dan ditimbang, sebelum dikirim; kurs Rupiah
+  dibekukan saat tagihan dibuat. Tidak ada estimasi di awal.
 - Besaran sourcing fee / deposit / aturan refund.
 - Masa inspeksi setelah barang tiba (usulan 3–7 hari).
 - Tarif QC per zona. (T07: tabel `QcZone` sudah ada dengan **angka placeholder** — Badung/Denpasar $3, Gianyar/Tabanan $5, Klungkung/Bangli $6, Karangasem/Buleleng/Jembrana $8 — ganti setelah tarif diputuskan.)
@@ -222,7 +228,8 @@ Setiap langkah: tanggal, catatan, foto (opsional). Nomor AWB bisa ditautkan ke t
 - Sub-keputusan cart: lihat bagian 5a (dikonfirmasi 2026-10-21; tersisa pertanyaan waktu konfirmasi penjual).
 - **Reservasi stok** saat order request menunggu konfirmasi penjual (stok ditahan sementara atau tidak?) — muncul dari desain 7a.
 - **Pengiriman sampai mana**: diantar ke alamat pembeli (door-to-door via mitra lokal) atau diambil pembeli di bandara/gudang mitra? — muncul dari desain 7a.
-- **Isi tagihan ongkir**: hanya air freight, atau ditambah biaya dokumen ekspor (phytosanitary, COO, dll.) sebagai baris terpisah? — muncul dari desain 8.
+- **Isi tagihan ongkir** — DIPUTUSKAN 2026-11-20 (T19): **beberapa baris** yang diisi admin (air freight, dokumen ekspor, dll.), plus berat,
+  jumlah karton dan foto karton opsional; total dihitung sistem.
 - **Masa inspeksi** setelah barang tiba sebelum dana diteruskan otomatis jika pembeli tidak konfirmasi (usulan awal 3–7 hari).
 
 ## 16. Tahap teknis — jawaban owner & usulan (2026-10-22)

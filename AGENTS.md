@@ -106,7 +106,7 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
   `apps/api/src` file and revert it. Also check nothing else holds port 4000 (`lsof -iTCP:4000 -sTCP:LISTEN`) before starting.
 - **API e2e tests:** login is rate-limited (5/min per app instance) → log in once per user and reuse the supertest agent; a spec with more than 5 users mints session cookies with `JwtService` instead (see `test/chat.e2e-spec.ts`).
   Each spec file cleans its own users by a unique email prefix (`auth-e2e-`, `e2e-rbac-`, `sellers-e2e-`, `media-e2e-`, `products-e2e-`,
-  `adminprod-e2e-`, `fx-e2e-`, `catalog-e2e-`, `chat-e2e-`, `chatrt-e2e-`, `notif-e2e-`, `orders-e2e-`, `orderact-e2e-`, `qc-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
+  `adminprod-e2e-`, `fx-e2e-`, `catalog-e2e-`, `chat-e2e-`, `chatrt-e2e-`, `notif-e2e-`, `orders-e2e-`, `orderact-e2e-`, `qc-e2e-`, `ship-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
 - Browser checks: headless Chrome via `puppeteer-core` works well (`/Applications/Google Chrome.app`). Delete test accounts afterwards.
 - `pnpm add` of very recent packages may add them to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` (already done for the AWS SDK).
 - Seed data: `pnpm db:seed` creates the admin from `ADMIN_*` env and the 9 Bali QC zones (fees are **placeholders**).
@@ -114,8 +114,14 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 ## Current status
 
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-20**,
-working tree clean, 26 of 34 tasks done (T01–T18, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
+working tree clean, 27 of 34 tasks done (T01–T19, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
+
+**T19 shipping + tracking is built and tested locally, NOT deployed (2026-11-20).** Deploying it needs migration
+`20261120113922_shipping_tracking` (two new tables + one enum, no data moved) applied on the VPS **before** the new images. On the order
+page: `OrderShippingPanel` (bill, shipping money, OPS bill form, FINANCE "shipping is paid"; never rendered for the seller) and
+`OrderTrackingPanel` (timeline for all three, OPS milestone form). OPS's queue is `/admin/shipping`. `pay-order.tsx` now follows
+`PaymentSummary.purpose`, so one payment page serves goods and shipping. An order ends at `ARRIVED`; `COMPLETED` and payouts are T20.
 
 **Deployed 2026-11-20: T18 QC (commit `3b0c5fe`) is live.** CI run #44727262395 green. The database was dumped first to
 `~/db-backups/balitrade-2026-11-20-pre-t18.dump` on the VPS (93 KB, chmod 600), then migration `20261120104104_qc_reports` (two new
@@ -223,9 +229,9 @@ dialog; see the hidden-page gotcha below and `docs/DECISIONS.md`).
 0. **T24 backup** is now the most valuable unfinished task, not the next one in number order: the database shares
    a box with the app, so `pg_dump` to R2 **with a restore actually tried once** is the only thing standing between
    a dead disk and losing every order record. It also owns the rest of `docs/DEPLOY.md`'s open checklist.
-1. **T19 shipping + tracking** starts from `QC_APPROVED` (T18 is done): the admin bills shipping → `AWAITING_SHIPPING_PAYMENT`.
-2. Then T19's tracking (it reuses the payment screens through `PaymentPurpose.SHIPPING`, already in the schema), T20 completion + payout,
-   T21 password reset (nothing resets a forgotten password today — the owner edits the database), T25 end-to-end test.
+1. **T20 completion + payout** starts from `ARRIVED` (T19 is done): the buyer confirms receipt → `COMPLETED`, and the owner records
+   the payout to the seller. It is also where T31 (buyer credit) fits best.
+2. Then T21 password reset (nothing resets a forgotten password today — the owner edits the database), T25 end-to-end test.
    Each adds its own `ADMIN_NAV` entry and, where it makes sense, a tile on the admin Overview.
 
 **Small things left open (not blocking anything)**

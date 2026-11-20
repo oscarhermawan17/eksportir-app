@@ -13,9 +13,12 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/admin/exchange-rates` | ADMIN_OWNER | `set` | admin-exchange-rates |
 | GET | `/api/admin/orders` | ADMIN_OPS, ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-orders |
 | POST | `/api/admin/orders/:id/confirm-paid` | ADMIN_FINANCE, ADMIN_OWNER | `confirmPaid` | admin-order-payments |
+| POST | `/api/admin/orders/:id/confirm-shipping-paid` | ADMIN_FINANCE, ADMIN_OWNER | `confirmShippingPaid` | admin-order-payments |
 | POST | `/api/admin/orders/:id/qc-report` | ADMIN_OPS, ADMIN_OWNER | `submit` | admin-qc |
 | POST | `/api/admin/orders/:id/redo-qc` | ADMIN_OPS, ADMIN_OWNER | `redo` | admin-qc |
+| POST | `/api/admin/orders/:id/shipping-bill` | ADMIN_OPS, ADMIN_OWNER | `issueBill` | admin-shipping |
 | POST | `/api/admin/orders/:id/start-qc` | ADMIN_OPS, ADMIN_OWNER | `startQc` | admin-order-payments |
+| POST | `/api/admin/orders/:id/tracking` | ADMIN_OPS, ADMIN_OWNER | `addEvent` | admin-shipping |
 | GET | `/api/admin/payments` | ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-payments |
 | POST | `/api/admin/payments/:id/reject` | ADMIN_FINANCE, ADMIN_OWNER | `reject` | admin-payments |
 | POST | `/api/admin/payments/:id/verify` | ADMIN_FINANCE, ADMIN_OWNER | `verify` | admin-payments |
@@ -60,6 +63,8 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | GET | `/api/orders/:id/qc` | logged in | `list` | qc |
 | POST | `/api/orders/:id/qc/approve` | logged in | `approve` | qc |
 | POST | `/api/orders/:id/qc/report-issue` | logged in | `reportIssue` | qc |
+| GET | `/api/orders/:id/shipping-bill` | logged in | `bill` | shipping |
+| GET | `/api/orders/:id/tracking` | logged in | `tracking` | shipping |
 | GET | `/api/payments/instructions` | logged in | `instructions` | payments |
 | GET | `/api/products` | public | `list` | catalog |
 | GET | `/api/products/:id` | public | `detail` | catalog |

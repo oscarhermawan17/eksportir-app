@@ -92,8 +92,21 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   baru diketahui setelah barang dikemas dan ditimbang. Diuji: 15 e2e baru (akses per peran, file milik orang lain, checklist, 409, ISSUE →
   periksa ulang → putaran 2, auto-approve), dan di browser dengan akun sementara: laporan dengan foto + video ke R2 sungguhan, laporkan
   masalah (id), tampilan penjual (ru), periksa ulang, setujui (en), 375px tanpa luberan; akun dan file uji dihapus lagi.
-- [ ] **T19 Ongkir & tracking** — admin buat tagihan ongkir (berat, jumlah karton, nominal); pembeli bayar (3 metode yang sama dengan T17) & upload bukti; admin verifikasi; admin tambah TrackingEvent (milestone, catatan, foto, AWB).
+- [x] **T19 Ongkir & tracking** — admin buat tagihan ongkir (berat, jumlah karton, nominal); pembeli bayar (3 metode yang sama dengan T17) & upload bukti; admin verifikasi; admin tambah TrackingEvent (milestone, catatan, foto, AWB).
   DoD: timeline tracking tampil di halaman order pembeli.
+  ✅ 2026-11-20. Keputusan pemilik hari itu:
+  - **Tagihan beberapa baris** (mis. kargo udara + dokumen ekspor) + berat, karton, foto karton opsional. Total dihitung server.
+  - **Kurs Rupiah = kurs saat tagihan dibuat**, dibekukan di tagihan.
+  - **Penjual hanya melihat tracking**, tidak melihat tagihan atau uang ongkir.
+  - **Status mengikuti milestone:** "Diserahkan ke kargo" (wajib AWB) → `SHIPPED`, "Diterima pembeli" → `ARRIVED`; milestone lain
+    hanya timeline. Tiap milestone sekali.
+
+  Tagihan bisa direvisi selama belum ada bukti ongkir (baris lama disimpan, `supersededAt`). Pembayaran ongkir memakai tabel dan layar
+  T17 (`purpose = SHIPPING`, **ditentukan server dari status**); bukti ongkir yang ditolak tidak mengubah status. Default yang diambil:
+  tanpa batas waktu bayar ongkir, AWB tanpa link ke situs pihak ketiga, tanpa hapus milestone.
+  Diuji: 12 e2e baru, dan di browser dengan akun sementara: Ops "Dikemas" → tagihan 2 baris + foto (kurs live dikunci) → pembeli bayar
+  ongkir (id) → Finance verifikasi + "Ongkir sudah lunas" → Ops AWB → bea cukai (foto) → diterima; tampilan penjual (ru, 375px)
+  hanya tracking. Ditemukan dan diperbaiki: dua uploader di satu halaman memakai `id` HTML yang sama. Akun dan file uji dihapus.
 - [ ] **T20 Selesai & pencairan** — pembeli "Confirm received" → COMPLETED; admin OWNER catat Payout ke penjual (+ audit log).
   DoD: satu order bisa dijalankan dari REQUESTED sampai COMPLETED.
 - [ ] **T21 Lupa password** — Resend (noreply), token sekali pakai berkedaluwarsa.
