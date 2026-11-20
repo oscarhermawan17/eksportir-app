@@ -93,7 +93,10 @@ Modul NestJS: `auth`, `users`, `sellers`, `products`, `media`, `chat` (gateway),
   - Akses: buyer, penjual order itu, dan **semua peran admin** (termasuk FINANCE) melihat order; yang lain 404. **Alamat pengiriman tidak dikirim ke penjual** (BaliTrade yang mengirim). Pesan sistem (`MessageKind.SYSTEM`, tanpa pengirim) tidak menimbulkan notifikasi chat.
 - **Payment**: orderId, kind (GOODS / SHIPPING), method (BANK_IDR / USDT / EXCHANGE), amountUsd, amountIdr, proofKey, txHash, senderName, exchangeName/exchangeRef (EXCHANGE saja), status (SUBMITTED / VERIFIED / REJECTED), verifiedBy, verifiedAt
 - Metode pembayaran (diputuskan 2026-10-30, dibangun di T17/T19): `BANK_IDR` = transfer ke rekening BCA, diperiksa manual; `USDT` = kirim ke wallet Binance milik BaliTrade, dikonversi ke rupiah lewat Binance; `EXCHANGE` = pembeli hanya punya rubel, membayar ke exchange mitra di Indonesia yang mengirim rupiah ke BaliTrade secara manual. Semua diverifikasi manual oleh ADMIN_FINANCE (+ audit log); tidak ada integrasi otomatis. Detail rekening, wallet, jaringan USDT dan petunjuk exchange datang dari konfigurasi (bukan kode); pencairan ke penjual tetap IDR manual (T20).
-- **QcReport** (+ media): orderId, checklist (json), comment, status (READY / APPROVED / ISSUE), createdBy
+- **QcReport** (T18): orderId, round (1, 2, … per order), checklist (json, `QC_CHECKLIST` tetap 5 poin, tiap poin PASS/FAIL + catatan wajib bila FAIL), comment, status (READY / APPROVED / ISSUE), createdBy, decidedBy, decidedAt, autoApproved, issueReason · **QcMedia**: reportId, r2Key (unik), type (IMAGE/VIDEO), sortOrder.
+  - Baris tidak pernah diganti: "periksa ulang" membuat putaran baru dan laporan lama tetap sebagai riwayat dengan status ISSUE dan alasan pembeli. Modul `apps/api/src/qc/`; aturan transisi tetap di `nextOrderStatus()` (`SUBMIT_QC`, `APPROVE_QC`, `REPORT_ISSUE`, `REDO_QC`), pola sama dengan pembayaran: update bersyarat status (409 bila berubah), laporan + pesan sistem dalam satu transaksi, notifikasi setelah commit.
+  - File di bucket **privat** dan harus unggahan admin penulis laporan; pembeli, penjual pesanan itu dan admin membacanya lewat signed URL 5 menit dari `GET /api/orders/:id/qc`. Penjual ikut melihat (transparansi), hanya pembeli yang menjawab.
+  - **Persetujuan otomatis 48 jam** (`QC_LIMITS.autoApproveHours`): `QcAutoApproveService` menyapu tiap 10 menit (timer biasa, satu instance API; mati saat `NODE_ENV=test`), lewat jalur yang sama dengan klik pembeli, ditandai `autoApproved`.
 - **TrackingEvent**: orderId, milestone, note, photoKey, createdBy, at
 - **Conversation** (T13): type (PRODUCT_INQUIRY / ORDER), productId?, buyerId, sellerId (SellerProfile), lastMessageAt · **Message**: conversationId, senderId, body (≤ 2000 karakter; lampiran menyusul). **Tidak ada tabel Participant**: peserta = buyer + penjual percakapan itu, dan admin `ADMIN_OPS`/`ADMIN_OWNER` ikut di semua percakapan lewat peran (admin baru otomatis ikut). `ADMIN_FINANCE` tidak ikut. Satu percakapan per pembeli per produk (unik `buyerId+productId`); pesan sistem dan `orderId` menyusul di T15/T16.
   - Aturan (T13 langkah 1, REST `/api/conversations`): hanya pembeli (role BUYER) yang bisa memulai, tidak untuk produknya sendiri (403) dan hanya untuk produk yang terlihat pembeli (selain itu 404); bukan peserta → 404; pengirim selalu user yang login; label pengirim BUYER/SELLER/ADMIN (penjual tampil dengan nama toko); pembeli hanya terlihat id dan namanya (tanpa email/telepon). Daftar pesan: 50 terbaru, urut lama→baru, halaman lebih lama lewat `?before=`.
@@ -110,7 +113,9 @@ REQUESTED ──seller──> ACCEPTED ─────────────�
     └──seller──> DECLINED (selesai)         │
                                             ▼
 AWAITING_PAYMENT → PAYMENT_SUBMITTED → PAYMENT_VERIFIED (ditolak → AWAITING_PAYMENT)
-→ IN_QC → QC_READY → QC_APPROVED (ISSUE → diselesaikan admin: pengganti / refund)
+→ IN_QC → QC_READY → QC_APPROVED (pembeli diam 48 jam → disetujui otomatis)
+              └─buyer─> ISSUE ─(dibahas di chat order, lalu OPS "periksa ulang")─> IN_QC (putaran baru)
+              (ISSUE bukan pembatalan; uang yang tidak terpakai → saldo pembeli, T31)
 → AWAITING_SHIPPING_PAYMENT → SHIPPING_PAID → SHIPPED → ARRIVED → COMPLETED
 → pencairan ke penjual dicatat (Payout)
 Status lain: CANCELLED, REFUNDED

@@ -81,6 +81,8 @@ Aturan penting:
 
 - QC **default** (bukan opsional) — menurut teman owner, pembeli justru suka ada QC karena ini soal **TRUST**.
 - QC **dikenakan biaya**, karena lokasi penjual bisa jauh (mis. Karangasem) sementara tim di Canggu, Badung. Usulan: **tarif per zona** (Badung/Denpasar murah, Karangasem/Buleleng lebih mahal), transparan di checkout.
+- **Diputuskan 2026-11-20 (T18):** laporan QC memakai **checklist tetap** (jumlah, sesuai listing, tidak rusak, pengerjaan, bebas jamur/hama) + ringkasan + foto/video, dan **penjual ikut melihatnya** (transparansi). Pembeli menyetujui atau melaporkan masalah; diam **2 hari (48 jam)** = disetujui otomatis, seperti toko online lain.
+- **Masalah setelah QC bukan pembatalan.** B2B selalu ada risiko (barang kurang, rusak); BaliTrade selalu **mengusahakan pengiriman berhasil**, jadi masalah dibahas dulu di chat pesanan (barang pengganti, melengkapi kekurangan, bahkan stok dari toko lain), lalu barang diperiksa ulang. Jika barang tetap tidak bisa dipenuhi, uang **tidak langsung dikembalikan** tetapi **ditahan sebagai saldo pembeli** untuk belanja berikutnya → task **T31** (aturan pencairan dan masa berlaku saldo masih harus diputuskan).
 
 ## 7. Diskusi / Chat
 

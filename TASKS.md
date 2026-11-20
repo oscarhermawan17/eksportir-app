@@ -80,8 +80,18 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 - [x] **T17b Layout admin terpisah** (ditambahkan 2026-10-30; **dikerjakan sebelum T17**, karena T17 terblokir menunggu data pemilik sedangkan task ini tidak bergantung apa pun) — area `/admin` memakai layout sendiri: sidebar kiri teal gelap 240px + top bar polos (judul halaman, language switcher, ikon pesan, avatar), tanpa navbar/footer toko dan **tanpa pencarian produk**. Chrome dipisah lewat route group: `[locale]/layout.tsx` hanya dokumen/terjemahan/sesi, `(shop)` memegang navbar+footer, `(admin)` memegang sidebar; URL tidak berubah. Menu mengikuti peran; halaman **Ringkasan** baru menghitung pekerjaan yang menunggu; pesanan tetap di dalam layout admin lewat `/admin/orders` (memakai ulang komponen toko dengan prop `basePath`). `homePathFor()` mengarahkan semua peran admin ke `/admin`, dan menu avatar admin menyusut jadi satu entri "Area admin". Halaman pembayaran dari T17 tinggal ditambahkan ke sidebar.
   DoD: semua halaman admin tampil di layout baru; menu hanya menampilkan halaman yang boleh diakses perannya; di layar kecil sidebar menjadi laci; lint/typecheck/build lulus dan diuji di browser. ✅ 2026-11-06 (diuji di Chrome sebagai ADMIN_OWNER: Ringkasan, Penjual, Listing, Pesanan, Kurs tampil di layout baru dengan penanda menu aktif yang ikut berpindah, dalam 3 bahasa (en/id/ru); lebar 375px diuji dengan emulasi viewport: sidebar tersembunyi, tombol menu muncul, laci 240px memuat kelima menu, tanpa luberan horizontal, tertutup oleh Escape. **Belum teruji dengan akun ADMIN_OPS dan ADMIN_FINANCE terpisah** — dev hanya punya satu akun admin yang memegang ketiga peran; aturan menunya ada di `navItemsFor()` dan Ringkasan menyembunyikan kartu yang perannya tidak boleh baca.)
   Sisa: ikon ✉ di top bar masih membuka `/messages` dengan tampilan toko; memindahkannya butuh perlakuan yang sama seperti pesanan.
-- [ ] **T18 QC** — admin OPS upload laporan QC (foto/video, checklist, komentar) → QC_READY; pembeli Approve atau Report problem (→ ISSUE, diselesaikan lewat chat/admin).
+- [x] **T18 QC** — admin OPS upload laporan QC (foto/video, checklist, komentar) → QC_READY; pembeli Approve atau Report problem (→ ISSUE, diselesaikan lewat chat/admin).
   DoD: approve → AWAITING_SHIPPING_PAYMENT.
+  ✅ 2026-11-20. Keputusan pemilik hari itu: **ISSUE bukan pembatalan** — B2B selalu ada risiko (barang kurang, rusak), jadi masalah
+  dibicarakan dulu di chat pesanan lalu OPS menekan **"Periksa ulang"** (`ISSUE → IN_QC`, laporan berikutnya jadi putaran baru, laporan lama
+  tetap sebagai riwayat). Uang yang tidak bisa dipakai lagi ditahan sebagai **saldo pembeli → T31**, bukan dikembalikan langsung.
+  **Checklist tetap 5 poin** (`QC_CHECKLIST`: jumlah, sesuai listing, tidak rusak, pengerjaan, bebas jamur/hama), tiap poin Lolos/Gagal,
+  Gagal wajib bercatatan; minimal 1 foto, maks 20 file, file di bucket **privat** dan harus unggahan admin itu sendiri. **Penjual ikut
+  melihat** laporan (transparansi). **Disetujui otomatis setelah 48 jam** tanpa jawaban (`QcAutoApproveService`, sapuan 10 menit).
+  **DoD diubah:** approve berhenti di `QC_APPROVED`; tagihan ongkir (`AWAITING_SHIPPING_PAYMENT`) dibuat admin di T19, karena nominalnya
+  baru diketahui setelah barang dikemas dan ditimbang. Diuji: 15 e2e baru (akses per peran, file milik orang lain, checklist, 409, ISSUE →
+  periksa ulang → putaran 2, auto-approve), dan di browser dengan akun sementara: laporan dengan foto + video ke R2 sungguhan, laporkan
+  masalah (id), tampilan penjual (ru), periksa ulang, setujui (en), 375px tanpa luberan; akun dan file uji dihapus lagi.
 - [ ] **T19 Ongkir & tracking** — admin buat tagihan ongkir (berat, jumlah karton, nominal); pembeli bayar (3 metode yang sama dengan T17) & upload bukti; admin verifikasi; admin tambah TrackingEvent (milestone, catatan, foto, AWB).
   DoD: timeline tracking tampil di halaman order pembeli.
 - [ ] **T20 Selesai & pencairan** — pembeli "Confirm received" → COMPLETED; admin OWNER catat Payout ke penjual (+ audit log).
@@ -250,6 +260,13 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 ---
 
 ## Tidak mendesak (dikerjakan paling akhir)
+
+- [ ] **T31 Saldo pembeli** (ditambahkan 2026-11-20 dari keputusan T18) — bila barang tidak bisa dipenuhi (stok habis, kurang setelah QC)
+  uang pembeli **tidak langsung dikembalikan** tetapi ditahan BaliTrade sebagai **saldo**, seperti toko online lain, supaya bisa dipakai
+  membeli lagi. Perlu: tabel saldo + riwayat (setiap mutasi satu baris, tidak pernah diedit), pencatatan oleh admin FINANCE/OWNER dari
+  pesanan yang `ISSUE`, saldo tampil di akun pembeli, dan memakai saldo saat membayar (metode keempat di T17). Aturan yang harus diputuskan
+  pemilik dulu: boleh dicairkan atau tidak, masa berlaku, dan bagaimana dengan selisih kurs. Dekat dengan T20 (pencairan ke penjual).
+  DoD: admin mencatat saldo dari satu pesanan, pembeli melihatnya, dan memakainya untuk membayar pesanan berikutnya.
 
 - [ ] **T30 Matikan URL `r2.dev` bucket publik** (ditambahkan 2026-11-18 atas permintaan pemilik, tidak mendesak) — sejak 2026-11-18 foto
   disajikan dari `https://media.projectbali.my.id` (custom domain bucket `eksportir-testing`, lihat `docs/DEPLOY.md` §3c), karena `r2.dev`
