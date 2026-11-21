@@ -19,23 +19,24 @@ const OWN_FILTERS = ['status', 'q', 'from', 'to'];
  * their own handful of orders as roomy cards, which is right for them and wrong here. One component
  * wearing both faces would have to be told which one on every prop.
  */
-export function AdminOrdersTable({ statuses }: { statuses?: readonly OrderStatus[] } = {}) {
+export function AdminOrdersTable({ statuses, payoutQueue = false }: { statuses?: readonly OrderStatus[]; payoutQueue?: boolean } = {}) {
   return (
     <LoginGate
       allow={(user) =>
         user.roles.includes('ADMIN_OPS') || user.roles.includes('ADMIN_FINANCE') || user.roles.includes('ADMIN_OWNER')
       }
     >
-      {() => <OrdersTable statuses={statuses} />}
+      {() => <OrdersTable statuses={statuses} payoutQueue={payoutQueue} />}
     </LoginGate>
   );
 }
 
 /**
  * `statuses` narrows the table to a work queue (the QC page, T18): only those statuses are offered, there is no
- * "all statuses" choice, and the first one is the default.
+ * "all statuses" choice, and the first one is the default. `payoutQueue` (T20) shows completed orders instead, filtered
+ * by whether the seller was paid out ("unpaid" first).
  */
-function OrdersTable({ statuses }: { statuses?: readonly OrderStatus[] }) {
+function OrdersTable({ statuses, payoutQueue }: { statuses?: readonly OrderStatus[]; payoutQueue: boolean }) {
   const t = useTranslations('Orders');
   const tAdmin = useTranslations('AdminOrders');
   const format = useFormatter();
@@ -47,8 +48,14 @@ function OrdersTable({ statuses }: { statuses?: readonly OrderStatus[] }) {
   // In a work queue the status is never empty: an unknown or missing one falls back to the queue's first status.
   const requested = table.get('status');
   const status = statuses ? (statuses.includes(requested as OrderStatus) ? requested : statuses[0]!) : requested;
+  const payout = table.get('payout') === 'paid' ? 'paid' : 'unpaid';
   const params = new URLSearchParams(toApiQuery(table, OWN_FILTERS));
-  if (status) params.set('status', status);
+  if (payoutQueue) {
+    params.delete('status');
+    params.set('payout', payout);
+  } else if (status) {
+    params.set('status', status);
+  }
   const query = params.toString();
   const filtered = OWN_FILTERS.some((key) => key !== 'status' && table.get(key) !== '') || (!statuses && requested !== '');
   const key = `${query}#${attempt}`;
@@ -133,6 +140,19 @@ function OrdersTable({ statuses }: { statuses?: readonly OrderStatus[] }) {
   const toolbar = (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
       <SearchBox value={table.get('q')} onSearch={(next) => table.set({ q: next })} placeholder={tAdmin('searchPlaceholder')} />
+      {payoutQueue ? (
+        <label className="flex items-center gap-2 text-sm text-muted">
+          {tAdmin('payoutFilter')}
+          <select
+            value={payout}
+            onChange={(event) => table.set({ payout: event.target.value === 'paid' ? 'paid' : '' })}
+            className="h-9 rounded-button border border-border bg-card px-2 text-sm font-medium text-text focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
+          >
+            <option value="unpaid">{tAdmin('payoutUnpaid')}</option>
+            <option value="paid">{tAdmin('payoutPaid')}</option>
+          </select>
+        </label>
+      ) : (
       <label className="flex items-center gap-2 text-sm text-muted">
         {tAdmin('columnStatus')}
         <select
@@ -148,6 +168,7 @@ function OrdersTable({ statuses }: { statuses?: readonly OrderStatus[] }) {
           ))}
         </select>
       </label>
+      )}
       <DateRange from={table.get('from')} to={table.get('to')} onChange={(next) => table.set(next)} />
     </div>
   );

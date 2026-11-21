@@ -327,7 +327,8 @@
       "payments": "Payments",
       "categories": "Categories",
       "qc": "Quality control",
-      "shipping": "Shipping"
+      "shipping": "Shipping",
+      "payouts": "Payouts"
     },
     "overview": {
       "title": "What needs you",
@@ -340,7 +341,8 @@
       "noRate": "No exchange rate is set yet, so buyers cannot order and prices show \"Price coming soon\".",
       "loadError": "We could not load the overview.",
       "waitingQc": "Orders waiting for a QC report",
-      "waitingShippingBill": "Orders ready for a shipping bill"
+      "waitingShippingBill": "Orders ready for a shipping bill",
+      "waitingPayout": "Sellers to pay out"
     },
     "sellersTitle": "Seller applications",
     "filter": {
@@ -708,7 +710,9 @@
       "CANCELLED": "Order {code} was cancelled"
     },
     "orderStatusFallback": "Order {code}: {status}",
-    "orderStatusBody": "{qty} × {product}"
+    "orderStatusBody": "{qty} × {product}",
+    "payoutRecorded": "{code}: you were paid",
+    "payoutRecordedBody": "{amount} was transferred to your bank account."
   },
   "Orders": {
     "title": "Orders",
@@ -738,7 +742,9 @@
       "AWAITING_SHIPPING_PAYMENT": "The goods are packed. The shipping bill is waiting for payment.",
       "SHIPPING_PAID": "Shipping is paid. BaliTrade hands the goods to the air cargo next.",
       "SHIPPED": "On the way by air cargo. Follow the tracking below.",
-      "ARRIVED": "The goods have been delivered."
+      "ARRIVED": "The goods have been delivered.",
+      "DELIVERY_ISSUE": "A problem was reported after delivery and is being discussed in the order chat.",
+      "COMPLETED": "This order is complete."
     },
     "itemTitle": "Item",
     "quantity": "Quantity",
@@ -812,7 +818,8 @@
       "ARRIVED": "Arrived",
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled",
-      "REFUNDED": "Refunded"
+      "REFUNDED": "Refunded",
+      "DELIVERY_ISSUE": "Problem after delivery"
     },
     "buyer": "Buyer",
     "seller": "Seller",
@@ -853,7 +860,10 @@
     "columnStatus": "Status",
     "open": "Open",
     "allStatuses": "All statuses",
-    "searchPlaceholder": "Order code, buyer or seller…"
+    "searchPlaceholder": "Order code, buyer or seller…",
+    "payoutFilter": "Payout",
+    "payoutUnpaid": "Not paid out yet",
+    "payoutPaid": "Paid out"
   },
   "Payments": {
     "pageTitle": "Pay for your order",
@@ -1132,5 +1142,82 @@
       "errAwb": "Enter a valid air waybill number, e.g. 618-12345675.",
       "errDate": "The date cannot be in the future."
     }
+  },
+  "Completion": {
+    "arrivedTitle": "Your goods have arrived",
+    "arrivedTitleOthers": "The goods have arrived at the buyer",
+    "arrivedBuyer": "Please check the goods. When everything is in order, confirm that you received them; BaliTrade then pays the seller.",
+    "arrivedOthers": "Waiting for the buyer to confirm receipt.",
+    "issueTitle": "A problem was reported after delivery",
+    "issueText": "It is being talked through in the order chat. The order is completed once it is settled.",
+    "completedTitle": "Order completed",
+    "completedText": "The buyer received the goods. Thank you for trading with BaliTrade.",
+    "completedOn": "Completed {date}",
+    "confirmButton": "I received my goods",
+    "confirmText": "Confirm that the goods arrived as expected? This completes the order and cannot be undone.",
+    "confirmYes": "Yes, I received them",
+    "issueButton": "Report a problem",
+    "reasonLabel": "What is wrong?",
+    "reasonHelper": "BaliTrade, you and the seller will talk it through in the order chat. Nothing is cancelled.",
+    "reasonTooShort": "Please describe the problem in at least {min} characters.",
+    "sendIssue": "Send problem report",
+    "completeButton": "Complete the order",
+    "noteLabel": "Why is BaliTrade completing it?",
+    "noteHelper": "Shown in the order chat and kept in the audit log.",
+    "noteTooShort": "Please write at least {min} characters.",
+    "completeYes": "Complete the order",
+    "back": "Back",
+    "working": "Please wait…"
+  },
+  "Payouts": {
+    "title": "Seller payout",
+    "loading": "Loading the payout…",
+    "loadError": "We could not load the payout.",
+    "retry": "Try again",
+    "gross": "Goods at the seller’s prices",
+    "commission": "BaliTrade commission ({percent}%)",
+    "netSeller": "You receive",
+    "netAdmin": "To transfer to the seller",
+    "waitCompletion": "The seller is paid once the order is completed.",
+    "sellerPending": "BaliTrade will transfer this to your bank account. You will be notified when it is sent.",
+    "paidOn": "{amount} transferred on {date}",
+    "paidTo": "To {bank} {account} ({holder})",
+    "reference": "Reference: {reference}",
+    "viewProof": "View the transfer receipt",
+    "noBank": "{shop} has not filled in their bank details yet. Ask them to add them under Shop profile.",
+    "transferTo": "Transfer to",
+    "copy": "Copy",
+    "copied": "Copied",
+    "holder": "Account holder: {holder} · shop {shop} (owner: {owner})",
+    "bankUpdated": "Bank details last changed {date}",
+    "recentWarning": "These bank details were changed in the last 7 days. Confirm them with the seller by another channel before transferring.",
+    "recordTitle": "Record the transfer",
+    "paidAt": "Transferred on",
+    "referenceLabel": "Transfer reference (optional)",
+    "proof": "Transfer receipt",
+    "noteLabel": "Note (optional)",
+    "working": "Please wait…",
+    "recordButton": "Record the payout",
+    "ownerOnly": "Only the owner records payouts.",
+    "errProof": "Attach a photo or screenshot of the transfer receipt.",
+    "errDate": "The transfer date cannot be in the future."
+  },
+  "SellerBank": {
+    "title": "Payout bank account",
+    "privacy": "Only you and BaliTrade’s finance team can see this. Every change is recorded.",
+    "loadError": "We could not load your bank details.",
+    "bankName": "Bank",
+    "accountNumber": "Account number",
+    "accountNumberHelper": "Digits only.",
+    "accountHolder": "Account holder name",
+    "accountHolderHelper": "Exactly as the bank shows it.",
+    "save": "Save bank details",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "change": "Change",
+    "updated": "Last changed {date}",
+    "errBank": "Enter the bank name.",
+    "errNumber": "Enter an account number of 6 to 20 digits.",
+    "errHolder": "Enter the account holder name."
   }
 }

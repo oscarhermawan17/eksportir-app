@@ -4,6 +4,7 @@ import type { QcZoneOption, SellerProfileView } from '@balitrade/shared';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
+import { SellerBankCard } from '@/components/payouts/seller-bank-card';
 import { SellerForm } from '@/components/seller/seller-form';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -100,6 +101,8 @@ function SellerAccount({ defaultName, phone }: { defaultName: string; phone: str
           />
         </div>
       </div>
+      {/* Only an approved seller is ever paid, so only they are asked where to (T20). */}
+      {profile?.status === 'APPROVED' ? <SellerBankCard /> : null}
     </div>
   );
 }

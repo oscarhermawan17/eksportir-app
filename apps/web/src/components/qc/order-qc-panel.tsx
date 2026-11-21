@@ -74,6 +74,8 @@ export function OrderQcPanel({ order, onChanged }: { order: OrderView; onChanged
   }, [order.id, order.status, relevant, attempt]);
 
   if (!relevant) return null;
+  // Past quality control with no report on file (an order moved on by hand): an empty heading says nothing.
+  if (reports !== null && reports.length === 0 && !['IN_QC', 'QC_READY', 'ISSUE'].includes(order.status)) return null;
 
   const holds = (role: string) => user?.roles.includes(role as never) ?? false;
   const handlesQc = order.viewer === 'ADMIN' && (holds('ADMIN_OPS') || holds('ADMIN_OWNER'));

@@ -1,5 +1,5 @@
-import { DEFAULT_PAGE_SIZE, OrderStatus, PAGE_SIZES, PAGINATION_LIMITS } from '@balitrade/shared';
-import type { PageSize } from '@balitrade/shared';
+import { DEFAULT_PAGE_SIZE, OrderStatus, PAGE_SIZES, PAGINATION_LIMITS, PAYOUT_FILTERS } from '@balitrade/shared';
+import type { PageSize, PayoutFilter } from '@balitrade/shared';
 import { Transform } from 'class-transformer';
 import { IsIn, IsInt, IsISO8601, IsOptional, IsString, Max, MaxLength, Min } from 'class-validator';
 
@@ -20,6 +20,11 @@ export class AdminOrderQueryDto {
   q?: string;
 
   /** Inclusive, on the day the order was requested. */
+  /** The payout queue (T20): completed orders not paid out yet, or already paid out. Implies status COMPLETED. */
+  @IsOptional()
+  @IsIn(PAYOUT_FILTERS)
+  payout?: PayoutFilter;
+
   @IsOptional()
   @IsISO8601()
   from?: string;

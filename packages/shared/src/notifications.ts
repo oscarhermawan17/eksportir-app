@@ -3,6 +3,8 @@ export const NotificationType = {
   CHAT_MESSAGE: 'CHAT_MESSAGE',
   ORDER_REQUESTED: 'ORDER_REQUESTED',
   ORDER_STATUS: 'ORDER_STATUS',
+  /** BaliTrade paid the seller for an order (T20). Sent to the seller only: the buyer is not a party to it. */
+  PAYOUT_RECORDED: 'PAYOUT_RECORDED',
 } as const;
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
 
@@ -65,7 +67,16 @@ interface NotificationBase {
 export type NotificationView =
   | (NotificationBase & { type: 'CHAT_MESSAGE'; payload: ChatMessageNotificationPayload })
   | (NotificationBase & { type: 'ORDER_REQUESTED'; payload: OrderRequestedNotificationPayload })
-  | (NotificationBase & { type: 'ORDER_STATUS'; payload: OrderStatusNotificationPayload });
+  | (NotificationBase & { type: 'ORDER_STATUS'; payload: OrderStatusNotificationPayload })
+  | (NotificationBase & { type: 'PAYOUT_RECORDED'; payload: PayoutNotificationPayload });
+
+/** BaliTrade transferred the seller's money for an order (T20). */
+export interface PayoutNotificationPayload {
+  orderId: string;
+  code: string;
+  /** What the seller received, in whole rupiah. */
+  netIdr: number;
+}
 
 /** Response of GET /api/notifications. */
 export interface NotificationsResponse {

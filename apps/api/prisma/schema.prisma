@@ -1,5 +1,5 @@
 // BaliTrade database schema — grows task by task (see TASKS.md / docs/ARCHITECTURE.md §5).
-// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13), notifications (T14), orders (T15), payments (T17), QC reports (T18), shipping bills and tracking (T19).
+// So far: users & roles (T02), seller profiles & QC zones (T07), products (T09), exchange rates (T11), chat (T13), notifications (T14), orders (T15), payments (T17), QC reports (T18), shipping bills and tracking (T19), completion, payouts and the audit log (T20).
 
 generator client {
   provider            = "prisma-client"
@@ -50,6 +50,10 @@ model User {
   decidedQcReports   QcReport[]     @relation("QcReportDecidedBy")
   shippingBills      ShippingBill[]
   trackingEvents     TrackingEvent[]
+  deliveryIssues     DeliveryIssue[]
+  recordedPayouts    Payout[]
+  bankAccountEdits   SellerBankAccount[]
+  auditLogs          AuditLog[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -99,6 +103,8 @@ model SellerProfile {
   products      Product[]
   conversations Conversation[]
   orders        Order[]
+  bankAccount   SellerBankAccount?
+  payouts       Payout[]
 
   @@index([status, createdAt])
   @@map("seller_profiles")
@@ -294,6 +300,7 @@ enum NotificationType {
   CHAT_MESSAGE
   ORDER_REQUESTED
   ORDER_STATUS
+  PAYOUT_RECORDED
 }
 
 /// An in-app notification for one user. Unread notifications about the same subject are folded into one row
@@ -338,6 +345,7 @@ enum OrderStatus {
   SHIPPING_PAID
   SHIPPED
   ARRIVED
+  DELIVERY_ISSUE
   COMPLETED
   CANCELLED
   REFUNDED
@@ -388,6 +396,10 @@ model Order {
   fxRate          Decimal       @map("fx_rate") @db.Decimal(12, 4)
   itemsUsd        Decimal       @map("items_usd") @db.Decimal(12, 2)
   qcFeeUsd        Decimal       @map("qc_fee_usd") @db.Decimal(12, 2)
+  /// Share of the goods (rupiah) BaliTrade keeps when paying the seller, frozen when the order is requested
+  /// (owner, 2026-11-21: 1%). Orders that existed before T20 got the 1% default.
+  commissionRate  Decimal       @default(0.0100) @map("commission_rate") @db.Decimal(5, 4)
+  completedAt     DateTime?     @map("completed_at")
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @updatedAt @map("updated_at")
 
@@ -397,6 +409,8 @@ model Order {
   qcReports      QcReport[]
   shippingBills  ShippingBill[]
   trackingEvents TrackingEvent[]
+  deliveryIssues DeliveryIssue[]
+  payout         Payout?
 
   @@index([buyerId, createdAt])
   @@index([sellerId, createdAt])
@@ -579,4 +593,84 @@ model TrackingEvent {
 
   @@unique([orderId, milestone])
   @@map("tracking_events")
+}
+
+/// A problem the buyer reported after the goods arrived (T20). A history row, like QcReport: the order moves to
+/// DELIVERY_ISSUE, the problem is talked through in the order chat, and the order is completed afterwards.
+model DeliveryIssue {
+  id           String   @id @default(cuid())
+  orderId      String   @map("order_id")
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  reason       String
+  reportedById String?  @map("reported_by_id")
+  reportedBy   User?    @relation(fields: [reportedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([orderId, createdAt])
+  @@map("delivery_issues")
+}
+
+/// Where BaliTrade transfers a seller's money (T20). A table of its own ON PURPOSE: the catalog, the orders and the chat
+/// all `include` the seller profile, and none of them can pull bank details by accident when they live elsewhere.
+/// Only PayoutsService reads it: the seller sees their own, FINANCE and OWNER see it to make a transfer.
+model SellerBankAccount {
+  sellerId      String        @id @map("seller_id")
+  seller        SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  bankName      String        @map("bank_name")
+  /// Digits only (BANK_LIMITS in packages/shared). Never logged in full; the audit log keeps the last four digits.
+  accountNumber String        @map("account_number")
+  accountHolder String        @map("account_holder")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  updatedById   String?       @map("updated_by_id")
+  updatedBy     User?         @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@map("seller_bank_accounts")
+}
+
+/// The record of BaliTrade paying a seller for one order (T20), written by the OWNER after making the bank transfer by
+/// hand. One per order, never edited. Amounts and the bank details are snapshots, so a later change of the seller's
+/// account or of the commission rate never rewrites what was paid.
+model Payout {
+  id                String        @id @default(cuid())
+  orderId           String        @unique @map("order_id")
+  order             Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  sellerId          String        @map("seller_id")
+  seller            SellerProfile @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  grossIdr          Int           @map("gross_idr")
+  commissionRate    Decimal       @map("commission_rate") @db.Decimal(5, 4)
+  commissionIdr     Int           @map("commission_idr")
+  netIdr            Int           @map("net_idr")
+  bankName          String        @map("bank_name")
+  accountNumber     String        @map("account_number")
+  accountHolder     String        @map("account_holder")
+  transferReference String?       @map("transfer_reference")
+  /// The transfer receipt: a private image the OWNER uploaded.
+  proofKey          String        @map("proof_key")
+  note              String?
+  /// When the money was transferred (chosen by the OWNER); `createdAt` is when it was recorded.
+  paidAt            DateTime      @map("paid_at")
+  recordedById      String?       @map("recorded_by_id")
+  recordedBy        User?         @relation(fields: [recordedById], references: [id], onDelete: SetNull)
+  createdAt         DateTime      @default(now()) @map("created_at")
+
+  @@index([sellerId, paidAt])
+  @@map("payouts")
+}
+
+/// Who did what to money and to who gets paid (T20; ARCHITECTURE "money must be recorded"). Append-only: rows are
+/// written by AuditService inside the transaction of the action itself, and the API has no route that changes or
+/// deletes them. `data` never holds a full account number.
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?  @map("actor_id")
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String   @map("entity_id")
+  data      Json
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
 }

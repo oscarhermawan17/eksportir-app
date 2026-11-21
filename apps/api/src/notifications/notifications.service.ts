@@ -6,6 +6,7 @@ import type {
   NotificationCount,
   OrderRequestedNotificationPayload,
   OrderStatusNotificationPayload,
+  PayoutNotificationPayload,
   NotificationsResponse,
   NotificationView,
 } from '@balitrade/shared';
@@ -134,6 +135,19 @@ export class NotificationsService implements OnModuleInit, OnModuleDestroy {
       },
     });
     this.events.stream.next({ userId, kind: 'created', push: { item: toView(row), unreadCount: await this.unreadCount(userId) } });
+  }
+
+  /** Tells a seller BaliTrade paid them for an order (T20). */
+  async notifyPayout(sellerUserId: string, payload: PayoutNotificationPayload): Promise<void> {
+    const row = await this.prisma.notification.create({
+      data: {
+        userId: sellerUserId,
+        type: NotificationType.PAYOUT_RECORDED,
+        subject: `order:${payload.orderId}`,
+        payload: payload as unknown as Prisma.InputJsonValue,
+      },
+    });
+    this.events.stream.next({ userId: sellerUserId, kind: 'created', push: { item: toView(row), unreadCount: await this.unreadCount(sellerUserId) } });
   }
 
   private unreadCount(userId: string): Promise<number> {

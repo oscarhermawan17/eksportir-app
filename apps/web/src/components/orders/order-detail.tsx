@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
 import { OrderActions } from '@/components/orders/order-actions';
 import { OrderStatusBadge } from '@/components/orders/order-status-badge';
+import { OrderCompletionPanel } from '@/components/completion/order-completion-panel';
 import { OrderPaymentPanel } from '@/components/payments/order-payment-panel';
+import { OrderPayoutPanel } from '@/components/payouts/order-payout-panel';
 import { OrderQcPanel } from '@/components/qc/order-qc-panel';
 import { OrderShippingPanel } from '@/components/shipping/order-shipping-panel';
 import { OrderTrackingPanel } from '@/components/shipping/order-tracking-panel';
@@ -118,6 +120,10 @@ function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUp
       </header>
 
       <OrderActions order={order} onUpdated={onUpdated} onStale={onStale} />
+
+      <OrderCompletionPanel order={order} onChanged={onReload} />
+
+      <OrderPayoutPanel order={order} onChanged={onReload} />
 
       <OrderPaymentPanel order={order} onChanged={onReload} />
 

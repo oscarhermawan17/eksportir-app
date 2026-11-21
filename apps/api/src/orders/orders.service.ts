@@ -7,6 +7,7 @@ import {
   orderActionsFor,
   orderCode,
   orderNumberFromCode,
+  SELLER_COMMISSION_RATE,
 } from '@balitrade/shared';
 import type {
   AuthUser,
@@ -34,6 +35,8 @@ const orderInclude = {
   seller: { select: { id: true, displayName: true, userId: true } },
   items: true,
   conversation: { select: { id: true } },
+  // Only whether a payout exists (T20); its amounts and bank details are PayoutsService's business.
+  payout: { select: { id: true } },
 } satisfies Prisma.OrderInclude;
 
 type OrderRow = Prisma.OrderGetPayload<{ include: typeof orderInclude }>;
@@ -108,6 +111,8 @@ export class OrdersService {
           fxRate: rate.rate,
           itemsUsd,
           qcFeeUsd,
+          // Frozen like the prices: a later change of the commission never alters what this seller agreed to (T20).
+          commissionRate: new Prisma.Decimal(SELLER_COMMISSION_RATE),
           items: {
             create: {
               productId: product.id,
@@ -170,6 +175,11 @@ export class OrdersService {
     const where: Prisma.OrderWhereInput = {};
 
     if (query.status) where.status = query.status;
+    // The payout queue (T20): completed orders still to pay out, or already paid out. Only completed orders are paid.
+    if (query.payout) {
+      where.status = 'COMPLETED';
+      where.payout = query.payout === 'paid' ? { isNot: null } : { is: null };
+    }
 
     if (query.q) {
       const text = escapeLike(query.q);
@@ -348,6 +358,8 @@ export class OrdersService {
       // The seller hands the goods to BaliTrade, so the buyer's address stays private.
       delivery: viewer === 'SELLER' ? null : (row.deliveryAddress as unknown as DeliveryAddress),
       conversationId: row.conversation?.id ?? null,
+      // The payout is between BaliTrade and the seller; the buyer is not told about it (T20).
+      payoutRecorded: viewer === 'BUYER' ? null : row.payout !== null,
     };
   }
 }

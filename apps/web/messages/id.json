@@ -327,7 +327,8 @@
       "payments": "Pembayaran",
       "categories": "Kategori",
       "qc": "Pemeriksaan kualitas",
-      "shipping": "Pengiriman"
+      "shipping": "Pengiriman",
+      "payouts": "Pencairan"
     },
     "overview": {
       "title": "Yang perlu Anda kerjakan",
@@ -340,7 +341,8 @@
       "noRate": "Kurs belum diisi, jadi pembeli belum bisa memesan dan harga tampil \"Price coming soon\".",
       "loadError": "Ringkasan tidak bisa dimuat.",
       "waitingQc": "Pesanan menunggu laporan QC",
-      "waitingShippingBill": "Pesanan siap ditagih ongkir"
+      "waitingShippingBill": "Pesanan siap ditagih ongkir",
+      "waitingPayout": "Penjual menunggu pencairan"
     },
     "sellersTitle": "Pengajuan penjual",
     "filter": {
@@ -708,7 +710,9 @@
       "CANCELLED": "Pesanan {code} dibatalkan"
     },
     "orderStatusFallback": "Pesanan {code}: {status}",
-    "orderStatusBody": "{qty} × {product}"
+    "orderStatusBody": "{qty} × {product}",
+    "payoutRecorded": "{code}: dana sudah dicairkan",
+    "payoutRecordedBody": "{amount} sudah ditransfer ke rekening Anda."
   },
   "Orders": {
     "title": "Pesanan",
@@ -738,7 +742,9 @@
       "AWAITING_SHIPPING_PAYMENT": "Barang sudah dikemas. Tagihan ongkir menunggu pembayaran.",
       "SHIPPING_PAID": "Ongkir sudah lunas. BaliTrade berikutnya menyerahkan barang ke kargo udara.",
       "SHIPPED": "Dalam perjalanan dengan kargo udara. Ikuti pelacakan di bawah.",
-      "ARRIVED": "Barang sudah diterima."
+      "ARRIVED": "Barang sudah diterima.",
+      "DELIVERY_ISSUE": "Ada masalah yang dilaporkan setelah barang tiba dan sedang dibahas di chat pesanan.",
+      "COMPLETED": "Pesanan ini sudah selesai."
     },
     "itemTitle": "Barang",
     "quantity": "Jumlah",
@@ -812,7 +818,8 @@
       "ARRIVED": "Tiba",
       "COMPLETED": "Selesai",
       "CANCELLED": "Dibatalkan",
-      "REFUNDED": "Dana dikembalikan"
+      "REFUNDED": "Dana dikembalikan",
+      "DELIVERY_ISSUE": "Masalah setelah tiba"
     },
     "buyer": "Pembeli",
     "seller": "Penjual",
@@ -853,7 +860,10 @@
     "columnStatus": "Status",
     "open": "Buka",
     "allStatuses": "Semua status",
-    "searchPlaceholder": "Kode pesanan, pembeli atau penjual…"
+    "searchPlaceholder": "Kode pesanan, pembeli atau penjual…",
+    "payoutFilter": "Pencairan",
+    "payoutUnpaid": "Belum dicairkan",
+    "payoutPaid": "Sudah dicairkan"
   },
   "Payments": {
     "pageTitle": "Bayar pesanan Anda",
@@ -1132,5 +1142,82 @@
       "errAwb": "Isi nomor AWB yang benar, misalnya 618-12345675.",
       "errDate": "Tanggal tidak boleh di masa depan."
     }
+  },
+  "Completion": {
+    "arrivedTitle": "Barang Anda sudah tiba",
+    "arrivedTitleOthers": "Barang sudah tiba di pembeli",
+    "arrivedBuyer": "Silakan periksa barangnya. Jika semuanya sesuai, konfirmasi bahwa barang sudah diterima; BaliTrade lalu membayar penjual.",
+    "arrivedOthers": "Menunggu pembeli mengonfirmasi penerimaan.",
+    "issueTitle": "Ada masalah yang dilaporkan setelah barang tiba",
+    "issueText": "Masalah ini sedang dibahas di chat pesanan. Pesanan diselesaikan setelah masalahnya beres.",
+    "completedTitle": "Pesanan selesai",
+    "completedText": "Pembeli sudah menerima barang. Terima kasih sudah bertransaksi di BaliTrade.",
+    "completedOn": "Selesai {date}",
+    "confirmButton": "Barang sudah saya terima",
+    "confirmText": "Konfirmasi bahwa barang tiba sesuai harapan? Pesanan akan selesai dan tidak bisa dibatalkan.",
+    "confirmYes": "Ya, sudah saya terima",
+    "issueButton": "Laporkan masalah",
+    "reasonLabel": "Apa masalahnya?",
+    "reasonHelper": "BaliTrade, Anda dan penjual akan membicarakannya di chat pesanan. Tidak ada yang dibatalkan.",
+    "reasonTooShort": "Jelaskan masalahnya minimal {min} karakter.",
+    "sendIssue": "Kirim laporan masalah",
+    "completeButton": "Selesaikan pesanan",
+    "noteLabel": "Mengapa BaliTrade menyelesaikan pesanan ini?",
+    "noteHelper": "Ditampilkan di chat pesanan dan disimpan di audit log.",
+    "noteTooShort": "Tulis minimal {min} karakter.",
+    "completeYes": "Selesaikan pesanan",
+    "back": "Kembali",
+    "working": "Mohon tunggu…"
+  },
+  "Payouts": {
+    "title": "Pencairan ke penjual",
+    "loading": "Memuat pencairan…",
+    "loadError": "Data pencairan tidak dapat dimuat.",
+    "retry": "Coba lagi",
+    "gross": "Harga barang sesuai harga penjual",
+    "commission": "Komisi BaliTrade ({percent}%)",
+    "netSeller": "Anda terima",
+    "netAdmin": "Ditransfer ke penjual",
+    "waitCompletion": "Penjual dibayar setelah pesanan selesai.",
+    "sellerPending": "BaliTrade akan mentransfer dana ini ke rekening Anda. Anda akan diberi tahu saat sudah dikirim.",
+    "paidOn": "{amount} ditransfer pada {date}",
+    "paidTo": "Ke {bank} {account} ({holder})",
+    "reference": "Referensi: {reference}",
+    "viewProof": "Lihat bukti transfer",
+    "noBank": "{shop} belum mengisi data rekening. Minta penjual mengisinya di Profil Toko.",
+    "transferTo": "Transfer ke",
+    "copy": "Salin",
+    "copied": "Tersalin",
+    "holder": "Pemilik rekening: {holder} · toko {shop} (pemilik akun: {owner})",
+    "bankUpdated": "Data rekening terakhir diubah {date}",
+    "recentWarning": "Data rekening ini diubah dalam 7 hari terakhir. Pastikan dulu ke penjual lewat jalur lain sebelum mentransfer.",
+    "recordTitle": "Catat transfer",
+    "paidAt": "Tanggal transfer",
+    "referenceLabel": "Referensi transfer (opsional)",
+    "proof": "Bukti transfer",
+    "noteLabel": "Catatan (opsional)",
+    "working": "Mohon tunggu…",
+    "recordButton": "Catat pencairan",
+    "ownerOnly": "Hanya owner yang mencatat pencairan.",
+    "errProof": "Lampirkan foto atau tangkapan layar bukti transfer.",
+    "errDate": "Tanggal transfer tidak boleh di masa depan."
+  },
+  "SellerBank": {
+    "title": "Rekening pencairan",
+    "privacy": "Hanya Anda dan tim keuangan BaliTrade yang bisa melihat data ini. Setiap perubahan tercatat.",
+    "loadError": "Data rekening tidak dapat dimuat.",
+    "bankName": "Bank",
+    "accountNumber": "Nomor rekening",
+    "accountNumberHelper": "Hanya angka.",
+    "accountHolder": "Nama pemilik rekening",
+    "accountHolderHelper": "Sama persis seperti di bank.",
+    "save": "Simpan data rekening",
+    "saving": "Menyimpan…",
+    "cancel": "Batal",
+    "change": "Ubah",
+    "updated": "Terakhir diubah {date}",
+    "errBank": "Isi nama bank.",
+    "errNumber": "Isi nomor rekening 6 sampai 20 digit.",
+    "errHolder": "Isi nama pemilik rekening."
   }
 }

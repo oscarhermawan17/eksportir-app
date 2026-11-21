@@ -3,7 +3,7 @@ import type { AddressInfo } from 'node:net';
 import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
-import { Role } from '@balitrade/shared';
+import { NotificationType, Role } from '@balitrade/shared';
 import type { NotificationCount, NotificationPush, NotificationsResponse } from '@balitrade/shared';
 import request from 'supertest';
 import { io, type Socket } from 'socket.io-client';
@@ -110,7 +110,8 @@ describe('Notifications (e2e)', () => {
   });
 
 /** Every notification type at zero: the response always carries a count per type. */
-const NO_UNREAD = { CHAT_MESSAGE: 0, ORDER_REQUESTED: 0, ORDER_STATUS: 0 };
+// Every type is always present (see NotificationsService.unreadByType); built from the enum so a new type cannot break it.
+const NO_UNREAD = Object.fromEntries(Object.values(NotificationType).map((type) => [type, 0]));
 
   it('requires a login for every route (401)', async () => {
     const server = request(app.getHttpServer());

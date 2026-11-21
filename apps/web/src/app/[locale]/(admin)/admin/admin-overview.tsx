@@ -26,6 +26,7 @@ const OPEN_ORDER_STATUSES = new Set([
   'SHIPPING_PAID',
   'SHIPPED',
   'ARRIVED',
+  'DELIVERY_ISSUE',
 ]);
 
 interface Counts {
@@ -35,6 +36,8 @@ interface Counts {
   qc: number | null;
   /** Orders that passed QC and wait for packing and a shipping bill (T19, OPS and the owner). */
   toBill: number | null;
+  /** Completed orders whose seller has not been paid out yet (T20, FINANCE and the owner). */
+  toPay: number | null;
   orders: number;
   rate: CurrentRateView;
 }
@@ -49,6 +52,7 @@ function Overview() {
   const format = useFormatter();
   const { user } = useAuth();
   const handlesQc = Boolean(user?.roles.some((role) => role === 'ADMIN_OPS' || role === 'ADMIN_OWNER'));
+  const handlesMoney = Boolean(user?.roles.some((role) => role === 'ADMIN_FINANCE' || role === 'ADMIN_OWNER'));
   const [counts, setCounts] = useState<Counts | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -59,13 +63,14 @@ function Overview() {
       try {
         // Roles differ, so a page this admin may not read answers 403; that tile is simply hidden.
         const optional = <T,>(path: string) => apiFetch<T>(path).catch(() => null);
-        const [sellers, listings, qc, toBill, orders, rate] = await Promise.all([
+        const [sellers, listings, qc, toBill, toPay, orders, rate] = await Promise.all([
           optional<AdminSellerView[]>('/admin/sellers?status=PENDING'),
           // Paged since T27: the count is `total`, not the length of a page (reading `.length` hid this tile).
           optional<PageResult<AdminProductView>>('/admin/products?status=PENDING_REVIEW'),
           // Every admin may read orders, but writing the QC report is OPS work (T18).
           handlesQc ? optional<PageResult<OrderView>>('/admin/orders?status=IN_QC') : Promise.resolve(null),
           handlesQc ? optional<PageResult<OrderView>>('/admin/orders?status=QC_APPROVED') : Promise.resolve(null),
+          handlesMoney ? optional<PageResult<OrderView>>('/admin/orders?payout=unpaid') : Promise.resolve(null),
           apiFetch<OrderView[]>('/orders'),
           // The public endpoint, not the owner-only history: every admin may see which rate is in force, and
           // reading the history would answer 403 for OPS and FINANCE — which used to look like "no rate set".
@@ -77,6 +82,7 @@ function Overview() {
             listings: listings?.total ?? null,
             qc: qc?.total ?? null,
             toBill: toBill?.total ?? null,
+            toPay: toPay?.total ?? null,
             orders: orders.filter((order) => OPEN_ORDER_STATUSES.has(order.status)).length,
             rate,
           });
@@ -90,7 +96,7 @@ function Overview() {
     return () => {
       cancelled = true;
     };
-  }, [attempt, handlesQc]);
+  }, [attempt, handlesQc, handlesMoney]);
 
   return (
     <div>
@@ -122,6 +128,7 @@ function Overview() {
             )}
             {counts.qc === null ? null : <Stat value={counts.qc} label={t('overview.waitingQc')} href="/admin/qc" />}
             {counts.toBill === null ? null : <Stat value={counts.toBill} label={t('overview.waitingShippingBill')} href="/admin/shipping" />}
+            {counts.toPay === null ? null : <Stat value={counts.toPay} label={t('overview.waitingPayout')} href="/admin/payouts" />}
             <Stat value={counts.orders} label={t('overview.openOrders')} href="/admin/orders" highlight={false} />
           </ul>
 

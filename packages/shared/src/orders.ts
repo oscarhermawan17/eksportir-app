@@ -15,6 +15,8 @@ export const OrderStatus = {
   SHIPPING_PAID: 'SHIPPING_PAID',
   SHIPPED: 'SHIPPED',
   ARRIVED: 'ARRIVED',
+  /** The buyer reported a problem after the goods arrived (T20); talked through in the order chat before completing. */
+  DELIVERY_ISSUE: 'DELIVERY_ISSUE',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',
   REFUNDED: 'REFUNDED',
@@ -91,6 +93,8 @@ export interface AdminOrderQuery {
   status?: OrderStatus;
   /** An order code, or part of a buyer's or seller's name. */
   q?: string;
+  /** The payout queue (T20): completed orders still to pay out, or already paid out. */
+  payout?: 'unpaid' | 'paid';
   /** ISO date (YYYY-MM-DD), inclusive, on the date the order was requested. */
   from?: string;
   to?: string;
@@ -124,7 +128,11 @@ export type OrderAction =
   | 'REVISE_SHIPPING_BILL'
   | 'CONFIRM_SHIPPING_PAID'
   | 'SHIP'
-  | 'DELIVER';
+  | 'DELIVER'
+  // Completion (T20): the buyer confirms receipt or reports a problem; the OWNER can complete an order by hand.
+  | 'CONFIRM_RECEIVED'
+  | 'REPORT_DELIVERY_ISSUE'
+  | 'ADMIN_COMPLETE';
 
 /** Who may take each action. Which admin role may do an ADMIN action is decided per endpoint (money: FINANCE, QC: OPS). */
 const ACTION_ACTOR: Record<OrderAction, 'BUYER' | 'SELLER' | 'ADMIN'> = {
@@ -146,6 +154,9 @@ const ACTION_ACTOR: Record<OrderAction, 'BUYER' | 'SELLER' | 'ADMIN'> = {
   CONFIRM_SHIPPING_PAID: 'ADMIN',
   SHIP: 'ADMIN',
   DELIVER: 'ADMIN',
+  CONFIRM_RECEIVED: 'BUYER',
+  REPORT_DELIVERY_ISSUE: 'BUYER',
+  ADMIN_COMPLETE: 'ADMIN',
 };
 
 /**
@@ -184,6 +195,11 @@ const TRANSITIONS: Partial<Record<OrderStatus, Partial<Record<OrderAction, Order
   },
   SHIPPING_PAID: { SHIP: 'SHIPPED' },
   SHIPPED: { DELIVER: 'ARRIVED' },
+  // Completion (T20, owner 2026-11-21). Nothing completes by itself: the buyer confirms receipt, or the OWNER completes
+  // by hand with a note (a buyer who went quiet, or a problem settled in the chat). A problem after arrival is a
+  // discussion, like a QC issue, not a cancellation; refunds and buyer credit are T31. COMPLETED is final.
+  ARRIVED: { CONFIRM_RECEIVED: 'COMPLETED', REPORT_DELIVERY_ISSUE: 'DELIVERY_ISSUE', ADMIN_COMPLETE: 'COMPLETED' },
+  DELIVERY_ISSUE: { CONFIRM_RECEIVED: 'COMPLETED', ADMIN_COMPLETE: 'COMPLETED' },
 };
 
 /**
@@ -274,4 +290,6 @@ export interface OrderView {
   delivery: DeliveryAddress | null;
   /** The chat of this order (buyer, seller and admin). */
   conversationId: string | null;
+  /** Whether BaliTrade recorded the seller's payout (T20). Null for the buyer, who is not a party to it. */
+  payoutRecorded: boolean | null;
 }

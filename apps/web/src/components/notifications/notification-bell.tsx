@@ -129,6 +129,16 @@ export function NotificationBell() {
         badge: null,
       };
     }
+    if (item.type === 'PAYOUT_RECORDED') {
+      const { orderId, code, netIdr } = item.payload;
+      return {
+        href: `${ordersBase}/${orderId}`,
+        title: t('payoutRecorded', { code }),
+        subtitle: null,
+        body: t('payoutRecordedBody', { amount: `Rp ${format.number(netIdr)}` }),
+        badge: null,
+      };
+    }
     const { conversationId, senderName, productTitle, preview, count } = item.payload;
     return {
       href: `/messages?c=${conversationId}`,
