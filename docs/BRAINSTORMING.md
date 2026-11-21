@@ -218,7 +218,10 @@ ongkir.
 - Mekanisme ongkir — DIPUTUSKAN 2026-11-20 (T19): **ditagih terpisah** setelah barang dikemas dan ditimbang, sebelum dikirim; kurs Rupiah
   dibekukan saat tagihan dibuat. Tidak ada estimasi di awal.
 - Besaran sourcing fee / deposit / aturan refund.
-- Masa inspeksi setelah barang tiba (usulan 3–7 hari).
+- Masa inspeksi setelah barang tiba — DIPUTUSKAN 2026-11-21 (T20): **tanpa selesai otomatis**. Pesanan selesai saat pembeli menekan
+  "Barang diterima" atau OWNER menyelesaikannya dengan catatan. Masalah setelah tiba dibahas dulu di chat (status `DELIVERY_ISSUE`).
+- **Komisi penjual** — DIPUTUSKAN 2026-11-21 (T20): **1%** dari nilai barang (harga Rupiah penjual), dibekukan di setiap pesanan saat
+  dibuat. Wajar sebagai tarif awal karena BaliTrade juga mendapat biaya QC dan selisih kurs; marketplace B2B umumnya 3–15%.
 - Tarif QC per zona. (T07: tabel `QcZone` sudah ada dengan **angka placeholder** — Badung/Denpasar $3, Gianyar/Tabanan $5, Klungkung/Bangli $6, Karangasem/Buleleng/Jembrana $8 — ganti setelah tarif diputuskan.)
 - Daftar kategori terlarang.
 - Jaringan USDT (TRC-20 / ERC-20 / lainnya) — masih terbuka; dibaca dari config, di development memakai nilai mock.
@@ -230,7 +233,7 @@ ongkir.
 - **Pengiriman sampai mana**: diantar ke alamat pembeli (door-to-door via mitra lokal) atau diambil pembeli di bandara/gudang mitra? — muncul dari desain 7a.
 - **Isi tagihan ongkir** — DIPUTUSKAN 2026-11-20 (T19): **beberapa baris** yang diisi admin (air freight, dokumen ekspor, dll.), plus berat,
   jumlah karton dan foto karton opsional; total dihitung sistem.
-- **Masa inspeksi** setelah barang tiba sebelum dana diteruskan otomatis jika pembeli tidak konfirmasi (usulan awal 3–7 hari).
+- **Masa inspeksi** setelah barang tiba — DIPUTUSKAN 2026-11-21: tidak ada penerusan dana otomatis (lihat butir di atas).
 
 ## 16. Tahap teknis — jawaban owner & usulan (2026-10-22)
 

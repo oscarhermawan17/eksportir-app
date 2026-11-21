@@ -103,8 +103,10 @@ Modul NestJS: `auth`, `users`, `sellers`, `products`, `media`, `chat` (gateway),
   - Aturan (T13 langkah 1, REST `/api/conversations`): hanya pembeli (role BUYER) yang bisa memulai, tidak untuk produknya sendiri (403) dan hanya untuk produk yang terlihat pembeli (selain itu 404); bukan peserta → 404; pengirim selalu user yang login; label pengirim BUYER/SELLER/ADMIN (penjual tampil dengan nama toko); pembeli hanya terlihat id dan namanya (tanpa email/telepon). Daftar pesan: 50 terbaru, urut lama→baru, halaman lebih lama lewat `?before=`.
   - UI (T13 langkah 3): komponen `ChatPanel` (`apps/web/src/components/chat/`) dipakai oleh laci chat di `/products/[id]` (`ChatDrawer`, elemen `<dialog>` bawaan) dan oleh `/messages?c=<id>` (daftar kiri, chat kanan; di layar kecil salah satunya). Pesan baru datang lewat **Socket.IO** (lihat "Realtime" di `docs/API.md`); polling tetap ada sebagai cadangan: 30 detik saat socket tersambung (daftar percakapan 60 detik), 4 detik (daftar 8 detik) saat tidak, hanya selagi tab terlihat, plus segar seketika saat tab kembali terlihat atau socket tersambung ulang. Teks pesan ditampilkan sebagai teks biasa (React meng-escape; tidak ada HTML).
 - **Notification**: userId, type, payload, readAt
-- **Payout**: orderId, sellerId, amountIdr, status, paidBy, paidAt (dicatat manual)
-- **AuditLog**: actorId, action, entity, entityId, data
+- **Payout** (T20): orderId (unik), sellerId, grossIdr, commissionRate, commissionIdr, netIdr, snapshot rekening (bankName, accountNumber, accountHolder), transferReference?, proofKey (gambar privat milik OWNER), note?, paidAt, recordedBy. Tidak pernah diedit. Nominal dihitung server dari snapshot pesanan: bruto = qty × `unitPriceIdr`, komisi = `Order.commissionRate` (dibekukan saat pesanan dibuat, default 1%), dibulatkan half-up ke Rupiah utuh (`payoutBreakdown` di `packages/shared/src/payouts.ts`). Hanya OWNER yang mencatat; FINANCE melihat. Penjual diberi tahu lewat notifikasi `PAYOUT_RECORDED`, tidak lewat chat pesanan.
+- **SellerBankAccount** (T20): sellerId (PK), bankName, accountNumber (angka 6–20), accountHolder, updatedBy. **Tabel terpisah dengan sengaja**: katalog, pesanan dan chat meng-`include` profil penjual, jadi data bank tidak boleh ada di sana. Hanya `PayoutsService` yang membacanya; selain penjual sendiri dan FINANCE/OWNER, nomor selalu ter-mask (`••••1234`).
+- **DeliveryIssue** (T20): orderId, reason, reportedBy, createdAt — riwayat laporan masalah setelah barang tiba (status `DELIVERY_ISSUE`).
+- **AuditLog** (T20): actorId, action (`ORDER_COMPLETED_BY_ADMIN`, `PAYOUT_RECORDED`, `SELLER_BANK_UPDATED`), entity, entityId, data. Append-only: ditulis hanya oleh `AuditService.record(tx, …)` di dalam transaksi aksinya, tanpa route baca/ubah/hapus. `data` tidak pernah berisi nomor rekening lengkap. Halaman riwayat audit = MVP 1.1.
 
 ## 6. Alur status order (MVP 1.0)
 
@@ -118,8 +120,10 @@ AWAITING_PAYMENT → PAYMENT_SUBMITTED → PAYMENT_VERIFIED (ditolak → AWAITIN
               └─buyer─> ISSUE ─(dibahas di chat order, lalu OPS "periksa ulang")─> IN_QC (putaran baru)
               (ISSUE bukan pembatalan; uang yang tidak terpakai → saldo pembeli, T31)
 → (OPS mengemas + tagihan ongkir) AWAITING_SHIPPING_PAYMENT → (FINANCE "ongkir lunas") SHIPPING_PAID
-→ (milestone "diserahkan ke kargo" + AWB) SHIPPED → (milestone "diterima pembeli") ARRIVED → COMPLETED (T20)
-→ pencairan ke penjual dicatat (Payout)
+→ (milestone "diserahkan ke kargo" + AWB) SHIPPED → (milestone "diterima pembeli") ARRIVED
+→ (pembeli "Barang diterima", atau OWNER "Selesaikan pesanan" + catatan) COMPLETED — tanpa selesai otomatis
+   └─buyer─> DELIVERY_ISSUE (dibahas di chat) → COMPLETED
+→ OWNER mencatat pencairan ke penjual (Payout, neto setelah komisi 1%) + AuditLog
 Status lain: CANCELLED, REFUNDED
 ```
 

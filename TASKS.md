@@ -107,8 +107,23 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   Diuji: 12 e2e baru, dan di browser dengan akun sementara: Ops "Dikemas" → tagihan 2 baris + foto (kurs live dikunci) → pembeli bayar
   ongkir (id) → Finance verifikasi + "Ongkir sudah lunas" → Ops AWB → bea cukai (foto) → diterima; tampilan penjual (ru, 375px)
   hanya tracking. Ditemukan dan diperbaiki: dua uploader di satu halaman memakai `id` HTML yang sama. Akun dan file uji dihapus.
-- [ ] **T20 Selesai & pencairan** — pembeli "Confirm received" → COMPLETED; admin OWNER catat Payout ke penjual (+ audit log).
+- [x] **T20 Selesai & pencairan** — pembeli "Confirm received" → COMPLETED; admin OWNER catat Payout ke penjual (+ audit log).
   DoD: satu order bisa dijalankan dari REQUESTED sampai COMPLETED.
+  ✅ 2026-11-21. Keputusan pemilik hari itu:
+  - **Tanpa selesai otomatis.** Selesai hanya lewat pembeli ("Barang diterima") atau OWNER ("Selesaikan pesanan", catatan wajib, ter-audit).
+  - **Masalah setelah tiba = diskusi.** Status baru `DELIVERY_ISSUE`, dibahas di chat; refund/saldo tetap T31.
+  - **Komisi 1%** dari nilai barang Rupiah, **dibekukan per pesanan** (`Order.commissionRate`, pesanan lama otomatis 1%). Dibulatkan
+    half-up ke Rupiah utuh dengan aritmetika bilangan bulat (`payoutBreakdown`).
+  - **Rekening penjual di app**, di tabel terpisah (`SellerBankAccount`) yang hanya dibaca `PayoutsService`; ditampilkan ter-mask
+    kecuali ke penjual itu sendiri dan FINANCE/OWNER.
+
+  Pencatatan pencairan = OWNER saja, satu per pesanan, nominal dihitung server, rekening di-snapshot, bukti transfer wajib, dan baris
+  `AuditLog` dalam transaksi yang sama. Form OWNER memperingatkan bila rekening diubah < 7 hari. Penjual mendapat notifikasi baru
+  `PAYOUT_RECORDED`, **tidak** lewat chat pesanan (pembeli ikut membacanya). Pembeli tidak melihat komisi maupun pencairan.
+  Diuji: 16 e2e baru (termasuk "nomor rekening tidak bocor" di katalog, halaman penjual publik, pesanan, daftar admin), dan di
+  browser dengan akun sementara: penjual isi rekening (id), pembeli lapor masalah lalu konfirmasi (en), Finance hanya melihat,
+  OWNER catat pencairan + bukti, penjual melihat bukti dan notifikasi (ru, 375px). Data dan file uji dihapus lagi.
+  Catatan: alasan masalah setelah tiba tampil di chat pesanan, bukan di panel penyelesaian.
 - [ ] **T21 Lupa password** — Resend (noreply), token sekali pakai berkedaluwarsa.
   **URGENT (dinaikkan pemilik 2026-11-14)** — bukan karena nomor urutnya, tapi karena hari ini **tidak ada jalan keluar sama sekali**
   bagi orang yang lupa password: pemilik harus mengedit database. Sesi mati sendiri setelah 7 hari, jadi setiap user pasti akan

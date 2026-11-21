@@ -12,8 +12,11 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | GET | `/api/admin/exchange-rates` | ADMIN_OWNER | `history` | admin-exchange-rates |
 | POST | `/api/admin/exchange-rates` | ADMIN_OWNER | `set` | admin-exchange-rates |
 | GET | `/api/admin/orders` | ADMIN_OPS, ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-orders |
+| POST | `/api/admin/orders/:id/complete` | ADMIN_OWNER | `complete` | completion |
 | POST | `/api/admin/orders/:id/confirm-paid` | ADMIN_FINANCE, ADMIN_OWNER | `confirmPaid` | admin-order-payments |
 | POST | `/api/admin/orders/:id/confirm-shipping-paid` | ADMIN_FINANCE, ADMIN_OWNER | `confirmShippingPaid` | admin-order-payments |
+| POST | `/api/admin/orders/:id/payout` | ADMIN_OWNER | `record` | payouts |
+| GET | `/api/admin/orders/:id/payout-preview` | ADMIN_FINANCE, ADMIN_OWNER | `preview` | payouts |
 | POST | `/api/admin/orders/:id/qc-report` | ADMIN_OPS, ADMIN_OWNER | `submit` | admin-qc |
 | POST | `/api/admin/orders/:id/redo-qc` | ADMIN_OPS, ADMIN_OWNER | `redo` | admin-qc |
 | POST | `/api/admin/orders/:id/shipping-bill` | ADMIN_OPS, ADMIN_OWNER | `issueBill` | admin-shipping |
@@ -56,13 +59,16 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/orders/:id/accept` | logged in | `accept` | orders |
 | POST | `/api/orders/:id/accept-change` | logged in | `acceptChange` | orders |
 | POST | `/api/orders/:id/cancel` | logged in | `cancel` | orders |
+| POST | `/api/orders/:id/confirm-received` | logged in | `confirmReceived` | completion |
 | POST | `/api/orders/:id/decline` | logged in | `decline` | orders |
 | GET | `/api/orders/:id/payments` | logged in | `summary` | payments |
 | POST | `/api/orders/:id/payments` | logged in | `submit` | payments |
+| GET | `/api/orders/:id/payout` | logged in | `forOrder` | payouts |
 | POST | `/api/orders/:id/propose-change` | logged in | `proposeChange` | orders |
 | GET | `/api/orders/:id/qc` | logged in | `list` | qc |
 | POST | `/api/orders/:id/qc/approve` | logged in | `approve` | qc |
 | POST | `/api/orders/:id/qc/report-issue` | logged in | `reportIssue` | qc |
+| POST | `/api/orders/:id/report-delivery-issue` | logged in | `reportIssue` | completion |
 | GET | `/api/orders/:id/shipping-bill` | logged in | `bill` | shipping |
 | GET | `/api/orders/:id/tracking` | logged in | `tracking` | shipping |
 | GET | `/api/payments/instructions` | logged in | `instructions` | payments |
@@ -81,6 +87,8 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/sellers/apply` | logged in | `apply` | sellers |
 | GET | `/api/sellers/me` | logged in | `getOwn` | sellers |
 | PATCH | `/api/sellers/me` | logged in | `updateOwn` | sellers |
+| GET | `/api/sellers/me/bank` | logged in | `myBank` | payouts |
+| PUT | `/api/sellers/me/bank` | logged in | `setMyBank` | payouts |
 
 ## Realtime (Socket.IO)
 
