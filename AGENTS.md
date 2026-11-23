@@ -117,10 +117,14 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 working tree clean, 28 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
 
-**T20 completion + payouts is built and tested locally, NOT deployed (2026-11-21).** An order now runs from REQUESTED to COMPLETED.
-Deploying needs **two** migrations on the VPS, in order, before the new images: `20261121095745_completion_payouts` (enum value
-`DELIVERY_ISSUE`, `orders.commission_rate` defaulting to 1%, four new tables) and `20261121095958_payout_notification` (enum value
-`PAYOUT_RECORDED`). On the order page: `OrderCompletionPanel` (buyer confirm / report, OWNER complete) and `OrderPayoutPanel` (seller and
+**Deployed 2026-11-23: T20 completion + payouts (commit `ae5c1a3`) is live.** An order now runs from REQUESTED to COMPLETED. CI run
+#45194927728 green. Dump first (`~/db-backups/balitrade-2026-11-23-pre-t20.dump`, 116 KB), then **two** migrations before the new
+images: `20261121095745_completion_payouts` (enum value `DELIVERY_ISSUE`, `orders.commission_rate` defaulting to 1% — the one live
+order got 0.0100 — and four new tables) and `20261121095958_payout_notification` (enum value `PAYOUT_RECORDED`). Digests api `a7d34181`
+→ `cfb44927`, web `8db0f2a5` → `4758f0f1`. Verified from outside: `database: up`; `/id`, `/id/login`, `/id/seller`,
+`/id/seller/account`, `/en/admin`, `/id/admin/payouts` and `/id/admin/shipping` all 200; the eight new routes answer 401 without a
+session; the catalog still has 7 products and no `r2.dev`. Not exercised while logged in on the live site: the one live order is still
+REQUESTED. On the order page: `OrderCompletionPanel` (buyer confirm / report, OWNER complete) and `OrderPayoutPanel` (seller and
 FINANCE/OWNER only); the seller's bank card is on `/seller/account`; the payout queue is `/admin/payouts`. The browser check used the
 app's Terminal panel to run `pnpm dev` (`run_in_terminal`): a dev server started there is the owner's shell, so Next.js does not stop it.
 
