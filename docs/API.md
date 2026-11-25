@@ -9,6 +9,11 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | GET | `/api/admin/categories` | ADMIN_OWNER | `list` | admin-categories |
 | POST | `/api/admin/categories` | ADMIN_OWNER | `create` | admin-categories |
 | PATCH | `/api/admin/categories/:id` | ADMIN_OWNER | `update` | admin-categories |
+| GET | `/api/admin/content` | ADMIN_OWNER | `list` | admin-content |
+| POST | `/api/admin/content` | ADMIN_OWNER | `create` | admin-content |
+| PATCH | `/api/admin/content/:id` | ADMIN_OWNER | `update` | admin-content |
+| POST | `/api/admin/content/:id/move` | ADMIN_OWNER | `move` | admin-content |
+| DELETE | `/api/admin/content/:id` | ADMIN_OWNER | `remove` | admin-content |
 | GET | `/api/admin/exchange-rates` | ADMIN_OWNER | `history` | admin-exchange-rates |
 | POST | `/api/admin/exchange-rates` | ADMIN_OWNER | `set` | admin-exchange-rates |
 | GET | `/api/admin/orders` | ADMIN_OPS, ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-orders |
@@ -40,6 +45,7 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | PATCH | `/api/auth/me` | logged in | `updateMe` | auth |
 | POST | `/api/auth/register` | public · rate-limited | `register` | auth |
 | GET | `/api/categories` | public | `list` | categories |
+| GET | `/api/content` | public | `list` | content |
 | GET | `/api/conversations` | logged in | `list` | chat |
 | POST | `/api/conversations` | logged in | `start` | chat |
 | GET | `/api/conversations/:id` | logged in | `get` | chat |

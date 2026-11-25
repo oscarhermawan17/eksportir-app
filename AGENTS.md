@@ -107,7 +107,7 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
   `apps/api/src` file and revert it. Also check nothing else holds port 4000 (`lsof -iTCP:4000 -sTCP:LISTEN`) before starting.
 - **API e2e tests:** login is rate-limited (5/min per app instance) → log in once per user and reuse the supertest agent; a spec with more than 5 users mints session cookies with `JwtService` instead (see `test/chat.e2e-spec.ts`).
   Each spec file cleans its own users by a unique email prefix (`auth-e2e-`, `e2e-rbac-`, `sellers-e2e-`, `media-e2e-`, `products-e2e-`,
-  `adminprod-e2e-`, `fx-e2e-`, `catalog-e2e-`, `chat-e2e-`, `chatrt-e2e-`, `notif-e2e-`, `orders-e2e-`, `orderact-e2e-`, `qc-e2e-`, `ship-e2e-`, `done-e2e-`, `payout-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
+  `adminprod-e2e-`, `fx-e2e-`, `catalog-e2e-`, `chat-e2e-`, `chatrt-e2e-`, `notif-e2e-`, `orders-e2e-`, `orderact-e2e-`, `qc-e2e-`, `ship-e2e-`, `done-e2e-`, `payout-e2e-`, `content-e2e-`); never share a prefix between files (they run in parallel). Presigned R2 URLs are computed offline, so tests use fake R2 env.
 - Browser checks: headless Chrome via `puppeteer-core` works well (`/Applications/Google Chrome.app`). Delete test accounts afterwards.
 - `pnpm add` of very recent packages may add them to `minimumReleaseAgeExclude` in `pnpm-workspace.yaml` (already done for the AWS SDK).
 - Seed data: `pnpm db:seed` creates the admin from `ADMIN_*` env and the 9 Bali QC zones (fees are **placeholders**).
@@ -117,6 +117,11 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-26**,
 29 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26, T27 and T28). Open: T21 password reset, T24 backup, T25 end-to-end
 test, T29 seller↔admin chat, T30 switch off `r2.dev`, T31 buyer credit.
+
+**Not deployed yet (2026-11-26): editable How it works content.** The six steps and five questions of `/how-it-works` now live in
+the `content_items` table (migration `20261126120000_content_items` creates it **and seeds the current texts** in en/id/ru) and are
+edited by the OWNER on `/admin/content` (menu "Page content"). Steps render as a vertical numbered timeline, questions as an accordion.
+The old `HowItWorks.steps/faq` message keys are gone. Deploy order as always: backup, migration, images.
 
 **Deployed 2026-11-26 (third deploy of the day): T27 — commit `7364109` is live.** CI run #45713422152 green. Dump first
 (`~/db-backups/balitrade-2026-11-26-pre-t27.dump`, 72 KB), no migration, then images: api `c5107563` → `74300919`, web `296c4f1b` →
