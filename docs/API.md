@@ -27,6 +27,8 @@ Input is validated by DTOs (`whitelist` + `forbidNonWhitelisted`), so unknown fi
 | POST | `/api/admin/orders/:id/shipping-bill` | ADMIN_OPS, ADMIN_OWNER | `issueBill` | admin-shipping |
 | POST | `/api/admin/orders/:id/start-qc` | ADMIN_OPS, ADMIN_OWNER | `startQc` | admin-order-payments |
 | POST | `/api/admin/orders/:id/tracking` | ADMIN_OPS, ADMIN_OWNER | `addEvent` | admin-shipping |
+| GET | `/api/admin/payment-settings` | ADMIN_FINANCE, ADMIN_OWNER | `get` | admin-payment-settings |
+| PUT | `/api/admin/payment-settings` | ADMIN_OWNER | `save` | admin-payment-settings |
 | GET | `/api/admin/payments` | ADMIN_FINANCE, ADMIN_OWNER | `list` | admin-payments |
 | POST | `/api/admin/payments/:id/reject` | ADMIN_FINANCE, ADMIN_OWNER | `reject` | admin-payments |
 | POST | `/api/admin/payments/:id/verify` | ADMIN_FINANCE, ADMIN_OWNER | `verify` | admin-payments |

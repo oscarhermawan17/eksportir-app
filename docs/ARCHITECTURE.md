@@ -71,6 +71,10 @@ Modul NestJS: `auth`, `users`, `sellers`, `products`, `media`, `chat` (gateway),
   titleEn/Id/Ru + bodyEn/Id/Ru (teks biasa, ditampilkan dengan `whitespace-pre-line`, tidak pernah sebagai HTML), active, sortOrder
   (nomor langkah = posisi, tidak disimpan), updatedById (id polos, bukan relasi). Isi awal dimasukkan oleh migrasi
   `20261126120000_content_items` dari teks file pesan lama; kunci `HowItWorks.steps/faq` sudah dihapus dari `messages/*.json`.
+- **PaymentSettings** (2026-11-26): satu baris (`id = 'default'`) berisi rekening bank IDR dan alamat USDT tujuan pembayaran pembeli,
+  masing-masing dengan saklar aktif, plus `showTestWarning`. Disimpan OWNER di `/admin/payment-settings` (FINANCE hanya baca), diaudit.
+  Selama baris belum ada, `PaymentSettingsService` memakai `PAY_*` dari env; exchange tetap dari env. **Payment.destination**: salinan
+  rekening/alamat tujuan saat pembayaran dikirim (null untuk pembayaran lama dan untuk exchange).
   Dikelola OWNER di `/admin/categories`. Kolom `products.category` tidak berubah nama saat kategori jadi data — foreign key-nya ke `slug`,
   `ON DELETE RESTRICT`, jadi tidak ada satu baris produk pun yang dipindah dan hard delete mustahil selama masih dipakai.
 - Aturan produk (T09): penjual APPROVED membuat produk (status DRAFT) → `submit` (butuh ≥1 foto) → PENDING_REVIEW. Mengedit produk APPROVED mengirimnya kembali ke PENDING_REVIEW; mengedit DRAFT/REJECTED tidak mengubah status (harus `submit` lagi). ARCHIVED tidak bisa diedit/diajukan, hanya dipulihkan ke DRAFT. Semua perubahan status lewat `nextStatus()` (`apps/api/src/products/product-status.ts`). `stockQty` hanya untuk READY_STOCK, `leadTimeDays` hanya untuk MADE_TO_ORDER. Harga disimpan IDR utuh (`Int`); penjual menulis dalam EN atau ID (`sourceLocale`), terjemahan lain ditambah admin di T10. Satuan = daftar tetap di `packages/shared/src/product.ts`.
