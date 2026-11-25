@@ -118,7 +118,14 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 29 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26, T27 and T28). Open: T21 password reset, T24 backup, T25 end-to-end
 test, T29 seller↔admin chat, T30 switch off `r2.dev`, T31 buyer credit.
 
-**Not deployed yet (2026-11-26): editable How it works content.** The six steps and five questions of `/how-it-works` now live in
+**Deployed 2026-11-26 (fourth deploy of the day): editable How it works content — commit `3fb9560` is live.** CI run
+#45717818400 green. Dump first (`~/db-backups/balitrade-2026-11-26-pre-content.dump`, 72 KB), then migration
+`20261126120000_content_items` (created the table and seeded 6 steps + 5 questions), then images: api `74300919` → `6195c43b`, web
+`fd82f7e4` → `28fa8cbf`. Verified from outside: `database: up`; `/id`, `/id/how-it-works`, `/ru/how-it-works`, `/en/admin/content` 200;
+`/api/content` serves the same 6 steps (id/ru) and 5 questions; `/api/admin/content` answers 401 without a session; the rendered page
+shows 6 steps and 5 questions with no horizontal overflow. The admin screen was not opened while logged in on the live site.
+
+**Editable How it works content (2026-11-26).** The six steps and five questions of `/how-it-works` now live in
 the `content_items` table (migration `20261126120000_content_items` creates it **and seeds the current texts** in en/id/ru) and are
 edited by the OWNER on `/admin/content` (menu "Page content"). Steps render as a vertical numbered timeline, questions as an accordion.
 The old `HowItWorks.steps/faq` message keys are gone. Deploy order as always: backup, migration, images.
