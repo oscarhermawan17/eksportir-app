@@ -9,6 +9,7 @@ import type { AdminProductQueryDto } from './dto/admin-product-query.dto.js';
 import type { ProductTranslationsDto } from './dto/admin-product.dto.js';
 import { nextStatus } from './product-status.js';
 import { endOfBusinessDay, startOfBusinessDay } from '../common/business-day.js';
+import { escapeLike } from '../common/escape-like.js';
 
 const reviewInclude = {
   translations: true,
@@ -18,8 +19,6 @@ const reviewInclude = {
 } satisfies Prisma.ProductInclude;
 type ReviewProduct = Prisma.ProductGetPayload<{ include: typeof reviewInclude }>;
 
-/** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them. */
-const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
 
 
 @Injectable()

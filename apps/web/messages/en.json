@@ -382,7 +382,15 @@
     "confirmReject": "Confirm rejection",
     "cancel": "Cancel",
     "needsLocation": "This seller has not chosen a location yet, so they cannot be approved.",
-    "rejectedWithReason": "Reason:"
+    "rejectedWithReason": "Reason:",
+    "sellersTabsLabel": "Application status",
+    "sellersSearchPlaceholder": "Shop, owner or email…",
+    "contact": "Contact",
+    "columns": {
+      "shop": "Shop",
+      "owner": "Owner",
+      "status": "Status"
+    }
   },
   "NotFound": {
     "title": "Page not found",
@@ -1028,7 +1036,20 @@
     "purpose": {
       "GOODS": "Goods",
       "SHIPPING": "Shipping"
-    }
+    },
+    "tabsLabel": "Payment status",
+    "searchPlaceholder": "Order code or buyer…",
+    "columns": {
+      "order": "Order",
+      "submitted": "Sent",
+      "buyer": "Buyer",
+      "method": "Method",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "proofTitle": "Proof of transfer",
+    "proofAlt": "Proof of transfer for order {code}",
+    "openFullSize": "Open full size"
   },
   "Qc": {
     "title": "Quality control",

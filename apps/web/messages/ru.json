@@ -382,7 +382,15 @@
     "confirmReject": "Подтвердить отклонение",
     "cancel": "Отмена",
     "needsLocation": "Продавец ещё не выбрал местоположение, поэтому его нельзя одобрить.",
-    "rejectedWithReason": "Причина:"
+    "rejectedWithReason": "Причина:",
+    "sellersTabsLabel": "Статус заявки",
+    "sellersSearchPlaceholder": "Магазин, владелец или email…",
+    "contact": "Контакты",
+    "columns": {
+      "shop": "Магазин",
+      "owner": "Владелец",
+      "status": "Статус"
+    }
   },
   "NotFound": {
     "title": "Страница не найдена",
@@ -1028,7 +1036,20 @@
     "purpose": {
       "GOODS": "Товар",
       "SHIPPING": "Доставка"
-    }
+    },
+    "tabsLabel": "Статус платежа",
+    "searchPlaceholder": "Код заказа или покупатель…",
+    "columns": {
+      "order": "Заказ",
+      "submitted": "Отправлен",
+      "buyer": "Покупатель",
+      "method": "Способ",
+      "amount": "Сумма",
+      "status": "Статус"
+    },
+    "proofTitle": "Подтверждение перевода",
+    "proofAlt": "Подтверждение перевода по заказу {code}",
+    "openFullSize": "Открыть полностью"
   },
   "Qc": {
     "title": "Контроль качества",

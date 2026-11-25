@@ -64,7 +64,7 @@ function Overview() {
         // Roles differ, so a page this admin may not read answers 403; that tile is simply hidden.
         const optional = <T,>(path: string) => apiFetch<T>(path).catch(() => null);
         const [sellers, listings, qc, toBill, toPay, orders, rate] = await Promise.all([
-          optional<AdminSellerView[]>('/admin/sellers?status=PENDING'),
+          optional<PageResult<AdminSellerView>>('/admin/sellers?status=PENDING&size=25'),
           // Paged since T27: the count is `total`, not the length of a page (reading `.length` hid this tile).
           optional<PageResult<AdminProductView>>('/admin/products?status=PENDING_REVIEW'),
           // Every admin may read orders, but writing the QC report is OPS work (T18).
@@ -78,7 +78,7 @@ function Overview() {
         ]);
         if (!cancelled) {
           setCounts({
-            sellers: sellers?.length ?? null,
+            sellers: sellers?.total ?? null,
             listings: listings?.total ?? null,
             qc: qc?.total ?? null,
             toBill: toBill?.total ?? null,
@@ -121,7 +121,7 @@ function Overview() {
         <>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {counts.sellers === null ? null : (
-              <Stat value={counts.sellers} label={t('overview.pendingSellers')} href="/admin/sellers?status=PENDING" />
+              <Stat value={counts.sellers} label={t('overview.pendingSellers')} href="/admin/sellers" />
             )}
             {counts.listings === null ? null : (
               <Stat value={counts.listings} label={t('overview.pendingListings')} href="/admin/products?status=PENDING_REVIEW" />

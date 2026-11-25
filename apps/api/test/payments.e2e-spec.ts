@@ -3,15 +3,18 @@ import { INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { Role } from '@balitrade/shared';
-import type { ChatMessageView, OrderView, PaymentInstructions, PaymentSummary, PaymentView } from '@balitrade/shared';
+import type { ChatMessageView, OrderView, PageResult, PaymentInstructions, PaymentSummary, PaymentView } from '@balitrade/shared';
 import request from 'supertest';
 import { AppModule } from '../src/app.module.js';
 import { configureApp } from '../src/app.setup.js';
 import { SESSION_COOKIE } from '../src/auth/auth.constants.js';
+import { businessDate } from '../src/common/business-day.js';
 import { hashPassword } from '../src/common/password.js';
 import { FxService } from '../src/fx/fx.service.js';
 import { Prisma } from '../src/generated/prisma/client.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
+
+type AdminPage = PageResult<PaymentView>;
 
 // Test users use the prefix "payments-e2e-" so other spec files' cleanup (running in parallel) leaves them alone.
 // The exchange rate is faked (16,000 IDR per USD) because the rate table is shared with the specs running in parallel.
@@ -267,11 +270,35 @@ describe('Payments: three methods, FINANCE verification (e2e)', () => {
     it('lists the payments waiting for a decision', async () => {
       const order = await payableOrder();
       await http('buyer', 'post', `/api/orders/${order.id}/payments`).send(bankBody()).expect(201);
-      const waiting = (await http('finance', 'get', '/api/admin/payments?status=SUBMITTED').expect(200)).body as PaymentView[];
-      const mine = waiting.filter((payment) => payment.orderId === order.id);
+      const waiting = (await http('finance', 'get', `/api/admin/payments?status=SUBMITTED&q=${order.code}`).expect(200))
+        .body as AdminPage;
+      const mine = waiting.items.filter((payment) => payment.orderId === order.id);
       expect(mine).toHaveLength(1);
       expect(mine[0]?.orderCode).toBe(order.code);
       expect(mine[0]?.submittedBy.id).toBe(ids['buyer']);
+    });
+
+    it('pages on the server, searches by order code or buyer name, and counts every status (T27)', async () => {
+      const order = await payableOrder();
+      await http('buyer', 'post', `/api/orders/${order.id}/payments`).send(bankBody()).expect(201);
+      const page = async (query: string) => (await http('finance', 'get', `/api/admin/payments?${query}`).expect(200)).body as AdminPage;
+
+      const first = await page('');
+      expect(first).toMatchObject({ page: 1, size: 25 });
+      expect(first.total).toBeGreaterThanOrEqual(first.items.length);
+      // Compared within one response: other spec files add payments in parallel.
+      expect(Object.values(first.statusCounts ?? {}).reduce<number>((sum, n) => sum + (n ?? 0), 0)).toBe(first.total);
+
+      expect((await page(`q=${order.code}`)).items.every((payment) => payment.orderId === order.id)).toBe(true);
+      expect((await page(`q=${order.code}`)).total).toBeGreaterThan(0);
+      // "%" is a plain character, not a wildcard that matches everything.
+      expect((await page('q=%25')).total).toBe(0);
+      expect((await page('from=2020-01-01&to=2020-01-02')).total).toBe(0);
+      expect((await page(`from=${businessDate()}&to=${businessDate()}&size=100`)).total).toBeGreaterThan(0);
+
+      for (const bad of ['status=NOPE', 'size=37', 'page=0', 'from=not-a-date']) {
+        await http('finance', 'get', `/api/admin/payments?${bad}`).expect(400);
+      }
     });
   });
 

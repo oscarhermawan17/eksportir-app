@@ -5,9 +5,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { AdminSellerView, QcZoneOption, SellerProfileView, SellerStatus } from '@balitrade/shared';
+import { DEFAULT_PAGE_SIZE } from '@balitrade/shared';
+import type { AdminSellerView, PageResult, PageSize, QcZoneOption, SellerProfileView, SellerStatus } from '@balitrade/shared';
+import { endOfBusinessDay, startOfBusinessDay } from '../common/business-day.js';
+import { escapeLike } from '../common/escape-like.js';
 import { Prisma, Role } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { AdminSellerQueryDto } from './dto/admin-seller-query.dto.js';
 import type { ApplySellerDto, UpdateSellerDto } from './dto/seller-profile.dto.js';
 
 const profileInclude = { qcZone: true, user: true } satisfies Prisma.SellerProfileInclude;
@@ -83,14 +87,49 @@ export class SellersService {
     return toProfileView(profile);
   }
 
-  async listForAdmin(status?: SellerStatus): Promise<AdminSellerView[]> {
-    const profiles = await this.prisma.sellerProfile.findMany({
-      where: status ? { status } : undefined,
-      include: profileInclude,
-      orderBy: { createdAt: 'asc' },
-    });
-    // A user deleted between the two reads leaves `user` null; skip such a row instead of failing the whole list.
-    return profiles.filter((profile) => (profile.user as ProfileWithRelations['user'] | null) !== null).map(toAdminView);
+  /**
+   * The seller applications table (T27), paged on the server. Search matches the shop name, the owner's name or
+   * their email; the day range is on the application date. Oldest first, as before: an approval queue is worked
+   * in the order people applied. `statusCounts` ignores the status filter, so each tab can show its size.
+   */
+  async listForAdmin(query: AdminSellerQueryDto = {}): Promise<PageResult<AdminSellerView>> {
+    const size: PageSize = query.size ?? DEFAULT_PAGE_SIZE;
+    const page = query.page ?? 1;
+    const base: Prisma.SellerProfileWhereInput = {};
+    if (query.q) {
+      const contains = { contains: escapeLike(query.q), mode: 'insensitive' as const };
+      base.OR = [{ displayName: contains }, { user: { name: contains } }, { user: { email: contains } }];
+    }
+    const from = startOfBusinessDay(query.from);
+    const to = endOfBusinessDay(query.to);
+    if (from || to) base.createdAt = { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) };
+    const where: Prisma.SellerProfileWhereInput = query.status ? { ...base, status: query.status } : base;
+
+    const [total, profiles, byStatus] = await this.prisma.$transaction(
+      [
+        this.prisma.sellerProfile.count({ where }),
+        this.prisma.sellerProfile.findMany({
+          where,
+          include: profileInclude,
+          // `id` breaks ties so offset paging never repeats or skips a row with the same timestamp.
+          orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+          skip: (page - 1) * size,
+          take: size,
+        }),
+        this.prisma.sellerProfile.groupBy({ by: ['status'], where: base, orderBy: { status: 'asc' }, _count: { _all: true } }),
+      ],
+      // One snapshot for all three reads, so the tab counts always add up to the total.
+      { isolationLevel: 'RepeatableRead' },
+    );
+
+    return {
+      // A user deleted between the reads leaves `user` null; skip such a row instead of failing the whole list.
+      items: profiles.filter((profile) => (profile.user as ProfileWithRelations['user'] | null) !== null).map(toAdminView),
+      total,
+      page,
+      size,
+      statusCounts: Object.fromEntries(byStatus.map((row) => [row.status, (row._count as { _all: number })._all])),
+    };
   }
 
   async approve(profileId: string, adminId: string): Promise<AdminSellerView> {

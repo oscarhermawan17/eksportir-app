@@ -1,11 +1,13 @@
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
+  DEFAULT_PAGE_SIZE,
   PAYMENT_LIMITS,
   PAYMENT_REFERENCE_FIELD,
   isAdmin,
   nextOrderStatus,
   orderCode,
+  orderNumberFromCode,
   paymentCurrency,
   paymentPurposeFor,
 } from '@balitrade/shared';
@@ -13,9 +15,10 @@ import type {
   AuthUser,
   OrderAction,
   PaymentInstructions,
+  PageResult,
+  PageSize,
   PaymentMethod,
   PaymentPurpose,
-  PaymentStatus,
   PaymentSummary,
   PaymentView,
 } from '@balitrade/shared';
@@ -26,6 +29,9 @@ import { idrToUsd } from '../fx/fx-math.js';
 import { Prisma } from '../generated/prisma/client.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { endOfBusinessDay, startOfBusinessDay } from '../common/business-day.js';
+import { escapeLike } from '../common/escape-like.js';
+import type { AdminPaymentQueryDto } from './dto/admin-payment-query.dto.js';
 import type { SubmitPaymentDto } from './dto/submit-payment.dto.js';
 
 const paymentInclude = {
@@ -36,7 +42,6 @@ const paymentInclude = {
 
 type PaymentRow = Prisma.PaymentGetPayload<{ include: typeof paymentInclude }>;
 
-const ADMIN_LIST_LIMIT = 200;
 
 /** How a payment's purpose reads in the order chat. */
 const PURPOSE_LABEL: Record<PaymentPurpose, string> = { GOODS: 'a payment', SHIPPING: 'a shipping payment' };
@@ -212,14 +217,46 @@ export class PaymentsService {
   }
 
   /** Payments waiting for a decision (or another status), newest first — the FINANCE admin's work list. */
-  async adminList(status?: PaymentStatus): Promise<PaymentView[]> {
-    const rows = await this.prisma.payment.findMany({
-      where: status ? { status } : {},
-      include: paymentInclude,
-      orderBy: { submittedAt: 'desc' },
-      take: ADMIN_LIST_LIMIT,
-    });
-    return rows.map((row) => this.toView(row));
+  /**
+   * The FINANCE queue (T27): every payment attempt, paged on the server — the old `take: 200` silently dropped the
+   * oldest rows. Search matches an order code exactly or the buyer's name; the day range is on the submission date.
+   * `statusCounts` ignores the status filter, so each tab can say how many rows it would list.
+   */
+  async adminList(query: AdminPaymentQueryDto = {}): Promise<PageResult<PaymentView>> {
+    const size: PageSize = query.size ?? DEFAULT_PAGE_SIZE;
+    const page = query.page ?? 1;
+    const base: Prisma.PaymentWhereInput = {};
+    if (query.q) {
+      const number = orderNumberFromCode(query.q);
+      base.OR = [
+        ...(number === null ? [] : [{ order: { number } }]),
+        { order: { buyer: { name: { contains: escapeLike(query.q), mode: 'insensitive' as const } } } },
+      ];
+    }
+    const from = startOfBusinessDay(query.from);
+    const to = endOfBusinessDay(query.to);
+    if (from || to) base.submittedAt = { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) };
+    const where: Prisma.PaymentWhereInput = query.status ? { ...base, status: query.status } : base;
+
+    const [total, rows, byStatus] = await this.prisma.$transaction(
+      [
+        this.prisma.payment.count({ where }),
+        this.prisma.payment.findMany({
+          where,
+          include: paymentInclude,
+          // `id` breaks ties so offset paging never repeats or skips a row with the same timestamp.
+          orderBy: [{ submittedAt: 'desc' }, { id: 'desc' }],
+          skip: (page - 1) * size,
+          take: size,
+        }),
+        this.prisma.payment.groupBy({ by: ['status'], where: base, orderBy: { status: 'asc' }, _count: { _all: true } }),
+      ],
+      // One snapshot for all three reads, so the tab counts always add up to the total.
+      { isolationLevel: 'RepeatableRead' },
+    );
+
+    const statusCounts = Object.fromEntries(byStatus.map((row) => [row.status, (row._count as { _all: number })._all]));
+    return { items: rows.map((row) => this.toView(row)), total, page, size, statusCounts };
   }
 
   /**

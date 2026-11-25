@@ -9,6 +9,7 @@ import { Prisma } from '../generated/prisma/client.js';
 import { MediaService } from '../media/media.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { CatalogQueryDto } from './dto/catalog-query.dto.js';
+import { escapeLike } from '../common/escape-like.js';
 
 const catalogInclude = {
   translations: true,
@@ -19,8 +20,6 @@ const catalogInclude = {
 
 type CatalogRow = Prisma.ProductGetPayload<{ include: typeof catalogInclude }>;
 
-/** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them to match literally. */
-const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
 
 /**
  * Relations are read in separate queries, so a seller deleted in between leaves `product.seller` null although the type says

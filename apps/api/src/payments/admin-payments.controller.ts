@@ -1,10 +1,10 @@
-import { Controller, Get, Param, ParseEnumPipe, Post, Query, UseGuards, Body } from '@nestjs/common';
-import { PaymentStatus } from '@balitrade/shared';
-import type { AuthUser, PaymentView } from '@balitrade/shared';
+import { Controller, Get, Param, Post, Query, UseGuards, Body } from '@nestjs/common';
+import type { AuthUser, PageResult, PaymentView } from '@balitrade/shared';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
 import { RolesGuard } from '../auth/roles.guard.js';
+import { AdminPaymentQueryDto } from './dto/admin-payment-query.dto.js';
 import { RejectPaymentDto } from './dto/submit-payment.dto.js';
 import { PaymentsService } from './payments.service.js';
 
@@ -16,8 +16,8 @@ export class AdminPaymentsController {
   constructor(private readonly payments: PaymentsService) {}
 
   @Get()
-  list(@Query('status', new ParseEnumPipe(PaymentStatus, { optional: true })) status?: PaymentStatus): Promise<PaymentView[]> {
-    return this.payments.adminList(status);
+  list(@Query() query: AdminPaymentQueryDto): Promise<PageResult<PaymentView>> {
+    return this.payments.adminList(query);
   }
 
   @Post(':id/verify')

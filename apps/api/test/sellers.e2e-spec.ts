@@ -102,10 +102,30 @@ describe('Seller onboarding (e2e)', () => {
     await (await agentFor(financeEmail)).get('/api/admin/sellers').expect(403);
 
     const ops = await agentFor(opsEmail);
-    const list = await ops.get('/api/admin/sellers?status=PENDING').expect(200);
-    const entry = list.body.find((item: { user: { email: string } }) => item.user.email === sellerEmail);
+    const list = await ops.get(`/api/admin/sellers?status=PENDING&q=${encodeURIComponent(sellerEmail)}`).expect(200);
+    const entry = list.body.items.find((item: { user: { email: string } }) => item.user.email === sellerEmail);
     expect(entry).toMatchObject({ status: 'PENDING', qcZone: { name: 'Gianyar', feeUsd: expect.stringMatching(/^\d+\.\d{2}$/) } });
     await ops.get('/api/admin/sellers?status=BOGUS').expect(400);
+  });
+
+  it('pages the applications on the server, searches shop, owner and email, and counts every status (T27)', async () => {
+    const ops = await agentFor(opsEmail);
+    type Page = { items: { user: { email: string } }[]; total: number; page: number; size: number; statusCounts?: Record<string, number> };
+    const page = async (query: string) => (await ops.get(`/api/admin/sellers?${query}`).expect(200)).body as Page;
+
+    const first = await page('');
+    expect(first).toMatchObject({ page: 1, size: 25 });
+    // Compared within one response: other spec files add sellers in parallel.
+    expect(Object.values(first.statusCounts ?? {}).reduce((sum, n) => sum + n, 0)).toBe(first.total);
+
+    for (const q of ['Ketut Weaving', 'Ketut Weaver', sellerEmail]) {
+      const found = await page(`q=${encodeURIComponent(q)}`);
+      expect(found.items.some((item) => item.user.email === sellerEmail)).toBe(true);
+    }
+    // "%" is a plain character, not a wildcard that matches everything.
+    expect((await page('q=%25')).total).toBe(0);
+    expect((await page('from=2020-01-01&to=2020-01-02')).total).toBe(0);
+    for (const bad of ['size=37', 'page=0', 'from=not-a-date']) await ops.get(`/api/admin/sellers?${bad}`).expect(400);
   });
 
   it('admin rejects with a reason; the seller sees it and can resubmit', async () => {

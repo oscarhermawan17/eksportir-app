@@ -1,9 +1,9 @@
 'use client';
 
 import { PAGE_SIZES, pageCount, type PageSize } from '@balitrade/shared';
-import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import type { MouseEvent, ReactNode } from 'react';
+import { Fragment, useId, useState, type MouseEvent, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useRouter } from '@/i18n/navigation';
 
@@ -35,6 +35,7 @@ export function DataTable<T>({
   columns,
   rowKey,
   rowHref,
+  expand,
   card,
   total,
   page,
@@ -54,6 +55,12 @@ export function DataTable<T>({
   rowKey: (row: T) => string;
   /** Where a row leads. Cards must then contain no links of their own: the whole card is the link. */
   rowHref?: (row: T) => string;
+  /**
+   * Instead of leading elsewhere, a row opens in place and shows this below itself (T27: a payment is checked against
+   * its proof without losing the list). Only one row is open at a time, and the content mounts only while open, so
+   * anything it fetches (a signed URL for a proof) is fetched on opening.
+   */
+  expand?: (row: T) => ReactNode;
   /** A card is written separately, not squeezed from the row: it shows fewer, different facts. */
   card: (row: T) => ReactNode;
   total: number;
@@ -70,6 +77,9 @@ export function DataTable<T>({
   const t = useTranslations('Table');
   const tCommon = useTranslations('Common');
   const router = useRouter();
+  const panelPrefix = useId();
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const toggle = (id: string) => setOpenKey((current) => (current === id ? null : id));
 
   const pages = pageCount(total, size);
   const firstRow = total === 0 ? 0 : (page - 1) * size + 1;
@@ -113,9 +123,32 @@ export function DataTable<T>({
           <ul className="divide-y divide-border lg:hidden">
             {rows.map((row) => {
               const href = rowHref?.(row);
+              const id = rowKey(row);
+              const isOpen = openKey === id;
               return (
-                <li key={rowKey(row)}>
-                  {href ? (
+                <li key={id}>
+                  {expand ? (
+                    <>
+                      <button
+                        type="button"
+                        aria-expanded={isOpen}
+                        aria-controls={isOpen ? `${panelPrefix}-m-${id}` : undefined}
+                        onClick={() => toggle(id)}
+                        className={`flex w-full items-start gap-3 px-4 py-4 text-left transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary ${isOpen ? 'bg-surface' : ''}`}
+                      >
+                        <div className="min-w-0 flex-1">{card(row)}</div>
+                        <ChevronDown
+                          className={`mt-0.5 h-4 w-4 shrink-0 text-muted transition-transform motion-reduce:transition-none ${isOpen ? 'rotate-180' : ''}`}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      {isOpen ? (
+                        <div id={`${panelPrefix}-m-${id}`} className="border-t border-border bg-surface px-4 py-4">
+                          {expand(row)}
+                        </div>
+                      ) : null}
+                    </>
+                  ) : href ? (
                     <Link
                       href={href}
                       className="flex items-start gap-3 px-4 py-4 transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary"
@@ -139,22 +172,42 @@ export function DataTable<T>({
                     {column.header}
                   </th>
                 ))}
-                {rowHref ? <th scope="col" className="w-10" aria-hidden="true" /> : null}
+                {rowHref || expand ? <th scope="col" className="w-10" aria-hidden="true" /> : null}
               </tr>
             </thead>
             <tbody>
               {rows.map((row) => {
                 const href = rowHref?.(row);
+                const id = rowKey(row);
+                const isOpen = openKey === id;
+                const onRowClick = expand
+                  ? (event: MouseEvent<HTMLTableRowElement>) => {
+                      if (!(event.target as HTMLElement).closest('a, input, select, label, [data-row-toggle]')) toggle(id);
+                    }
+                  : href
+                    ? (event: MouseEvent<HTMLTableRowElement>) => openRow(event, href)
+                    : undefined;
                 return (
+                  <Fragment key={id}>
                   <tr
-                    key={rowKey(row)}
-                    onClick={href ? (event) => openRow(event, href) : undefined}
-                    onAuxClick={href ? (event) => openRow(event, href) : undefined}
-                    className={`border-b border-border last:border-0 ${href ? 'cursor-pointer transition-colors hover:bg-surface' : ''}`}
+                    onClick={onRowClick}
+                    onAuxClick={href && !expand ? (event) => openRow(event, href) : undefined}
+                    className={`border-b border-border last:border-0 ${onRowClick ? 'cursor-pointer transition-colors hover:bg-surface' : ''} ${isOpen ? 'bg-surface' : ''}`}
                   >
                     {columns.map((column, index) => (
                       <td key={column.key} className={`px-4 py-3 align-middle text-text ${column.className ?? ''}`}>
-                        {href && index === 0 ? (
+                        {expand && index === 0 ? (
+                          <button
+                            type="button"
+                            data-row-toggle
+                            aria-expanded={isOpen}
+                            aria-controls={isOpen ? `${panelPrefix}-${id}` : undefined}
+                            onClick={() => toggle(id)}
+                            className="rounded-sm text-left hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                          >
+                            {column.cell(row)}
+                          </button>
+                        ) : href && index === 0 ? (
                           <Link
                             href={href}
                             className="rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
@@ -166,12 +219,26 @@ export function DataTable<T>({
                         )}
                       </td>
                     ))}
-                    {href ? (
+                    {expand ? (
+                      <td className="px-2 py-3 align-middle text-muted" aria-hidden="true">
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform motion-reduce:transition-none ${isOpen ? 'rotate-180' : ''}`}
+                        />
+                      </td>
+                    ) : href ? (
                       <td className="px-2 py-3 align-middle text-muted" aria-hidden="true">
                         <ChevronRight className="h-4 w-4" />
                       </td>
                     ) : null}
                   </tr>
+                  {expand && isOpen ? (
+                    <tr id={`${panelPrefix}-${id}`} className="border-b border-border bg-surface last:border-0">
+                      <td colSpan={columns.length + 1} className="px-4 pb-5 pt-1">
+                        {expand(row)}
+                      </td>
+                    </tr>
+                  ) : null}
+                  </Fragment>
                 );
               })}
             </tbody>

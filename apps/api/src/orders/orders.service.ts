@@ -28,6 +28,7 @@ import { NotificationsService } from '../notifications/notifications.service.js'
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { CreateOrderDto } from './dto/create-order.dto.js';
 import { endOfBusinessDay, startOfBusinessDay } from '../common/business-day.js';
+import { escapeLike } from '../common/escape-like.js';
 
 const LIST_LIMIT = 100;
 
@@ -42,8 +43,6 @@ const orderInclude = {
 
 type OrderRow = Prisma.OrderGetPayload<{ include: typeof orderInclude }>;
 
-/** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them. */
-const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
 
 
 /** Order requests (T15). Money is copied into the order at the moment of the request; nothing is recomputed later. */

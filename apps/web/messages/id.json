@@ -382,7 +382,15 @@
     "confirmReject": "Konfirmasi penolakan",
     "cancel": "Batal",
     "needsLocation": "Penjual ini belum memilih lokasi sehingga belum bisa disetujui.",
-    "rejectedWithReason": "Alasan:"
+    "rejectedWithReason": "Alasan:",
+    "sellersTabsLabel": "Status pendaftaran",
+    "sellersSearchPlaceholder": "Toko, pemilik atau email…",
+    "contact": "Kontak",
+    "columns": {
+      "shop": "Toko",
+      "owner": "Pemilik",
+      "status": "Status"
+    }
   },
   "NotFound": {
     "title": "Halaman tidak ditemukan",
@@ -1028,7 +1036,20 @@
     "purpose": {
       "GOODS": "Barang",
       "SHIPPING": "Ongkir"
-    }
+    },
+    "tabsLabel": "Status pembayaran",
+    "searchPlaceholder": "Kode pesanan atau pembeli…",
+    "columns": {
+      "order": "Pesanan",
+      "submitted": "Dikirim",
+      "buyer": "Pembeli",
+      "method": "Metode",
+      "amount": "Nominal",
+      "status": "Status"
+    },
+    "proofTitle": "Bukti transfer",
+    "proofAlt": "Bukti transfer untuk pesanan {code}",
+    "openFullSize": "Buka ukuran penuh"
   },
   "Qc": {
     "title": "Pemeriksaan kualitas",
