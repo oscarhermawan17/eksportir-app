@@ -161,7 +161,7 @@ export function OrderDialog({ product, onClose }: { product: CatalogProduct; onC
             <TextareaField id="order-address" name="address" label={t('address')} helper={t('addressHelper')} required rows={3} minLength={ORDER_LIMITS.addressMin} maxLength={ORDER_LIMITS.addressMax} autoComplete="street-address" />
           </fieldset>
 
-          <div className="space-y-1 rounded-card border border-gold/40 bg-gold/10 p-4 text-sm">
+          <div className="space-y-1 rounded-card border border-border bg-surface p-4 text-sm">
             {unitCents === null ? (
               <p className="text-text">{t('noPrice')}</p>
             ) : (

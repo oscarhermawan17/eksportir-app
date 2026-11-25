@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 export const inputClasses =
-  'w-full rounded-card border border-border bg-card px-3.5 py-2.5 text-sm font-medium text-text placeholder:text-muted/70 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15';
+  'w-full rounded-button border border-border-strong bg-card px-3.5 py-2.5 text-sm text-text placeholder:text-muted/70 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15';
 
 /** Label above, helper text below (design system form pattern). */
 export function Field({
@@ -14,7 +14,7 @@ export function Field({
   const helperId = helper ? `${id}-helper` : undefined;
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="block text-xs font-bold uppercase tracking-wider text-text">
+      <label htmlFor={id} className="block text-sm font-medium text-text">
         {label}
         {required ? (
           <span className="text-error" aria-hidden="true">
@@ -67,7 +67,7 @@ function FieldShell({
 }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="block text-xs font-bold uppercase tracking-wider text-text">
+      <label htmlFor={id} className="block text-sm font-medium text-text">
         {label}
         {required ? (
           <span className="text-error" aria-hidden="true">

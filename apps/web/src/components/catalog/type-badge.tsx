@@ -1,31 +1,20 @@
 import type { ProductType } from '@balitrade/shared';
 
-const TONES: Record<ProductType, string> = {
-  READY_STOCK: 'border-primary/25 bg-primary/10 text-primary',
-  MADE_TO_ORDER: 'border-terracotta/30 bg-terracotta/10 text-terracotta',
-};
-
-/** Over a photo the tinted background disappears, so the pill gets an opaque one and a little lift. */
-const TONES_ON_IMAGE: Record<ProductType, string> = {
-  READY_STOCK: 'border-primary/25 bg-card text-primary shadow-sm',
-  MADE_TO_ORDER: 'border-terracotta/30 bg-card text-terracotta shadow-sm',
+const TONES: Record<ProductType, { text: string; dot: string }> = {
+  READY_STOCK: { text: 'text-success', dot: 'bg-success' },
+  MADE_TO_ORDER: { text: 'text-warning', dot: 'bg-warning' },
 };
 
 /**
- * "Ready stock" (teal) / "Made to order" (terracotta), as in the design system.
- *
- * It never wraps: a pill broken over two lines stops looking like a pill, and on a two-column phone
- * grid the longest label ("Dibuat sesuai pesanan") did exactly that. It shrinks a step on small
- * screens instead, and truncates rather than pushing the card wider if a label ever outgrows that.
+ * "Ready stock" (green) / "Made to order" (amber): a coloured dot and a label, not a pill (design system v2).
+ * It never wraps; on a narrow two-column card it truncates rather than pushing the card wider.
  */
-export function TypeBadge({ type, label, onImage = false }: { type: ProductType; label: string; onImage?: boolean }) {
+export function TypeBadge({ type, label, className = '' }: { type: ProductType; label: string; className?: string }) {
+  const tone = TONES[type];
   return (
-    <span
-      className={`inline-flex max-w-full items-center truncate whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] font-semibold sm:px-2.5 sm:text-xs ${
-        onImage ? TONES_ON_IMAGE[type] : TONES[type]
-      }`}
-    >
-      {label}
+    <span className={`inline-flex max-w-full items-center gap-1.5 text-[13px] font-medium ${tone.text} ${className}`}>
+      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${tone.dot}`} aria-hidden="true" />
+      <span className="truncate">{label}</span>
     </span>
   );
 }

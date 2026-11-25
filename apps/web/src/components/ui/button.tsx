@@ -3,11 +3,11 @@ import type { ButtonHTMLAttributes } from 'react';
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 
 const base =
-  'inline-flex h-11 items-center justify-center gap-2 rounded-button px-5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60';
+  'inline-flex h-11 items-center justify-center gap-2 rounded-button px-5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60';
 
 const variants: Record<Variant, string> = {
   primary: 'bg-primary text-white hover:bg-primary-hover',
-  secondary: 'border border-primary bg-card text-primary hover:bg-background',
+  secondary: 'border border-border-strong bg-card text-text hover:border-primary/40 hover:bg-surface',
   ghost: 'text-primary hover:bg-primary/5',
   danger: 'border border-error bg-card text-error hover:bg-error/5',
 };

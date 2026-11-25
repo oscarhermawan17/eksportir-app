@@ -24,9 +24,9 @@ export function Navbar() {
   const { user, status } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6">
-        <div className="flex h-16 items-center gap-4">
+    <header className="sticky top-0 z-40 border-b border-border bg-background">
+      <div className="page-container">
+        <div className="flex h-16 items-center gap-6">
           <Logo href={homePathFor(user)} />
 
           {/* Wide screens: search sits in the bar. Narrow screens: it moves to its own row below. */}

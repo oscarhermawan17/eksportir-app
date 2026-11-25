@@ -1,7 +1,7 @@
 'use client';
 
 import type { CatalogProduct } from '@balitrade/shared';
-import { ImageOff, MessageCircle, Play, ShieldCheck, ClipboardCheck } from 'lucide-react';
+import { ChevronLeft, ClipboardCheck, ImageOff, MessageCircle, Play, ShieldCheck } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/components/auth/auth-provider';
@@ -43,10 +43,14 @@ export function ProductDetail({ id }: { id: string }) {
   const current = state?.key === `${key}#${attempt}` ? state : null;
 
   return (
-    <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
-      <nav aria-label={t('title')} className="mb-5 text-sm text-muted">
-        <Link href="/" className="hover:text-primary hover:underline">
-          ← {t('back')}
+    <div className="page-container flex-1 pt-6 pb-16 sm:pt-8">
+      <nav aria-label={t('title')} className="mb-6 text-sm">
+        <Link
+          href="/"
+          className="-ml-1 inline-flex items-center gap-1 rounded-sm px-1 text-muted transition-colors hover:text-text focus-visible:outline-2 focus-visible:outline-primary"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          {t('back')}
         </Link>
       </nav>
       {current === null ? (
@@ -83,35 +87,34 @@ function Product({ product }: { product: CatalogProduct }) {
   const languageName = t(`languages.${product.textLocale}`);
 
   return (
-    <article className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
+    <article className="grid gap-8 lg:grid-cols-12 lg:gap-x-12">
       {chatOpen ? <ChatDrawer product={product} onClose={() => setChatOpen(false)} /> : null}
       {orderOpen ? <OrderDialog product={product} onClose={() => setOrderOpen(false)} /> : null}
-      <Gallery product={product} />
+      <div className="lg:col-span-7">
+        <Gallery product={product} />
+      </div>
 
-      <div className="space-y-5">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="lg:col-span-5">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <TypeBadge type={product.type} label={tProducts(`types.${product.type}`)} />
           {product.isAuto ? (
-            <span className="inline-flex items-center rounded-full border border-border bg-background px-2.5 py-0.5 text-xs font-semibold text-muted">
-              {t('autoTranslated')}
-            </span>
+            <span className="text-[13px] text-muted">{t('autoTranslated')}</span>
           ) : product.textLocale !== locale ? (
-            <span className="inline-flex items-center rounded-full border border-border bg-background px-2.5 py-0.5 text-xs font-semibold text-muted">
-              {t('originalLanguage', { language: languageName })}
-            </span>
+            <span className="text-[13px] text-muted">{t('originalLanguage', { language: languageName })}</span>
           ) : null}
         </div>
 
-        <h1 className="text-3xl font-bold text-text">{product.title}</h1>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-balance text-text sm:text-3xl">{product.title}</h1>
 
-        <div>
-          <p className="text-3xl font-bold tabular-nums text-text">
-            {price ?? <span className="text-lg font-medium text-muted">{t('noPrice')}</span>}
+        <div className="mt-4">
+          <p className="text-2xl font-semibold tabular-nums text-text">
+            {price ?? <span className="text-base font-normal text-muted">{t('noPrice')}</span>}
           </p>
-          {price ? <p className="mt-1 text-sm text-muted">{t('priceNote')}</p> : null}
+          {price ? <p className="mt-1 text-[13px] text-muted">{t('priceNote')}</p> : null}
         </div>
 
-        <dl className="grid grid-cols-2 gap-4 rounded-card border border-border bg-card p-4 text-sm">
+        {/* Label left, value right, a thin line between rows: it reads like a spec sheet, not a set of boxes. */}
+        <dl className="mt-6 divide-y divide-border border-y border-border text-sm">
           <Fact label={t('minimumOrder')} value={text.moqValue(product)} />
           {availability ? (
             <Fact label={product.type === 'READY_STOCK' ? t('availableStock') : t('leadTimeTitle')} value={availability} />
@@ -119,9 +122,9 @@ function Product({ product }: { product: CatalogProduct }) {
           {location ? <Fact label={t('sellerLocation')} value={location} /> : null}
         </dl>
 
-        <p className="text-sm text-muted">{t('shippingNote')}</p>
+        <p className="mt-4 text-[13px] leading-relaxed text-muted">{t('shippingNote')}</p>
 
-        <div className="space-y-3">
+        <div className="mt-6 space-y-3">
           {status === 'loading' ? null : user ? (
             <>
               {/* Only buyers can order or ask; admins join conversations from the inbox, sellers answer there. */}
@@ -146,35 +149,35 @@ function Product({ product }: { product: CatalogProduct }) {
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
                 {t('ask')}
               </Link>
-              <p className="text-sm text-muted">{t('loginHint')}</p>
+              <p className="text-center text-[13px] text-muted">{t('loginHint')}</p>
             </>
           )}
         </div>
 
-        <ul className="space-y-2 rounded-card border border-gold/40 bg-gold/10 p-4 text-sm text-text">
-          <li className="flex items-start gap-2">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold-text" aria-hidden="true" />
+        <ul className="mt-6 space-y-2.5 text-sm text-text">
+          <li className="flex items-start gap-2.5">
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
             {t('trustPayment')}
           </li>
-          <li className="flex items-start gap-2">
-            <ClipboardCheck className="mt-0.5 h-4 w-4 shrink-0 text-gold-text" aria-hidden="true" />
+          <li className="flex items-start gap-2.5">
+            <ClipboardCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
             {t('trustQc')}
           </li>
         </ul>
       </div>
 
-      <section aria-labelledby="description" className="lg:col-span-2">
-        <h2 id="description" className="text-xl font-semibold text-text">
+      <section aria-labelledby="description" className="border-t border-border pt-8 lg:col-span-7">
+        <h2 id="description" className="text-lg font-semibold text-text">
           {t('descriptionTitle')}
         </h2>
-        <p className="mt-3 max-w-3xl whitespace-pre-line text-text">{product.description}</p>
+        <p className="mt-3 max-w-[70ch] whitespace-pre-line text-[15px] leading-relaxed text-text">{product.description}</p>
       </section>
 
-      <section aria-labelledby="seller" className="rounded-card border border-border bg-card p-5 shadow-sm lg:col-span-2">
-        <h2 id="seller" className="text-xs font-bold uppercase tracking-wider text-muted">
+      <section aria-labelledby="seller" className="border-t border-border pt-8 lg:col-span-5">
+        <h2 id="seller" className="text-lg font-semibold text-text">
           {t('seller')}
         </h2>
-        <p className="mt-1 text-lg font-semibold text-text">{product.seller.displayName}</p>
+        <p className="mt-3 font-medium text-text">{product.seller.displayName}</p>
         {location ? <p className="text-sm text-muted">{location}</p> : null}
         <Link href={`/sellers/${product.seller.id}`} className={buttonClasses('secondary', 'mt-4')}>
           {t('viewSeller')}
@@ -186,9 +189,9 @@ function Product({ product }: { product: CatalogProduct }) {
 
 function Fact({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <dt className="text-xs font-bold uppercase tracking-wider text-muted">{label}</dt>
-      <dd className="mt-0.5 font-medium text-text">{value}</dd>
+    <div className="flex items-baseline justify-between gap-4 py-3">
+      <dt className="text-muted">{label}</dt>
+      <dd className="text-right font-medium tabular-nums text-text">{value}</dd>
     </div>
   );
 }
@@ -201,7 +204,7 @@ function Gallery({ product }: { product: CatalogProduct }) {
 
   if (!active?.url) {
     return (
-      <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-card border border-border bg-card text-muted">
+      <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-card bg-surface text-muted">
         <ImageOff className="h-8 w-8" aria-hidden="true" />
         {t('noPhoto')}
       </div>
@@ -210,12 +213,19 @@ function Gallery({ product }: { product: CatalogProduct }) {
 
   return (
     <section aria-label={t('gallery')} className="space-y-3">
-      <div className="aspect-[4/3] w-full overflow-hidden rounded-card border border-border bg-black/5">
+      <div className="aspect-[4/3] w-full overflow-hidden rounded-card bg-surface">
         {active.type === 'VIDEO' ? (
           <video key={active.url} src={active.url} controls preload="metadata" className="h-full w-full object-contain" />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- remote R2 image, sized by CSS
-          <img src={active.url} alt={product.title} className="h-full w-full object-contain" />
+          <img
+            src={active.url}
+            alt={product.title}
+            width={800}
+            height={600}
+            fetchPriority="high"
+            className="h-full w-full object-contain"
+          />
         )}
       </div>
       {items.length > 1 ? (
@@ -227,18 +237,18 @@ function Gallery({ product }: { product: CatalogProduct }) {
                 onClick={() => setSelected(index)}
                 aria-label={t('thumbnail', { number: index + 1 })}
                 aria-current={index === selected}
-                className={`relative h-16 w-16 overflow-hidden rounded-lg border bg-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-                  index === selected ? 'border-primary ring-2 ring-primary/30' : 'border-border'
+                className={`relative h-16 w-16 overflow-hidden rounded-button border bg-surface transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                  index === selected ? 'border-primary ring-1 ring-primary' : 'border-border hover:border-border-strong'
                 }`}
               >
                 {item.type === 'VIDEO' ? (
-                  <span className="flex h-full w-full flex-col items-center justify-center bg-primary/10 text-primary">
+                  <span className="flex h-full w-full flex-col items-center justify-center text-primary">
                     <Play className="h-5 w-5" aria-hidden="true" />
                     <span className="sr-only">{t('video')}</span>
                   </span>
                 ) : (
                   // eslint-disable-next-line @next/next/no-img-element -- remote R2 image, sized by CSS
-                  <img src={item.url!} alt="" className="h-full w-full object-cover" />
+                  <img src={item.url!} alt="" width={64} height={64} className="h-full w-full object-cover" />
                 )}
               </button>
             </li>

@@ -31,31 +31,29 @@ const COLUMNS = [
   },
 ] as const;
 
+const LINK = 'rounded-sm text-muted transition-colors hover:text-text focus-visible:outline-2 focus-visible:outline-primary';
+
+/** Light and quiet (design system v2): a thin line above, the same page width as the navbar, no pattern. */
 export function Footer() {
   const t = useTranslations('Footer');
   return (
-    <footer className="relative bg-primary-hover text-white">
-      {/* Very subtle Balinese-inspired dot pattern (design system: footer only) */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 opacity-10 [background-image:radial-gradient(#C9A24A_1px,transparent_1px)] [background-size:24px_24px]"
-      />
-      <div className="relative mx-auto w-full max-w-[1280px] px-4 py-12 sm:px-6">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
-          <div className="space-y-3">
-            <Logo onDark />
-            <p className="max-w-xs text-sm text-white/70">{t('tagline')}</p>
-            <Link href="/about" className="inline-block text-sm font-semibold text-gold hover:underline">
+    <footer className="border-t border-border bg-surface">
+      <div className="page-container py-12">
+        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-[1.5fr_repeat(3,1fr)]">
+          <div className="space-y-3 sm:col-span-2 md:col-span-1">
+            <Logo />
+            <p className="max-w-xs text-sm leading-relaxed text-muted">{t('tagline')}</p>
+            <Link href="/about" className={`inline-block text-sm font-medium ${LINK}`}>
               {t('about')}
             </Link>
           </div>
           {COLUMNS.map((column) => (
             <nav key={column.titleKey} aria-label={t(column.titleKey)}>
-              <h2 className="mb-3 text-sm font-semibold text-gold">{t(column.titleKey)}</h2>
-              <ul className="space-y-2 text-sm">
+              <h2 className="mb-3 text-sm font-semibold text-text">{t(column.titleKey)}</h2>
+              <ul className="space-y-2.5 text-sm">
                 {column.links.map((link) => (
                   <li key={link.key}>
-                    <Link href={link.href} className="text-white/80 transition hover:text-white">
+                    <Link href={link.href} className={LINK}>
                       {t(link.key)}
                     </Link>
                   </li>
@@ -64,11 +62,13 @@ export function Footer() {
             </nav>
           ))}
         </div>
-        <div className="mt-10 flex flex-col gap-4 border-t border-gold/30 pt-6 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between">
-          <LanguageSwitcher onDark openUp />
+        <div className="mt-10 flex flex-col gap-4 border-t border-border pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1 sm:flex-row sm:gap-6">
             <span>{t('copyright')}</span>
             <span>{t('route')}</span>
+          </div>
+          <div className="-ml-2.5 sm:ml-0">
+            <LanguageSwitcher openUp />
           </div>
         </div>
       </div>

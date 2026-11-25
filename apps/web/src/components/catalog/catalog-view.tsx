@@ -14,9 +14,9 @@ import { fetchCategories } from '@/lib/categories';
 type Result = { key: string; products: CatalogProduct[] | null };
 type Search = { q: string; category: ProductCategorySlug | ''; type: ProductType | '' };
 
-const CHIP = 'inline-flex h-9 items-center rounded-button border px-3.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+const CHIP = 'inline-flex h-9 items-center whitespace-nowrap rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 const CHIP_ON = `${CHIP} border-primary bg-primary text-white`;
-const CHIP_OFF = `${CHIP} border-border bg-card text-text hover:border-primary hover:text-primary`;
+const CHIP_OFF = `${CHIP} border-border bg-card text-muted hover:border-border-strong hover:text-text`;
 
 /** The catalog, which is also the landing page. The search field itself lives in the navbar. */
 export function CatalogView() {
@@ -83,14 +83,15 @@ export function CatalogView() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-8 sm:px-6 sm:py-10">
-      <h1 className="text-2xl font-bold text-text">{q ? t('resultsFor', { q }) : t('title')}</h1>
+    <div className="page-container flex-1 pt-6 pb-16 sm:pt-8">
+      {/* The page heading is the introduction above; a search gets its own visible heading. */}
+      <h2 className={q ? 'mb-5 text-xl font-semibold tracking-tight text-text' : 'sr-only'}>{q ? t('resultsFor', { q }) : t('title')}</h2>
 
       {/* Categories are the main filter, so they are visible rather than hidden in a dropdown. */}
       {/* Narrow screens scroll the row sideways; from sm up there is room to wrap instead. */}
       <nav
         aria-label={t('categoryLabel')}
-        className="no-scrollbar -mx-4 mt-5 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0"
+        className="no-scrollbar -mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0"
       >
         <ul className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
           <li>
@@ -118,19 +119,19 @@ export function CatalogView() {
         </ul>
       </nav>
 
-      <div className="mt-5 flex flex-wrap items-center gap-3">
-        <p className="text-sm font-medium text-muted" aria-live="polite">
+      <div className="mt-4 flex flex-wrap items-center gap-3 border-b border-border pb-4">
+        <p className="text-sm tabular-nums text-muted" aria-live="polite">
           {current?.products ? t('resultCount', { count: current.products.length }) : ''}
         </p>
         <div className="ml-auto flex items-center gap-2">
-          <label htmlFor="catalog-type" className="text-sm font-medium text-muted">
+          <label htmlFor="catalog-type" className="text-sm text-muted">
             {t('typeLabel')}
           </label>
           <select
             id="catalog-type"
             value={type}
             onChange={(event) => search({ q, category, type: event.target.value as ProductType | '' })}
-            className="h-9 rounded-button border border-border bg-card px-3 text-sm font-medium text-text transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
+            className="h-9 rounded-button border border-border-strong bg-card px-3 text-sm text-text transition-colors hover:border-primary/40 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
           >
             <option value="">{t('allTypes')}</option>
             {PRODUCT_TYPES.map((value) => (
@@ -147,7 +148,7 @@ export function CatalogView() {
         </div>
       </div>
 
-      <div className="mt-5">
+      <div className="mt-6">
         {current === null ? (
           <p className="text-muted" aria-busy="true">
             {t('loading')}
@@ -160,7 +161,7 @@ export function CatalogView() {
             </Button>
           </div>
         ) : current.products.length === 0 ? (
-          <div className="rounded-card border border-border bg-card px-6 py-12 text-center">
+          <div className="rounded-card bg-surface px-6 py-14 text-center">
             <p className="text-lg font-semibold text-text">{t('emptyTitle')}</p>
             <p className="mt-1 text-muted">{t('emptyText')}</p>
             {filtered ? (
@@ -170,12 +171,11 @@ export function CatalogView() {
             ) : null}
           </div>
         ) : (
-          <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {/* Two per row on a phone, up to five on a wide screen; the gap stays tight so the cards
-                get the width instead. */}
-            {current.products.map((product) => (
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {/* Two per row on a phone, up to five on a wide screen. Rows are separated by space, not frames. */}
+            {current.products.map((product, index) => (
               <li key={product.id} className="flex">
-                <ProductCard product={product} />
+                <ProductCard product={product} priority={index < 5} />
               </li>
             ))}
           </ul>

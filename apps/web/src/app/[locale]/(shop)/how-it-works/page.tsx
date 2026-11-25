@@ -5,7 +5,6 @@ import {
   Coins,
   MessagesSquare,
   Package,
-  Plane,
   Repeat,
   ShieldCheck,
   type LucideIcon,
@@ -13,6 +12,8 @@ import {
 import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
+import type { ReactNode } from 'react';
+import { buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 
 const TRUST = [
@@ -33,12 +34,28 @@ const PAYMENT: { key: 'bank' | 'usdt' | 'exchange'; Icon: LucideIcon }[] = [
   { key: 'exchange', Icon: Repeat },
 ];
 
-const SECTION = 'mx-auto w-full max-w-6xl px-4';
-
 export async function generateMetadata({ params }: PageProps<'/[locale]/how-it-works'>): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'HowItWorks' });
   return { title: `${t('title')} — BaliTrade` };
+}
+
+/**
+ * One section = a thin line, its heading in a narrow left column and the content to the right (stacked on a
+ * phone). It reads like a reference page rather than a wall of cards (design system v2).
+ * `scroll-mt-24` keeps the footer's #payment / #shipping targets clear of the sticky navbar.
+ */
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+  return (
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-24 border-t border-border py-10 sm:py-14">
+      <div className="grid gap-6 lg:grid-cols-12 lg:gap-12">
+        <h2 id={`${id}-title`} className="text-xl font-semibold tracking-tight text-balance text-text lg:col-span-4">
+          {title}
+        </h2>
+        <div className="lg:col-span-8">{children}</div>
+      </div>
+    </section>
+  );
 }
 
 /**
@@ -49,121 +66,92 @@ export default function HowItWorksPage() {
   const t = useTranslations('HowItWorks');
 
   return (
-    <div className="flex flex-1 flex-col gap-16 pb-16 sm:gap-20 sm:pb-20">
-      <section className="border-b border-border bg-card">
-        <div className={`${SECTION} py-12 sm:py-16`}>
-          <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-text sm:text-4xl">{t('title')}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-muted">{t('intro')}</p>
-        </div>
-      </section>
+    <div className="page-container flex-1 pb-16 sm:pb-20">
+      <header className="max-w-3xl py-10 sm:py-14">
+        <h1 className="text-3xl font-semibold tracking-tight text-balance text-text sm:text-4xl">{t('title')}</h1>
+        <p className="mt-4 text-base leading-relaxed text-pretty text-muted sm:text-lg">{t('intro')}</p>
+      </header>
 
       {/* A real sequence, so numbered. */}
-      <section aria-labelledby="how-title" className={SECTION}>
-        <h2 id="how-title" className="text-2xl font-bold text-text sm:text-3xl">
-          {t('howTitle')}
-        </h2>
-        <ol className="relative mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
-          <div aria-hidden="true" className="absolute left-0 right-0 top-5 hidden h-px bg-border lg:block" />
+      <Section id="how" title={t('howTitle')}>
+        <ol className="grid gap-x-8 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
           {STEPS.map((step, index) => (
-            <li key={step} className="relative flex gap-4 lg:block">
-              <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold text-sm font-bold text-primary ring-4 ring-background">
-                {index + 1}
-              </span>
-              <div className="lg:mt-3">
-                <h3 className="text-base font-semibold text-text">{t(`steps.${step}.title`)}</h3>
-                <p className="mt-1 text-sm text-muted">{t(`steps.${step}.text`)}</p>
-              </div>
+            <li key={step} className="border-t-2 border-primary pt-3">
+              <span className="text-sm font-semibold tabular-nums text-primary">{index + 1}</span>
+              <h3 className="mt-1 text-base font-semibold text-text">{t(`steps.${step}.title`)}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{t(`steps.${step}.text`)}</p>
             </li>
           ))}
         </ol>
-      </section>
+      </Section>
 
-      <section aria-labelledby="trust-title" className={SECTION}>
-        <h2 id="trust-title" className="text-2xl font-bold text-text sm:text-3xl">
-          {t('trustTitle')}
-        </h2>
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Section id="trust" title={t('trustTitle')}>
+        <ul className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
           {TRUST.map(({ key, Icon }) => (
-            <li key={key} className="rounded-card border border-border bg-card p-5 shadow-sm">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-3 text-base font-semibold text-text">{t(`trust.${key}.title`)}</h3>
-              <p className="mt-1 text-sm text-muted">{t(`trust.${key}.text`)}</p>
+            <li key={key} className="flex gap-3">
+              <Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+              <div>
+                <h3 className="text-base font-semibold text-text">{t(`trust.${key}.title`)}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted">{t(`trust.${key}.text`)}</p>
+              </div>
             </li>
           ))}
         </ul>
-      </section>
+      </Section>
 
       {/* Linked from the footer as /how-it-works#payment */}
-      <section id="payment" aria-labelledby="payment-title" className={`${SECTION} scroll-mt-24`}>
-        <h2 id="payment-title" className="text-2xl font-bold text-text sm:text-3xl">
-          {t('paymentTitle')}
-        </h2>
-        <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+      <Section id="payment" title={t('paymentTitle')}>
+        <ul className="divide-y divide-border border-y border-border">
           {PAYMENT.map(({ key, Icon }) => (
-            <li key={key} className="rounded-card border border-border bg-card p-5 shadow-sm">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gold/20 text-gold-text">
-                <Icon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <h3 className="mt-3 text-base font-semibold text-text">{t(`payment.${key}.title`)}</h3>
-              <p className="mt-1 text-sm text-muted">{t(`payment.${key}.text`)}</p>
+            <li key={key} className="grid gap-1 py-4 sm:grid-cols-[14rem_1fr] sm:gap-6">
+              <h3 className="flex items-center gap-2.5 text-base font-semibold text-text">
+                <Icon className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                {t(`payment.${key}.title`)}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted">{t(`payment.${key}.text`)}</p>
             </li>
           ))}
         </ul>
-        <p className="mt-4 max-w-3xl text-sm text-muted">{t('paymentNote')}</p>
-      </section>
+        <p className="mt-4 max-w-[70ch] text-sm leading-relaxed text-muted">{t('paymentNote')}</p>
+      </Section>
 
       {/* Linked from the footer as /how-it-works#shipping */}
-      <section id="shipping" aria-labelledby="shipping-title" className={`${SECTION} scroll-mt-24`}>
-        <h2 id="shipping-title" className="text-2xl font-bold text-text sm:text-3xl">
-          {t('shippingTitle')}
-        </h2>
-        <ul className="mt-6 max-w-3xl space-y-3">
+      <Section id="shipping" title={t('shippingTitle')}>
+        <ul className="max-w-[70ch] list-disc space-y-2.5 pl-5 text-[15px] leading-relaxed text-text marker:text-border-strong">
           {SHIPPING.map((key) => (
-            <li key={key} className="flex gap-3 rounded-card border border-border bg-card p-4 text-sm text-text shadow-sm">
-              <Plane className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-              {t(`shipping.${key}`)}
-            </li>
+            <li key={key}>{t(`shipping.${key}`)}</li>
           ))}
         </ul>
-      </section>
+      </Section>
 
-      <section aria-labelledby="faq-title" className={`${SECTION} max-w-3xl`}>
-        <h2 id="faq-title" className="text-2xl font-bold text-text sm:text-3xl">
-          {t('faqTitle')}
-        </h2>
-        <div className="mt-6 space-y-3">
+      <Section id="faq" title={t('faqTitle')}>
+        <div className="divide-y divide-border border-y border-border">
           {FAQ.map((item) => (
-            <details key={item} className="group rounded-card border border-border bg-card px-5 py-4 open:shadow-sm">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-text focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
+            <details key={item} className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
                 {t(`faq.${item}.q`)}
-                <ChevronDown className="h-5 w-5 shrink-0 text-muted transition group-open:rotate-180" aria-hidden="true" />
+                <ChevronDown
+                  className="h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
+                  aria-hidden="true"
+                />
               </summary>
-              <p className="mt-3 text-sm text-muted">{t(`faq.${item}.a`)}</p>
+              <p className="max-w-[70ch] pb-4 text-sm leading-relaxed text-muted">{t(`faq.${item}.a`)}</p>
             </details>
           ))}
         </div>
-      </section>
+      </Section>
 
-      <section aria-labelledby="sellers-title" className={SECTION}>
-        <div className="relative overflow-hidden rounded-card bg-primary px-6 py-10 text-white sm:px-10">
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 opacity-10 [background-image:radial-gradient(#C9A24A_1px,transparent_1px)] [background-size:24px_24px]"
-          />
-          <div className="relative max-w-2xl">
-            <h2 id="sellers-title" className="text-2xl font-bold sm:text-3xl">
+      <section aria-labelledby="sellers-title" className="rounded-card bg-surface px-6 py-10 sm:px-10">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="max-w-2xl">
+            <h2 id="sellers-title" className="text-xl font-semibold tracking-tight text-text sm:text-2xl">
               {t('sellersTitle')}
             </h2>
-            <p className="mt-3 text-white/85">{t('sellersText')}</p>
-            <Link
-              href="/register?role=seller"
-              className="mt-6 inline-flex h-11 items-center justify-center rounded-button bg-gold px-5 text-sm font-semibold text-text transition hover:bg-gold/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              {t('becomeSeller')}
-            </Link>
+            <p className="mt-2 text-[15px] leading-relaxed text-muted">{t('sellersText')}</p>
           </div>
+          <Link href="/register?role=seller" className={buttonClasses('primary', 'shrink-0')}>
+            {t('becomeSeller')}
+          </Link>
         </div>
       </section>
     </div>

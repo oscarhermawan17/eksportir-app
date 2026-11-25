@@ -1,16 +1,14 @@
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
-import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
 import { notFound } from 'next/navigation';
 import { AuthProvider } from '@/components/auth/auth-provider';
 import { routing } from '@/i18n/routing';
+import { fontSans } from '../fonts';
 import '../globals.css';
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: '--font-jakarta',
-  subsets: ['latin', 'cyrillic-ext'],
-});
+/** Matches the page background, so a phone's browser bar blends into the navbar. */
+export const viewport: Viewport = { themeColor: '#ffffff' };
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -33,7 +31,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   }
 
   return (
-    <html lang={locale} className={`${jakarta.variable} h-full antialiased`}>
+    <html lang={locale} className={`${fontSans.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <NextIntlClientProvider>
           <AuthProvider>{children}</AuthProvider>

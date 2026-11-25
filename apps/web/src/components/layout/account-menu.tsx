@@ -20,7 +20,7 @@ function initials(name: string): string {
   return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
 }
 
-const ITEM = 'flex w-full items-center gap-2.5 rounded-button px-3 py-2 text-left text-sm font-medium text-text transition hover:bg-background focus-visible:outline-2 focus-visible:outline-primary';
+const ITEM = 'flex w-full items-center gap-2.5 rounded-button px-3 py-2 text-left text-sm font-medium text-text transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary';
 
 /**
  * Everything personal (orders, messages, the seller and admin areas) hangs off the avatar, so the
@@ -75,9 +75,9 @@ export function AccountMenu({ user }: { user: AuthUser }) {
         aria-controls={panelId}
         aria-haspopup="menu"
         aria-label={t('accountMenu', { name: user.name })}
-        className="flex items-center gap-0.5 rounded-button p-1 transition hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary"
+        className="flex items-center gap-0.5 rounded-button p-1 transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+        <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
           {initials(user.name)}
         </span>
         <ChevronDown className="h-4 w-4 text-muted" aria-hidden="true" />
@@ -87,7 +87,7 @@ export function AccountMenu({ user }: { user: AuthUser }) {
         <div
           id={panelId}
           role="menu"
-          className="absolute right-0 z-50 mt-2 w-64 rounded-card border border-border bg-card p-1.5 shadow-lg"
+          className="absolute right-0 z-50 mt-2 w-64 rounded-card border border-border bg-card p-1.5 shadow-lg shadow-black/5"
         >
           <div className="border-b border-border px-3 pb-2.5 pt-1.5">
             <p className="truncate text-sm font-semibold text-text">{user.name}</p>

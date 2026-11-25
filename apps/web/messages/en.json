@@ -67,11 +67,7 @@
   },
   "Home": {
     "title": "Products from Bali sellers",
-    "checks": {
-      "qc": "Quality control on every order",
-      "payment": "Payment held until delivery",
-      "cargo": "Air cargo to Russia & CIS"
-    },
+    "lead": "Buy wholesale from Bali sellers. We check the goods before they ship, hold your payment until they arrive, and send them by air cargo to Russia and the CIS.",
     "howItWorksLink": "How it works",
     "sellLink": "Sell on BaliTrade"
   },

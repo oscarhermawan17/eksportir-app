@@ -14,7 +14,7 @@ const LABELS: Record<Locale, string> = { en: 'English', id: 'Bahasa Indonesia', 
  * Switches the URL locale (next-intl also stores it in the NEXT_LOCALE cookie) and,
  * when logged in, saves it to the user's profile so it follows them to other devices.
  */
-export function LanguageSwitcher({ onDark = false, openUp = false }: { onDark?: boolean; openUp?: boolean }) {
+export function LanguageSwitcher({ openUp = false }: { openUp?: boolean }) {
   const t = useTranslations('Common');
   const current = useLocale() as Locale;
   const router = useRouter();
@@ -58,10 +58,6 @@ export function LanguageSwitcher({ onDark = false, openUp = false }: { onDark?: 
     }
   }
 
-  const buttonTone = onDark
-    ? 'border-white/30 bg-white/10 text-white hover:border-gold'
-    : 'border-border bg-card text-text hover:border-primary';
-
   return (
     <div ref={rootRef} className="relative inline-block text-left">
       <button
@@ -70,17 +66,17 @@ export function LanguageSwitcher({ onDark = false, openUp = false }: { onDark?: 
         aria-expanded={open}
         aria-label={`${t('language')}: ${LABELS[current]}`}
         onClick={() => setOpen((value) => !value)}
-        className={`inline-flex h-9 items-center gap-2 rounded-button border px-3 text-xs font-semibold transition ${buttonTone}`}
+        className="inline-flex h-10 items-center gap-1.5 rounded-button px-2.5 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-text focus-visible:outline-2 focus-visible:outline-primary"
       >
-        <Globe className={`h-3.5 w-3.5 ${onDark ? 'text-gold' : 'text-gold-text'}`} aria-hidden="true" />
-        <span className={`font-bold ${onDark ? 'text-white' : 'text-primary'}`}>{current.toUpperCase()}</span>
-        <ChevronDown className="h-3 w-3 opacity-70" aria-hidden="true" />
+        <Globe className="h-4 w-4" aria-hidden="true" />
+        <span className="text-text">{current.toUpperCase()}</span>
+        <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
       </button>
       {open ? (
         <ul
           role="listbox"
           aria-label={t('language')}
-          className={`absolute right-0 z-50 min-w-44 overflow-hidden rounded-card border border-border bg-card py-1 text-sm text-text shadow-lg ${
+          className={`absolute right-0 z-50 min-w-44 overflow-hidden rounded-card border border-border bg-card py-1 text-sm text-text shadow-lg shadow-black/5 ${
             openUp ? 'bottom-full mb-2' : 'top-full mt-2'
           }`}
         >
@@ -90,7 +86,7 @@ export function LanguageSwitcher({ onDark = false, openUp = false }: { onDark?: 
                 type="button"
                 lang={locale}
                 onClick={() => choose(locale)}
-                className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left hover:bg-background"
+                className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left hover:bg-surface"
               >
                 {LABELS[locale]}
                 {locale === current ? <Check className="h-4 w-4 text-primary" aria-hidden="true" /> : null}

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { fontSans } from './fonts';
 import './globals.css';
 
 export const metadata: Metadata = { title: '404 — BaliTrade' };
@@ -7,10 +8,10 @@ export const metadata: Metadata = { title: '404 — BaliTrade' };
 // there is no locale to translate with here.
 export default function GlobalNotFound() {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`${fontSans.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col items-center justify-center gap-4 px-4 text-center font-sans">
-        <p className="text-5xl font-bold text-gold-text">404</p>
-        <h1 className="text-2xl font-bold">Page not found</h1>
+        <p className="text-5xl font-semibold tabular-nums text-primary">404</p>
+        <h1 className="text-2xl font-semibold tracking-tight">Page not found</h1>
         <p className="text-muted">The page you are looking for does not exist.</p>
         {/* A plain link on purpose: this page renders outside the normal app tree (no router/locale). */}
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}

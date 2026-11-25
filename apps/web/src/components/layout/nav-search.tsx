@@ -21,7 +21,7 @@ export function NavSearch({ className = '' }: { className?: string }) {
       <label htmlFor={id} className="sr-only">
         {t('searchLabel')}
       </label>
-      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden="true" />
+      <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden="true" />
       {/* Remounted when the active search changes, so the field shows what the catalog is filtered by. */}
       <input
         key={q}
@@ -31,7 +31,7 @@ export function NavSearch({ className = '' }: { className?: string }) {
         defaultValue={q}
         maxLength={100}
         placeholder={t('searchPlaceholder')}
-        className="h-11 w-full rounded-button border border-border bg-background pl-9 pr-3 text-sm font-medium text-text transition placeholder:text-muted/70 focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/15"
+        className="h-11 w-full rounded-button border border-transparent bg-surface pl-10 pr-3 text-[15px] text-text transition-colors placeholder:text-muted hover:border-border-strong focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/15"
       />
     </form>
   );
