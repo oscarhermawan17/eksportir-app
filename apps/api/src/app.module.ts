@@ -4,6 +4,7 @@ import { validateEnv } from './config/env.js';
 import { AdminModule } from './admin/admin.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { CategoriesModule } from './categories/categories.module.js';
+import { ContentModule } from './content/content.module.js';
 import { ChatModule } from './chat/chat.module.js';
 import { FxModule } from './fx/fx.module.js';
 import { MediaModule } from './media/media.module.js';
@@ -37,6 +38,7 @@ import { PayoutsModule } from './payouts/payouts.module.js';
     PayoutsModule,
     FxModule,
     CategoriesModule,
+    ContentModule,
     ProductsModule,
     HealthModule,
   ],

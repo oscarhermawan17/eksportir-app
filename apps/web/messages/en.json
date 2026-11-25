@@ -92,32 +92,6 @@
     "title": "How BaliTrade works",
     "intro": "BaliTrade sits between you and the seller in Bali: we check the goods, hold your payment and arrange the air cargo. Here is what happens from the moment you find a product.",
     "howTitle": "How it works",
-    "steps": {
-      "s1": {
-        "title": "Find a product",
-        "text": "Browse products from Bali sellers and pick what you need."
-      },
-      "s2": {
-        "title": "Discuss",
-        "text": "Chat with the seller and our team, and agree on the details."
-      },
-      "s3": {
-        "title": "Pay securely",
-        "text": "Your payment is held by BaliTrade until your goods arrive."
-      },
-      "s4": {
-        "title": "Quality check",
-        "text": "We inspect and send you a photo and video report to approve."
-      },
-      "s5": {
-        "title": "Ship",
-        "text": "We pack and send by air cargo, and you can follow the tracking."
-      },
-      "s6": {
-        "title": "Receive",
-        "text": "Confirm arrival, then the seller gets paid."
-      }
-    },
     "trustTitle": "What BaliTrade does for you",
     "trust": {
       "qc": {
@@ -161,31 +135,11 @@
       "s4": "Our team adds each step to the tracking timeline on your order page."
     },
     "faqTitle": "Questions",
-    "faq": {
-      "q1": {
-        "q": "How does BaliTrade protect my payment?",
-        "a": "Your payment is held by BaliTrade until your goods arrive. The seller is paid only after you confirm delivery."
-      },
-      "q2": {
-        "q": "What if the goods don’t pass quality control?",
-        "a": "We will first help you find a replacement. If you prefer, you can get a full refund."
-      },
-      "q3": {
-        "q": "Can I order more than the stock shown?",
-        "a": "Yes. Ask the seller and BaliTrade in the product chat about a larger quantity. Made-to-order products have a lead time set by the seller."
-      },
-      "q4": {
-        "q": "Which countries do you ship to?",
-        "a": "Russia and CIS countries, for example Kazakhstan, Uzbekistan, Kyrgyzstan, Armenia and Belarus. You only enter a delivery address; our team arranges the air cargo."
-      },
-      "q5": {
-        "q": "How long does shipping take?",
-        "a": "Shipping time depends on the destination. Our team confirms it before you pay."
-      }
-    },
     "sellersTitle": "Sell your Bali products to Russia & CIS",
     "sellersText": "Register, get approved by our team, and list your products. We handle buyers, quality control, export and shipping.",
-    "becomeSeller": "Become a seller"
+    "becomeSeller": "Become a seller",
+    "contentLoading": "Loading…",
+    "contentError": "Could not load this section."
   },
   "Auth": {
     "email": "Email",
@@ -341,7 +295,8 @@
       "categories": "Categories",
       "qc": "Quality control",
       "shipping": "Shipping",
-      "payouts": "Payouts"
+      "payouts": "Payouts",
+      "content": "Page content"
     },
     "overview": {
       "title": "What needs you",
@@ -1293,5 +1248,54 @@
     "errBank": "Enter the bank name.",
     "errNumber": "Enter an account number of 6 to 20 digits.",
     "errHolder": "Enter the account holder name."
+  },
+  "AdminContent": {
+    "title": "Page content",
+    "intro": "What the How it works page says. Every item is written in all three languages at once and appears on the site in the visitor's language. Text only: line breaks are kept, nothing else is formatted.",
+    "tabsLabel": "Content type",
+    "tabs": {
+      "HOW_IT_WORKS_STEP": "How it works",
+      "FAQ": "Questions"
+    },
+    "add": {
+      "HOW_IT_WORKS_STEP": "Add a step",
+      "FAQ": "Add a question"
+    },
+    "editTitle": {
+      "HOW_IT_WORKS_STEP": "Edit step {n}",
+      "FAQ": "Edit question"
+    },
+    "newTitle": {
+      "HOW_IT_WORKS_STEP": "New step",
+      "FAQ": "New question"
+    },
+    "titleLabel": {
+      "HOW_IT_WORKS_STEP": "Step title",
+      "FAQ": "Question"
+    },
+    "bodyLabel": {
+      "HOW_IT_WORKS_STEP": "Explanation",
+      "FAQ": "Answer"
+    },
+    "languages": {
+      "en": "English",
+      "id": "Indonesian",
+      "ru": "Russian"
+    },
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "hide": "Hide",
+    "show": "Show",
+    "hidden": "Hidden",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "delete": "Delete",
+    "confirmDelete": "Delete this item for good? Hiding it keeps it for later.",
+    "confirmDeleteYes": "Yes, delete",
+    "empty": "Nothing here yet.",
+    "loadError": "Could not load the content.",
+    "viewPage": "View the page"
   }
 }

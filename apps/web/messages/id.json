@@ -92,32 +92,6 @@
     "title": "Cara kerja BaliTrade",
     "intro": "BaliTrade berdiri di antara Anda dan penjual di Bali: kami memeriksa barang, menahan pembayaran Anda, dan mengurus kargo udara. Berikut yang terjadi sejak Anda menemukan produk.",
     "howTitle": "Cara kerja",
-    "steps": {
-      "s1": {
-        "title": "Temukan produk",
-        "text": "Telusuri produk penjual Bali dan pilih yang Anda butuhkan."
-      },
-      "s2": {
-        "title": "Diskusi",
-        "text": "Chat dengan penjual dan tim kami, lalu sepakati detailnya."
-      },
-      "s3": {
-        "title": "Bayar dengan aman",
-        "text": "Pembayaran Anda ditahan BaliTrade sampai barang tiba."
-      },
-      "s4": {
-        "title": "Pemeriksaan kualitas",
-        "text": "Kami memeriksa dan mengirim laporan foto dan video untuk Anda setujui."
-      },
-      "s5": {
-        "title": "Kirim",
-        "text": "Kami mengemas dan mengirim lewat kargo udara, dan Anda bisa memantau pelacakannya."
-      },
-      "s6": {
-        "title": "Terima",
-        "text": "Konfirmasi barang tiba, lalu penjual dibayar."
-      }
-    },
     "trustTitle": "Yang BaliTrade kerjakan untuk Anda",
     "trust": {
       "qc": {
@@ -161,31 +135,11 @@
       "s4": "Tim kami menambahkan setiap tahap ke lini masa pelacakan di halaman pesanan Anda."
     },
     "faqTitle": "Pertanyaan",
-    "faq": {
-      "q1": {
-        "q": "Bagaimana BaliTrade melindungi pembayaran saya?",
-        "a": "Pembayaran Anda ditahan BaliTrade sampai barang tiba. Penjual baru dibayar setelah Anda mengonfirmasi penerimaan."
-      },
-      "q2": {
-        "q": "Bagaimana jika barang tidak lolos kontrol kualitas?",
-        "a": "Kami akan lebih dulu membantu mencarikan barang pengganti. Jika Anda lebih suka, Anda bisa mendapat pengembalian dana penuh."
-      },
-      "q3": {
-        "q": "Bisakah saya memesan lebih dari stok yang tampil?",
-        "a": "Bisa. Tanyakan jumlah yang lebih besar kepada penjual dan BaliTrade di chat produk. Produk made to order memiliki waktu produksi yang ditentukan penjual."
-      },
-      "q4": {
-        "q": "Ke negara mana saja Anda mengirim?",
-        "a": "Rusia dan negara CIS, misalnya Kazakhstan, Uzbekistan, Kirgizstan, Armenia, dan Belarus. Anda cukup mengisi alamat pengiriman; tim kami yang mengatur kargo udaranya."
-      },
-      "q5": {
-        "q": "Berapa lama pengirimannya?",
-        "a": "Lama pengiriman bergantung pada tujuan. Tim kami mengonfirmasinya sebelum Anda membayar."
-      }
-    },
     "sellersTitle": "Jual produk Bali Anda ke Rusia & CIS",
     "sellersText": "Daftar, dapatkan persetujuan tim kami, lalu pasang produk Anda. Kami mengurus pembeli, kontrol kualitas, ekspor, dan pengiriman.",
-    "becomeSeller": "Jadi penjual"
+    "becomeSeller": "Jadi penjual",
+    "contentLoading": "Memuat…",
+    "contentError": "Bagian ini tidak dapat dimuat."
   },
   "Auth": {
     "email": "Email",
@@ -341,7 +295,8 @@
       "categories": "Kategori",
       "qc": "Pemeriksaan kualitas",
       "shipping": "Pengiriman",
-      "payouts": "Pencairan"
+      "payouts": "Pencairan",
+      "content": "Konten halaman"
     },
     "overview": {
       "title": "Yang perlu Anda kerjakan",
@@ -1293,5 +1248,54 @@
     "errBank": "Isi nama bank.",
     "errNumber": "Isi nomor rekening 6 sampai 20 digit.",
     "errHolder": "Isi nama pemilik rekening."
+  },
+  "AdminContent": {
+    "title": "Konten halaman",
+    "intro": "Isi halaman Cara kerja. Setiap item ditulis dalam ketiga bahasa sekaligus dan tampil di situs sesuai bahasa pengunjung. Hanya teks: baris baru dipertahankan, selebihnya tanpa format.",
+    "tabsLabel": "Jenis konten",
+    "tabs": {
+      "HOW_IT_WORKS_STEP": "Cara kerja",
+      "FAQ": "Pertanyaan"
+    },
+    "add": {
+      "HOW_IT_WORKS_STEP": "Tambah langkah",
+      "FAQ": "Tambah pertanyaan"
+    },
+    "editTitle": {
+      "HOW_IT_WORKS_STEP": "Ubah langkah {n}",
+      "FAQ": "Ubah pertanyaan"
+    },
+    "newTitle": {
+      "HOW_IT_WORKS_STEP": "Langkah baru",
+      "FAQ": "Pertanyaan baru"
+    },
+    "titleLabel": {
+      "HOW_IT_WORKS_STEP": "Judul langkah",
+      "FAQ": "Pertanyaan"
+    },
+    "bodyLabel": {
+      "HOW_IT_WORKS_STEP": "Penjelasan",
+      "FAQ": "Jawaban"
+    },
+    "languages": {
+      "en": "Inggris",
+      "id": "Indonesia",
+      "ru": "Rusia"
+    },
+    "save": "Simpan",
+    "saving": "Menyimpan…",
+    "cancel": "Batal",
+    "edit": "Ubah",
+    "hide": "Sembunyikan",
+    "show": "Tampilkan",
+    "hidden": "Disembunyikan",
+    "moveUp": "Naikkan",
+    "moveDown": "Turunkan",
+    "delete": "Hapus",
+    "confirmDelete": "Hapus item ini selamanya? Menyembunyikannya menyimpannya untuk nanti.",
+    "confirmDeleteYes": "Ya, hapus",
+    "empty": "Belum ada isi.",
+    "loadError": "Tidak dapat memuat konten.",
+    "viewPage": "Lihat halamannya"
   }
 }

@@ -1,5 +1,5 @@
 import type { AuthUser, Role } from '@balitrade/shared';
-import { Banknote, ClipboardCheck, ClipboardList, Coins, LayoutDashboard, ShoppingCart, Tags, Truck, UserCheck, Wallet, type LucideIcon } from 'lucide-react';
+import { Banknote, ClipboardCheck, ClipboardList, Coins, FileText, LayoutDashboard, ShoppingCart, Tags, Truck, UserCheck, Wallet, type LucideIcon } from 'lucide-react';
 import { deepestMatch } from '@/lib/nav';
 
 export interface AdminNavItem {
@@ -27,6 +27,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: '/admin/payouts', key: 'payouts', icon: Wallet, roles: FINANCE },
   { href: '/admin/categories', key: 'categories', icon: Tags, roles: ['ADMIN_OWNER'] },
   { href: '/admin/exchange-rate', key: 'rates', icon: Coins, roles: ['ADMIN_OWNER'] },
+  { href: '/admin/content', key: 'content', icon: FileText, roles: ['ADMIN_OWNER'] },
 ];
 
 export function navItemsFor(user: AuthUser): AdminNavItem[] {

@@ -677,3 +677,31 @@ model AuditLog {
   @@index([createdAt])
   @@map("audit_logs")
 }
+
+enum ContentKind {
+  HOW_IT_WORKS_STEP
+  FAQ
+}
+
+/// Editable page content (2026-11-26): the steps and the questions on /how-it-works, in all three languages, written by
+/// the OWNER on /admin/content. Shown as plain text, never as HTML. A step's number is its position, not a column.
+model ContentItem {
+  id          String      @id @default(cuid())
+  kind        ContentKind
+  titleEn     String      @map("title_en")
+  titleId     String      @map("title_id")
+  titleRu     String      @map("title_ru")
+  bodyEn      String      @map("body_en")
+  bodyId      String      @map("body_id")
+  bodyRu      String      @map("body_ru")
+  /// Unticked: kept, but not shown on the site.
+  active      Boolean     @default(true)
+  sortOrder   Int         @default(0) @map("sort_order")
+  /// The admin who last changed it. A plain id, not a relation: content outlives the accounts that wrote it.
+  updatedById String?     @map("updated_by_id")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@index([kind, active, sortOrder])
+  @@map("content_items")
+}

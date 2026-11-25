@@ -1,6 +1,5 @@
 import {
   Banknote,
-  ChevronDown,
   ClipboardCheck,
   Coins,
   MessagesSquare,
@@ -13,6 +12,7 @@ import type { Metadata } from 'next';
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { FaqList, HowItWorksSteps } from '@/components/how-it-works/content-sections';
 import { buttonClasses } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 
@@ -23,8 +23,6 @@ const TRUST = [
   { key: 'cargo', Icon: Package },
 ] as const;
 
-const STEPS = ['s1', 's2', 's3', 's4', 's5', 's6'] as const;
-const FAQ = ['q1', 'q2', 'q3', 'q4', 'q5'] as const;
 const SHIPPING = ['s1', 's2', 's3', 's4'] as const;
 
 /** The three methods decided on 2026-10-30; the actual account details live in config and appear on the order. */
@@ -72,17 +70,9 @@ export default function HowItWorksPage() {
         <p className="mt-4 text-base leading-relaxed text-pretty text-muted sm:text-lg">{t('intro')}</p>
       </header>
 
-      {/* A real sequence, so numbered. */}
+      {/* A real sequence, so numbered. Written by the OWNER on /admin/content. */}
       <Section id="how" title={t('howTitle')}>
-        <ol className="grid gap-x-8 gap-y-8 sm:grid-cols-2 xl:grid-cols-3">
-          {STEPS.map((step, index) => (
-            <li key={step} className="border-t-2 border-primary pt-3">
-              <span className="text-sm font-semibold tabular-nums text-primary">{index + 1}</span>
-              <h3 className="mt-1 text-base font-semibold text-text">{t(`steps.${step}.title`)}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{t(`steps.${step}.text`)}</p>
-            </li>
-          ))}
-        </ol>
+        <HowItWorksSteps />
       </Section>
 
       <Section id="trust" title={t('trustTitle')}>
@@ -124,21 +114,9 @@ export default function HowItWorksPage() {
         </ul>
       </Section>
 
+      {/* Written by the OWNER on /admin/content. */}
       <Section id="faq" title={t('faqTitle')}>
-        <div className="divide-y divide-border border-y border-border">
-          {FAQ.map((item) => (
-            <details key={item} className="group">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
-                {t(`faq.${item}.q`)}
-                <ChevronDown
-                  className="h-5 w-5 shrink-0 text-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
-                  aria-hidden="true"
-                />
-              </summary>
-              <p className="max-w-[70ch] pb-4 text-sm leading-relaxed text-muted">{t(`faq.${item}.a`)}</p>
-            </details>
-          ))}
-        </div>
+        <FaqList />
       </Section>
 
       <section aria-labelledby="sellers-title" className="rounded-card bg-surface px-6 py-10 sm:px-10">
