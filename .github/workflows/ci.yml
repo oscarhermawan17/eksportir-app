@@ -80,6 +80,18 @@ jobs:
           R2_PUBLIC_BUCKET: ci-public
           R2_PUBLIC_BASE_URL: https://example.invalid
           R2_PRIVATE_BUCKET: ci-private
+          # The payment destinations buyers are shown. Until the owner saves /admin/payment-settings they come
+          # from these variables, and a method with no destination is refused (400) — so the specs that pay need
+          # them, exactly as a developer's .env has them. Placeholders from .env.example, never real accounts.
+          PAY_BANK_NAME: BCA
+          PAY_BANK_ACCOUNT_NUMBER: '1234567890'
+          PAY_BANK_ACCOUNT_HOLDER: PT BaliTrade Mock
+          PAY_USDT_NETWORK: TRC20
+          PAY_USDT_ADDRESS: TMockUsdtAddressForDevelopmentOnly00
+          PAY_EXCHANGE_NAME: Mock Exchange Bali
+          PAY_EXCHANGE_CONTACT: '@mock_exchange_bali'
+          PAY_EXCHANGE_INSTRUCTIONS: Development placeholder. Tell the exchange your order number and ask them for the transfer reference.
+          PAY_MOCK: 'true'
 
   images:
     name: Build and push images
