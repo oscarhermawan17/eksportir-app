@@ -118,12 +118,19 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 29 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26, T27 and T28). Open: T21 password reset, T24 backup, T25 end-to-end
 test, T29 seller↔admin chat, T30 switch off `r2.dev`, T31 buyer credit.
 
-**Not deployed yet (2026-11-26): payment accounts managed by the OWNER.** `/admin/payment-settings` (menu "Payment accounts";
+**Deployed 2026-11-26 (fifth deploy of the day): payment accounts managed by the OWNER — commit `b0cae51` is live.** The first
+CI run (#45723285628) failed: CI had no `PAY_*` values, so the new destination check refused every e2e payment (400); the e2e step now
+gets the `.env.example` placeholders, run #45723970140 green. Dump first (`~/db-backups/balitrade-2026-11-26-pre-payment-settings.dump`,
+76 KB), migration `20261126140000_payment_settings`, then images: api `6195c43b` → `46cc9c22`, web `28fa8cbf` → `a2d8cc9a`. Verified
+from outside: `database: up`; `/id`, `/id/how-it-works`, `/en/admin/payment-settings` and `/en/admin/payments` 200; `GET`/`PUT
+/api/admin/payment-settings` answer 401 without a session; the catalog still answers. `payment_settings` is still empty there, so buyers
+see the env placeholders until the owner saves the page. Not opened while logged in on the live site.
+
+**Payment accounts managed by the OWNER (2026-11-26).** `/admin/payment-settings` (menu "Payment accounts";
 OWNER saves, FINANCE reads) holds the bank account and the USDT (Binance) deposit address buyers pay to; every save is audited with
 masked values, both are typed twice, the address is checked against its network, and each payment now keeps `destination`. Until the
 first save the `PAY_*` env values stay in force; the exchange method is env-only and, while `PAY_MOCK=true`, keeps the buyer's test
-warning on (the page says so). **Migration `20261126140000_payment_settings`** (one table + one nullable column): backup, migrate,
-images. On the live site the env values are still the public placeholders — the owner enters the real ones on that page after deploy.
+warning on (the page says so). The owner enters the real bank and USDT details on that page; the exchange stays in env.
 
 **Deployed 2026-11-26 (fourth deploy of the day): editable How it works content — commit `3fb9560` is live.** CI run
 #45717818400 green. Dump first (`~/db-backups/balitrade-2026-11-26-pre-content.dump`, 72 KB), then migration
