@@ -133,8 +133,14 @@ owner:** pick icons for the four live categories on `/admin/categories` (they re
 PowerShell and not from Git Bash; the BOM PowerShell adds breaks a first-line comment that contains `(`, so the first line is now a
 throwaway word (`bom-guard-line-ignore-the-error`); and the server `.env`'s `DATABASE_URL` points at the Docker bridge (`172.19.0.1`),
 so `pg_dump` run on the host must swap the host for `127.0.0.1` (done inside the command, the URL is never printed).
-**Not deployed yet (2026-11-26):** the admin tables (listings, orders and the QC/shipping/payout queues) got status tabs with counts, a
-react-day-picker date popover with presets and clickable rows; the API gained a multi-status filter and `statusCounts` (no migration).
+**Deployed 2026-11-26 (second deploy of the day): the admin tables — commit `a6c1545` is live.** Listings, orders and the
+QC/shipping/payout queues got status tabs with counts, a react-day-picker date popover with presets and clickable rows; the API gained a
+multi-status filter and `statusCounts` (no migration). CI run #45708549535 green. Dump first
+(`~/db-backups/balitrade-2026-11-26-pre-admin-tables.dump`, 72 KB), then images: api `ff2ffe91` → `c5107563`, web `a1f4c05f` →
+`296c4f1b`. Verified from outside: `database: up`; `/id`, `/id/seller`, `/en/admin/orders`, `/en/admin/products`, `/en/admin/qc`,
+`/en/admin/shipping` and `/en/admin/payouts` all 200; `/api/admin/orders?status=REQUESTED,COMPLETED` and `/api/admin/products` answer
+401 without a session; 7 products, 8/8 home images load. The new tables were not opened while logged in on the live site (no
+password is typed into a tool) — the owner checks them.
 For browser checks use the globally installed `agent-browser` CLI (`agent-browser skills get core`); for admin/seller screens on
 localhost mint a session from the laptop's `JWT_SECRET` for an existing local user instead of typing a password.
 
