@@ -71,7 +71,11 @@ Ganti font = ubah file itu saja.
   Tanggal **tidak** memakai input bawaan browser: `date-range-picker.tsx` (react-day-picker) dengan preset (Hari ini, 7/30 hari,
   Bulan ini, Bulan lalu), kalender rentang bergaya token (`.bt-calendar` di `globals.css`), Batal/Terapkan, lembar bawah di HP.
   Orders dikelompokkan per tahap (`ORDER_STATUS_GROUPS`), Listings per status (`LISTING_STATUS_TABS`); antrean QC/Pengiriman/Payouts
-  memakai tabel yang sama dengan tab antreannya sendiri. Tabel admin lain (Payments, Sellers) sebaiknya memakai pola ini juga.
+  memakai tabel yang sama dengan tab antreannya sendiri.
+  **Baris yang dibuka di tempat** (`expand`, dipakai Payments dan Sellers): klik baris membuka panel berlatar `surface` tepat di bawahnya
+  (satu baris sekaligus, chevron berputar, tombol di sel pertama dengan `aria-expanded`); di dalamnya detail di kiri/atas dan tombol
+  keputusan di kanan bawah (aksi utama paling kanan, navy; tolak = secondary, konfirmasi tolak = danger). Pakai ini bila keputusan butuh
+  konteks daftar (bukti vs nominal); pakai `rowHref` bila record punya halaman sendiri (listing, pesanan).
 
 ## Progress
 

@@ -171,7 +171,7 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
   terhadap kehilangan catatan pesanan dan bukti pembayaran. DoD-nya tidak boleh dilonggarkan — backup yang belum pernah di-restore bukan backup.
   Tambahkan juga pemantauan sederhana: RAM, disk, dan apakah backup semalam benar-benar jadi.
   DoD: restore backup ke DB kosong berhasil dicoba sekali.
-- [ ] **T27 Tabel, filter dan pagination untuk daftar admin** (ditambahkan 2026-11-13 atas permintaan pemilik) — tiga daftar inti
+- [x] **T27 Tabel, filter dan pagination untuk daftar admin** (ditambahkan 2026-11-13 atas permintaan pemilik) — tiga daftar inti
   (**Listing**, **Pesanan**, **Pembayaran**) sekarang `take: N` tanpa `skip` dan tanpa hitungan total: 200 untuk listing, `LIST_LIMIT`
   untuk pesanan, `ADMIN_LIST_LIMIT` untuk pembayaran. **Itu cacat, bukan sekadar ketidaknyamanan** — begitu baris melewati batas, yang
   tertua hilang tanpa tanda apa pun dan admin tidak akan tahu ada yang tidak terlihat. Dikerjakan sekarang selagi VPS masih kosong.

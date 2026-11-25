@@ -114,9 +114,17 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 
 ## Current status
 
-Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-21**,
-working tree clean, 28 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
-and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
+Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-26**,
+29 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26, T27 and T28). Open: T21 password reset, T24 backup, T25 end-to-end
+test, T29 seller↔admin chat, T30 switch off `r2.dev`, T31 buyer credit.
+
+**T27 done 2026-11-26 (not deployed yet):** Payments and Sellers joined Listings and Orders on the shared admin table. Both APIs are
+paged on the server (`AdminListQueryDto` in `apps/api/src/common/`: `q`, `from`/`to` as Bali days, `page`, `size`) and return
+`statusCounts`; the payments list lost its silent `take: 200`. Rows **open in place** (`DataTable` `expand`): a payment shows its proof
+(signed URL fetched on opening) beside the amount and the Verify / Reject buttons, a seller application shows contact, location, QC fee
+and the Approve / Reject / Revoke buttons. `escapeLike` now lives once in `apps/api/src/common/escape-like.ts`. Checked in the browser with
+temporary local fixtures (a pending seller, a submitted payment), deleted afterwards together with the chat message and notification the
+rejection wrote; the proof image itself was not seen, since no file was uploaded to the shared private bucket for the check.
 
 **Deployed 2026-11-26: the UI revamp (design system v2), category icons, Bali-day admin date filters and Next.js 16.4.6 — commit
 `2089841` is live.** Design system v2 (navy on white, IBM Plex Sans, no shadows or all-caps labels; `docs/DESIGN.md`) covers the navbar,
