@@ -217,6 +217,10 @@ export interface AdminProductView extends Omit<ProductView, 'title' | 'descripti
 export const ADMIN_PRODUCT_DATE_FIELDS = ['createdAt', 'reviewedAt'] as const;
 export type AdminProductDateField = (typeof ADMIN_PRODUCT_DATE_FIELDS)[number];
 
+/** The tabs of the admin listings table, in order. `ALL` means every status but DRAFT (a seller's private work). */
+export const LISTING_STATUS_TABS = ['PENDING_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED', 'ALL'] as const;
+export type ListingStatusTab = (typeof LISTING_STATUS_TABS)[number];
+
 /** Query of GET /api/admin/products. Everything optional; the API applies the defaults. */
 export interface AdminProductQuery {
   status?: ProductStatus;

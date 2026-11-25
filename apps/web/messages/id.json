@@ -30,7 +30,25 @@
     "to": "Sampai",
     "clearDates": "Hapus tanggal",
     "dateCreated": "Dibuat",
-    "dateReviewed": "Ditinjau"
+    "dateReviewed": "Ditinjau",
+    "activeFilters": "Difilter:",
+    "reset": "Reset",
+    "removeFilter": "Hapus filter: {filter}",
+    "dateAll": "Semua tanggal",
+    "dateFrom": "Sejak {date}",
+    "dateUntil": "Sampai {date}",
+    "datePanelLabel": "Pilih tanggal",
+    "datePickHint": "Pilih tanggal awal dan akhir, atau rentang cepat.",
+    "cancel": "Batal",
+    "apply": "Terapkan",
+    "searchFilter": "“{q}”",
+    "datePresets": {
+      "today": "Hari ini",
+      "last7": "7 hari terakhir",
+      "last30": "30 hari terakhir",
+      "thisMonth": "Bulan ini",
+      "lastMonth": "Bulan lalu"
+    }
   },
   "Navbar": {
     "searchLabel": "Cari produk",
@@ -532,7 +550,8 @@
     "columnPrice": "Harga",
     "columnStatus": "Status",
     "columnReviewed": "Ditinjau",
-    "searchPlaceholder": "Judul atau penjual…"
+    "searchPlaceholder": "Judul atau penjual…",
+    "tabsLabel": "Status listing"
   },
   "AdminRate": {
     "title": "Kurs",
@@ -887,7 +906,17 @@
     "searchPlaceholder": "Kode pesanan, pembeli atau penjual…",
     "payoutFilter": "Pencairan",
     "payoutUnpaid": "Belum dicairkan",
-    "payoutPaid": "Sudah dicairkan"
+    "payoutPaid": "Sudah dicairkan",
+    "tabsLabel": "Tahap pesanan",
+    "tabs": {
+      "all": "Semua",
+      "request": "Permintaan",
+      "payment": "Pembayaran",
+      "qc": "Kontrol kualitas",
+      "shipping": "Pengiriman",
+      "completed": "Selesai",
+      "cancelled": "Dibatalkan"
+    }
   },
   "Payments": {
     "pageTitle": "Bayar pesanan Anda",

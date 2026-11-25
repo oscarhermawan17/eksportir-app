@@ -13,6 +13,11 @@ export interface PageResult<T> {
   /** 1-based, so it reads the same in the URL as on the buttons. */
   page: number;
   size: PageSize;
+  /**
+   * Rows per status under the same search and date filters but **any** status, so a tab can show how many
+   * rows it would list. Only lists with status tabs send it.
+   */
+  statusCounts?: Partial<Record<string, number>>;
 }
 
 export const PAGE_SIZES = [25, 50, 100] as const;

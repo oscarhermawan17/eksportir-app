@@ -38,9 +38,11 @@ export class AdminProductsService {
     const size: PageSize = query.size ?? DEFAULT_PAGE_SIZE;
     const page = query.page ?? 1;
     const where = this.buildWhere(query);
+    // The same filters with any status (drafts still excluded): what each status tab would list.
+    const base = this.buildWhere({ ...query, status: undefined });
 
-    // One round trip: the page itself and the count behind it, which is what "last page" needs.
-    const [total, products] = await this.prisma.$transaction([
+    // One round trip: the page itself, the count behind it (what "last page" needs) and the tab counts.
+    const [total, products, byStatus] = await this.prisma.$transaction([
       this.prisma.product.count({ where }),
       this.prisma.product.findMany({
         where,
@@ -51,7 +53,11 @@ export class AdminProductsService {
         skip: (page - 1) * size,
         take: size,
       }),
-    ]);
+      this.prisma.product.groupBy({ by: ['status'], where: base, orderBy: { status: 'asc' }, _count: { _all: true } }),
+      ],
+      // One snapshot for all three reads, so the tab counts always add up to the total even while rows are being added.
+      { isolationLevel: 'RepeatableRead' },
+    );
 
     return {
       // A seller or user deleted between the reads leaves a relation null; skip such a row instead of
@@ -63,6 +69,7 @@ export class AdminProductsService {
       total,
       page,
       size,
+      statusCounts: Object.fromEntries(byStatus.map((row) => [row.status, (row._count as { _all: number })._all])),
     };
   }
 

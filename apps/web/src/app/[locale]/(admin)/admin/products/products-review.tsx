@@ -1,18 +1,17 @@
 'use client';
 
-import { DEFAULT_PAGE_SIZE, type AdminProductView, type PageResult, type ProductStatus } from '@balitrade/shared';
+import { DEFAULT_PAGE_SIZE, LISTING_STATUS_TABS, type AdminProductView, type ListingStatusTab, type PageResult } from '@balitrade/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
 import { DataTable, type Column } from '@/components/admin/data-table';
-import { DateRange, SearchBox } from '@/components/admin/table-filters';
-import { buttonClasses } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
+import { DateRangePicker, useRangeLabel } from '@/components/admin/date-range-picker';
+import { StatusTabs } from '@/components/admin/status-tabs';
+import { ActiveFilters, SearchBox, type ActiveFilter } from '@/components/admin/table-filters';
+import { ProductStatusBadge } from '@/components/ui/product-status-badge';
 import { apiFetch } from '@/lib/api';
 import { toApiQuery, useTableQuery } from '@/lib/table-query';
 
-type Filter = ProductStatus | 'ALL';
-const FILTERS: Filter[] = ['PENDING_REVIEW', 'APPROVED', 'REJECTED', 'ARCHIVED', 'ALL'];
 
 /** The filters this list adds to the shared page/size state; all of them live in the URL. */
 const OWN_FILTERS = ['status', 'q', 'from', 'to', 'dateField'];
@@ -30,6 +29,7 @@ function ReviewList() {
   const tProducts = useTranslations('Products');
   const tTable = useTranslations('Table');
   const format = useFormatter();
+  const rangeLabel = useRangeLabel();
   const table = useTableQuery();
 
   const [attempt, setAttempt] = useState(0);
@@ -39,7 +39,7 @@ function ReviewList() {
   const [loaded, setLoaded] = useState<{ key: string; page: PageResult<AdminProductView> | null } | null>(null);
 
   const status = table.get('status');
-  const filter: Filter = (FILTERS as string[]).includes(status) ? (status as Filter) : 'ALL';
+  const filter: ListingStatusTab = (LISTING_STATUS_TABS as readonly string[]).includes(status) ? (status as ListingStatusTab) : 'ALL';
   const query = toApiQuery(table, OWN_FILTERS);
   const filtered = OWN_FILTERS.some((key) => table.get(key) !== '');
   const key = `${query}#${attempt}`;
@@ -60,6 +60,10 @@ function ReviewList() {
   const current = loaded?.key === key ? loaded : null;
   const result = current?.page ?? null;
   const failed = current !== null && current.page === null;
+  // The last counts received stay on the tabs while the next page loads, so the numbers do not flicker.
+  const counts = (current?.page ?? loaded?.page)?.statusCounts;
+  const countOf = (tab: ListingStatusTab) =>
+    counts === undefined ? undefined : tab === 'ALL' ? Object.values(counts).reduce<number>((sum, n) => sum + (n ?? 0), 0) : (counts[tab] ?? 0);
 
   const date = (iso: string | null) =>
     iso ? format.dateTime(new Date(iso), { dateStyle: 'medium' }) : '—';
@@ -70,7 +74,7 @@ function ReviewList() {
   const photo = (product: AdminProductView) => {
     const cover = coverOf(product);
     return (
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-button bg-background text-[10px] text-muted">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-button bg-surface text-[10px] text-muted">
         {cover?.url ? (
           // eslint-disable-next-line @next/next/no-img-element -- remote R2 image, sized by CSS
           <img src={cover.url} alt="" className="h-full w-full object-cover" />
@@ -82,9 +86,7 @@ function ReviewList() {
   };
 
   const statusBadge = (product: AdminProductView) => (
-    <span className="whitespace-nowrap rounded-full border border-border px-2 py-0.5 text-xs font-semibold text-muted">
-      {tProducts(`status.${product.status}`)}
-    </span>
+    <ProductStatusBadge status={product.status} label={tProducts(`status.${product.status}`)} />
   );
 
   const columns: Column<AdminProductView>[] = [
@@ -94,7 +96,7 @@ function ReviewList() {
       cell: (product) => (
         <div className="flex items-center gap-3">
           {photo(product)}
-          <span className="font-semibold text-text">{titleOf(product)}</span>
+          <span className="font-medium text-text">{titleOf(product)}</span>
         </div>
       ),
     },
@@ -113,16 +115,6 @@ function ReviewList() {
       className: 'whitespace-nowrap',
       cell: (product) => date(product.reviewedAt ?? null),
     },
-    {
-      key: 'actions',
-      header: '',
-      className: 'text-right',
-      cell: (product) => (
-        <Link href={`/admin/products/${product.id}`} className={buttonClasses('secondary', 'h-8 px-3')}>
-          {t('review')}
-        </Link>
-      ),
-    },
   ];
 
   /** On a phone an admin is triaging, so a card carries only what decides whether to open it. */
@@ -140,54 +132,54 @@ function ReviewList() {
         <p className="mt-0.5 text-sm text-muted">
           {t('columnReviewed')}: {date(product.reviewedAt ?? null)}
         </p>
-        <Link href={`/admin/products/${product.id}`} className={buttonClasses('secondary', 'mt-3 h-9')}>
-          {t('review')}
-        </Link>
       </div>
     </div>
   );
+
+  const tabs = (
+    <StatusTabs
+      label={t('tabsLabel')}
+      active={filter}
+      onChange={(next) => table.set({ status: next === 'ALL' ? '' : next })}
+      tabs={LISTING_STATUS_TABS.map((tab) => ({ key: tab, label: t(`filter.${tab}`), count: countOf(tab) }))}
+    />
+  );
+
+  const dateField = table.get('dateField') || 'createdAt';
+  const dateOptions = [
+    { value: 'createdAt', label: tTable('dateCreated') },
+    { value: 'reviewedAt', label: tTable('dateReviewed') },
+  ];
 
   const toolbar = (
-    <div className="space-y-3">
-      <div role="tablist" aria-label={t('title')} className="flex flex-wrap gap-2">
-        {FILTERS.map((option) => (
-          <button
-            key={option}
-            type="button"
-            role="tab"
-            aria-selected={filter === option}
-            onClick={() => table.set({ status: option === 'ALL' ? '' : option })}
-            className={`rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
-              filter === option ? 'border-primary bg-primary text-white' : 'border-border bg-card text-text hover:border-primary'
-            }`}
-          >
-            {t(`filter.${option}`)}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-        <SearchBox
-          value={table.get('q')}
-          onSearch={(next) => table.set({ q: next })}
-          placeholder={t('searchPlaceholder')}
-        />
-        <DateRange
-          from={table.get('from')}
-          to={table.get('to')}
-          onChange={(next) => table.set(next)}
-          which={{
-            value: table.get('dateField') || 'createdAt',
-            onChange: (next) => table.set({ dateField: next === 'createdAt' ? '' : next }),
-            options: [
-              { value: 'createdAt', label: tTable('dateCreated') },
-              { value: 'reviewedAt', label: tTable('dateReviewed') },
-            ],
-          }}
-        />
-      </div>
+    <div className="flex flex-wrap items-center gap-3">
+      <SearchBox value={table.get('q')} onSearch={(next) => table.set({ q: next })} placeholder={t('searchPlaceholder')} />
+      <DateRangePicker
+        from={table.get('from')}
+        to={table.get('to')}
+        which={{ value: dateField, options: dateOptions }}
+        onChange={({ from, to, which }) =>
+          table.set({ from, to, dateField: !from && !to ? '' : which === 'createdAt' ? '' : which })
+        }
+      />
     </div>
   );
+
+  const q = table.get('q');
+  const from = table.get('from');
+  const to = table.get('to');
+  const chips: ActiveFilter[] = [
+    ...(q ? [{ key: 'q', label: tTable('searchFilter', { q }), onRemove: () => table.set({ q: '' }) }] : []),
+    ...(from || to
+      ? [
+          {
+            key: 'date',
+            label: `${dateOptions.find((o) => o.value === dateField)?.label ?? ''}: ${rangeLabel(from, to)}`,
+            onRemove: () => table.set({ from: '', to: '', dateField: '' }),
+          },
+        ]
+      : []),
+  ];
 
   return (
     <DataTable
@@ -203,7 +195,10 @@ function ReviewList() {
       onPage={(next) => table.set({ page: next })}
       onSize={(next) => table.set({ size: next === DEFAULT_PAGE_SIZE ? '' : next, page: 1 })}
       filtered={filtered}
+      rowHref={(product) => `/admin/products/${product.id}`}
+      tabs={tabs}
       toolbar={toolbar}
+      activeFilters={<ActiveFilters filters={chips} onReset={() => table.set({ q: '', from: '', to: '', dateField: '' })} />}
     />
   );
 }

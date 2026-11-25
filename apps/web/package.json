@@ -17,6 +17,7 @@
     "next": "16.4.6",
     "next-intl": "4.14.9",
     "react": "19.3.1",
+    "react-day-picker": "9.14.0",
     "react-dom": "19.3.1",
     "socket.io-client": "4.8.4"
   },

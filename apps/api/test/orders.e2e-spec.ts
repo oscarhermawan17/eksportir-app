@@ -357,6 +357,7 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
       total: number;
       page: number;
       size: number;
+      statusCounts?: Record<string, number>;
     }
     const adminPage = async (who: Who, query = '') =>
       (await http(who, 'get', `/api/admin/orders?${query}`).expect(200)).body as Page;
@@ -442,6 +443,26 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
       await http('ops', 'get', '/api/admin/orders?page=0').expect(400);
       await http('ops', 'get', '/api/admin/orders?status=NOPE').expect(400);
       await http('ops', 'get', '/api/admin/orders?from=not-a-date').expect(400);
+      // A tab sends several statuses; every one of them must still be a real status.
+      await http('ops', 'get', '/api/admin/orders?status=REQUESTED,NOPE').expect(400);
+    });
+
+    it('takes several statuses at once (a tab) and counts every status under the same search and dates', async () => {
+      const tab = await adminPage('ops', 'status=REQUESTED,CHANGE_PROPOSED,DECLINED&size=100');
+      expect(tab.items.length).toBeGreaterThan(0);
+      expect(tab.items.every((row) => ['REQUESTED', 'CHANGE_PROPOSED', 'DECLINED'].includes(row.status))).toBe(true);
+
+      // The counts ignore the status filter, so on an unfiltered page they add up to its total. Compared within one
+      // response: other spec files create orders in parallel.
+      const all = await adminPage('ops', 'size=100');
+      const counts = all.statusCounts ?? {};
+      expect(Object.values(counts).reduce((sum, n) => sum + n, 0)).toBe(all.total);
+      // A tab still gets the counts of every status, its own included.
+      expect(tab.statusCounts?.REQUESTED ?? 0).toBeGreaterThan(0);
+
+      // ...but they do follow the search: a search that matches nothing counts nothing.
+      const none = await adminPage('ops', 'q=zzz-nobody-matches&status=REQUESTED');
+      expect(Object.values(none.statusCounts ?? {}).reduce((sum, n) => sum + n, 0)).toBe(0);
     });
   });
 

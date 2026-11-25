@@ -88,9 +88,26 @@ export function orderNumberFromCode(text: string): number | null {
   return value > 1000 && value - 1000 <= MAX_ORDER_NUMBER ? value - 1000 : null;
 }
 
+/**
+ * The tabs of the admin orders table: an order's stage, each a set of statuses. By stage rather than "needs
+ * action", because what needs action differs between OPS and FINANCE and one number would mislead both.
+ * Every status sits in exactly one group (checked by a unit test).
+ */
+export const ORDER_STATUS_GROUPS = {
+  request: ['REQUESTED', 'CHANGE_PROPOSED'],
+  payment: ['ACCEPTED', 'AWAITING_PAYMENT', 'PAYMENT_SUBMITTED', 'PAYMENT_VERIFIED'],
+  qc: ['IN_QC', 'QC_READY', 'QC_APPROVED', 'ISSUE'],
+  shipping: ['AWAITING_SHIPPING_PAYMENT', 'SHIPPING_PAID', 'SHIPPED', 'ARRIVED', 'DELIVERY_ISSUE'],
+  completed: ['COMPLETED'],
+  cancelled: ['DECLINED', 'CANCELLED', 'REFUNDED'],
+} as const satisfies Record<string, readonly OrderStatus[]>;
+export type OrderStatusGroup = keyof typeof ORDER_STATUS_GROUPS;
+export const ORDER_STATUS_GROUP_KEYS = Object.keys(ORDER_STATUS_GROUPS) as OrderStatusGroup[];
+
 /** Query of GET /api/admin/orders (T27). Everything optional; the API applies the defaults. */
 export interface AdminOrderQuery {
-  status?: OrderStatus;
+  /** One status, or several separated by commas (a tab of ORDER_STATUS_GROUPS). */
+  status?: OrderStatus | string;
   /** An order code, or part of a buyer's or seller's name. */
   q?: string;
   /** The payout queue (T20): completed orders still to pay out, or already paid out. */

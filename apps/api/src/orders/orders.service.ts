@@ -170,21 +170,16 @@ export class OrdersService {
   async listForAdmin(user: AuthUser, query: AdminOrderQueryDto = {}): Promise<PageResult<OrderView>> {
     const size: PageSize = query.size ?? DEFAULT_PAGE_SIZE;
     const page = query.page ?? 1;
-    const where: Prisma.OrderWhereInput = {};
-
-    if (query.status) where.status = query.status;
-    // The payout queue (T20): completed orders still to pay out, or already paid out. Only completed orders are paid.
-    if (query.payout) {
-      where.status = 'COMPLETED';
-      where.payout = query.payout === 'paid' ? { isNot: null } : { is: null };
-    }
+    // Everything but the status first: the tab counts use exactly these filters, so a tab says how many rows it
+    // would show under the current search and dates.
+    const base: Prisma.OrderWhereInput = {};
 
     if (query.q) {
       const text = escapeLike(query.q);
       // An admin types what they see on screen, so a code is matched exactly and anything else is
       // treated as a name. Both go in one OR so a single box covers all three the owner asked for.
       const number = orderNumberFromCode(query.q);
-      where.OR = [
+      base.OR = [
         ...(number === null ? [] : [{ number }]),
         { buyer: { name: { contains: text, mode: 'insensitive' as const } } },
         { seller: { displayName: { contains: text, mode: 'insensitive' as const } } },
@@ -194,13 +189,22 @@ export class OrdersService {
     const from = startOfBusinessDay(query.from);
     const to = endOfBusinessDay(query.to);
     if (from || to) {
-      where.createdAt = { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) };
+      base.createdAt = { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) };
+    }
+    // The payout queue (T20): completed orders still to pay out, or already paid out. Only completed orders are paid,
+    // so here the status is part of the base and the counts stay inside the queue.
+    if (query.payout) {
+      base.status = 'COMPLETED';
+      base.payout = query.payout === 'paid' ? { isNot: null } : { is: null };
     }
 
-    const [total, rows] = await this.prisma.$transaction([
-      this.prisma.order.count({ where }),
+    const filtered: Prisma.OrderWhereInput =
+      query.status?.length && !query.payout ? { ...base, status: { in: query.status } } : base;
+
+    const [total, rows, byStatus] = await this.prisma.$transaction([
+      this.prisma.order.count({ where: filtered }),
       this.prisma.order.findMany({
-        where,
+        where: filtered,
         include: orderInclude,
         // `id` breaks ties: orders with the same timestamp would otherwise come back in any order, and offset
         // paging then repeats one row on two pages and skips another.
@@ -208,9 +212,14 @@ export class OrdersService {
         skip: (page - 1) * size,
         take: size,
       }),
-    ]);
+      this.prisma.order.groupBy({ by: ['status'], where: base, orderBy: { status: 'asc' }, _count: { _all: true } }),
+      ],
+      // One snapshot for all three reads, so the tab counts always add up to the total even while rows are being added.
+      { isolationLevel: 'RepeatableRead' },
+    );
 
-    return { items: rows.map((row) => this.toView(row, user)), total, page, size };
+    const statusCounts = Object.fromEntries(byStatus.map((row) => [row.status, (row._count as { _all: number })._all]));
+    return { items: rows.map((row) => this.toView(row, user)), total, page, size, statusCounts };
   }
 
   async get(user: AuthUser, orderId: string): Promise<OrderView> {

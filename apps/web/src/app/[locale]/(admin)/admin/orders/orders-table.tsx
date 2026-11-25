@@ -1,18 +1,27 @@
 'use client';
 
-import { DEFAULT_PAGE_SIZE, OrderStatus, type OrderView, type PageResult } from '@balitrade/shared';
+import {
+  DEFAULT_PAGE_SIZE,
+  ORDER_STATUS_GROUP_KEYS,
+  ORDER_STATUS_GROUPS,
+  type OrderStatus,
+  type OrderStatusGroup,
+  type OrderView,
+  type PageResult,
+} from '@balitrade/shared';
 import { useFormatter, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
 import { DataTable, type Column } from '@/components/admin/data-table';
-import { DateRange, SearchBox } from '@/components/admin/table-filters';
+import { DateRangePicker, useRangeLabel } from '@/components/admin/date-range-picker';
+import { StatusTabs, type StatusTab } from '@/components/admin/status-tabs';
+import { ActiveFilters, SearchBox, type ActiveFilter } from '@/components/admin/table-filters';
 import { OrderStatusBadge } from '@/components/orders/order-status-badge';
-import { buttonClasses } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
 import { apiFetch } from '@/lib/api';
 import { toApiQuery, useTableQuery } from '@/lib/table-query';
 
-const OWN_FILTERS = ['status', 'q', 'from', 'to'];
+/** Filters other than the tab; the tab is turned into `status` (or `payout`) below. */
+const OWN_FILTERS = ['q', 'from', 'to'];
 
 /**
  * The admin orders table (T27). Deliberately not the storefront's OrdersList: that one shows a person
@@ -32,32 +41,35 @@ export function AdminOrdersTable({ statuses, payoutQueue = false }: { statuses?:
 }
 
 /**
- * `statuses` narrows the table to a work queue (the QC page, T18): only those statuses are offered, there is no
- * "all statuses" choice, and the first one is the default. `payoutQueue` (T20) shows completed orders instead, filtered
- * by whether the seller was paid out ("unpaid" first).
+ * Three faces, one table, all with the same tabs on top (design system v2, 2026-11-26):
+ * - the orders page: a tab per stage of ORDER_STATUS_GROUPS, plus All (the default);
+ * - a work queue (`statuses`, the QC and shipping pages): a tab per status of the queue, the first by default;
+ * - the payout queue (`payoutQueue`, T20): Unpaid (default) and Paid.
+ * The tab lives in the URL as `?tab=`, like every other filter.
  */
 function OrdersTable({ statuses, payoutQueue }: { statuses?: readonly OrderStatus[]; payoutQueue: boolean }) {
   const t = useTranslations('Orders');
   const tAdmin = useTranslations('AdminOrders');
+  const tTable = useTranslations('Table');
   const format = useFormatter();
+  const rangeLabel = useRangeLabel();
   const table = useTableQuery();
 
   const [attempt, setAttempt] = useState(0);
   const [loaded, setLoaded] = useState<{ key: string; page: PageResult<OrderView> | null } | null>(null);
 
-  // In a work queue the status is never empty: an unknown or missing one falls back to the queue's first status.
-  const requested = table.get('status');
-  const status = statuses ? (statuses.includes(requested as OrderStatus) ? requested : statuses[0]!) : requested;
-  const payout = table.get('payout') === 'paid' ? 'paid' : 'unpaid';
+  const tabKeys: string[] = payoutQueue ? ['unpaid', 'paid'] : statuses ? [...statuses] : [...ORDER_STATUS_GROUP_KEYS, 'all'];
+  const requested = table.get('tab');
+  // The orders page opens on All; a queue opens on its first tab.
+  const defaultTab = statuses || payoutQueue ? tabKeys[0]! : 'all';
+  const tab = tabKeys.includes(requested) ? requested : defaultTab;
+
   const params = new URLSearchParams(toApiQuery(table, OWN_FILTERS));
-  if (payoutQueue) {
-    params.delete('status');
-    params.set('payout', payout);
-  } else if (status) {
-    params.set('status', status);
-  }
+  if (payoutQueue) params.set('payout', tab);
+  else if (statuses) params.set('status', tab);
+  else if (tab !== 'all') params.set('status', ORDER_STATUS_GROUPS[tab as OrderStatusGroup].join(','));
   const query = params.toString();
-  const filtered = OWN_FILTERS.some((key) => key !== 'status' && table.get(key) !== '') || (!statuses && requested !== '');
+  const filtered = OWN_FILTERS.some((key) => table.get(key) !== '');
   const key = `${query}#${attempt}`;
 
   useEffect(() => {
@@ -77,16 +89,24 @@ function OrdersTable({ statuses, payoutQueue }: { statuses?: readonly OrderStatu
   const result = current?.page ?? null;
   const failed = current !== null && current.page === null;
 
+  // The last counts received stay on the tabs while the next page loads, so the numbers do not flicker.
+  const counts = (current?.page ?? loaded?.page)?.statusCounts;
+  const sum = (list: readonly string[]) => list.reduce((total, status) => total + (counts?.[status] ?? 0), 0);
+  const countOf = (key: string): number | undefined => {
+    if (counts === undefined || payoutQueue) return undefined; // the payout split is not a status
+    if (statuses) return counts[key] ?? 0;
+    if (key === 'all') return Object.values(counts).reduce<number>((total, n) => total + (n ?? 0), 0);
+    return sum(ORDER_STATUS_GROUPS[key as OrderStatusGroup]);
+  };
+  const tabLabel = (key: string) =>
+    payoutQueue ? (key === 'paid' ? tAdmin('payoutPaid') : tAdmin('payoutUnpaid')) : statuses ? t(`status.${key}`) : tAdmin(`tabs.${key}`);
+  const tabs: StatusTab[] = tabKeys.map((key) => ({ key, label: tabLabel(key), count: countOf(key) }));
+
   const money = (usd: string) => format.number(Number(usd), { style: 'currency', currency: 'USD' });
   const when = (iso: string) => format.dateTime(new Date(iso), { dateStyle: 'medium' });
 
   const columns: Column<OrderView>[] = [
-    {
-      key: 'code',
-      header: tAdmin('columnCode'),
-      className: 'whitespace-nowrap font-semibold',
-      cell: (order) => order.code,
-    },
+    { key: 'code', header: tAdmin('columnCode'), className: 'whitespace-nowrap font-medium', cell: (order) => order.code },
     { key: 'date', header: tAdmin('columnDate'), className: 'whitespace-nowrap', cell: (order) => when(order.createdAt) },
     { key: 'buyer', header: tAdmin('columnBuyer'), cell: (order) => order.buyer.name },
     { key: 'seller', header: tAdmin('columnSeller'), cell: (order) => order.seller.displayName },
@@ -107,18 +127,9 @@ function OrdersTable({ statuses, payoutQueue }: { statuses?: readonly OrderStatu
       header: tAdmin('columnStatus'),
       cell: (order) => <OrderStatusBadge status={order.status} label={t(`status.${order.status}`)} />,
     },
-    {
-      key: 'actions',
-      header: '',
-      className: 'text-right',
-      cell: (order) => (
-        <Link href={`/admin/orders/${order.id}`} className={buttonClasses('secondary', 'h-8 px-3')}>
-          {tAdmin('open')}
-        </Link>
-      ),
-    },
   ];
 
+  /** No links inside: the whole card is the link (`rowHref`). */
   const card = (order: OrderView) => (
     <div>
       <div className="flex flex-wrap items-center gap-2">
@@ -128,50 +139,26 @@ function OrdersTable({ statuses, payoutQueue }: { statuses?: readonly OrderStatu
       <p className="mt-1 text-sm text-muted">
         {order.buyer.name} → {order.seller.displayName}
       </p>
-      <p className="mt-0.5 text-sm text-muted">
+      <p className="mt-0.5 text-sm tabular-nums text-muted">
         {money(order.totals.totalUsd)} · {when(order.createdAt)}
       </p>
-      <Link href={`/admin/orders/${order.id}`} className={buttonClasses('secondary', 'mt-3 h-9')}>
-        {tAdmin('open')}
-      </Link>
     </div>
   );
 
   const toolbar = (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+    <div className="flex flex-wrap items-center gap-3">
       <SearchBox value={table.get('q')} onSearch={(next) => table.set({ q: next })} placeholder={tAdmin('searchPlaceholder')} />
-      {payoutQueue ? (
-        <label className="flex items-center gap-2 text-sm text-muted">
-          {tAdmin('payoutFilter')}
-          <select
-            value={payout}
-            onChange={(event) => table.set({ payout: event.target.value === 'paid' ? 'paid' : '' })}
-            className="h-9 rounded-button border border-border bg-card px-2 text-sm font-medium text-text focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
-          >
-            <option value="unpaid">{tAdmin('payoutUnpaid')}</option>
-            <option value="paid">{tAdmin('payoutPaid')}</option>
-          </select>
-        </label>
-      ) : (
-      <label className="flex items-center gap-2 text-sm text-muted">
-        {tAdmin('columnStatus')}
-        <select
-          value={status}
-          onChange={(event) => table.set({ status: event.target.value })}
-          className="h-9 rounded-button border border-border bg-card px-2 text-sm font-medium text-text focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
-        >
-          {statuses ? null : <option value="">{tAdmin('allStatuses')}</option>}
-          {(statuses ?? Object.values(OrderStatus)).map((option) => (
-            <option key={option} value={option}>
-              {t(`status.${option}`)}
-            </option>
-          ))}
-        </select>
-      </label>
-      )}
-      <DateRange from={table.get('from')} to={table.get('to')} onChange={(next) => table.set(next)} />
+      <DateRangePicker from={table.get('from')} to={table.get('to')} onChange={({ from, to }) => table.set({ from, to })} />
     </div>
   );
+
+  const q = table.get('q');
+  const from = table.get('from');
+  const to = table.get('to');
+  const chips: ActiveFilter[] = [
+    ...(q ? [{ key: 'q', label: tTable('searchFilter', { q }), onRemove: () => table.set({ q: '' }) }] : []),
+    ...(from || to ? [{ key: 'date', label: rangeLabel(from, to), onRemove: () => table.set({ from: '', to: '' }) }] : []),
+  ];
 
   return (
     <DataTable
@@ -180,6 +167,7 @@ function OrdersTable({ statuses, payoutQueue }: { statuses?: readonly OrderStatu
       onRetry={() => setAttempt((n) => n + 1)}
       columns={columns}
       rowKey={(order) => order.id}
+      rowHref={(order) => `/admin/orders/${order.id}`}
       card={card}
       total={result?.total ?? 0}
       page={table.page}
@@ -187,7 +175,16 @@ function OrdersTable({ statuses, payoutQueue }: { statuses?: readonly OrderStatu
       onPage={(next) => table.set({ page: next })}
       onSize={(next) => table.set({ size: next === DEFAULT_PAGE_SIZE ? '' : next, page: 1 })}
       filtered={filtered}
+      tabs={
+        <StatusTabs
+          label={tAdmin('tabsLabel')}
+          active={tab}
+          onChange={(next) => table.set({ tab: next === defaultTab ? '' : next })}
+          tabs={tabs}
+        />
+      }
       toolbar={toolbar}
+      activeFilters={<ActiveFilters filters={chips} onReset={() => table.set({ q: '', from: '', to: '' })} />}
     />
   );
 }

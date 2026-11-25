@@ -16,6 +16,7 @@ interface Page {
   total: number;
   page: number;
   size: number;
+  statusCounts?: Record<string, number>;
 }
 
 describe('Admin product review + public catalog (e2e)', () => {
@@ -115,6 +116,23 @@ describe('Admin product review + public catalog (e2e)', () => {
     const res = await request(app.getHttpServer()).get(`/api/products${locale ? `?locale=${locale}` : ''}`).expect(200);
     return res.body as { id: string; title: string; isAuto: boolean; textLocale: string; seller: { displayName: string; location: string | null } }[];
   };
+
+  describe('status tab counts', () => {
+    it('counts every status but drafts, whatever status is selected, and follows the search', async () => {
+      const ops = await agentFor(emails.ops);
+      // Other spec files create listings in parallel, so compare numbers from one response (one transaction).
+      const all = (await ops.get('/api/admin/products?size=100').expect(200)).body as Page;
+      const counts = all.statusCounts ?? {};
+      expect(counts.DRAFT).toBeUndefined();
+      expect(Object.values(counts).reduce((sum, n) => sum + n, 0)).toBe(all.total);
+      // A selected status narrows the rows, not the counts.
+      const queue = (await ops.get('/api/admin/products?status=PENDING_REVIEW&size=100').expect(200)).body as Page;
+      expect(queue.items.every((row) => row.status === 'PENDING_REVIEW')).toBe(true);
+      expect(Object.keys(queue.statusCounts ?? {}).length).toBeGreaterThan(1);
+      const nothing = (await ops.get('/api/admin/products?q=zzz-nobody-matches').expect(200)).body as Page;
+      expect(Object.values(nothing.statusCounts ?? {}).reduce((sum, n) => sum + n, 0)).toBe(0);
+    });
+  });
 
   describe('paging, search and date range (T27)', () => {
     const page = async (query: string) => {

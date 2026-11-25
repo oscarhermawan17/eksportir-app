@@ -30,7 +30,25 @@
     "to": "To",
     "clearDates": "Clear dates",
     "dateCreated": "Created",
-    "dateReviewed": "Reviewed"
+    "dateReviewed": "Reviewed",
+    "activeFilters": "Filtered by",
+    "reset": "Reset",
+    "removeFilter": "Remove filter: {filter}",
+    "dateAll": "All dates",
+    "dateFrom": "From {date}",
+    "dateUntil": "Until {date}",
+    "datePanelLabel": "Choose dates",
+    "datePickHint": "Pick a start and an end date, or a quick range.",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "searchFilter": "“{q}”",
+    "datePresets": {
+      "today": "Today",
+      "last7": "Last 7 days",
+      "last30": "Last 30 days",
+      "thisMonth": "This month",
+      "lastMonth": "Last month"
+    }
   },
   "Navbar": {
     "searchLabel": "Search products",
@@ -532,7 +550,8 @@
     "columnPrice": "Price",
     "columnStatus": "Status",
     "columnReviewed": "Reviewed",
-    "searchPlaceholder": "Title or seller…"
+    "searchPlaceholder": "Title or seller…",
+    "tabsLabel": "Listing status"
   },
   "AdminRate": {
     "title": "Exchange rate",
@@ -887,7 +906,17 @@
     "searchPlaceholder": "Order code, buyer or seller…",
     "payoutFilter": "Payout",
     "payoutUnpaid": "Not paid out yet",
-    "payoutPaid": "Paid out"
+    "payoutPaid": "Paid out",
+    "tabsLabel": "Order stage",
+    "tabs": {
+      "all": "All",
+      "request": "Requests",
+      "payment": "Payment",
+      "qc": "Quality control",
+      "shipping": "Shipping",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
   },
   "Payments": {
     "pageTitle": "Pay for your order",

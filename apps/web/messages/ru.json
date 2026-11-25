@@ -30,7 +30,25 @@
     "to": "По",
     "clearDates": "Очистить даты",
     "dateCreated": "Создано",
-    "dateReviewed": "Проверено"
+    "dateReviewed": "Проверено",
+    "activeFilters": "Фильтры:",
+    "reset": "Сбросить",
+    "removeFilter": "Убрать фильтр: {filter}",
+    "dateAll": "Все даты",
+    "dateFrom": "С {date}",
+    "dateUntil": "По {date}",
+    "datePanelLabel": "Выбор дат",
+    "datePickHint": "Выберите начальную и конечную дату или быстрый диапазон.",
+    "cancel": "Отмена",
+    "apply": "Применить",
+    "searchFilter": "«{q}»",
+    "datePresets": {
+      "today": "Сегодня",
+      "last7": "Последние 7 дней",
+      "last30": "Последние 30 дней",
+      "thisMonth": "Этот месяц",
+      "lastMonth": "Прошлый месяц"
+    }
   },
   "Navbar": {
     "searchLabel": "Поиск товаров",
@@ -532,7 +550,8 @@
     "columnPrice": "Цена",
     "columnStatus": "Статус",
     "columnReviewed": "Проверено",
-    "searchPlaceholder": "Название или продавец…"
+    "searchPlaceholder": "Название или продавец…",
+    "tabsLabel": "Статус объявления"
   },
   "AdminRate": {
     "title": "Курс валюты",
@@ -887,7 +906,17 @@
     "searchPlaceholder": "Код заказа, покупатель или продавец…",
     "payoutFilter": "Выплата",
     "payoutUnpaid": "Ещё не выплачено",
-    "payoutPaid": "Выплачено"
+    "payoutPaid": "Выплачено",
+    "tabsLabel": "Этап заказа",
+    "tabs": {
+      "all": "Все",
+      "request": "Запросы",
+      "payment": "Оплата",
+      "qc": "Контроль качества",
+      "shipping": "Доставка",
+      "completed": "Завершены",
+      "cancelled": "Отменены"
+    }
   },
   "Payments": {
     "pageTitle": "Оплата заказа",
