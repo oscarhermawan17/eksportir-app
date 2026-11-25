@@ -1,9 +1,63 @@
 # DESIGN — BaliTrade
 
-Panduan UI. Visual source of truth: `design-ui/google-stitch/01-v4.html` (token sudah ada di `apps/web/src/app/globals.css`); halaman Stitch lain
-(`02-lengkap`, `03`–`08`) hanya acuan **alur dan struktur**. Dokumen ini dulunya `UI_PROMPT.md` (prompt Google Stitch + log revisi, 98 KB); prompt lengkap dan
+Panduan UI. **Sejak 2026-11-26 sumber kebenaran visual adalah "Design system v2" di bawah** (token di `apps/web/src/app/globals.css`, font di
+`apps/web/src/app/fonts.ts`). `design-ui/google-stitch/01-v4.html` dan bagian "Blok DESIGN SYSTEM" lama di dokumen ini **diarsipkan**: jangan
+dipakai untuk warna, font atau gaya. Halaman Stitch (`02-lengkap`, `03`–`08`) tetap hanya acuan **alur dan struktur**. Dokumen ini dulunya `UI_PROMPT.md` (prompt Google Stitch + log revisi, 98 KB); prompt lengkap dan
 log revisinya masih ada di riwayat git (`git log -- UI_PROMPT.md`; versi terakhir: `git show 3d9ebce:UI_PROMPT.md`). Yang dipertahankan di sini: progres, aturan implementasi, design system,
 dan spesifikasi layar (`TASK`) per halaman untuk halaman yang belum dibuat.
+
+## Design system v2 (2026-11-26)
+
+Tujuan: bersih, rapi, profesional, tidak terasa seperti template AI. Satu hal yang menonjol, yaitu foto produk; sisanya tenang.
+Sudah diterapkan di navbar, footer, `/`, `/products/:id` dan `/how-it-works`. Area admin, penjual dan pembeli menyusul.
+
+**Warna** (nama token Tailwind, semua di `@theme` di `globals.css`)
+
+| Token | Nilai | Pakai untuk |
+|---|---|---|
+| `background` / `card` | `#FFFFFF` | latar halaman, permukaan utama |
+| `surface` | `#F6F7F9` | blok sekunder, footer, field pencarian, latar foto |
+| `border` / `border-strong` | `#E4E7EC` / `#D0D5DD` | semua garis / hover dan bingkai kontrol |
+| `text` / `muted` | `#101828` / `#475467` | teks utama / teks sekunder |
+| `primary` / `primary-hover` | `#16324F` / `#0F2439` | tombol utama, link, chip aktif, ikon aksen |
+| `success` / `warning` / `error` / `info` | `#1E7F4F` / `#B54708` / `#B42318` / `#1D5B8F` | status (stok tersedia = success, dibuat sesuai pesanan = warning) |
+
+`gold`, `gold-text` dan `terracotta` adalah sisa 01-v4, **dilarang di halaman baru**, dan dihapus saat area admin/penjual dirombak.
+
+**Font:** IBM Plex Sans (Latin + Cyrillic), weight 400/500/600/700, diatur **hanya** di `src/app/fonts.ts` (variabel `--font-app`).
+Ganti font = ubah file itu saja.
+
+**Tipografi**
+
+| Peran | Kelas |
+|---|---|
+| `h1` halaman | `text-2xl sm:text-3xl font-semibold tracking-tight text-balance` (Cara kerja: `sm:text-4xl`) |
+| `h2` bagian | `text-xl font-semibold tracking-tight` (`text-lg` di detail produk) |
+| `h3` | `text-base font-semibold` |
+| Paragraf | `text-[15px] leading-relaxed`, lebar baca `max-w-[70ch]` |
+| Kecil / meta | `text-sm` atau `text-[13px]`, warna `muted` |
+| Harga & angka | `font-semibold tabular-nums` |
+
+**Jarak dan bentuk**
+- Lebar halaman: utilitas `page-container` (maks 1200px, gutter 16/24/32px). Navbar, footer dan semua halaman publik memakainya.
+- Jarak antar-bagian `py-10` (HP) / `py-14`–`py-16` (desktop). Grid produk: `gap-x-4 sm:gap-x-5 gap-y-8`.
+- Radius: kontrol `rounded-button` 8px, foto dan blok `rounded-card` 10px, chip filter `rounded-full`.
+- **Tanpa bayangan** untuk struktur. Pemisah = garis tipis `border` atau jarak. Bayangan hanya untuk menu dropdown yang melayang (`shadow-lg shadow-black/5`).
+- Tombol: `buttonClasses()`; primary navy, secondary bingkai `border-strong` dengan latar putih. Tinggi 44px.
+- Focus selalu terlihat: `focus-visible:outline-2 outline-primary`.
+
+**Larangan (tanda desain generik)**
+- Label HURUF KAPITAL kecil (`uppercase tracking-wider`) di atas konten. Gunakan label sentence case.
+- Pita "✓ ✓ ✓", kartu ikon seragam berbayang, gradien dekoratif, pola titik.
+- Badge yang isinya sama di setiap kartu. Jenis listing = titik berwarna + teks (`TypeBadge`).
+- "→" atau "←" di dalam teks tombol/link (gunakan ikon Lucide bila perlu).
+- Logo: wordmark "BaliTrade" satu warna, tanpa simbol, sampai ada logo resmi.
+- Penomoran (1, 2, 3) hanya untuk urutan yang nyata, seperti langkah di Cara kerja.
+
+**Pola halaman**
+- Spesifikasi produk = baris label kiri / nilai kanan dengan garis tipis (`divide-y`), bukan kotak.
+- Halaman penjelasan (Cara kerja): setiap bagian dibuka garis tipis, judul di kolom kiri (4/12), isi di kanan (8/12).
+- Kartu produk datar: foto 4:3 dengan garis tipis di dalam (`ring-black/5`), lalu judul, jenis, harga, ketersediaan, penjual.
 
 ## Progress
 

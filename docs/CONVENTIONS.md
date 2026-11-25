@@ -13,9 +13,10 @@ the rules apply regardless of the assistant you use.)
 | TypeScript rules shared by web, api and shared | `.claude/skills/typescript/SKILL.md` | Any TypeScript |
 | Frontend design (third-party, `anthropics/skills`, installed 2026-10-30; version pinned in `skills-lock.json`) | `.claude/skills/frontend-design/SKILL.md` | Building or fixing the look of a page |
 
-**`frontend-design` is advisory.** The BaliTrade design system (`design-ui/google-stitch/01-v4.html`, tokens in
-`apps/web/src/app/globals.css`) is the brief and always wins: keep the palette, Plus Jakarta Sans, the 12px radius and Lucide icons even
-where the skill calls them "default" looks. Use the skill for what the system leaves open: hierarchy, spacing, alignment, responsive
+**`frontend-design` is advisory.** The BaliTrade design system ("Design system v2" in `docs/DESIGN.md`, tokens in
+`apps/web/src/app/globals.css`, typeface in `apps/web/src/app/fonts.ts`) is the brief and always wins: keep the navy-on-white palette,
+IBM Plex Sans, the 8/10px radii and Lucide icons. The globally installed Vercel skills (`web-design-guidelines`,
+`vercel-react-best-practices`, `vercel-composition-patterns`) are advisory in the same way. Use the skill for what the system leaves open: hierarchy, spacing, alignment, responsive
 layout, empty/error states, keyboard focus, and plain-language copy (see also "Catatan implementasi" in `docs/DESIGN.md`).
 
 ## How to use the "next task" workflow

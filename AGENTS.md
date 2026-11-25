@@ -27,7 +27,8 @@ MVP 1.0 target date: 2026-10-31. The owner (Oscar) works mostly alone with AI as
   (`.env.example` placeholders are fine). Stage files explicitly; no `git add .`. No force-push / hard reset without asking.
 - Never print secret values (`.env`, API keys). Refer to them by variable name.
 - Do not change the stack/framework without discussion.
-- Visual source of truth for UI: `design-ui/google-stitch/01-v4.html` (tokens already in `apps/web/src/app/globals.css`).
+- Visual source of truth for UI: **"Design system v2" in `docs/DESIGN.md`** (since 2026-11-26; tokens in `apps/web/src/app/globals.css`,
+  typeface in `apps/web/src/app/fonts.ts` only). The old `design-ui/google-stitch/01-v4.html` look (cream, teal, gold) is retired.
   Other Stitch pages are only a reference for flows. Do not use the word "escrow" in UI (use "payment protection / payment held by BaliTrade").
   The `frontend-design` skill (`.claude/skills/frontend-design`) is advisory only: it never overrides these tokens (see `docs/CONVENTIONS.md`).
 
@@ -55,7 +56,7 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 | `docs/ARCHITECTURE.md` | Stack, roles/RBAC, data model, order status flow, MVP scope, decisions, R2 setup | Before backend/db work |
 | `docs/BRAINSTORMING.md` | Business model, flows, open decisions (section 15) | Before product/flow decisions |
 | `docs/DESIGN.md` | Design system, per-page screen specs and "Catatan implementasi" (what NOT to copy from the designs) | Before UI work |
-| `design-ui/google-stitch/*.html` | Reference designs (visual truth: `01-v4.html`) | UI work |
+| `design-ui/google-stitch/*.html` | Reference designs for flows only (the `01-v4.html` look is retired) | UI work |
 | `docs/DECISIONS.md` | Chronological log of decisions + open questions | Before changing earlier choices |
 | `docs/CONVENTIONS.md` | Index of the convention guides (`.claude/skills/*`) | Before writing code |
 | `docs/API.md` | Every API route with its access rule | Before adding or calling an endpoint |
@@ -116,6 +117,11 @@ Setup steps are in `README.md`. Env files: `apps/api/.env`, root `.env` (from th
 Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay the source of truth). Last handoff: **2026-11-21**,
 working tree clean, 28 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
+
+**UI revamp started 2026-11-26 (not deployed):** design system v2 (navy on white, IBM Plex Sans, no shadows or all-caps labels;
+`docs/DESIGN.md`) is in place for the navbar, footer, `/`, `/products/:id` and `/how-it-works`. Admin, seller and buyer areas still carry
+the old chrome (they already inherit the new colours through the kept token names) and are the next UI steps. For browser checks use the
+globally installed `agent-browser` CLI (`agent-browser skills get core`), which costs far fewer tokens than screenshots of the app pane.
 
 **Deployed 2026-11-23: T20 completion + payouts (commit `ae5c1a3`) is live.** An order now runs from REQUESTED to COMPLETED. CI run
 #45194927728 green. Dump first (`~/db-backups/balitrade-2026-11-23-pre-t20.dump`, 116 KB), then **two** migrations before the new
