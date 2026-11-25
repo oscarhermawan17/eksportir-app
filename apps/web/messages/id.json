@@ -296,7 +296,8 @@
       "qc": "Pemeriksaan kualitas",
       "shipping": "Pengiriman",
       "payouts": "Pencairan",
-      "content": "Konten halaman"
+      "content": "Konten halaman",
+      "paymentSettings": "Rekening pembayaran"
     },
     "overview": {
       "title": "Yang perlu Anda kerjakan",
@@ -1004,7 +1005,8 @@
     },
     "proofTitle": "Bukti transfer",
     "proofAlt": "Bukti transfer untuk pesanan {code}",
-    "openFullSize": "Buka ukuran penuh"
+    "openFullSize": "Buka ukuran penuh",
+    "destination": "Dikirim ke"
   },
   "Qc": {
     "title": "Pemeriksaan kualitas",
@@ -1297,5 +1299,36 @@
     "empty": "Belum ada isi.",
     "loadError": "Tidak dapat memuat konten.",
     "viewPage": "Lihat halamannya"
+  },
+  "PaymentSettings": {
+    "title": "Rekening pembayaran",
+    "intro": "Ke mana pembeli mengirim uang. Setiap perubahan dicatat dengan nama Anda. Nomor atau alamat yang salah mengirim uang pembeli ke tempat lain, jadi keduanya diketik dua kali.",
+    "readOnly": "Hanya pemilik yang bisa mengubah ini. Anda bisa melihatnya untuk mencocokkan mutasi bank dan wallet.",
+    "envNotice": "Belum disimpan: halaman bayar masih memakai nilai dari file pengaturan server. Simpan sekali untuk mengelolanya dari sini.",
+    "lastChanged": "Terakhir diubah oleh {name} pada {date}",
+    "bankTitle": "Transfer bank (IDR)",
+    "usdtTitle": "USDT (Binance)",
+    "enabled": "Tawarkan metode ini ke pembeli",
+    "bankName": "Bank",
+    "accountNumber": "Nomor rekening",
+    "accountNumberConfirm": "Ulangi nomor rekening",
+    "accountNumberHelper": "Hanya angka, 6 sampai 20 digit. Spasi dan tanda hubung dihapus.",
+    "accountHolder": "Nama pemilik rekening",
+    "network": "Jaringan",
+    "networkHelper": "Harus sama dengan jaringan alamat deposit Binance Anda. Jaringan yang salah membuat dana hilang.",
+    "address": "Alamat deposit",
+    "addressConfirm": "Ulangi alamat deposit",
+    "addressHelper": "Alamat TRC20 diawali T; alamat ERC20 dan BEP20 diawali 0x.",
+    "mismatchNumber": "Kedua nomor rekening berbeda.",
+    "mismatchAddress": "Kedua alamat berbeda.",
+    "badAddress": "Alamat ini tidak cocok dengan jaringan yang dipilih.",
+    "warningTitle": "Peringatan uji",
+    "warningLabel": "Tampilkan peringatan ke pembeli bahwa data ini masih contoh (jangan transfer)",
+    "warningHelper": "Matikan setelah data di atas sudah asli.",
+    "save": "Simpan rekening pembayaran",
+    "saving": "Menyimpan…",
+    "saved": "Tersimpan. Halaman bayar sekarang memakai data ini.",
+    "loadError": "Tidak dapat memuat rekening pembayaran.",
+    "exchangeNotice": "Pembeli tetap melihat peringatan: metode exchange mitra masih berupa contoh di file pengaturan server (PAY_MOCK). Metode itu belum dikelola dari sini."
   }
 }

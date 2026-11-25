@@ -445,6 +445,9 @@ model Payment {
   note            String?
   /// Key in the private R2 bucket; readable only through a short-lived signed URL (buyer and admins).
   proofKey        String         @map("proof_key")
+  /// Where the buyer was told to send this money when submitting it (bank account or USDT address), so a later
+  /// change of account never makes an old payment look like it went to the new one. Null before 2026-11-26.
+  destination     String?
   submittedById   String         @map("submitted_by_id")
   submittedBy     User           @relation("PaymentSubmittedBy", fields: [submittedById], references: [id], onDelete: Cascade)
   submittedAt     DateTime       @default(now()) @map("submitted_at")
@@ -704,4 +707,26 @@ model ContentItem {
 
   @@index([kind, active, sortOrder])
   @@map("content_items")
+}
+
+/// Where buyers send money for bank and USDT (2026-11-26): one row (id "default"), saved by the OWNER on
+/// /admin/payment-settings. Until it exists the payment page uses the PAY_* env values; the exchange method stays in env.
+/// Every save writes an AuditLog row with masked values.
+model PaymentSettings {
+  id                String    @id @default("default")
+  bankEnabled       Boolean   @default(false) @map("bank_enabled")
+  bankName          String    @default("") @map("bank_name")
+  bankAccountNumber String    @default("") @map("bank_account_number")
+  bankAccountHolder String    @default("") @map("bank_account_holder")
+  usdtEnabled       Boolean   @default(false) @map("usdt_enabled")
+  /// One of USDT_NETWORKS (TRC20 | ERC20 | BEP20), checked by the API.
+  usdtNetwork       String    @default("TRC20") @map("usdt_network")
+  usdtAddress       String    @default("") @map("usdt_address")
+  /// Shows the "placeholder details, do not transfer" warning on the payment page.
+  showTestWarning   Boolean   @default(true) @map("show_test_warning")
+  /// A plain id, not a relation: the settings outlive the account that last saved them.
+  updatedById       String?   @map("updated_by_id")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@map("payment_settings")
 }

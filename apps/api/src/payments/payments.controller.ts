@@ -17,7 +17,7 @@ export class PaymentsController {
    * configured are returned, so the page cannot show half an instruction.
    */
   @Get('payments/instructions')
-  instructions(): PaymentInstructions {
+  instructions(): Promise<PaymentInstructions> {
     return this.payments.instructions();
   }
 

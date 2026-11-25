@@ -22,14 +22,14 @@ describe('Payments: three methods, FINANCE verification (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   const stamp = Date.now();
-  const names = ['buyer', 'seller', 'finance', 'ops', 'outsider'] as const;
+  const names = ['buyer', 'seller', 'finance', 'ops', 'outsider', 'owner'] as const;
   type Who = (typeof names)[number];
   const emails = Object.fromEntries(names.map((n) => [n, `payments-e2e-${n}-${stamp}@example.com`])) as Record<Who, string>;
   const ids: Record<string, string> = {};
   const cookies = new Map<Who, string>();
 
   const delivery = { fullName: 'Anna Ivanova', phone: '+7 900 123-45-67', country: 'RU', address: 'Tverskaya 1, Moscow, 125009' };
-  const http = (who: Who, method: 'get' | 'post', path: string) => request(app.getHttpServer())[method](path).set('Cookie', cookies.get(who)!);
+  const http = (who: Who, method: 'get' | 'post' | 'put', path: string) => request(app.getHttpServer())[method](path).set('Cookie', cookies.get(who)!);
   /** A proof file key as media.service.ts would hand it out: the uploader's id is part of the key. */
   const proofOf = (who: Who) => `private/${ids[who]}/00000000-0000-4000-8000-00000000000${names.indexOf(who)}.jpg`;
 
@@ -83,6 +83,7 @@ describe('Payments: three methods, FINANCE verification (e2e)', () => {
     await make('finance', 'Finance Admin', [Role.ADMIN_FINANCE]);
     await make('ops', 'Ops Admin', [Role.ADMIN_OPS]);
     await make('outsider', 'Outsider', [Role.BUYER]);
+    await make('owner', 'Owner Admin', [Role.ADMIN_OWNER]);
 
     const jwt = app.get(JwtService, { strict: false });
     for (const name of names) cookies.set(name, `${SESSION_COOKIE}=${jwt.sign({ sub: ids[name] })}`);
@@ -105,6 +106,9 @@ describe('Payments: three methods, FINANCE verification (e2e)', () => {
   });
 
   afterAll(async () => {
+    // The payment settings are one global row: remove it so every other spec is back on the env values.
+    await prisma.paymentSettings.deleteMany({});
+    await prisma.auditLog.deleteMany({ where: { entity: 'payment_settings', actorId: ids['owner'] } });
     await prisma.user.deleteMany({ where: { email: { startsWith: 'payments-e2e-' } } });
     await app.close();
   });
@@ -357,6 +361,73 @@ describe('Payments: three methods, FINANCE verification (e2e)', () => {
       ]);
       expect([first.status, second.status].sort()).toEqual([201, 409]);
       expect(await statusOf(order.id)).toBe('PAYMENT_VERIFIED');
+    });
+  });
+  // The settings are one global row while other spec files pay in parallel: every save here keeps bank and USDT
+  // switched on with valid details, and afterAll deletes the row. Switching a method off is covered by the unit test.
+  describe('payment settings managed by the owner (2026-11-26)', () => {
+    const TRON = 'T' + '9'.repeat(33);
+    const settings = (extra: Record<string, unknown> = {}) => ({
+      bankEnabled: true,
+      bankName: 'Mandiri',
+      bankAccountNumber: '1122 3344-5566',
+      bankAccountNumberConfirm: '112233445566',
+      bankAccountHolder: 'PT BaliTrade Indonesia',
+      usdtEnabled: true,
+      usdtNetwork: 'TRC20',
+      usdtAddress: TRON,
+      usdtAddressConfirm: TRON,
+      showTestWarning: false,
+      ...extra,
+    });
+
+    it('lets FINANCE read and only the OWNER save', async () => {
+      await request(app.getHttpServer()).get('/api/admin/payment-settings').expect(401);
+      for (const who of ['buyer', 'seller', 'ops'] as const) await http(who, 'get', '/api/admin/payment-settings').expect(403);
+      await http('finance', 'get', '/api/admin/payment-settings').expect(200);
+      await http('finance', 'put', '/api/admin/payment-settings').send(settings()).expect(403);
+      await http('ops', 'put', '/api/admin/payment-settings').send(settings()).expect(403);
+    });
+
+    it('refuses a mistyped number, a wrong-network address and unknown fields', async () => {
+      const put = (body: Record<string, unknown>) => http('owner', 'put', '/api/admin/payment-settings').send(body);
+      await put(settings({ bankAccountNumberConfirm: '112233445567' })).expect(400);
+      await put(settings({ bankAccountNumber: '12AB34', bankAccountNumberConfirm: '12AB34' })).expect(400);
+      await put(settings({ usdtAddressConfirm: TRON.slice(0, -1) + '8' })).expect(400);
+      await put(settings({ usdtNetwork: 'ERC20' })).expect(400); // a Tron address on an EVM network
+      await put(settings({ usdtNetwork: 'SOL' })).expect(400);
+      await put(settings({ exchangeName: 'x' })).expect(400);
+    });
+
+    it('takes over from the env values once saved, and records it in the audit log with masked values', async () => {
+      const saved = (await http('owner', 'put', '/api/admin/payment-settings').send(settings()).expect(200)).body as {
+        saved: boolean;
+        bankAccountNumber: string;
+        updatedBy: { id: string } | null;
+      };
+      expect(saved).toMatchObject({ saved: true, bankAccountNumber: '112233445566', updatedBy: { id: ids['owner'] } });
+
+      const now = (await http('buyer', 'get', '/api/payments/instructions').expect(200)).body as PaymentInstructions;
+      expect(now.bank).toEqual({ name: 'Mandiri', accountNumber: '112233445566', accountHolder: 'PT BaliTrade Indonesia' });
+      expect(now.usdt).toEqual({ network: 'TRC20', address: TRON });
+
+      const log = await prisma.auditLog.findFirstOrThrow({
+        where: { entity: 'payment_settings', actorId: ids['owner'] },
+        orderBy: { createdAt: 'desc' },
+      });
+      expect(log.action).toBe('PAYMENT_SETTINGS_UPDATED');
+      const text = JSON.stringify(log.data);
+      expect(text).not.toContain('112233445566');
+      expect(text).not.toContain(TRON);
+      expect(text).toContain('5566');
+    });
+
+    it('keeps where each new payment was sent', async () => {
+      await http('owner', 'put', '/api/admin/payment-settings').send(settings()).expect(200);
+      const order = await payableOrder();
+      await http('buyer', 'post', `/api/orders/${order.id}/payments`).send(bankBody()).expect(201);
+      const [payment] = (await summary('finance', order.id)).payments;
+      expect(payment?.destination).toBe('Mandiri 112233445566 a.n. PT BaliTrade Indonesia');
     });
   });
 });

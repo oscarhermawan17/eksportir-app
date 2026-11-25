@@ -122,6 +122,12 @@ export interface PaymentView {
   decidedBy: { id: string; name: string } | null;
   decidedAt: string | null;
   rejectionReason: string | null;
+  /**
+   * Where the buyer was told to send this money when they submitted it ("BCA 1234567890 a.n. …" or "USDT TRC20 T…"),
+   * so an old payment is still checked against the right account after the account changes. Null for payments made
+   * before 2026-11-26 and for the exchange method.
+   */
+  destination: string | null;
 }
 
 /** What the buyer sees on the payment page, and what the admin sees above the order's payments. */
@@ -141,11 +147,64 @@ export interface PaymentSummary {
   payments: PaymentView[];
 }
 
-/** Where to send the money. Read from config, so going live is an `.env` change (dev uses mock values). */
+/**
+ * Where to send the money. Bank and USDT come from the OWNER's payment settings (2026-11-26), falling back to the
+ * `PAY_*` env values until those are saved once; the exchange still comes from env.
+ */
 export interface PaymentInstructions {
   bank: { name: string; accountNumber: string; accountHolder: string } | null;
   usdt: { network: string; address: string } | null;
   exchange: { name: string; contact: string; instructions: string } | null;
   /** True while any of the three is still a development placeholder. */
   mock: boolean;
+}
+
+/** The USDT networks BaliTrade may receive on. The wrong one loses the buyer's funds, so it is a closed list. */
+export const USDT_NETWORKS = ['TRC20', 'ERC20', 'BEP20'] as const;
+export type UsdtNetwork = (typeof USDT_NETWORKS)[number];
+
+/**
+ * Whether an address has the shape of its network: TRC20 (Tron) = "T" + 33 base58 characters; ERC20 and BEP20 (both
+ * EVM) = "0x" + 40 hex. A shape check, not a checksum: it catches a pasted wrong-network address or a cut-off one.
+ */
+export function isUsdtAddressFor(network: UsdtNetwork, address: string): boolean {
+  return network === 'TRC20' ? /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(address) : /^0x[0-9a-fA-F]{40}$/.test(address);
+}
+
+/** The OWNER's payment settings as admins see them (FINANCE reads, only the OWNER saves). */
+export interface AdminPaymentSettingsView {
+  /** False until the OWNER saves once; the payment page then still uses the env values. */
+  saved: boolean;
+  bankEnabled: boolean;
+  bankName: string;
+  bankAccountNumber: string;
+  bankAccountHolder: string;
+  usdtEnabled: boolean;
+  usdtNetwork: UsdtNetwork;
+  usdtAddress: string;
+  showTestWarning: boolean;
+  /**
+   * The exchange method still comes from env, and env marks it as a placeholder (PAY_MOCK): buyers keep seeing the
+   * test warning while it is offered, whatever `showTestWarning` says.
+   */
+  exchangeIsPlaceholder: boolean;
+  updatedBy: { id: string; name: string } | null;
+  updatedAt: string | null;
+}
+
+/**
+ * Body of PUT /api/admin/payment-settings. The account number and the address are typed twice; the API refuses the
+ * save when the two differ, because one wrong digit sends a buyer's money elsewhere.
+ */
+export interface PaymentSettingsInput {
+  bankEnabled: boolean;
+  bankName: string;
+  bankAccountNumber: string;
+  bankAccountNumberConfirm: string;
+  bankAccountHolder: string;
+  usdtEnabled: boolean;
+  usdtNetwork: UsdtNetwork;
+  usdtAddress: string;
+  usdtAddressConfirm: string;
+  showTestWarning: boolean;
 }

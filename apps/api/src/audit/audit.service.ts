@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 
 /** What an audit row can say. Add a name here rather than passing free text, so the log stays searchable. */
-export type AuditAction = 'ORDER_COMPLETED_BY_ADMIN' | 'PAYOUT_RECORDED' | 'SELLER_BANK_UPDATED';
+export type AuditAction = 'ORDER_COMPLETED_BY_ADMIN' | 'PAYOUT_RECORDED' | 'SELLER_BANK_UPDATED' | 'PAYMENT_SETTINGS_UPDATED';
 
 /**
  * The one way to write the audit log (T20). It takes the caller's transaction client on purpose: the row is written in
@@ -14,7 +14,7 @@ export type AuditAction = 'ORDER_COMPLETED_BY_ADMIN' | 'PAYOUT_RECORDED' | 'SELL
 export class AuditService {
   async record(
     tx: Prisma.TransactionClient,
-    entry: { actorId: string | null; action: AuditAction; entity: 'order' | 'seller'; entityId: string; data: Record<string, unknown> },
+    entry: { actorId: string | null; action: AuditAction; entity: 'order' | 'seller' | 'payment_settings'; entityId: string; data: Record<string, unknown> },
   ): Promise<void> {
     await tx.auditLog.create({
       data: {

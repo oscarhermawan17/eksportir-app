@@ -209,6 +209,8 @@ function PaymentReviewPanel({ payment, onDone }: { payment: PaymentView; onDone:
   }
 
   const facts: [string, string | null][] = [
+    // Where the buyer was told to send it at the time (2026-11-26); check the statement of that account.
+    [t('destination'), payment.destination],
     [t('form.senderName'), payment.senderName],
     [t('form.txHash'), payment.txHash],
     [t('form.exchangeName'), payment.exchangeName],

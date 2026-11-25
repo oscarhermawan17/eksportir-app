@@ -1,5 +1,4 @@
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import {
   DEFAULT_PAGE_SIZE,
   PAYMENT_LIMITS,
@@ -24,7 +23,6 @@ import type {
 } from '@balitrade/shared';
 import { ChatService } from '../chat/chat.service.js';
 import { MessageRateLimiter } from '../chat/message-rate-limiter.js';
-import type { Env } from '../config/env.js';
 import { idrToUsd } from '../fx/fx-math.js';
 import { Prisma } from '../generated/prisma/client.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
@@ -33,6 +31,7 @@ import { endOfBusinessDay, startOfBusinessDay } from '../common/business-day.js'
 import { escapeLike } from '../common/escape-like.js';
 import type { AdminPaymentQueryDto } from './dto/admin-payment-query.dto.js';
 import type { SubmitPaymentDto } from './dto/submit-payment.dto.js';
+import { PaymentSettingsService } from './payment-settings.service.js';
 
 const paymentInclude = {
   submittedBy: { select: { id: true, name: true } },
@@ -65,37 +64,12 @@ export class PaymentsService {
     private readonly chat: ChatService,
     private readonly notifications: NotificationsService,
     private readonly limiter: MessageRateLimiter,
-    private readonly config: ConfigService<Env, true>,
+    private readonly settings: PaymentSettingsService,
   ) {}
 
-  /**
-   * Where buyers send their money, from config. A method whose fields are not all filled in is left out, so a
-   * half-configured `.env` cannot show a buyer an incomplete instruction (a wrong USDT network loses their funds).
-   */
-  instructions(): PaymentInstructions {
-    const value = (key: keyof Env): string => (this.config.get(key, { infer: true }) as string | undefined) ?? '';
-    const all = (...keys: (keyof Env)[]): boolean => keys.every((key) => value(key) !== '');
-
-    return {
-      bank: all('PAY_BANK_NAME', 'PAY_BANK_ACCOUNT_NUMBER', 'PAY_BANK_ACCOUNT_HOLDER')
-        ? {
-            name: value('PAY_BANK_NAME'),
-            accountNumber: value('PAY_BANK_ACCOUNT_NUMBER'),
-            accountHolder: value('PAY_BANK_ACCOUNT_HOLDER'),
-          }
-        : null,
-      usdt: all('PAY_USDT_NETWORK', 'PAY_USDT_ADDRESS')
-        ? { network: value('PAY_USDT_NETWORK'), address: value('PAY_USDT_ADDRESS') }
-        : null,
-      exchange: all('PAY_EXCHANGE_NAME', 'PAY_EXCHANGE_CONTACT', 'PAY_EXCHANGE_INSTRUCTIONS')
-        ? {
-            name: value('PAY_EXCHANGE_NAME'),
-            contact: value('PAY_EXCHANGE_CONTACT'),
-            instructions: value('PAY_EXCHANGE_INSTRUCTIONS'),
-          }
-        : null,
-      mock: value('PAY_MOCK').toLowerCase() === 'true',
-    };
+  /** Where buyers send their money: the OWNER's settings, or env until those are saved (PaymentSettingsService). */
+  instructions(): Promise<PaymentInstructions> {
+    return this.settings.instructions();
   }
 
   /**
@@ -160,6 +134,8 @@ export class PaymentsService {
     }
     this.assertReference(dto);
     const amount = this.assertAmount(dto.method, dto.amount);
+    // The method must be offered right now, and where it pointed is kept with the payment (owner's decision, 2026-11-26).
+    const destination = await this.settings.destinationFor(dto.method);
     this.limiter.consume(user.id);
 
     const amountIdr = paymentCurrency(dto.method) === 'IDR' ? Math.round(dto.amount) : null;
@@ -193,6 +169,7 @@ export class PaymentsService {
           reference: dto.reference ?? null,
           note: dto.note ?? null,
           proofKey: dto.proofKey,
+          destination,
           submittedById: user.id,
         },
       });
@@ -472,6 +449,7 @@ export class PaymentsService {
       decidedBy: row.decidedBy,
       decidedAt: row.decidedAt?.toISOString() ?? null,
       rejectionReason: row.rejectionReason,
+      destination: row.destination,
     };
   }
 }

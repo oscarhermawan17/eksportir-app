@@ -296,7 +296,8 @@
       "qc": "Quality control",
       "shipping": "Shipping",
       "payouts": "Payouts",
-      "content": "Page content"
+      "content": "Page content",
+      "paymentSettings": "Payment accounts"
     },
     "overview": {
       "title": "What needs you",
@@ -1004,7 +1005,8 @@
     },
     "proofTitle": "Proof of transfer",
     "proofAlt": "Proof of transfer for order {code}",
-    "openFullSize": "Open full size"
+    "openFullSize": "Open full size",
+    "destination": "Sent to"
   },
   "Qc": {
     "title": "Quality control",
@@ -1297,5 +1299,36 @@
     "empty": "Nothing here yet.",
     "loadError": "Could not load the content.",
     "viewPage": "View the page"
+  },
+  "PaymentSettings": {
+    "title": "Payment accounts",
+    "intro": "Where buyers send their money. Every change is recorded with your name. A wrong number or address sends buyers' money elsewhere, so both are typed twice.",
+    "readOnly": "Only the owner can change these. You can read them to match bank statements and the wallet.",
+    "envNotice": "Not saved yet: the payment page still shows the values from the server settings file. Save once to take over here.",
+    "lastChanged": "Last changed by {name} on {date}",
+    "bankTitle": "Bank transfer (IDR)",
+    "usdtTitle": "USDT (Binance)",
+    "enabled": "Offer this method to buyers",
+    "bankName": "Bank",
+    "accountNumber": "Account number",
+    "accountNumberConfirm": "Account number again",
+    "accountNumberHelper": "Digits only, 6 to 20. Spaces and dashes are removed.",
+    "accountHolder": "Account holder name",
+    "network": "Network",
+    "networkHelper": "Must be the network your Binance deposit address is on. The wrong network loses the money.",
+    "address": "Deposit address",
+    "addressConfirm": "Deposit address again",
+    "addressHelper": "TRC20 addresses start with T; ERC20 and BEP20 addresses start with 0x.",
+    "mismatchNumber": "The two account numbers differ.",
+    "mismatchAddress": "The two addresses differ.",
+    "badAddress": "This address does not fit the chosen network.",
+    "warningTitle": "Test warning",
+    "warningLabel": "Show buyers a warning that these are placeholder details (do not transfer)",
+    "warningHelper": "Switch it off once the details above are real.",
+    "save": "Save payment accounts",
+    "saving": "Saving…",
+    "saved": "Saved. The payment page uses these details now.",
+    "loadError": "Could not load the payment accounts.",
+    "exchangeNotice": "Buyers still see the warning: the partner exchange method is still a placeholder in the server settings file (PAY_MOCK). It is not managed here yet."
   }
 }
