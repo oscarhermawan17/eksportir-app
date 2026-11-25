@@ -123,8 +123,9 @@ and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T3
 the old chrome (they already inherit the new colours through the kept token names) and are the next UI steps.
 Also not deployed yet: a photo banner on `/` (CC BY 2.0 placeholder, credits in `apps/web/src/assets/banners/CREDITS.md`), category
 icons picked by the OWNER on `/admin/categories` (**migration `20261126100000_category_icon`** — backup, migrate, then images), and
-Next.js 16.4.6. After that deploy the OWNER picks icons for the four live categories. The admin date-range e2e tests (T27) fail when run
-between 00:00 and 08:00 local time: they build "today" in UTC while the API reads the range in the laptop's time zone — CI (UTC) passes. For browser checks use the
+Next.js 16.4.6. After that deploy the OWNER picks icons for the four live categories. Also waiting: admin date filters now read a day as
+**Bali time (UTC+8)** on every machine (`apps/api/src/common/business-day.ts`); before, the server's UTC container filed an order placed
+before 08:00 WITA under the previous day. For browser checks use the
 globally installed `agent-browser` CLI (`agent-browser skills get core`), which costs far fewer tokens than screenshots of the app pane.
 
 **Deployed 2026-11-23: T20 completion + payouts (commit `ae5c1a3`) is live.** An order now runs from REQUESTED to COMPLETED. CI run
