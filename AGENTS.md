@@ -133,6 +133,8 @@ owner:** pick icons for the four live categories on `/admin/categories` (they re
 PowerShell and not from Git Bash; the BOM PowerShell adds breaks a first-line comment that contains `(`, so the first line is now a
 throwaway word (`bom-guard-line-ignore-the-error`); and the server `.env`'s `DATABASE_URL` points at the Docker bridge (`172.19.0.1`),
 so `pg_dump` run on the host must swap the host for `127.0.0.1` (done inside the command, the URL is never printed).
+**Not deployed yet (2026-11-26):** the admin tables (listings, orders and the QC/shipping/payout queues) got status tabs with counts, a
+react-day-picker date popover with presets and clickable rows; the API gained a multi-status filter and `statusCounts` (no migration).
 For browser checks use the globally installed `agent-browser` CLI (`agent-browser skills get core`); for admin/seller screens on
 localhost mint a session from the laptop's `JWT_SECRET` for an existing local user instead of typing a password.
 

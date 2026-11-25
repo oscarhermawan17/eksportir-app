@@ -62,6 +62,16 @@ Ganti font = ubah file itu saja.
 - Spesifikasi produk = baris label kiri / nilai kanan dengan garis tipis (`divide-y`), bukan kotak.
 - Halaman penjelasan (Cara kerja): setiap bagian dibuka garis tipis, judul di kolom kiri (4/12), isi di kanan (8/12).
 - Kartu produk datar: foto 4:3 dengan garis tipis di dalam (`ring-black/5`), lalu judul, jenis, harga, ketersediaan, penjual.
+- **Tabel admin** (2026-11-26, `components/admin/data-table.tsx`): satu wadah berbingkai berisi, dari atas ke bawah:
+  - **tab status dengan jumlah** (`status-tabs.tsx`, garis navy di bawah tab aktif; di HP digeser ke samping);
+  - toolbar: cari (lebar, Enter untuk cari, × di dalam field) di kiri, **tombol tanggal** di kanan;
+  - chip "Difilter:" yang bisa dihapus + Reset;
+  - baris (seluruh baris bisa diklik, panah `›`, link asli di sel pertama untuk keyboard dan Ctrl+klik; di HP kartu yang bisa diklik);
+  - footer pagination.
+  Tanggal **tidak** memakai input bawaan browser: `date-range-picker.tsx` (react-day-picker) dengan preset (Hari ini, 7/30 hari,
+  Bulan ini, Bulan lalu), kalender rentang bergaya token (`.bt-calendar` di `globals.css`), Batal/Terapkan, lembar bawah di HP.
+  Orders dikelompokkan per tahap (`ORDER_STATUS_GROUPS`), Listings per status (`LISTING_STATUS_TABS`); antrean QC/Pengiriman/Payouts
+  memakai tabel yang sama dengan tab antreannya sendiri. Tabel admin lain (Payments, Sellers) sebaiknya memakai pola ini juga.
 
 ## Progress
 
