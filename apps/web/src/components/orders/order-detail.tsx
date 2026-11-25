@@ -112,7 +112,7 @@ function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUp
     <article className="space-y-6">
       <header className="space-y-2">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold text-text">{t('orderTitle', { code: order.code })}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-text">{t('orderTitle', { code: order.code })}</h1>
           <OrderStatusBadge status={order.status} label={t(`status.${order.status}`)} />
         </div>
         <p className="text-sm text-muted">{t('requestedOn', { date: format.dateTime(new Date(order.createdAt), { dateStyle: 'long', timeStyle: 'short' }) })}</p>
@@ -133,8 +133,8 @@ function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUp
 
       <OrderTrackingPanel order={order} onChanged={onReload} />
 
-      <section aria-labelledby="order-item" className="rounded-card border border-border bg-card p-5 shadow-sm">
-        <h2 id="order-item" className="text-xs font-bold uppercase tracking-wider text-muted">
+      <section aria-labelledby="order-item" className="rounded-card border border-border bg-card p-5">
+        <h2 id="order-item" className="text-base font-semibold text-text">
           {t('itemTitle')}
         </h2>
         <p className="mt-2 text-base font-semibold text-text">{order.item.title}</p>
@@ -151,14 +151,14 @@ function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUp
         ) : null}
       </section>
 
-      <section aria-labelledby="order-totals" className="rounded-card border border-border bg-card p-5 shadow-sm">
-        <h2 id="order-totals" className="text-xs font-bold uppercase tracking-wider text-muted">
+      <section aria-labelledby="order-totals" className="rounded-card border border-border bg-card p-5">
+        <h2 id="order-totals" className="text-base font-semibold text-text">
           {t('totalsTitle')}
         </h2>
         <dl className="mt-3 space-y-2 text-sm">
           <Line label={t('itemsSubtotal')} value={money(order.totals.itemsUsd)} />
           <Line label={t('qcFee')} value={money(order.totals.qcFeeUsd)} />
-          <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-bold text-text">
+          <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-semibold text-text">
             <dt>{t('totalSoFar')}</dt>
             <dd className="tabular-nums">{money(order.totals.totalUsd)}</dd>
           </div>
@@ -167,8 +167,8 @@ function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUp
         <p className="mt-1 text-xs text-muted">{t('rateUsed', { rate: format.number(Number(order.fxRate), { minimumFractionDigits: 2, maximumFractionDigits: 4 }) })}</p>
       </section>
 
-      <section aria-labelledby="order-parties" className="rounded-card border border-border bg-card p-5 shadow-sm">
-        <h2 id="order-parties" className="text-xs font-bold uppercase tracking-wider text-muted">
+      <section aria-labelledby="order-parties" className="rounded-card border border-border bg-card p-5">
+        <h2 id="order-parties" className="text-base font-semibold text-text">
           {t('parties')}
         </h2>
         <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
@@ -177,8 +177,8 @@ function Order({ order, onUpdated, onStale, onReload }: { order: OrderView; onUp
         </dl>
       </section>
 
-      <section aria-labelledby="order-delivery" className="rounded-card border border-border bg-card p-5 shadow-sm">
-        <h2 id="order-delivery" className="text-xs font-bold uppercase tracking-wider text-muted">
+      <section aria-labelledby="order-delivery" className="rounded-card border border-border bg-card p-5">
+        <h2 id="order-delivery" className="text-base font-semibold text-text">
           {t('deliveryTitle')}
         </h2>
         {order.delivery ? <Delivery delivery={order.delivery} /> : <p className="mt-2 text-sm text-muted">{t('deliveryHidden')}</p>}
@@ -210,7 +210,7 @@ function Delivery({ delivery }: { delivery: DeliveryAddress }) {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-bold uppercase tracking-wider text-muted">{label}</dt>
+      <dt className="text-sm font-medium text-muted">{label}</dt>
       <dd className="mt-0.5 whitespace-pre-line break-words text-text">{value}</dd>
     </div>
   );

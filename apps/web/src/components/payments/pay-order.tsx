@@ -104,7 +104,7 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-bold text-text">{t(summary.purpose === 'SHIPPING' ? 'titleShipping' : 'title', { code: order.code })}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-text">{t(summary.purpose === 'SHIPPING' ? 'titleShipping' : 'title', { code: order.code })}</h1>
         <p className="text-sm text-text">{t('protectionNote')}</p>
         {instructions.mock ? (
           <p role="alert" className="rounded-card border border-warning/40 bg-warning/5 px-4 py-3 text-sm font-semibold text-text">
@@ -113,14 +113,14 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
         ) : null}
       </header>
 
-      <section aria-labelledby="pay-amounts" className="rounded-card border border-border bg-card p-5 shadow-sm">
-        <h2 id="pay-amounts" className="text-xs font-bold uppercase tracking-wider text-muted">
+      <section aria-labelledby="pay-amounts" className="rounded-card border border-border bg-card p-5">
+        <h2 id="pay-amounts" className="text-base font-semibold text-text">
           {t('amountsTitle')}
         </h2>
         <dl className="mt-3 space-y-2 text-sm">
           <Line label={t(summary.purpose === 'SHIPPING' ? 'dueShipping' : 'due')} value={money(summary.dueUsd)} />
           <Line label={t('verified')} value={money(summary.verifiedUsd)} />
-          <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-bold text-text">
+          <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-semibold text-text">
             <dt>{t('remaining')}</dt>
             <dd className="tabular-nums">{money(summary.remainingUsd)}</dd>
           </div>
@@ -144,7 +144,7 @@ function Content({ data, onPaid, onStale }: { data: Loaded; onPaid: (summary: Pa
       )}
 
       <section aria-labelledby="pay-history">
-        <h2 id="pay-history" className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">
+        <h2 id="pay-history" className="mb-3 text-base font-semibold text-text">
           {t('historyTitle')}
         </h2>
         <PaymentList payments={summary.payments} />
@@ -234,13 +234,13 @@ function PaymentForm({
   }
 
   return (
-    <section aria-labelledby="pay-form" className="space-y-5 rounded-card border border-border bg-card p-5 shadow-sm">
-      <h2 id="pay-form" className="text-base font-bold text-text">
+    <section aria-labelledby="pay-form" className="space-y-5 rounded-card border border-border bg-card p-5">
+      <h2 id="pay-form" className="text-base font-semibold text-text">
         {t('formTitle')}
       </h2>
 
       <fieldset>
-        <legend className="text-xs font-bold uppercase tracking-wider text-text">{t('chooseMethod')}</legend>
+        <legend className="text-sm font-medium text-text">{t('chooseMethod')}</legend>
         <div className="mt-2 space-y-2">
           {available.map((option) => (
             <label
@@ -267,7 +267,7 @@ function PaymentForm({
       </fieldset>
 
       <div className="rounded-card bg-background p-4">
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">{t('whereToSend')}</h3>
+        <h3 className="mb-3 text-base font-semibold text-text">{t('whereToSend')}</h3>
         <PaymentMethodCard method={method} instructions={instructions} />
       </div>
 
@@ -326,7 +326,7 @@ function PaymentForm({
         ) : null}
 
         <div className="space-y-1.5">
-          <label htmlFor="pay-proof" className="block text-xs font-bold uppercase tracking-wider text-text">
+          <label htmlFor="pay-proof" className="block text-sm font-medium text-text">
             {t('form.proof')}
             <span className="text-error" aria-hidden="true"> *</span>
           </label>

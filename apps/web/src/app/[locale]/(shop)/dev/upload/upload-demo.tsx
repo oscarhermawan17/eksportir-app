@@ -11,7 +11,7 @@ export function UploadDemo() {
       {() => (
         <div className="mx-auto w-full max-w-3xl flex-1 space-y-8 px-4 py-10 sm:py-14">
           <div>
-            <h1 className="text-2xl font-bold text-text">{t('uploadTitle')}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-text">{t('uploadTitle')}</h1>
             <p className="mt-1 text-sm text-muted">{t('uploadIntro')}</p>
           </div>
           <section className="space-y-3">

@@ -177,7 +177,7 @@ export function NotificationBell() {
         {unread > 0 ? (
           <span
             aria-hidden="true"
-            className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-terracotta px-1 text-[10px] font-bold text-white"
+            className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-error px-1 text-[10px] font-semibold text-white"
           >
             {unread > 99 ? '99+' : unread}
           </span>
@@ -190,7 +190,7 @@ export function NotificationBell() {
           role="region"
           aria-label={t('title')}
           // Phones: a sheet across the screen below the header; wider screens: a popover under the bell.
-          className="fixed inset-x-4 top-[4.25rem] z-50 overflow-hidden rounded-card border border-border bg-card shadow-lg sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-[22rem]"
+          className="fixed inset-x-4 top-[4.25rem] z-50 overflow-hidden rounded-card border border-border bg-card shadow-lg shadow-black/5 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-[22rem]"
         >
           <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
             <h2 className="text-sm font-semibold text-text">{t('title')}</h2>
@@ -229,7 +229,7 @@ export function NotificationBell() {
                         {line.subtitle ? <span className="block truncate text-xs text-muted">{line.subtitle}</span> : null}
                         <span className="mt-0.5 block truncate text-sm text-text">{line.body}</span>
                         {line.badge && !item.readAt ? (
-                          <span className="mt-1 inline-block rounded-full bg-terracotta/10 px-2 py-px text-[11px] font-semibold text-terracotta">{line.badge}</span>
+                          <span className="mt-1 inline-block rounded-full bg-warning/10 px-2 py-px text-[11px] font-medium text-warning">{line.badge}</span>
                         ) : null}
                       </Link>
                     </li>

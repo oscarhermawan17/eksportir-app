@@ -67,7 +67,7 @@ export function OrderActions({ order, onUpdated, onStale }: { order: OrderView; 
   const proposal = order.proposal;
 
   return (
-    <section aria-labelledby="order-actions" className="rounded-card border border-gold/50 bg-gold/10 p-5 shadow-sm">
+    <section aria-labelledby="order-actions" className="rounded-card border border-border bg-surface p-5">
       {seller ? (
         <>
           <h2 id="order-actions" className="text-base font-semibold text-text">

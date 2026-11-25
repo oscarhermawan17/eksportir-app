@@ -74,8 +74,8 @@ export function SellerBankCard() {
   }
 
   return (
-    <section aria-labelledby="seller-bank" className="mt-6 rounded-card border border-border bg-card p-6 shadow-sm sm:p-8">
-      <h2 id="seller-bank" className="flex items-center gap-2 text-lg font-bold text-text">
+    <section aria-labelledby="seller-bank" className="mt-6 rounded-card border border-border bg-card p-6 sm:p-8">
+      <h2 id="seller-bank" className="flex items-center gap-2 text-lg font-semibold text-text">
         <Landmark className="h-5 w-5 text-primary" aria-hidden="true" />
         {t('title')}
       </h2>
@@ -120,15 +120,15 @@ export function SellerBankCard() {
         <div className="mt-4 space-y-3">
           <dl className="grid gap-3 text-sm sm:grid-cols-3">
             <div>
-              <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('bankName')}</dt>
+              <dt className="text-sm font-medium text-muted">{t('bankName')}</dt>
               <dd className="mt-0.5 text-text">{bank.bankName}</dd>
             </div>
             <div>
-              <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('accountNumber')}</dt>
+              <dt className="text-sm font-medium text-muted">{t('accountNumber')}</dt>
               <dd className="mt-0.5 font-mono text-text">{maskAccount(bank.accountNumber)}</dd>
             </div>
             <div>
-              <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('accountHolder')}</dt>
+              <dt className="text-sm font-medium text-muted">{t('accountHolder')}</dt>
               <dd className="mt-0.5 text-text">{bank.accountHolder}</dd>
             </div>
           </dl>

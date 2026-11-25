@@ -19,7 +19,7 @@ export function OrderRow({ order, basePath }: { order: OrderView; basePath: stri
   return (
     <Link
       href={`${basePath}/${order.id}`}
-      className="block rounded-card border border-border bg-card p-4 shadow-sm transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
+      className="block rounded-card border border-border bg-card p-4 transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
     >
       <span className="flex flex-wrap items-center justify-between gap-2">
         <span className="flex items-center gap-2">

@@ -18,7 +18,7 @@ export default async function OrdersPage({ params }: PageProps<'/[locale]/orders
   const t = await getTranslations({ locale, namespace: 'Orders' });
   return (
     <div className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:py-10">
-      <h1 className="mb-6 text-2xl font-bold text-text">{t('title')}</h1>
+      <h1 className="mb-6 text-2xl font-semibold tracking-tight text-text">{t('title')}</h1>
       <OrdersList />
     </div>
   );

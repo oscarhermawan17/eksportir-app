@@ -77,7 +77,7 @@ export function QcReportForm({ orderId, onSent, onStale }: { orderId: string; on
       </div>
 
       <fieldset className="space-y-3">
-        <legend className="text-xs font-bold uppercase tracking-wider text-text">{t('form.checklistLabel')}</legend>
+        <legend className="text-sm font-medium text-text">{t('form.checklistLabel')}</legend>
         {QC_CHECKLIST.map((key) => {
           const line = lines[key];
           return (
@@ -129,7 +129,7 @@ export function QcReportForm({ orderId, onSent, onStale }: { orderId: string; on
       />
 
       <div className="space-y-1.5">
-        <p className="text-xs font-bold uppercase tracking-wider text-text">{t('form.mediaLabel')}</p>
+        <p className="text-sm font-medium text-text">{t('form.mediaLabel')}</p>
         <p className="text-xs text-muted">{t('form.mediaHelper', { max: QC_LIMITS.mediaMax })}</p>
         <MediaUploader
           key={uploaderKey}

@@ -128,7 +128,7 @@ function Payments() {
                       }}
                     >
                       <label className="flex-1">
-                        <span className="block text-xs font-bold uppercase tracking-wider text-text">{t('rejectReason')}</span>
+                        <span className="block text-sm font-medium text-text">{t('rejectReason')}</span>
                         <input
                           name="reason"
                           maxLength={PAYMENT_LIMITS.reasonMax}

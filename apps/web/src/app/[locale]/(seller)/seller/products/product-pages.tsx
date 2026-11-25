@@ -18,8 +18,8 @@ function Shell({ title, children }: { title: string; children: ReactNode }) {
       <Link href="/seller/products" className="text-sm font-semibold text-primary hover:underline">
         ← {t('back')}
       </Link>
-      <div className="mt-4 rounded-card border border-border bg-card p-6 shadow-sm sm:p-8">
-        <h1 className="mb-6 text-2xl font-bold text-text">{title}</h1>
+      <div className="mt-4 rounded-card border border-border bg-card p-6 sm:p-8">
+        <h1 className="mb-6 text-2xl font-semibold tracking-tight text-text">{title}</h1>
         {children}
       </div>
     </div>

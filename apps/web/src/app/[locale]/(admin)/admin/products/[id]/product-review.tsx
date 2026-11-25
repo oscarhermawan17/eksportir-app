@@ -140,9 +140,9 @@ function Review({ product, onChange }: { product: AdminProductView; onChange: (p
         ← {t('back')}
       </Link>
 
-      <section className="mt-4 rounded-card border border-border bg-card p-6 shadow-sm">
+      <section className="mt-4 rounded-card border border-border bg-card p-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-xl font-bold text-text">{product.translations[product.sourceLocale]?.title}</h2>
+          <h2 className="text-xl font-semibold text-text">{product.translations[product.sourceLocale]?.title}</h2>
           <span className="rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold text-muted">
             {tProducts(`status.${product.status}`)}
           </span>
@@ -249,7 +249,7 @@ function Review({ product, onChange }: { product: AdminProductView; onChange: (p
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-bold uppercase tracking-wider text-muted">{label}</dt>
+      <dt className="text-sm font-medium text-muted">{label}</dt>
       <dd className="mt-0.5 text-text">{value}</dd>
     </div>
   );

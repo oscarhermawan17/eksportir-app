@@ -83,8 +83,8 @@ export function OrderTrackingPanel({ order, onChanged }: { order: OrderView; onC
   }
 
   return (
-    <section aria-labelledby="order-tracking" className="rounded-card border border-border bg-card p-5 shadow-sm">
-      <h2 id="order-tracking" className="text-xs font-bold uppercase tracking-wider text-muted">
+    <section aria-labelledby="order-tracking" className="rounded-card border border-border bg-card p-5">
+      <h2 id="order-tracking" className="text-base font-semibold text-text">
         {t('title')}
       </h2>
       <p className="mt-1 text-xs text-muted">{t('manualNote')}</p>
@@ -231,7 +231,7 @@ function AddMilestoneForm({
     <form onSubmit={submit} className="space-y-3 rounded-card border border-border bg-background/60 p-4" noValidate>
       <h3 className="text-base font-semibold text-text">{t('form.title')}</h3>
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="text-xs font-bold uppercase tracking-wider text-text">
+        <label className="text-sm font-medium text-text">
           {t('form.milestone')}
           <select
             value={chosen}
@@ -245,7 +245,7 @@ function AddMilestoneForm({
             ))}
           </select>
         </label>
-        <label className="text-xs font-bold uppercase tracking-wider text-text">
+        <label className="text-sm font-medium text-text">
           {t('form.when')}
           <input
             type="datetime-local"
@@ -257,7 +257,7 @@ function AddMilestoneForm({
         </label>
       </div>
       {needsAwb ? (
-        <label className="block text-xs font-bold uppercase tracking-wider text-text">
+        <label className="block text-sm font-medium text-text">
           {t('form.awb')} <span className="text-error">*</span>
           <input
             value={awb}
@@ -271,7 +271,7 @@ function AddMilestoneForm({
       ) : null}
       <TextareaField id={`track-note-${orderId}`} label={t('form.note')} value={note} onChange={(event) => setNote(event.target.value)} maxLength={TRACKING_LIMITS.noteMax} rows={2} />
       <div className="space-y-1.5">
-        <p className="text-xs font-bold uppercase tracking-wider text-text">{t('form.photo')}</p>
+        <p className="text-sm font-medium text-text">{t('form.photo')}</p>
         <MediaUploader
           key={uploaderKey}
           purpose="PRIVATE_FILE"

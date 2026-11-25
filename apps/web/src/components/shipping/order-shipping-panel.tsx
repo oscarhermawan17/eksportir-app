@@ -97,8 +97,8 @@ export function OrderShippingPanel({ order, onChanged }: { order: OrderView; onC
   };
 
   return (
-    <section aria-labelledby="order-shipping" className="rounded-card border border-border bg-card p-5 shadow-sm">
-      <h2 id="order-shipping" className="text-xs font-bold uppercase tracking-wider text-muted">
+    <section aria-labelledby="order-shipping" className="rounded-card border border-border bg-card p-5">
+      <h2 id="order-shipping" className="text-base font-semibold text-text">
         {t('title')}
       </h2>
 
@@ -199,7 +199,7 @@ function Bill({ bill }: { bill: ShippingBillView }) {
             <dd className="tabular-nums">{money(line.amountUsd)}</dd>
           </div>
         ))}
-        <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-bold text-text">
+        <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-semibold text-text">
           <dt>{t('total')}</dt>
           <dd className="tabular-nums">{money(bill.totalUsd)}</dd>
         </div>

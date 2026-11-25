@@ -20,11 +20,6 @@
   --color-error: #b42318;
   --color-info: #1d5b8f;
 
-  /* Legacy (design 01-v4): still used by the admin and seller chrome; removed when those areas are redone. */
-  --color-gold: #c9a24a;
-  --color-gold-text: #9a7426;
-  --color-terracotta: #b5563a;
-
   --radius-card: 10px;
   --radius-button: 8px;
 

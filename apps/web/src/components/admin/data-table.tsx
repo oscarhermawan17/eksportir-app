@@ -86,13 +86,13 @@ export function DataTable<T>({
           {/* Cards below lg, table from lg up. Only one is in the DOM at a time. */}
           <ul className="mt-4 space-y-3 lg:hidden">
             {rows.map((row) => (
-              <li key={rowKey(row)} className="rounded-card border border-border bg-card p-4 shadow-sm">
+              <li key={rowKey(row)} className="rounded-card border border-border bg-card p-4">
                 {card(row)}
               </li>
             ))}
           </ul>
 
-          <div className="mt-4 hidden overflow-hidden rounded-card border border-border bg-card shadow-sm lg:block">
+          <div className="mt-4 hidden overflow-hidden rounded-card border border-border bg-card lg:block">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-background/60 text-left">
@@ -100,7 +100,7 @@ export function DataTable<T>({
                     <th
                       key={column.key}
                       scope="col"
-                      className={`px-4 py-3 text-xs font-bold uppercase tracking-wider text-muted ${column.className ?? ''}`}
+                      className={`px-4 py-3 text-sm font-medium text-muted ${column.className ?? ''}`}
                     >
                       {column.header}
                     </th>

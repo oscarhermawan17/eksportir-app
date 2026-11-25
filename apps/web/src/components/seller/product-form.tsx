@@ -128,7 +128,7 @@ export function ProductForm({ product }: { product: ProductView | null }) {
       {isLive ? <p className="rounded-card bg-warning/10 px-4 py-3 text-sm text-text">{t('editWarning')}</p> : null}
 
       <fieldset className="grid gap-2 sm:grid-cols-2">
-        <legend className="mb-1.5 text-xs font-bold uppercase tracking-wider text-text">{t('form.type')}</legend>
+        <legend className="mb-1.5 text-sm font-medium text-text">{t('form.type')}</legend>
         {(['READY_STOCK', 'MADE_TO_ORDER'] as const).map((value) => (
           <label
             key={value}
@@ -170,7 +170,7 @@ export function ProductForm({ product }: { product: ProductView | null }) {
       />
 
       <fieldset className="flex flex-wrap gap-4">
-        <legend className="mb-1.5 text-xs font-bold uppercase tracking-wider text-text">{t('form.sourceLocale')}</legend>
+        <legend className="mb-1.5 text-sm font-medium text-text">{t('form.sourceLocale')}</legend>
         {(['en', 'id'] as const).map((value) => (
           <label key={value} className="flex cursor-pointer items-center gap-2 text-sm text-text">
             <input
@@ -273,7 +273,7 @@ export function ProductForm({ product }: { product: ProductView | null }) {
       </div>
 
       <section className="space-y-2">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-text">{t('form.media')}</h2>
+        <h2 className="text-base font-semibold text-text">{t('form.media')}</h2>
         <p className="text-xs text-muted">{t('form.mediaHelper')}</p>
         <MediaUploader
           key={mediaVersion}

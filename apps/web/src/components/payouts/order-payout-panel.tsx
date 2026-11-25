@@ -68,8 +68,8 @@ export function OrderPayoutPanel({ order, onChanged }: { order: OrderView; onCha
   if (!relevant) return null;
 
   return (
-    <section aria-labelledby="order-payout" className="rounded-card border border-border bg-card p-5 shadow-sm">
-      <h2 id="order-payout" className="text-xs font-bold uppercase tracking-wider text-muted">
+    <section aria-labelledby="order-payout" className="rounded-card border border-border bg-card p-5">
+      <h2 id="order-payout" className="text-base font-semibold text-text">
         {t('title')}
       </h2>
       {failed ? (
@@ -131,7 +131,7 @@ function Breakdown({ data, seller }: { data: OrderPayoutView; seller: boolean })
         <dt>{t('commission', { percent })}</dt>
         <dd className="tabular-nums">− {rupiah(breakdown.commissionIdr)}</dd>
       </div>
-      <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-bold text-text">
+      <div className="flex justify-between gap-3 border-t border-border pt-2 text-base font-semibold text-text">
         <dt>{seller ? t('netSeller') : t('netAdmin')}</dt>
         <dd className="tabular-nums">{rupiah(breakdown.netIdr)}</dd>
       </div>
@@ -236,7 +236,7 @@ function AdminTransfer({
   return (
     <div className="space-y-4 rounded-card border border-border bg-background/60 p-4">
       <div className="space-y-1 text-sm">
-        <p className="text-xs font-bold uppercase tracking-wider text-muted">{t('transferTo')}</p>
+        <p className="text-sm font-medium text-muted">{t('transferTo')}</p>
         <p className="text-text">
           {bank.bankName} · <span className="font-mono font-semibold">{bank.accountNumber}</span>{' '}
           <button type="button" onClick={() => void copy(bank.accountNumber)} className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
@@ -258,7 +258,7 @@ function AdminTransfer({
         <form onSubmit={submit} className="space-y-3" noValidate>
           <h3 className="text-base font-semibold text-text">{t('recordTitle')}</h3>
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-text">
+            <label className="text-sm font-medium text-text">
               {t('paidAt')}
               <input
                 type="datetime-local"
@@ -268,7 +268,7 @@ function AdminTransfer({
                 className="mt-1.5 h-10 w-full rounded-button border border-border bg-card px-2 text-sm normal-case tracking-normal text-text focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </label>
-            <label className="text-xs font-bold uppercase tracking-wider text-text">
+            <label className="text-sm font-medium text-text">
               {t('referenceLabel')}
               <input
                 value={reference}
@@ -279,7 +279,7 @@ function AdminTransfer({
             </label>
           </div>
           <div className="space-y-1.5">
-            <p className="text-xs font-bold uppercase tracking-wider text-text">
+            <p className="text-sm font-medium text-text">
               {t('proof')} <span className="text-error">*</span>
             </p>
             <MediaUploader

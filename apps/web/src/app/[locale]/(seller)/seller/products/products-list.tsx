@@ -215,7 +215,7 @@ function Products() {
               </>
             );
             return (
-              <li key={product.id} className="rounded-card border border-border bg-card p-4 shadow-sm">
+              <li key={product.id} className="rounded-card border border-border bg-card p-4">
                 <div className="flex gap-4">
                   <div className="h-16 w-16 shrink-0 overflow-hidden rounded-button bg-background sm:h-20 sm:w-20">
                     {cover?.url ? (

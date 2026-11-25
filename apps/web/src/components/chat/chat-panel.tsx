@@ -247,7 +247,7 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
                     <span className="font-semibold text-text">{own ? t('you') : message.sender.name}</span>
                     {!own && !admin ? <span>· {t(`roles.${message.sender.role}`)}</span> : null}
                     {!own && admin ? (
-                      <span className="rounded-full border border-gold/50 bg-gold/15 px-2 py-px text-[10px] font-bold text-gold-text">
+                      <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-px text-[11px] font-medium text-primary">
                         {t('adminLabel')}
                       </span>
                     ) : null}
@@ -257,7 +257,7 @@ export function ChatPanel({ conversationId }: { conversationId: string }) {
                       own
                         ? 'bg-primary text-white'
                         : admin
-                          ? 'border border-gold/40 bg-gold/15 text-text'
+                          ? 'border border-primary/20 bg-primary/5 text-text'
                           : 'border border-border bg-card text-text'
                     }`}
                   >

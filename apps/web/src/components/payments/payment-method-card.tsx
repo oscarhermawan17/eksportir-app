@@ -11,7 +11,7 @@ function Copyable({ label, value }: { label: string; value: string }) {
 
   return (
     <div>
-      <dt className="text-xs font-bold uppercase tracking-wider text-muted">{label}</dt>
+      <dt className="text-sm font-medium text-muted">{label}</dt>
       <dd className="mt-0.5 flex flex-wrap items-center gap-2">
         <span className="break-all font-semibold text-text">{value}</span>
         <button
@@ -43,11 +43,11 @@ export function PaymentMethodCard({ method, instructions }: { method: PaymentMet
       <dl className="grid gap-3 sm:grid-cols-2">
         <Copyable label={t('bank.accountNumber')} value={instructions.bank.accountNumber} />
         <div>
-          <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('bank.accountHolder')}</dt>
+          <dt className="text-sm font-medium text-muted">{t('bank.accountHolder')}</dt>
           <dd className="mt-0.5 font-semibold text-text">{instructions.bank.accountHolder}</dd>
         </div>
         <div className="sm:col-span-2">
-          <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('bank.bankName')}</dt>
+          <dt className="text-sm font-medium text-muted">{t('bank.bankName')}</dt>
           <dd className="mt-0.5 font-semibold text-text">{instructions.bank.name}</dd>
         </div>
       </dl>
@@ -73,12 +73,12 @@ export function PaymentMethodCard({ method, instructions }: { method: PaymentMet
     return (
       <dl className="grid gap-3 sm:grid-cols-2">
         <div>
-          <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('exchange.name')}</dt>
+          <dt className="text-sm font-medium text-muted">{t('exchange.name')}</dt>
           <dd className="mt-0.5 font-semibold text-text">{instructions.exchange.name}</dd>
         </div>
         <Copyable label={t('exchange.contact')} value={instructions.exchange.contact} />
         <div className="sm:col-span-2">
-          <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('exchange.instructions')}</dt>
+          <dt className="text-sm font-medium text-muted">{t('exchange.instructions')}</dt>
           <dd className="mt-0.5 whitespace-pre-line text-text">{instructions.exchange.instructions}</dd>
         </div>
       </dl>

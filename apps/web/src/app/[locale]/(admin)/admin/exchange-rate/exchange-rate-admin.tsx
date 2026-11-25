@@ -99,13 +99,13 @@ function RatePage() {
         </p>
       ) : (
         <div className="mt-6 space-y-6">
-          <section aria-labelledby="current-rate" className="rounded-card border border-border bg-card p-5 shadow-sm">
-            <h2 id="current-rate" className="text-xs font-bold uppercase tracking-wider text-muted">
+          <section aria-labelledby="current-rate" className="rounded-card border border-border bg-card p-5">
+            <h2 id="current-rate" className="text-base font-semibold text-text">
               {t('currentTitle')}
             </h2>
             {current ? (
               <>
-                <p className="mt-1 text-2xl font-bold tabular-nums text-text">
+                <p className="mt-1 text-2xl font-semibold tracking-tight tabular-nums text-text">
                   {t('currentValue', { rate: formatRate(current.rate) })}
                 </p>
                 <p className="mt-1 text-sm text-muted">
@@ -117,7 +117,7 @@ function RatePage() {
             )}
           </section>
 
-          <section aria-labelledby="new-rate" className="rounded-card border border-border bg-card p-5 shadow-sm">
+          <section aria-labelledby="new-rate" className="rounded-card border border-border bg-card p-5">
             <h2 id="new-rate" className="text-lg font-semibold text-text">
               {t('formTitle')}
             </h2>
@@ -155,7 +155,7 @@ function RatePage() {
             ) : (
               <div className="mt-3 overflow-x-auto rounded-card border border-border bg-card">
                 <table className="w-full text-left text-sm">
-                  <thead className="border-b border-border text-xs uppercase tracking-wider text-muted">
+                  <thead className="border-b border-border text-sm font-medium text-muted">
                     <tr>
                       <th scope="col" className="px-4 py-3 font-bold">
                         {t('colRate')}

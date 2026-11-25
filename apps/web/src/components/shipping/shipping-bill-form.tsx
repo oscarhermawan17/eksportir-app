@@ -97,7 +97,7 @@ export function ShippingBillForm({
       </div>
 
       <fieldset className="space-y-2">
-        <legend className="text-xs font-bold uppercase tracking-wider text-text">{t('form.linesLabel')}</legend>
+        <legend className="text-sm font-medium text-text">{t('form.linesLabel')}</legend>
         {lines.map((line, index) => (
           <div key={line.id} className="flex flex-wrap items-end gap-2">
             <label className="min-w-0 flex-1 basis-48 text-xs font-semibold text-muted">
@@ -143,7 +143,7 @@ export function ShippingBillForm({
         ) : null}
         <p className="text-sm text-text">
           {t('form.preview')}{' '}
-          <span className="font-bold tabular-nums">{preview === null ? '—' : format.number(preview, { style: 'currency', currency: 'USD' })}</span>
+          <span className="font-semibold tabular-nums">{preview === null ? '—' : format.number(preview, { style: 'currency', currency: 'USD' })}</span>
         </p>
       </fieldset>
 
@@ -175,7 +175,7 @@ export function ShippingBillForm({
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-xs font-bold uppercase tracking-wider text-text">{t('form.photo')}</p>
+        <p className="text-sm font-medium text-text">{t('form.photo')}</p>
         <p className="text-xs text-muted">{t('form.photoHelper')}</p>
         <MediaUploader
           key={uploaderKey}

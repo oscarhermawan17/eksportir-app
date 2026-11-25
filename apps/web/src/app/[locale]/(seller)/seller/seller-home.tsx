@@ -102,8 +102,8 @@ function Dashboard({ user }: { user: AuthUser }) {
   if (profile === null) {
     return (
       <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:py-14">
-        <h1 className="text-2xl font-bold text-text">{t('applyTitle')}</h1>
-        <div className="mt-6 rounded-card border border-border bg-card p-6 text-sm shadow-sm">
+        <h1 className="text-2xl font-semibold tracking-tight text-text">{t('applyTitle')}</h1>
+        <div className="mt-6 rounded-card border border-border bg-card p-6 text-sm">
           <p className="text-text">{t('home.notAppliedText')}</p>
           <Link href="/seller/account" className={buttonClasses('primary', 'mt-4')}>
             {t('applyTitle')}
@@ -119,7 +119,7 @@ function Dashboard({ user }: { user: AuthUser }) {
     return (
       <div className="flex-1 space-y-6">
         <ShopHeader profile={profile} />
-        <div className="rounded-card border border-border bg-card p-6 text-sm shadow-sm">
+        <div className="rounded-card border border-border bg-card p-6 text-sm">
           <p className="text-text">{profile.status === 'REJECTED' ? t('rejectedText') : t('pendingText')}</p>
           {profile.status === 'REJECTED' && profile.rejectionReason ? (
             <p className="mt-2 text-error">
@@ -216,7 +216,7 @@ function ShopHeader({ profile }: { profile: SellerProfileView }) {
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           {/* The shell's top bar is the page title, so the shop name is a heading below it, not an h1. */}
-          <h2 className="text-2xl font-bold text-text">{profile.displayName}</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-text">{profile.displayName}</h2>
           <StatusBadge status={profile.status} label={t(`status.${profile.status}`)} />
         </div>
         <p className="mt-1 text-sm text-muted">
@@ -258,7 +258,7 @@ function StatGroup({ title, tiles, highlightWhenSet = false }: { title: string; 
   const t = useTranslations('Seller');
   return (
     <section>
-      <h3 className="text-xs font-bold uppercase tracking-wider text-muted">{title}</h3>
+      <h3 className="text-base font-semibold text-text">{title}</h3>
       <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {tiles.map((tile) => {
           const Icon = tile.icon;
@@ -267,12 +267,12 @@ function StatGroup({ title, tiles, highlightWhenSet = false }: { title: string; 
             <li key={tile.key}>
               <Link
                 href={tile.href}
-                className={`flex h-full flex-col gap-1 rounded-card border bg-card p-4 transition hover:border-primary hover:shadow-sm focus-visible:outline-2 focus-visible:outline-primary ${
-                  needsWork ? 'border-gold' : 'border-border'
+                className={`flex h-full flex-col gap-1 rounded-card border bg-card p-4 transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary ${
+                  needsWork ? 'border-primary' : 'border-border'
                 }`}
               >
-                <Icon className={`h-4 w-4 ${needsWork ? 'text-gold-text' : 'text-muted'}`} aria-hidden="true" />
-                <span className="text-2xl font-bold tabular-nums text-text">{tile.value}</span>
+                <Icon className={`h-4 w-4 ${needsWork ? 'text-primary' : 'text-muted'}`} aria-hidden="true" />
+                <span className="text-2xl font-semibold tracking-tight tabular-nums text-text">{tile.value}</span>
                 <span className="text-xs leading-snug text-muted">{t(`stats.${tile.key}`)}</span>
               </Link>
             </li>
@@ -287,7 +287,7 @@ function Panel({ title, link, children }: { title: string; link?: { href: string
   return (
     <section>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-muted">{title}</h3>
+        <h3 className="text-base font-semibold text-text">{title}</h3>
         {link ? (
           <Link href={link.href} className="text-sm font-semibold text-primary hover:underline">
             {link.label}
@@ -305,7 +305,7 @@ function ProductRow({ product }: { product: ProductView }) {
   return (
     <Link
       href={`/seller/products/${product.id}/edit`}
-      className="flex items-center gap-3 rounded-card border border-border bg-card p-3 shadow-sm transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
+      className="flex items-center gap-3 rounded-card border border-border bg-card p-3 transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
     >
       <span className="h-12 w-12 shrink-0 overflow-hidden rounded-button bg-background">
         {cover?.url ? (
@@ -322,7 +322,7 @@ function ProductRow({ product }: { product: ProductView }) {
 function ProfileGapsCard({ gaps }: { gaps: ProfileGap[] }) {
   const t = useTranslations('Seller');
   return (
-    <section className="rounded-card border border-gold bg-card p-5 shadow-sm">
+    <section className="rounded-card border border-primary bg-card p-5">
       <h3 className="font-semibold text-text">{t('home.profileGapsTitle')}</h3>
       <p className="mt-1 text-sm text-muted">{t('home.profileGapsText')}</p>
       <ul className="mt-3 list-inside list-disc space-y-1 text-sm text-text">

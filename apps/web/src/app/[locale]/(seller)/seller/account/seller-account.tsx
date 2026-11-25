@@ -71,14 +71,14 @@ function SellerAccount({ defaultName, phone }: { defaultName: string; phone: str
   const { profile, zones } = state;
   return (
     <div className="w-full max-w-2xl flex-1">
-      <div className="rounded-card border border-border bg-card p-6 shadow-sm sm:p-8">
+      <div className="rounded-card border border-border bg-card p-6 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/*
             A heading only for an applicant. They have no SELLER role yet, so they see this page in the
             storefront chrome, which has no page title; a seller sees it inside the seller shell, whose
             top bar already names the page.
           */}
-          {profile ? null : <h1 className="text-2xl font-bold text-text">{t('applyTitle')}</h1>}
+          {profile ? null : <h1 className="text-2xl font-semibold tracking-tight text-text">{t('applyTitle')}</h1>}
           {profile ? <StatusBadge status={profile.status} label={t(`status.${profile.status}`)} /> : null}
         </div>
 

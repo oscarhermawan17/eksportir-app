@@ -71,7 +71,7 @@ export function OrderCompletionPanel({ order, onChanged }: { order: OrderView; o
   return (
     <section
       aria-labelledby="order-completion"
-      className={`rounded-card border p-5 shadow-sm ${completed ? 'border-success/30 bg-success/5' : 'border-gold/50 bg-gold/10'}`}
+      className={`rounded-card border p-5 ${completed ? 'border-success/30 bg-success/5' : 'border-border bg-surface'}`}
     >
       <h2 id="order-completion" className="text-base font-semibold text-text">
         {completed ? t('completedTitle') : issue ? t('issueTitle') : isBuyer ? t('arrivedTitle') : t('arrivedTitleOthers')}

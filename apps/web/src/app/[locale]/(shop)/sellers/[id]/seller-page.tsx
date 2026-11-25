@@ -74,14 +74,14 @@ function Seller({ seller }: { seller: PublicSellerProfile }) {
 
   return (
     <div className="space-y-8">
-      <header className="rounded-card border border-border bg-card p-6 shadow-sm">
-        <h1 className="text-3xl font-bold text-text">{seller.displayName}</h1>
+      <header className="rounded-card border border-border bg-card p-6">
+        <h1 className="text-3xl font-semibold tracking-tight text-text">{seller.displayName}</h1>
         <p className="mt-1 text-sm text-muted">
           {[location, t('memberSince', { date: format.dateTime(new Date(seller.memberSince), { year: 'numeric', month: 'long' }) })]
             .filter(Boolean)
             .join(' · ')}
         </p>
-        <h2 className="mt-5 text-xs font-bold uppercase tracking-wider text-muted">{t('about')}</h2>
+        <h2 className="mt-5 text-base font-semibold text-text">{t('about')}</h2>
         <p className="mt-1 max-w-3xl whitespace-pre-line text-text">{seller.about || t('noAbout')}</p>
       </header>
 

@@ -50,15 +50,14 @@ export function SellerShell({ children }: { children: ReactNode }) {
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-card lg:flex">
         <div className="px-5 py-5">
           <Logo href="/seller" />
-          {/* Gold on a light background fails contrast, hence the darker `gold-text` token. */}
-          <p className="mt-1 pl-[42px] text-xs font-bold uppercase tracking-[0.18em] text-gold-text">{t('shell.sellerBadge')}</p>
+          <p className="mt-0.5 text-[13px] font-medium text-muted">{t('shell.sellerBadge')}</p>
         </div>
 
         <nav aria-label={t('shell.sidebarLabel')} className="flex-1 px-3 py-2">
           <ul className="space-y-1">
             {SELLER_NAV.map((item) => {
               const Icon = item.icon;
-              const shared = 'flex items-center gap-3 rounded-button border-l-[3px] px-3 py-2.5 text-sm font-semibold transition';
+              const shared = 'flex items-center gap-3 rounded-button px-3 py-2.5 text-sm font-medium transition-colors';
               return (
                 <li key={item.href}>
                   {item.soon ? (
@@ -67,7 +66,7 @@ export function SellerShell({ children }: { children: ReactNode }) {
                     <span aria-disabled="true" className={`${shared} border-transparent text-muted/60`}>
                       <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                       {t(`nav.${item.key}`)}
-                      <span className="ml-auto rounded-full border border-border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-muted">
+                      <span className="ml-auto rounded-full border border-border px-2 py-0.5 text-[11px] font-medium text-muted">
                         {t('shell.soon')}
                       </span>
                     </span>
@@ -76,7 +75,7 @@ export function SellerShell({ children }: { children: ReactNode }) {
                       href={item.href}
                       aria-current={isCurrent(item) ? 'page' : undefined}
                       className={`${shared} focus-visible:outline-2 focus-visible:outline-primary ${
-                        isCurrent(item) ? 'border-gold bg-primary/5 text-primary' : 'border-transparent text-muted hover:bg-background hover:text-text'
+                        isCurrent(item) ? 'bg-surface text-primary' : 'text-muted hover:bg-surface hover:text-text'
                       }`}
                     >
                       <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -102,7 +101,7 @@ export function SellerShell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
           <div className="flex h-16 items-center gap-3 px-4 sm:px-6">
-            <h1 className="truncate text-lg font-bold text-text">{active ? t(`nav.${active.key}`) : t('home.title')}</h1>
+            <h1 className="truncate text-lg font-semibold tracking-tight text-text">{active ? t(`nav.${active.key}`) : t('home.title')}</h1>
             <SellerSearch className="ml-2 hidden max-w-xs flex-1 md:block" />
             <div className="ml-auto flex items-center gap-1 sm:gap-2">
               <LanguageSwitcher />
@@ -128,7 +127,7 @@ export function SellerShell({ children }: { children: ReactNode }) {
         <ul className="flex">
           {SELLER_NAV.map((item) => {
             const Icon = item.icon;
-            const shared = 'relative flex h-14 flex-col items-center justify-center gap-1 px-1 text-[10px] font-semibold';
+            const shared = 'relative flex h-14 flex-col items-center justify-center gap-1 px-1 text-[11px] font-medium';
             return (
               <li key={item.href} className="min-w-0 flex-1">
                 {item.soon ? (
@@ -144,7 +143,7 @@ export function SellerShell({ children }: { children: ReactNode }) {
                       isCurrent(item) ? 'text-primary' : 'text-muted'
                     }`}
                   >
-                    {isCurrent(item) ? <span className="absolute inset-x-2 top-0 h-0.5 rounded-full bg-gold" aria-hidden="true" /> : null}
+                    {isCurrent(item) ? <span className="absolute inset-x-2 top-0 h-0.5 rounded-full bg-primary" aria-hidden="true" /> : null}
                     <Icon className="h-5 w-5" aria-hidden="true" />
                     <span className="max-w-full truncate">{t(`navShort.${item.key}`)}</span>
                   </Link>

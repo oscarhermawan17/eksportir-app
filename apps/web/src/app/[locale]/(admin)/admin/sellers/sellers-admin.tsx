@@ -147,7 +147,7 @@ function SellerCard({
   }
 
   return (
-    <article className="rounded-card border border-border bg-card p-5 shadow-sm">
+    <article className="rounded-card border border-border bg-card p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold text-text">{seller.displayName}</h2>
@@ -161,15 +161,15 @@ function SellerCard({
 
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
         <div>
-          <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('location')}</dt>
+          <dt className="text-sm font-medium text-muted">{t('location')}</dt>
           <dd className="mt-0.5 text-text">{seller.qcZone?.name ?? t('noLocation')}</dd>
         </div>
         <div>
-          <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('qcFee')}</dt>
+          <dt className="text-sm font-medium text-muted">{t('qcFee')}</dt>
           <dd className="mt-0.5 text-text">{seller.qcZone ? `$${seller.qcZone.feeUsd}` : '—'}</dd>
         </div>
         <div>
-          <dt className="text-xs font-bold uppercase tracking-wider text-muted">{t('appliedOn')}</dt>
+          <dt className="text-sm font-medium text-muted">{t('appliedOn')}</dt>
           <dd className="mt-0.5 text-text">
             {format.dateTime(new Date(seller.createdAt), { dateStyle: 'medium' })}
           </dd>
@@ -177,7 +177,7 @@ function SellerCard({
       </dl>
 
       <div className="mt-3 text-sm">
-        <p className="text-xs font-bold uppercase tracking-wider text-muted">{t('about')}</p>
+        <p className="text-sm font-medium text-muted">{t('about')}</p>
         <p className="mt-0.5 whitespace-pre-line text-text">{seller.about || t('noAbout')}</p>
       </div>
 

@@ -91,7 +91,7 @@ function Inbox({ user }: { user: AuthUser }) {
 
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-10">
-      <h1 className="text-2xl font-bold text-text">{t('title')}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight text-text">{t('title')}</h1>
 
       {failed ? (
         <div role="alert" className="mt-6 flex flex-col items-start gap-3">

@@ -54,13 +54,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <div className="flex items-center justify-between gap-2 px-5 py-5">
         <div>
           <Logo onDark href="/admin" />
-          <p className="mt-1 pl-[42px] text-xs font-bold uppercase tracking-[0.18em] text-gold">{t('adminBadge')}</p>
+          <p className="mt-0.5 text-[13px] font-medium text-white/60">{t('adminBadge')}</p>
         </div>
         <button
           type="button"
           onClick={() => setDrawerOpen(false)}
           aria-label={t('closeMenu')}
-          className="rounded-button p-2 text-white/80 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-gold lg:hidden"
+          className="rounded-button p-2 text-white/80 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white lg:hidden"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -77,8 +77,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   href={item.href}
                   onClick={() => setDrawerOpen(false)}
                   aria-current={current ? 'page' : undefined}
-                  className={`flex items-center gap-3 rounded-button border-l-[3px] px-3 py-2.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-gold ${
-                    current ? 'border-gold bg-white/10 text-white' : 'border-transparent text-white/75 hover:bg-white/5 hover:text-white'
+                  className={`flex items-center gap-3 rounded-button px-3 py-2.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-white ${
+                    current ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -94,7 +94,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <Link
           href="/"
           onClick={() => setDrawerOpen(false)}
-          className="flex items-center gap-2 rounded-button px-3 py-2 text-sm font-semibold text-white/75 transition hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-gold"
+          className="flex items-center gap-2 rounded-button px-3 py-2 text-sm font-semibold text-white/75 transition hover:bg-white/5 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
         >
           {t('backToSite')}
         </Link>
@@ -125,18 +125,18 @@ export function AdminShell({ children }: { children: ReactNode }) {
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label={t('openMenu')}
-              className="rounded-button p-2 text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary lg:hidden"
+              className="rounded-button p-2 text-primary hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary lg:hidden"
             >
               <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
-            <h1 className="truncate text-lg font-bold text-text">{active ? t(`nav.${active.key}`) : t('adminBadge')}</h1>
+            <h1 className="truncate text-lg font-semibold tracking-tight text-text">{active ? t(`nav.${active.key}`) : t('adminBadge')}</h1>
 
             <div className="ml-auto flex items-center gap-1 sm:gap-2">
               <LanguageSwitcher />
               <Link
                 href="/messages"
                 aria-label={t('inbox')}
-                className="rounded-button p-2 text-primary transition hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary"
+                className="rounded-button p-2 text-primary transition hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary"
               >
                 <MessageSquare className="h-5 w-5" aria-hidden="true" />
               </Link>

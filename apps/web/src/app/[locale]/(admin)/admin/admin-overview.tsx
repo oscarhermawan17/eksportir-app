@@ -132,7 +132,7 @@ function Overview() {
             <Stat value={counts.orders} label={t('overview.openOrders')} href="/admin/orders" highlight={false} />
           </ul>
 
-          <div className="mt-6 rounded-card border border-border bg-card p-5 text-sm shadow-sm">
+          <div className="mt-6 rounded-card border border-border bg-card p-5 text-sm">
             {counts.rate.rate !== null ? (
               <p className="text-text">
                 {t('overview.rate', { rate: format.number(Number(counts.rate.rate)) })}{' '}
@@ -158,11 +158,11 @@ function Stat({ value, label, href, highlight = true }: { value: number; label: 
     <li>
       <Link
         href={href}
-        className={`flex h-full flex-col gap-1 rounded-card border bg-card p-5 transition hover:border-primary hover:shadow-sm focus-visible:outline-2 focus-visible:outline-primary ${
-          needsWork ? 'border-gold' : 'border-border'
+        className={`flex h-full flex-col gap-1 rounded-card border bg-card p-5 transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary ${
+          needsWork ? 'border-primary' : 'border-border'
         }`}
       >
-        <span className="text-3xl font-bold tabular-nums text-text">{value}</span>
+        <span className="text-3xl font-semibold tracking-tight tabular-nums text-text">{value}</span>
         <span className="text-sm text-muted">{label}</span>
       </Link>
     </li>

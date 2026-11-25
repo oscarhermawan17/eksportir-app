@@ -54,14 +54,14 @@ export function PaymentList({ payments, actions }: { payments: PaymentView[]; ac
   return (
     <ul className="space-y-3">
       {payments.map((payment) => (
-        <li key={payment.id} className="rounded-card border border-border bg-card p-4 text-sm shadow-sm">
+        <li key={payment.id} className="rounded-card border border-border bg-card p-4 text-sm">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="text-base font-bold tabular-nums text-text">
+            <span className="text-base font-semibold tabular-nums text-text">
               {payment.amountIdr === null
                 ? t('amountUsdt', { amount: payment.amountUsd })
                 : t('amountIdrWithUsd', { idr: format.number(payment.amountIdr), usd: payment.amountUsd })}
             </span>
-            <span className={`rounded-button border px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${tone[payment.status]}`}>
+            <span className={`rounded-button border px-2 py-0.5 text-sm font-medium ${tone[payment.status]}`}>
               {t(`status.${payment.status}`)}
             </span>
             <span className="text-muted">{t(`method.${payment.method}`)}</span>
@@ -106,7 +106,7 @@ export function PaymentList({ payments, actions }: { payments: PaymentView[]; ac
 function Pair({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-bold uppercase tracking-wider text-muted">{label}</dt>
+      <dt className="text-sm font-medium text-muted">{label}</dt>
       <dd className="mt-0.5 break-all text-text">{value}</dd>
     </div>
   );

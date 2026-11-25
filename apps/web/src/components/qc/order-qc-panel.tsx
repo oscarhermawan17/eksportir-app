@@ -120,8 +120,8 @@ export function OrderQcPanel({ order, onChanged }: { order: OrderView; onChanged
   }
 
   return (
-    <section aria-labelledby="order-qc" className="rounded-card border border-border bg-card p-5 shadow-sm">
-      <h2 id="order-qc" className="text-xs font-bold uppercase tracking-wider text-muted">
+    <section aria-labelledby="order-qc" className="rounded-card border border-border bg-card p-5">
+      <h2 id="order-qc" className="text-base font-semibold text-text">
         {t('title')}
       </h2>
 
@@ -272,7 +272,7 @@ function Report({ report }: { report: QcReportView }) {
       </ul>
 
       <div>
-        <p className="text-xs font-bold uppercase tracking-wider text-muted">{t('commentLabel')}</p>
+        <p className="text-sm font-medium text-muted">{t('commentLabel')}</p>
         <p className="mt-1 whitespace-pre-line break-words text-sm text-text">{report.comment}</p>
       </div>
 
@@ -283,7 +283,7 @@ function Report({ report }: { report: QcReportView }) {
       ) : null}
       {report.status === 'ISSUE' && report.issueReason ? (
         <div className="rounded-card border border-error/30 bg-error/5 p-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-error">{t('issueReason')}</p>
+          <p className="text-sm font-medium text-error">{t('issueReason')}</p>
           <p className="mt-1 whitespace-pre-line break-words text-sm text-text">{report.issueReason}</p>
         </div>
       ) : null}

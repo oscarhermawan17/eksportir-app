@@ -67,8 +67,8 @@ export function OrderPaymentPanel({ order, onChanged }: { order: OrderView; onCh
   }
 
   return (
-    <section aria-labelledby="order-money" className="rounded-card border border-border bg-card p-5 shadow-sm">
-      <h2 id="order-money" className="text-xs font-bold uppercase tracking-wider text-muted">
+    <section aria-labelledby="order-money" className="rounded-card border border-border bg-card p-5">
+      <h2 id="order-money" className="text-base font-semibold text-text">
         {t('panelTitle')}
       </h2>
 
@@ -79,7 +79,7 @@ export function OrderPaymentPanel({ order, onChanged }: { order: OrderView; onCh
         </div>
         <div className="flex justify-between gap-3 text-text">
           <dt>{t('remaining')}</dt>
-          <dd className="font-bold tabular-nums">{money(summary.remainingUsd)}</dd>
+          <dd className="font-semibold tabular-nums">{money(summary.remainingUsd)}</dd>
         </div>
       </dl>
 
