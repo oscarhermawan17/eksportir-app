@@ -12,6 +12,7 @@ import { hashPassword } from '../src/common/password.js';
 import { FxService } from '../src/fx/fx.service.js';
 import { Prisma } from '../src/generated/prisma/client.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
+import { businessDate } from '../src/common/business-day.js';
 
 // Test users use the prefix "orders-e2e-" so other spec files' cleanup (running in parallel) leaves them alone.
 // The exchange rate is faked (not written to the database), because the rate table is shared with other specs running in parallel.
@@ -426,7 +427,7 @@ describe('Orders: request, snapshots, visibility (e2e)', () => {
     });
 
     it('filters by status and by an inclusive request-date range', async () => {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = businessDate();
       const requested = await adminPage('ops', 'status=REQUESTED&size=100');
       expect(requested.items.every((row) => row.status === 'REQUESTED')).toBe(true);
 

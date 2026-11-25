@@ -7,6 +7,7 @@ import { AppModule } from '../src/app.module.js';
 import { configureApp } from '../src/app.setup.js';
 import { hashPassword } from '../src/common/password.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
+import { businessDate } from '../src/common/business-day.js';
 
 // Test users use the prefix "adminprod-e2e-" so other spec files' cleanup (running in parallel) leaves them alone.
 // Requires the database from docker-compose.yml (`pnpm db:up`), `pnpm db:seed` (QC zones) and apps/api/.env.
@@ -151,7 +152,7 @@ describe('Admin product review + public catalog (e2e)', () => {
     });
 
     it('filters on the creation date by default, and the range is inclusive', async () => {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = businessDate();
       const todayRows = await page(`from=${today}&to=${today}&size=100`);
       expect(todayRows.items.length).toBeGreaterThan(0);
 
@@ -162,7 +163,7 @@ describe('Admin product review + public catalog (e2e)', () => {
     it('can filter on the review date instead, which excludes the queue', async () => {
       // Nothing in this spec has been reviewed at the time it runs, so a review-date range finds nothing
       // even though the same range on the creation date finds everything.
-      const today = new Date().toISOString().slice(0, 10);
+      const today = businessDate();
       const reviewed = await page(`dateField=reviewedAt&from=${today}&to=${today}&size=100`);
       const created = await page(`dateField=createdAt&from=${today}&to=${today}&size=100`);
       expect(created.total).toBeGreaterThan(reviewed.total);

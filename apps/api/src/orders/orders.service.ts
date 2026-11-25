@@ -27,6 +27,7 @@ import { Prisma } from '../generated/prisma/client.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { CreateOrderDto } from './dto/create-order.dto.js';
+import { endOfBusinessDay, startOfBusinessDay } from '../common/business-day.js';
 
 const LIST_LIMIT = 100;
 
@@ -44,9 +45,6 @@ type OrderRow = Prisma.OrderGetPayload<{ include: typeof orderInclude }>;
 /** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them. */
 const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
 
-/** A date filter is a plain day, so it has to cover the whole day in both directions. */
-const startOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T00:00:00.000`) : undefined);
-const endOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T23:59:59.999`) : undefined);
 
 /** Order requests (T15). Money is copied into the order at the moment of the request; nothing is recomputed later. */
 @Injectable()
@@ -193,8 +191,8 @@ export class OrdersService {
       ];
     }
 
-    const from = startOfDay(query.from);
-    const to = endOfDay(query.to);
+    const from = startOfBusinessDay(query.from);
+    const to = endOfBusinessDay(query.to);
     if (from || to) {
       where.createdAt = { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) };
     }

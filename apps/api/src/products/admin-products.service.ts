@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import type { AdminProductQueryDto } from './dto/admin-product-query.dto.js';
 import type { ProductTranslationsDto } from './dto/admin-product.dto.js';
 import { nextStatus } from './product-status.js';
+import { endOfBusinessDay, startOfBusinessDay } from '../common/business-day.js';
 
 const reviewInclude = {
   translations: true,
@@ -20,9 +21,6 @@ type ReviewProduct = Prisma.ProductGetPayload<{ include: typeof reviewInclude }>
 /** `contains` passes the text to LIKE as is, so "%" and "_" would act as wildcards; escape them. */
 const escapeLike = (text: string): string => text.replace(/[\\%_]/g, '\\$&');
 
-/** A date filter is a plain day, so it has to cover the whole day in both directions. */
-const startOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T00:00:00.000`) : undefined);
-const endOfDay = (iso?: string): Date | undefined => (iso ? new Date(`${iso.slice(0, 10)}T23:59:59.999`) : undefined);
 
 @Injectable()
 export class AdminProductsService {
@@ -80,8 +78,8 @@ export class AdminProductsService {
       ];
     }
 
-    const from = startOfDay(query.from);
-    const to = endOfDay(query.to);
+    const from = startOfBusinessDay(query.from);
+    const to = endOfBusinessDay(query.to);
     if (from || to) {
       // `reviewedAt` is null until an admin decides, so a range on it deliberately excludes the queue.
       const field = query.dateField ?? 'createdAt';
