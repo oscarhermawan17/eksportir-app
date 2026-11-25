@@ -9,7 +9,11 @@ dan spesifikasi layar (`TASK`) per halaman untuk halaman yang belum dibuat.
 ## Design system v2 (2026-11-26)
 
 Tujuan: bersih, rapi, profesional, tidak terasa seperti template AI. Satu hal yang menonjol, yaitu foto produk; sisanya tenang.
-Sudah diterapkan di navbar, footer, `/`, `/products/:id` dan `/how-it-works`. Area admin, penjual dan pembeli menyusul.
+Sudah diterapkan di navbar, footer, `/`, `/products/:id`, `/how-it-works`, Login/Sign up, dan (2026-11-26) seluruh area admin dan
+penjual termasuk detail pesanan dan panel-panelnya yang dipakai bersama pembeli. Sidebar admin **gelap** (navy `primary-hover`), sidebar
+penjual **terang**: pilihan pemilik, supaya tim langsung tahu sedang di ruang kendali.
+Judul seksi = `text-base font-semibold text-text`; label kecil di atas nilai = `text-sm font-medium text-muted`; ubin yang perlu perhatian
+disorot dengan `border-primary`; panel aksi (misalnya "Respond to this request") = `bg-surface border-border`.
 
 **Warna** (nama token Tailwind, semua di `@theme` di `globals.css`)
 
@@ -22,7 +26,7 @@ Sudah diterapkan di navbar, footer, `/`, `/products/:id` dan `/how-it-works`. Ar
 | `primary` / `primary-hover` | `#16324F` / `#0F2439` | tombol utama, link, chip aktif, ikon aksen |
 | `success` / `warning` / `error` / `info` | `#1E7F4F` / `#B54708` / `#B42318` / `#1D5B8F` | status (stok tersedia = success, dibuat sesuai pesanan = warning) |
 
-`gold`, `gold-text` dan `terracotta` adalah sisa 01-v4, **dilarang di halaman baru**, dan dihapus saat area admin/penjual dirombak.
+`gold`, `gold-text` dan `terracotta` (sisa 01-v4) **sudah dihapus** dari `globals.css` (2026-11-26); jangan dibuat lagi.
 
 **Font:** IBM Plex Sans (Latin + Cyrillic), weight 400/500/600/700, diatur **hanya** di `src/app/fonts.ts` (variabel `--font-app`).
 Ganti font = ubah file itu saja.
@@ -105,9 +109,9 @@ Hal yang sengaja tidak direvisi di Stitch dan harus dibereskan saat implementasi
   penjual). Di sistem yang menggambar scrollbar permanen, ia terbaca sebagai garis nyasar di bawah chip, bukan sesuatu yang bisa diseret.
   Scroll-nya sendiri tidak diubah.
 - **Area penjual punya chrome sendiri sejak T28 (2026-11-14), dan sengaja tidak mirip area admin.** Sidebar penjual **terang**
-  (`bg-card` + border, item aktif `bg-primary/5` dengan garis `border-gold` di kiri), bukan teal gelap seperti admin: penjual bukan staf dan
-  tidak boleh merasa berada di panel admin. Badge "SELLER" memakai **`text-gold-text`**, bukan `text-gold` — gold #c9a24a di atas putih tidak
-  lolos kontras 4,5:1, dan token itu memang ada untuk kasus ini.
+  (`bg-card` + border, item aktif `bg-surface` dengan teks navy), bukan navy gelap seperti admin: penjual bukan staf dan
+  tidak boleh merasa berada di panel admin. Sejak v2 (2026-11-26) label di bawah wordmark ("Seller" / "Admin") ditulis sentence case,
+  kecil dan redup, tanpa emas; item aktif admin = `bg-white/10` dengan teks putih, tanpa garis kiri.
 - **Di bawah `lg` penjual mendapat bottom tab bar, bukan drawer** (T28). Admin bekerja di laptop, penjual di ponsel: navigasi utama di balik
   hamburger salah untuk mereka. Karena itu area penjual **tidak punya drawer sama sekali** — satu state lebih sedikit. Konten dapat `pb-24` dan
   bar-nya `pb-[env(safe-area-inset-bottom)]` supaya baris terakhir tidak tertutup di iPhone. Label bottom bar memakai kunci `navShort` yang

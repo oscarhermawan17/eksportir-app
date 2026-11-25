@@ -119,8 +119,9 @@ working tree clean, 28 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22,
 and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
 
 **UI revamp started 2026-11-26 (not deployed):** design system v2 (navy on white, IBM Plex Sans, no shadows or all-caps labels;
-`docs/DESIGN.md`) is in place for the navbar, footer, `/`, `/products/:id` and `/how-it-works`. Admin, seller and buyer areas still carry
-the old chrome (they already inherit the new colours through the kept token names) and are the next UI steps.
+`docs/DESIGN.md`) is in place for the navbar, footer, `/`, `/products/:id`, `/how-it-works`, login/sign-up and (since 2026-11-26) the whole admin
+and seller areas, including the order detail and its panels that buyers share. The legacy `gold`/`terracotta` tokens are gone. Still
+to do: the buyer pages outside the order detail (`/orders` list, the payment page) get a look of their own later.
 Also not deployed yet: a photo banner on `/` (CC BY 2.0 placeholder, credits in `apps/web/src/assets/banners/CREDITS.md`), category
 icons picked by the OWNER on `/admin/categories` (**migration `20261126100000_category_icon`** — backup, migrate, then images), and
 Next.js 16.4.6. After that deploy the OWNER picks icons for the four live categories. Also waiting: admin date filters now read a day as
