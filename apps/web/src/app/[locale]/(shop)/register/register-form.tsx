@@ -67,12 +67,12 @@ export function RegisterForm() {
         <FormErrors messages={errors} />
 
         <fieldset className="space-y-2">
-          <legend className="mb-1.5 text-xs font-bold uppercase tracking-wider text-text">{t('accountType')}</legend>
+          <legend className="mb-1.5 text-sm font-medium text-text">{t('accountType')}</legend>
           {ACCOUNT_TYPES.map((type) => (
             <label
               key={type.value}
-              className={`flex cursor-pointer items-start gap-3 rounded-card border p-3 transition ${
-                role === type.value ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+              className={`flex cursor-pointer items-start gap-3 rounded-card border p-3 transition-colors ${
+                role === type.value ? 'border-primary bg-surface' : 'border-border hover:border-border-strong'
               }`}
             >
               <input
