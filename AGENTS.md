@@ -118,7 +118,13 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 29 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26, T27 and T28). Open: T21 password reset, T24 backup, T25 end-to-end
 test, T29 seller↔admin chat, T30 switch off `r2.dev`, T31 buyer credit.
 
-**T27 done 2026-11-26 (not deployed yet):** Payments and Sellers joined Listings and Orders on the shared admin table. Both APIs are
+**Deployed 2026-11-26 (third deploy of the day): T27 — commit `7364109` is live.** CI run #45713422152 green. Dump first
+(`~/db-backups/balitrade-2026-11-26-pre-t27.dump`, 72 KB), no migration, then images: api `c5107563` → `74300919`, web `296c4f1b` →
+`fd82f7e4`. Verified from outside: `database: up`; `/id`, `/id/seller`, `/en/admin`, `/en/admin/payments`, `/en/admin/sellers`,
+`/en/admin/orders` and `/en/admin/products` all 200; the paged `/api/admin/payments` and `/api/admin/sellers` answer 401 without a
+session; 7 products. Not opened while logged in on the live site — the owner checks the two tables.
+
+**T27 done 2026-11-26:** Payments and Sellers joined Listings and Orders on the shared admin table. Both APIs are
 paged on the server (`AdminListQueryDto` in `apps/api/src/common/`: `q`, `from`/`to` as Bali days, `page`, `size`) and return
 `statusCounts`; the payments list lost its silent `take: 200`. Rows **open in place** (`DataTable` `expand`): a payment shows its proof
 (signed URL fetched on opening) beside the amount and the Verify / Reject buttons, a seller application shows contact, location, QC fee
