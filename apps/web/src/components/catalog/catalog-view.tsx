@@ -5,6 +5,7 @@ import type { CatalogProduct, ProductCategorySlug, ProductCategoryView, ProductT
 import { useLocale, useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { CategoryIcon } from '@/components/catalog/category-icon';
 import { ProductCard } from '@/components/catalog/product-card';
 import { Button, buttonClasses } from '@/components/ui/button';
 import { useRouter } from '@/i18n/navigation';
@@ -14,7 +15,7 @@ import { fetchCategories } from '@/lib/categories';
 type Result = { key: string; products: CatalogProduct[] | null };
 type Search = { q: string; category: ProductCategorySlug | ''; type: ProductType | '' };
 
-const CHIP = 'inline-flex h-9 items-center whitespace-nowrap rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+const CHIP = 'inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-full border pl-3.5 pr-4 text-[15px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
 const CHIP_ON = `${CHIP} border-primary bg-primary text-white`;
 const CHIP_OFF = `${CHIP} border-border bg-card text-muted hover:border-border-strong hover:text-text`;
 
@@ -101,6 +102,7 @@ export function CatalogView() {
               onClick={() => search({ q, category: '', type })}
               className={category === '' ? CHIP_ON : CHIP_OFF}
             >
+              <CategoryIcon name="all" />
               {t('allCategories')}
             </button>
           </li>
@@ -112,6 +114,7 @@ export function CatalogView() {
                 onClick={() => search({ q, category: slug, type })}
                 className={category === slug ? CHIP_ON : CHIP_OFF}
               >
+                <CategoryIcon />
                 {name}
               </button>
             </li>
