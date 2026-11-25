@@ -35,10 +35,44 @@ export const CATEGORY_LIMITS = {
  */
 export const CATEGORY_SLUG_PATTERN = /^[A-Z][A-Z0-9_]*$/;
 
+/**
+ * The icons a category may show on its catalog chip, chosen by the OWNER. A closed list on purpose: the API
+ * accepts only these names and the web maps each to an icon it already bundles, so the column can never
+ * carry a URL, markup or anything else. `null` on a category means the default icon.
+ */
+export const CATEGORY_ICON_NAMES = [
+  'shirt',
+  'gem',
+  'coffee',
+  'leaf',
+  'sprout',
+  'flower',
+  'gift',
+  'package',
+  'palette',
+  'brush',
+  'hammer',
+  'armchair',
+  'lamp',
+  'footprints',
+  'briefcase',
+  'watch',
+  'glasses',
+  'sparkles',
+  'bath',
+  'utensils',
+  'cookie',
+  'wine',
+  'shell',
+  'tree-palm',
+] as const;
+export type CategoryIconName = (typeof CATEGORY_ICON_NAMES)[number];
+
 /** One category as buyers and sellers see it: the slug plus its label in the requested language. */
 export interface ProductCategoryView {
   slug: ProductCategorySlug;
   name: string;
+  icon: CategoryIconName | null;
 }
 
 /** One category in the OWNER's screen: every label, both switches, and whether it can be deleted. */
@@ -48,6 +82,7 @@ export interface AdminProductCategoryView {
   nameEn: string;
   nameId: string;
   nameRu: string;
+  icon: CategoryIconName | null;
   /** Unchecked: its products disappear from the shop without their status changing. */
   active: boolean;
   /** Soft-deleted (archived): same effect, and hidden from the default admin list. */
@@ -63,6 +98,7 @@ export interface ProductCategoryCreateInput {
   nameEn: string;
   nameId: string;
   nameRu: string;
+  icon?: CategoryIconName | null;
   sortOrder?: number;
 }
 
@@ -71,6 +107,8 @@ export interface ProductCategoryUpdateInput {
   nameEn?: string;
   nameId?: string;
   nameRu?: string;
+  /** `null` goes back to the default icon. */
+  icon?: CategoryIconName | null;
   active?: boolean;
   sortOrder?: number;
   /** True archives (soft delete), false restores. */

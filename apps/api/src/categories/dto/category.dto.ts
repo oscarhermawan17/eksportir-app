@@ -1,5 +1,5 @@
-import { CATEGORY_LIMITS, CATEGORY_SLUG_PATTERN, TRANSLATION_LOCALES } from '@balitrade/shared';
-import type { TranslationLocale } from '@balitrade/shared';
+import { CATEGORY_ICON_NAMES, CATEGORY_LIMITS, CATEGORY_SLUG_PATTERN, TRANSLATION_LOCALES } from '@balitrade/shared';
+import type { CategoryIconName, TranslationLocale } from '@balitrade/shared';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
@@ -45,6 +45,14 @@ export class CreateCategoryDto {
   @MaxLength(CATEGORY_LIMITS.nameMax)
   nameRu: string;
 
+  /**
+   * One name from the closed list in packages/shared. `null` (or leaving it out on create) means the default
+   * icon; `@IsOptional` lets null through on purpose, and anything else must be on the list.
+   */
+  @IsOptional()
+  @IsIn(CATEGORY_ICON_NAMES)
+  icon?: CategoryIconName | null;
+
   @IsOptional()
   @IsInt()
   @Min(0)
@@ -74,6 +82,14 @@ export class UpdateCategoryDto {
   @MinLength(CATEGORY_LIMITS.nameMin)
   @MaxLength(CATEGORY_LIMITS.nameMax)
   nameRu?: string;
+
+  /**
+   * One name from the closed list in packages/shared. `null` (or leaving it out on create) means the default
+   * icon; `@IsOptional` lets null through on purpose, and anything else must be on the list.
+   */
+  @IsOptional()
+  @IsIn(CATEGORY_ICON_NAMES)
+  icon?: CategoryIconName | null;
 
   /** False hides every product in this category from the shop, without touching their status. */
   @IsOptional()

@@ -106,7 +106,7 @@ export function CatalogView() {
               {t('allCategories')}
             </button>
           </li>
-          {categories.map(({ slug, name }) => (
+          {categories.map(({ slug, name, icon }) => (
             <li key={slug}>
               <button
                 type="button"
@@ -114,7 +114,7 @@ export function CatalogView() {
                 onClick={() => search({ q, category: slug, type })}
                 className={category === slug ? CHIP_ON : CHIP_OFF}
               >
-                <CategoryIcon />
+                <CategoryIcon name={icon} />
                 {name}
               </button>
             </li>

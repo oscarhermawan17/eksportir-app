@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { categoryLabel } from './category-label.js';
+import { categoryIcon, categoryLabel, toCategoryView } from './category-label.js';
 
 const row = { slug: 'COFFEE_TEA', nameEn: 'Coffee & tea', nameId: 'Kopi & teh', nameRu: 'Кофе и чай' };
 
@@ -16,5 +16,21 @@ describe('categoryLabel', () => {
 
   it('falls back to the slug when nothing is filled in', () => {
     expect(categoryLabel({ slug: 'SPICES', nameEn: '', nameId: '', nameRu: '' }, 'id')).toBe('SPICES');
+  });
+});
+
+describe('categoryIcon', () => {
+  it('keeps a name from the list', () => {
+    expect(categoryIcon('shirt')).toBe('shirt');
+  });
+
+  it('reads null, an unknown name or anything else as the default icon', () => {
+    expect(categoryIcon(null)).toBeNull();
+    expect(categoryIcon('not-an-icon')).toBeNull();
+    expect(categoryIcon('https://example.com/x.svg')).toBeNull();
+  });
+
+  it('is part of the public view', () => {
+    expect(toCategoryView({ ...row, icon: 'coffee' }, 'en')).toEqual({ slug: 'COFFEE_TEA', name: 'Coffee & tea', icon: 'coffee' });
   });
 });

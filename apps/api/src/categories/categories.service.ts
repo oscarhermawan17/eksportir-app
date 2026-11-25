@@ -5,7 +5,7 @@ import type {
   TranslationLocale,
 } from '@balitrade/shared';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { toCategoryView } from './category-label.js';
+import { categoryIcon, toCategoryView } from './category-label.js';
 import type { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto.js';
 
 /** A category is only offered to sellers and buyers while it is switched on and not archived. */
@@ -37,6 +37,7 @@ export class CategoriesService {
       nameEn: row.nameEn,
       nameId: row.nameId,
       nameRu: row.nameRu,
+      icon: categoryIcon(row.icon),
       active: row.active,
       archivedAt: row.archivedAt?.toISOString() ?? null,
       sortOrder: row.sortOrder,
@@ -60,6 +61,7 @@ export class CategoriesService {
         nameEn: dto.nameEn,
         nameId: dto.nameId,
         nameRu: dto.nameRu,
+        icon: dto.icon ?? null,
         sortOrder: dto.sortOrder ?? (await this.nextSortOrder()),
       },
     });
@@ -74,6 +76,8 @@ export class CategoriesService {
         nameEn: dto.nameEn,
         nameId: dto.nameId,
         nameRu: dto.nameRu,
+        // undefined leaves the icon alone; null goes back to the default.
+        icon: dto.icon,
         active: dto.active,
         sortOrder: dto.sortOrder,
         // `archived` is a switch in the API and a timestamp in the database, so the admin screen never

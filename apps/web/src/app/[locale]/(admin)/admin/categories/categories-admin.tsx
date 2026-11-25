@@ -9,9 +9,11 @@ import type {
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, type FormEvent } from 'react';
 import { LoginGate } from '@/components/auth/login-gate';
+import { CategoryIcon } from '@/components/catalog/category-icon';
 import { Button } from '@/components/ui/button';
 import { Field, FormErrors } from '@/components/ui/field';
 import { ApiError, apiFetch, errorKey } from '@/lib/api';
+import { IconPicker, iconFromForm } from './icon-picker';
 
 /**
  * What may be sold at all. Switching a category off takes every listing in it out of the shop at once —
@@ -152,7 +154,7 @@ function Page() {
       <CreateForm onCreated={reload} onError={(text) => setErrors([text])} existing={visible} />
 
       <div className="mt-8 flex flex-wrap items-center gap-3">
-        <h2 className="text-lg font-bold text-text">{t('listTitle')}</h2>
+        <h2 className="text-lg font-semibold text-text">{t('listTitle')}</h2>
         <label className="ml-auto flex items-center gap-2 text-sm font-medium text-muted">
           <input
             type="checkbox"
@@ -194,7 +196,7 @@ function Page() {
       ) : (
         <>
           <section aria-labelledby="cat-active" className="mt-5">
-            <h3 id="cat-active" className="text-sm font-bold uppercase tracking-wider text-muted">
+            <h3 id="cat-active" className="text-sm font-semibold text-muted">
               {t('sectionActive', { count: activeRows.length })}
             </h3>
             {list(activeRows, t('empty'))}
@@ -202,7 +204,7 @@ function Page() {
 
           {showArchived ? (
             <section aria-labelledby="cat-archived" className="mt-8">
-              <h3 id="cat-archived" className="text-sm font-bold uppercase tracking-wider text-muted">
+              <h3 id="cat-archived" className="text-sm font-semibold text-muted">
                 {t('sectionArchived', { count: archivedRows.length })}
               </h3>
               {list(archivedRows, t('archivedEmpty'))}
@@ -245,7 +247,7 @@ function ConfirmArchive({
         aria-labelledby="archive-title"
         className="relative w-full max-w-md rounded-card border border-border bg-card p-6 shadow-lg"
       >
-        <h2 id="archive-title" className="text-lg font-bold text-text">
+        <h2 id="archive-title" className="text-lg font-semibold text-text">
           {t('confirmArchiveTitle', { name })}
         </h2>
         <p className="mt-2 text-sm text-muted">{t('confirmArchiveBody')}</p>
@@ -290,13 +292,14 @@ function Row({
 
   return (
     <li
-      className={`rounded-card border bg-card p-4 shadow-sm ${
+      className={`rounded-card border bg-card p-4 ${
         dirty ? 'border-warning/60' : archived ? 'border-border opacity-70' : 'border-border'
       }`}
     >
       <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
+            <CategoryIcon name={row.icon} className="h-5 w-5 text-primary" />
             <h4 className="text-base font-semibold text-text">{row.nameEn}</h4>
             <code className="rounded bg-background px-1.5 py-0.5 text-xs text-muted">{row.slug}</code>
             {archived ? null : !row.active ? (
@@ -382,6 +385,7 @@ function EditLabels({
           nameEn: String(form.get('nameEn')).trim(),
           nameId: String(form.get('nameId')).trim(),
           nameRu: String(form.get('nameRu')).trim(),
+          icon: iconFromForm(form),
           sortOrder: Number(form.get('sortOrder')),
         });
         setOpen(false);
@@ -401,6 +405,7 @@ function EditLabels({
           max={CATEGORY_LIMITS.sortOrderMax}
           defaultValue={String(row.sortOrder)}
         />
+        <IconPicker idPrefix={`icon-${row.id}`} defaultValue={row.icon} />
       </div>
       <div className="mt-3 flex gap-2">
         <Button type="submit" className="h-9" disabled={busy}>
@@ -445,6 +450,7 @@ function CreateForm({
       nameEn: String(form.get('nameEn')).trim(),
       nameId: String(form.get('nameId')).trim(),
       nameRu: String(form.get('nameRu')).trim(),
+      icon: iconFromForm(form),
     };
     setBusy(true);
     try {
@@ -459,8 +465,8 @@ function CreateForm({
   }
 
   return (
-    <form onSubmit={(event) => void submit(event)} className="mt-5 rounded-card border border-border bg-card p-5 shadow-sm">
-      <h2 className="text-lg font-bold text-text">{t('addTitle')}</h2>
+    <form onSubmit={(event) => void submit(event)} className="mt-5 rounded-card border border-border bg-card p-5">
+      <h2 className="text-lg font-semibold text-text">{t('addTitle')}</h2>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <Field
           id="new-slug"
@@ -473,6 +479,7 @@ function CreateForm({
         <Field id="new-en" name="nameEn" label={t('nameEn')} required maxLength={CATEGORY_LIMITS.nameMax} />
         <Field id="new-id" name="nameId" label={t('nameId')} required maxLength={CATEGORY_LIMITS.nameMax} />
         <Field id="new-ru" name="nameRu" label={t('nameRu')} required maxLength={CATEGORY_LIMITS.nameMax} />
+        <IconPicker idPrefix="icon-new" defaultValue={null} />
       </div>
       <div className="mt-4 flex gap-2">
         <Button type="submit" className="h-10" disabled={busy}>

@@ -1,4 +1,5 @@
-import type { ProductCategoryView, TranslationLocale } from '@balitrade/shared';
+import { CATEGORY_ICON_NAMES } from '@balitrade/shared';
+import type { CategoryIconName, ProductCategoryView, TranslationLocale } from '@balitrade/shared';
 
 /** The three label columns of a product_categories row. */
 export interface CategoryLabels {
@@ -21,6 +22,14 @@ export function categoryLabel(row: CategoryLabels, locale: TranslationLocale): s
   return byLocale[locale]?.trim() || row.nameEn.trim() || row.slug;
 }
 
-export function toCategoryView(row: CategoryLabels, locale: TranslationLocale): ProductCategoryView {
-  return { slug: row.slug, name: categoryLabel(row, locale) };
+/**
+ * The stored icon name, if it is still on the list. A name dropped from CATEGORY_ICON_NAMES later reads as
+ * null (the default icon) instead of reaching the web as something it cannot draw.
+ */
+export function categoryIcon(value: string | null): CategoryIconName | null {
+  return value !== null && (CATEGORY_ICON_NAMES as readonly string[]).includes(value) ? (value as CategoryIconName) : null;
+}
+
+export function toCategoryView(row: CategoryLabels & { icon: string | null }, locale: TranslationLocale): ProductCategoryView {
+  return { slug: row.slug, name: categoryLabel(row, locale), icon: categoryIcon(row.icon) };
 }

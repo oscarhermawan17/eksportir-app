@@ -182,6 +182,9 @@ model ProductCategory {
   nameEn     String    @map("name_en")
   nameId     String    @map("name_id")
   nameRu     String    @map("name_ru")
+  /// Icon on the catalog chip: one of CATEGORY_ICON_NAMES in packages/shared (checked by the API), or null
+  /// for the default icon. A name only, never a URL or markup.
+  icon       String?
   /// Unchecked by an admin (regulation, a forbidden good): the products keep the category but disappear
   /// from the catalog, the filters and /products/[id], which answers 404. Their ProductStatus is left
   /// alone, so checking the box again restores everything without touching a product row.

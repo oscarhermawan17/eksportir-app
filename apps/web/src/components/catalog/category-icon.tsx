@@ -1,48 +1,75 @@
+import type { CategoryIconName } from '@balitrade/shared';
 import {
   Armchair,
+  Bath,
   Briefcase,
+  Brush,
   Coffee,
+  Cookie,
   Flower2,
   Footprints,
   Gem,
   Gift,
+  Glasses,
+  Hammer,
+  Lamp,
   LayoutGrid,
   Leaf,
   Package,
   Palette,
   Shapes,
+  Shell,
   Shirt,
   Sparkles,
+  Sprout,
+  TreePalm,
+  Utensils,
+  Watch,
+  Wine,
   type LucideIcon,
 } from 'lucide-react';
 
 /**
- * The icons a category may use, by name. Categories carry no icon yet (the owner will pick one per category
- * on /admin/categories later), so every category falls back to `DEFAULT_ICON` until then. Keeping the list
- * closed means a stored name can only ever pick one of these, never load anything else.
+ * Every name the OWNER may pick (CATEGORY_ICON_NAMES in packages/shared) mapped to an icon bundled here.
+ * Typed as a full Record, so a name added to the shared list without an icon here fails the typecheck.
  */
-export const CATEGORY_ICONS = {
-  armchair: Armchair,
-  briefcase: Briefcase,
-  coffee: Coffee,
-  flower: Flower2,
-  footprints: Footprints,
+export const CATEGORY_ICONS: Record<CategoryIconName, LucideIcon> = {
+  shirt: Shirt,
   gem: Gem,
-  gift: Gift,
+  coffee: Coffee,
   leaf: Leaf,
+  sprout: Sprout,
+  flower: Flower2,
+  gift: Gift,
   package: Package,
   palette: Palette,
-  shirt: Shirt,
+  brush: Brush,
+  hammer: Hammer,
+  armchair: Armchair,
+  lamp: Lamp,
+  footprints: Footprints,
+  briefcase: Briefcase,
+  watch: Watch,
+  glasses: Glasses,
   sparkles: Sparkles,
-} as const satisfies Record<string, LucideIcon>;
+  bath: Bath,
+  utensils: Utensils,
+  cookie: Cookie,
+  wine: Wine,
+  shell: Shell,
+  'tree-palm': TreePalm,
+};
 
-export type CategoryIconName = keyof typeof CATEGORY_ICONS;
+/** Shown for a category without an icon. */
+export const DEFAULT_CATEGORY_ICON: LucideIcon = Shapes;
 
-const DEFAULT_ICON: LucideIcon = Shapes;
-
-/** `all` is the "All categories" chip; an unknown or missing name gets the default. */
-export function CategoryIcon({ name, className = 'h-4 w-4' }: { name?: string | null | 'all'; className?: string }) {
+/** `all` is the "All categories" chip; a missing or unknown name gets the default. */
+export function CategoryIcon({ name, className = 'h-4 w-4' }: { name?: string | null; className?: string }) {
   const Icon =
-    name === 'all' ? LayoutGrid : name && name in CATEGORY_ICONS ? CATEGORY_ICONS[name as CategoryIconName] : DEFAULT_ICON;
+    name === 'all'
+      ? LayoutGrid
+      : name && Object.hasOwn(CATEGORY_ICONS, name)
+        ? CATEGORY_ICONS[name as CategoryIconName]
+        : DEFAULT_CATEGORY_ICON;
   return <Icon className={`shrink-0 ${className}`} aria-hidden="true" />;
 }

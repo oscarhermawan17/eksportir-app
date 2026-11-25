@@ -137,6 +137,7 @@ describe('Product categories managed by the owner (e2e)', () => {
       expect(body.find((row) => row.slug === 'COFFEE_TEA')).toEqual({
         slug: 'COFFEE_TEA',
         name: 'Кофе и чай',
+        icon: null,
       });
     });
 
@@ -169,6 +170,48 @@ describe('Product categories managed by the owner (e2e)', () => {
         .post('/api/admin/categories')
         .send({ slug: 'not a slug', nameEn: 'Bad', nameId: 'Bad', nameRu: 'Bad' })
         .expect(400);
+    });
+  });
+
+  describe('icons', () => {
+    const iconSlug = 'CATE2E_ICON';
+
+    it('stores an icon from the list and shows it in the public list', async () => {
+      const owner = await agentFor(emails.owner);
+      const res = await owner
+        .post('/api/admin/categories')
+        .send({ slug: iconSlug, nameEn: 'Icon test', nameId: 'Uji ikon', nameRu: 'Тест значка', icon: 'shirt' })
+        .expect(201);
+      expect(res.body).toMatchObject({ slug: iconSlug, icon: 'shirt' });
+      const list = await anon().get('/api/categories').expect(200);
+      expect((list.body as { slug: string; icon: string | null }[]).find((row) => row.slug === iconSlug)?.icon).toBe('shirt');
+    });
+
+    const iconUrl = async () => {
+      const row = await prisma.productCategory.findUniqueOrThrow({ where: { slug: iconSlug }, select: { id: true } });
+      return `/api/admin/categories/${row.id}`;
+    };
+
+    it('refuses a name that is not on the list, a URL included, with 400', async () => {
+      const owner = await agentFor(emails.owner);
+      const url = await iconUrl();
+      await owner.patch(url).send({ icon: 'skull' }).expect(400);
+      await owner.patch(url).send({ icon: 'https://example.com/x.svg' }).expect(400);
+      await owner.patch(url).send({ icon: 12 }).expect(400);
+    });
+
+    it('changes the icon, keeps it when other fields change, and goes back to the default with null', async () => {
+      const owner = await agentFor(emails.owner);
+      const url = await iconUrl();
+      await owner.patch(url).send({ icon: 'gem' }).expect(200);
+      const kept = await owner.patch(url).send({ nameEn: 'Icon test 2' }).expect(200);
+      expect(kept.body).toMatchObject({ icon: 'gem', nameEn: 'Icon test 2' });
+      const cleared = await owner.patch(url).send({ icon: null }).expect(200);
+      expect(cleared.body).toMatchObject({ icon: null });
+    });
+
+    it('is the owner only', async () => {
+      await (await agentFor(emails.ops)).patch(await iconUrl()).send({ icon: 'gem' }).expect(403);
     });
   });
 
