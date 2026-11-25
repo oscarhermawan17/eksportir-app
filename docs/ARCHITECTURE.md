@@ -64,7 +64,9 @@ Modul NestJS: `auth`, `users`, `sellers`, `products`, `media`, `chat` (gateway),
 - **SellerProfile**: userId, displayName, about, status (PENDING / APPROVED / REJECTED), rejectionReason, reviewedBy/At, qcZoneId (= kabupaten/kota penjual; tidak ada kolom `regency` terpisah)
 - **QcZone**: name (9 kabupaten/kota Bali, di-seed), feeUsd (`Decimal(12,2)`; **nilai seed = placeholder**, tarif asli belum diputuskan)
 - **Product**: sellerId, type (READY_STOCK / MADE_TO_ORDER), categorySlug, unit, priceIdr, moq, stockQty, leadTimeDays, sourceLocale, status (DRAFT / PENDING_REVIEW / APPROVED / REJECTED / ARCHIVED)
-- **ProductCategory** (T26): slug (kunci stabil, dipakai `Product.categorySlug`), nameEn/nameId/nameRu, active, archivedAt, sortOrder.
+- **ProductCategory** (T26): slug (kunci stabil, dipakai `Product.categorySlug`), nameEn/nameId/nameRu, active, archivedAt, sortOrder,
+  icon (2026-11-26: nama dari daftar tertutup `CATEGORY_ICON_NAMES` di `packages/shared`, atau null = ikon default; dipilih OWNER di
+  `/admin/categories`, tampil di chip katalog).
   Dikelola OWNER di `/admin/categories`. Kolom `products.category` tidak berubah nama saat kategori jadi data — foreign key-nya ke `slug`,
   `ON DELETE RESTRICT`, jadi tidak ada satu baris produk pun yang dipindah dan hard delete mustahil selama masih dipakai.
 - Aturan produk (T09): penjual APPROVED membuat produk (status DRAFT) → `submit` (butuh ≥1 foto) → PENDING_REVIEW. Mengedit produk APPROVED mengirimnya kembali ke PENDING_REVIEW; mengedit DRAFT/REJECTED tidak mengubah status (harus `submit` lagi). ARCHIVED tidak bisa diedit/diajukan, hanya dipulihkan ke DRAFT. Semua perubahan status lewat `nextStatus()` (`apps/api/src/products/product-status.ts`). `stockQty` hanya untuk READY_STOCK, `leadTimeDays` hanya untuk MADE_TO_ORDER. Harga disimpan IDR utuh (`Int`); penjual menulis dalam EN atau ID (`sourceLocale`), terjemahan lain ditambah admin di T10. Satuan = daftar tetap di `packages/shared/src/product.ts`.
