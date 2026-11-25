@@ -118,16 +118,23 @@ Update this block at the end of every task (the `[x]` ticks in `TASKS.md` stay t
 working tree clean, 28 of 34 tasks done (T01–T20, T13b, T16b, T16c, T17b, T22, T23, T26 and T28); **T27 is half built** (Listing
 and Orders done, Payments left). New open tasks: T31 buyer credit (from T18), T30 switch off `r2.dev`.
 
-**UI revamp started 2026-11-26 (not deployed):** design system v2 (navy on white, IBM Plex Sans, no shadows or all-caps labels;
-`docs/DESIGN.md`) is in place for the navbar, footer, `/`, `/products/:id`, `/how-it-works`, login/sign-up and (since 2026-11-26) the whole admin
-and seller areas, including the order detail and its panels that buyers share. The legacy `gold`/`terracotta` tokens are gone. Still
-to do: the buyer pages outside the order detail (`/orders` list, the payment page) get a look of their own later.
-Also not deployed yet: a photo banner on `/` (CC BY 2.0 placeholder, credits in `apps/web/src/assets/banners/CREDITS.md`), category
-icons picked by the OWNER on `/admin/categories` (**migration `20261126100000_category_icon`** — backup, migrate, then images), and
-Next.js 16.4.6. After that deploy the OWNER picks icons for the four live categories. Also waiting: admin date filters now read a day as
-**Bali time (UTC+8)** on every machine (`apps/api/src/common/business-day.ts`); before, the server's UTC container filed an order placed
-before 08:00 WITA under the previous day. For browser checks use the
-globally installed `agent-browser` CLI (`agent-browser skills get core`), which costs far fewer tokens than screenshots of the app pane.
+**Deployed 2026-11-26: the UI revamp (design system v2), category icons, Bali-day admin date filters and Next.js 16.4.6 — commit
+`2089841` is live.** Design system v2 (navy on white, IBM Plex Sans, no shadows or all-caps labels; `docs/DESIGN.md`) covers the navbar,
+footer, `/` (with a CC BY 2.0 placeholder photo banner, credits in `apps/web/src/assets/banners/CREDITS.md`), `/products/:id`,
+`/how-it-works`, login/sign-up and the whole admin and seller areas, including the order detail panels buyers share. Still to do: the
+buyer `/orders` list and payment page get a look of their own later. CI run #45691008522 green. Dump first
+(`~/db-backups/balitrade-2026-11-26-pre-ui-v2.dump`, 72 KB — smaller than the pre-T20 dump but every table's row count matches), then
+migration `20261126100000_category_icon` (one nullable column), then images: api `cfb44927` → `ff2ffe91`, web `4758f0f1` → `a1f4c05f`.
+Verified from outside: `database: up`; `/id`, `/en`, `/ru`, `/id/how-it-works`, `/id/login`, `/id/register`, `/id/seller`,
+`/id/seller/orders`, `/en/admin` and `/en/admin/categories` all 200; IBM Plex Sans served, the banner loads through `/_next/image`,
+8/8 images load, no horizontal overflow, 7 products, no `r2.dev`; an icon change without a session answers 401. **Waiting on the
+owner:** pick icons for the four live categories on `/admin/categories` (they read `null` = default until then).
+**Three deploy facts learned this time:** the owner's SSH key lives only in the Windows SSH agent, so `ssh balitrade` works from
+PowerShell and not from Git Bash; the BOM PowerShell adds breaks a first-line comment that contains `(`, so the first line is now a
+throwaway word (`bom-guard-line-ignore-the-error`); and the server `.env`'s `DATABASE_URL` points at the Docker bridge (`172.19.0.1`),
+so `pg_dump` run on the host must swap the host for `127.0.0.1` (done inside the command, the URL is never printed).
+For browser checks use the globally installed `agent-browser` CLI (`agent-browser skills get core`); for admin/seller screens on
+localhost mint a session from the laptop's `JWT_SECRET` for an existing local user instead of typing a password.
 
 **Deployed 2026-11-23: T20 completion + payouts (commit `ae5c1a3`) is live.** An order now runs from REQUESTED to COMPLETED. CI run
 #45194927728 green. Dump first (`~/db-backups/balitrade-2026-11-23-pre-t20.dump`, 116 KB), then **two** migrations before the new
