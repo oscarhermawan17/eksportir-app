@@ -4,6 +4,7 @@ import {
   BANK_LIMITS,
   USDT_NETWORKS,
   isUsdtAddressFor,
+  usdtAddressFamily,
   type AdminPaymentSettingsView,
   type PaymentSettingsInput,
   type UsdtNetwork,
@@ -85,7 +86,11 @@ function Settings() {
     const problems: string[] = [];
     if (body.bankAccountNumber !== body.bankAccountNumberConfirm) problems.push(t('mismatchNumber'));
     if (body.usdtAddress !== body.usdtAddressConfirm) problems.push(t('mismatchAddress'));
-    if ((body.usdtEnabled || body.usdtAddress) && !isUsdtAddressFor(network, body.usdtAddress)) problems.push(t('badAddress'));
+    if ((body.usdtEnabled || body.usdtAddress) && !isUsdtAddressFor(network, body.usdtAddress)) {
+      // Name the network the address does fit, if any: picking TRC20 for a 0x address is the likely slip.
+      const family = usdtAddressFamily(body.usdtAddress);
+      problems.push(family === 'TRC20' ? t('addressIsTron') : family === 'EVM' ? t('addressIsEvm') : t('badAddress'));
+    }
     setDone(false);
     if (problems.length > 0) {
       setErrors(problems);

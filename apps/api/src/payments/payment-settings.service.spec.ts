@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { isUsdtAddressFor } from '@balitrade/shared';
+import { isUsdtAddressFor, usdtAddressFamily } from '@balitrade/shared';
 import { describe, expect, it } from 'vitest';
 import { PaymentSettingsService } from './payment-settings.service.js';
 
@@ -85,5 +85,28 @@ describe('isUsdtAddressFor', () => {
     // Base58 has no 0, O, I or l; a cut-off address is too short.
     expect(isUsdtAddressFor('TRC20', 'T' + '0'.repeat(33))).toBe(false);
     expect(isUsdtAddressFor('ERC20', '0x' + 'a'.repeat(39))).toBe(false);
+  });
+});
+
+describe('usdtAddressFamily', () => {
+  it('names the network family an address belongs to, so the OWNER can be told which network to pick', () => {
+    expect(usdtAddressFamily('T' + '9'.repeat(33))).toBe('TRC20');
+    expect(usdtAddressFamily('0x' + 'aB'.repeat(20))).toBe('EVM');
+    expect(usdtAddressFamily('TMockUsdtAddressForDevelopmentOnly00')).toBeNull();
+  });
+});
+
+describe('PaymentSettingsService.adminView before the first save', () => {
+  it('leaves out an env address that is not a real one, so the first save does not fail on it', async () => {
+    const svc = new PaymentSettingsService(
+      { paymentSettings: { findUnique: async () => null } } as never,
+      {} as never,
+      { get: (key: string) => ENV[key] } as never,
+    );
+    const view = await svc.adminView();
+    expect(view.saved).toBe(false);
+    expect(view.usdtAddress).toBe('');
+    expect(view.usdtEnabled).toBe(false);
+    expect(view.bankAccountNumber).toBe('1234567890');
   });
 });

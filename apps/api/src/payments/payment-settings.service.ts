@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { USDT_NETWORKS, maskAccount } from '@balitrade/shared';
+import { USDT_NETWORKS, isUsdtAddressFor, maskAccount } from '@balitrade/shared';
 import type { AdminPaymentSettingsView, PaymentInstructions, PaymentMethod, UsdtNetwork } from '@balitrade/shared';
 import { AuditService } from '../audit/audit.service.js';
 import type { Env } from '../config/env.js';
@@ -85,16 +85,20 @@ export class PaymentSettingsService {
       this.env('PAY_MOCK').toLowerCase() === 'true' &&
       ['PAY_EXCHANGE_NAME', 'PAY_EXCHANGE_CONTACT', 'PAY_EXCHANGE_INSTRUCTIONS'].every((key) => this.env(key as keyof Env) !== '');
     if (!row) {
-      const network = this.env('PAY_USDT_NETWORK') as UsdtNetwork;
+      const known = (USDT_NETWORKS as readonly string[]).includes(this.env('PAY_USDT_NETWORK'));
+      const network = known ? (this.env('PAY_USDT_NETWORK') as UsdtNetwork) : 'TRC20';
+      // The env address is a placeholder on every environment so far, and not even a well-formed one; putting it in
+      // the form would make the OWNER's first save fail on a field they never touched. Only a real-looking one is kept.
+      const address = isUsdtAddressFor(network, this.env('PAY_USDT_ADDRESS')) ? this.env('PAY_USDT_ADDRESS') : '';
       return {
         saved: false,
         bankEnabled: this.env('PAY_BANK_ACCOUNT_NUMBER') !== '',
         bankName: this.env('PAY_BANK_NAME'),
         bankAccountNumber: this.env('PAY_BANK_ACCOUNT_NUMBER'),
         bankAccountHolder: this.env('PAY_BANK_ACCOUNT_HOLDER'),
-        usdtEnabled: this.env('PAY_USDT_ADDRESS') !== '',
-        usdtNetwork: (USDT_NETWORKS as readonly string[]).includes(network) ? network : 'TRC20',
-        usdtAddress: this.env('PAY_USDT_ADDRESS'),
+        usdtEnabled: address !== '',
+        usdtNetwork: network,
+        usdtAddress: address,
         showTestWarning: this.env('PAY_MOCK').toLowerCase() === 'true',
         exchangeIsPlaceholder,
         updatedBy: null,

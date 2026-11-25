@@ -171,6 +171,17 @@ export function isUsdtAddressFor(network: UsdtNetwork, address: string): boolean
   return network === 'TRC20' ? /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(address) : /^0x[0-9a-fA-F]{40}$/.test(address);
 }
 
+/**
+ * Which family of networks an address has the shape of: `TRC20`, `EVM` (ERC20 and BEP20 share one shape, so the
+ * address alone cannot tell those two apart) or `null` when it fits neither. Used to tell the OWNER which network
+ * to choose when the address and the chosen network disagree.
+ */
+export function usdtAddressFamily(address: string): 'TRC20' | 'EVM' | null {
+  if (isUsdtAddressFor('TRC20', address)) return 'TRC20';
+  if (isUsdtAddressFor('BEP20', address)) return 'EVM';
+  return null;
+}
+
 /** The OWNER's payment settings as admins see them (FINANCE reads, only the OWNER saves). */
 export interface AdminPaymentSettingsView {
   /** False until the OWNER saves once; the payment page then still uses the env values. */
