@@ -739,7 +739,7 @@
     "statusHint": {
       "REQUESTED": "Waiting for the seller to respond.",
       "CHANGE_PROPOSED": "The seller proposed a different quantity. The buyer decides.",
-      "AWAITING_PAYMENT": "Accepted. The next step is payment (opening soon).",
+      "AWAITING_PAYMENT": "Accepted. Next the buyer pays BaliTrade, which holds the money until quality control and delivery.",
       "DECLINED": "The seller declined this order.",
       "CANCELLED": "This order was cancelled.",
       "IN_QC": "BaliTrade has the goods and is checking their quality.",

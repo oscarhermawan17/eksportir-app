@@ -739,7 +739,7 @@
     "statusHint": {
       "REQUESTED": "Menunggu jawaban penjual.",
       "CHANGE_PROPOSED": "Penjual mengusulkan jumlah lain. Pembeli yang memutuskan.",
-      "AWAITING_PAYMENT": "Diterima. Langkah berikutnya adalah pembayaran (segera dibuka).",
+      "AWAITING_PAYMENT": "Diterima. Berikutnya pembeli membayar ke BaliTrade, yang menahan uangnya sampai pemeriksaan kualitas dan pengiriman selesai.",
       "DECLINED": "Penjual menolak pesanan ini.",
       "CANCELLED": "Pesanan ini dibatalkan.",
       "IN_QC": "Barang sudah di BaliTrade dan sedang diperiksa kualitasnya.",
