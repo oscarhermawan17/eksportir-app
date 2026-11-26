@@ -125,6 +125,11 @@ gets the `.env.example` placeholders, run #45723970140 green. Dump first (`~/db-
 from outside: `database: up`; `/id`, `/id/how-it-works`, `/en/admin/payment-settings` and `/en/admin/payments` 200; `GET`/`PUT
 /api/admin/payment-settings` answer 401 without a session; the catalog still answers. `payment_settings` is still empty there, so buyers
 see the env placeholders until the owner saves the page. Not opened while logged in on the live site.
+**Redeployed the same day: commit `5997292`.** The owner's first save was refused ("does not fit the chosen network"): before the first
+save the form was prefilled with the env USDT address, a placeholder that is not a valid TRC20 address. The form now leaves an invalid env
+address out and names the network an address fits (`usdtAddressFamily()` in `packages/shared`). CI run #45725370381 green, dump
+`~/db-backups/balitrade-2026-11-26-pre-usdt-fix.dump` (78 KB), no migration, images api `46cc9c22` → `800b90da`, web `a2d8cc9a` →
+`db70c63e`; `database: up`, the page 200, the settings API 401 without a session.
 
 **Payment accounts managed by the OWNER (2026-11-26).** `/admin/payment-settings` (menu "Payment accounts";
 OWNER saves, FINANCE reads) holds the bank account and the USDT (Binance) deposit address buyers pay to; every save is audited with
