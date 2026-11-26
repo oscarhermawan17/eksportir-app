@@ -130,6 +130,11 @@ save the form was prefilled with the env USDT address, a placeholder that is not
 address out and names the network an address fits (`usdtAddressFamily()` in `packages/shared`). CI run #45725370381 green, dump
 `~/db-backups/balitrade-2026-11-26-pre-usdt-fix.dump` (78 KB), no migration, images api `46cc9c22` → `800b90da`, web `a2d8cc9a` →
 `db70c63e`; `database: up`, the page 200, the settings API 401 without a session.
+**Redeployed again: commit `96b7e38`** — the `AWAITING_PAYMENT` status hint no longer says payment is "opening soon" (en/id/ru).
+CI run #45728899831 green, dump `~/db-backups/balitrade-2026-11-26-pre-hint-text.dump` (78 KB), no migration, images api → `e863ba23`,
+web → `a82867fa`; `database: up`, `/id`, `/id/seller`, `/en/admin/payment-settings` 200, the new text is in the web build.
+**On the live site USDT was still switched off** after the owner's last save (00:12 UTC); the local database had it on only because the
+assistant switched it on there for a local purchase test (OR-1539 BCA, OR-1540 USDT — local data, gone at the next `db:pull`).
 
 **Payment accounts managed by the OWNER (2026-11-26).** `/admin/payment-settings` (menu "Payment accounts";
 OWNER saves, FINANCE reads) holds the bank account and the USDT (Binance) deposit address buyers pay to; every save is audited with
