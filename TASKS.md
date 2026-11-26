@@ -281,7 +281,7 @@ Legenda: **DoD** = Definition of Done (syarat task dianggap selesai).
 - [ ] Terjemahan otomatis konten produk (API, mis. DeepL) + review admin
 - [ ] Kurs dari API harian + konfirmasi admin + peringatan selisih > 3%
 - [ ] Rating & ulasan per penjual
-- [ ] Halaman How It Works + FAQ lengkap
+- [x] Halaman How It Works + FAQ lengkap — selesai 2026-11-26: langkah dan FAQ diisi OWNER di `/admin/content` (tabel `content_items`)
 - [ ] Audit log lengkap + halaman riwayat aksi admin
 - [ ] (pindahan dari MVP 1.0 jika tidak sempat)
 
